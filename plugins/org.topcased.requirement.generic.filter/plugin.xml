@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="org.topcased.requirement.generic.filter.contribution1"
+            nameFilter="*.requirement"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="org.topcased.requirement.generic.filter.popup.actions.RequirementsFilter"
+               enablesFor="+"
+               id="org.topcased.requirement.generic.filter.newAction"
+               label="Filter upstream requirements"
+               menubarPath="org.topcased.facilities.menu.topcased/org.topcased.facilities.menu.topcased.requirement/topcasedGroup"
+               tooltip="Filter requirements file with regular expressions">
+         </action>
+      </objectContribution>
+   </extension>
+  
+</plugin>

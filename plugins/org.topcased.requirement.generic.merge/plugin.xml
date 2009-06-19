@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="org.topcased.requirement.generic.merge"
+            nameFilter="*di"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="org.topcased.requirement.generic.merge.actions.SampleAction"
+               enablesFor="2+"
+               icon="icons/sample.gif"
+               id="org.topcased.requirement.generic.merge"
+               label="Merge requirement"
+               menubarPath="org.topcased.facilities.menu.topcased/org.topcased.facilities.menu.topcased.requirement/topcasedGroup">
+         </action>
+      </objectContribution>
+   </extension>
+
+</plugin>

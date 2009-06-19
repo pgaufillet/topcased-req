@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="org.topcased.requirement.generic.actionSet"
+            label="Sample Action Set"
+            visible="true">
+         <menu
+               id="sampleMenu"
+               label="Sample &amp;Menu">
+            <separator
+                  name="sampleGroup">
+            </separator>
+         </menu>
+         <action
+               class="org.topcased.requirement.generic.actions.SyncRequirement"
+               icon="icons/CurrentRequirement.gif"
+               id="org.topcased.requirement.generic.actions.SyncRequirement"
+               label="&amp;Sample Action"
+               menubarPath="sampleMenu/sampleGroup"
+               toolbarPath="sampleGroup"
+               tooltip="define requirements">
+         </action>
+      </actionSet>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.topcased.modeler.editor.Modeler"
+            class="org.topcased.requirement.generic.AdapterFactory">
+         <adapter
+               type="org.topcased.sam.requirement.core.views.upstream.IUpstreamRequirementPage">
+         </adapter>
+         <adapter
+               type="org.topcased.sam.requirement.core.views.current.ICurrentRequirementPage">
+         </adapter>
+      </factory>
+   </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="org.topcased.requirement.generic.Startup"></startup>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.topcased.facilities.preferences.TopcasedPreferencePage"
+            class="org.topcased.requirement.generic.preferences.RequirementPreferencePage"
+            id="org.topcased.requirement.preferences.nonsam"
+            name="Generic Requirement">
+      </page>
+      <page
+            category="org.topcased.requirement.preferences.nonsam"
+            class="org.topcased.requirement.generic.preferences.NamingSettingsPage"
+            id="org.topcased.requirement.preferences.namingsettings"
+            name="Naming Settings">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            id="org.topcased.facilities.menu.topcased.requirement"
+            objectClass="org.eclipse.core.resources.IResource">
+         <menu
+               id="org.topcased.facilities.menu.topcased.requirement"
+               label="Requirement"
+               path="org.topcased.facilities.menu.topcased/topcasedGroup">
+            <groupMarker
+                  name="topcasedGroup">
+            </groupMarker>
+         </menu>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.topcased.modeler.commandsStackListeners">
+      <command
+            commandStackListener="org.topcased.requirement.generic.commands.DeleteCommandResolver">
+      </command>
+      <command
+            commandStackListener="org.topcased.requirement.generic.commands.ReplaceNodeCommandResolver">
+      </command>
+      <command
+            commandStackListener="org.topcased.requirement.generic.commands.DragAndDropResolver">
+      </command>
+   </extension>
+</plugin>

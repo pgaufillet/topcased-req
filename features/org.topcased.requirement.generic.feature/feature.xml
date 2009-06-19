@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.topcased.requirement.generic.feature"
+      label="Generic Requirement Feature"
+      version="1.0.0.qualifier">
+
+   <description url="http://www.example.com/description">
+      [Enter Feature Description here.]
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.emf.ecore"/>
+      <import plugin="org.eclipse.emf.ecore.edit"/>
+      <import plugin="org.eclipse.emf.edit.ui"/>
+      <import plugin="org.topcased.sam.requirement"/>
+      <import plugin="org.topcased.sam.requirement.core"/>
+      <import plugin="org.topcased.modeler"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.topcased.regexviewer"/>
+      <import plugin="org.eclipse.emf.edit"/>
+      <import plugin="org.eclipse.ui.forms"/>
+      <import plugin="org.topcased.facilities"/>
+      <import plugin="org.eclipse.gef"/>
+      <import plugin="org.eclipse.uml2.uml"/>
+   </requires>
+
+   <plugin
+         id="org.topcased.requirement.generic"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.topcased.requirement.generic.filter"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.topcased.requirement.generic.merge"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
