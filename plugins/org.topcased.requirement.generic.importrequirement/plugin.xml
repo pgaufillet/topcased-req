@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.importWizards">
+      <wizard
+            category="org.topcased.facilities.importmenu"
+            class="org.topcased.requirement.generic.importrequirement.ui.ImportRequirementWizard"
+            icon="icons/sample.gif"
+            id="org.topcased.requirement.generic.importrequirement.wizard"
+            name="Import Requirements">
+         <description>
+            Import requirement from docx, odt, csv, or xlsx document and create a uml, sysml or requirement model
+         </description>
+      </wizard>
+   </extension>
+
+</plugin>

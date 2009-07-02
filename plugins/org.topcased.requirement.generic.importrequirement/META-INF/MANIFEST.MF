@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Requirement Plug-in
+Bundle-SymbolicName: org.topcased.requirement.generic.importrequirement;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: org.topcased.requirement.generic.importrequirement.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.ui.forms,
+ org.eclipse.emf.common.ui,
+ org.eclipse.uml2.uml,
+ org.topcased.sysml,
+ org.topcased.document.parser,
+ org.topcased.doc2model.parser
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Import-Package: org.topcased.regexviewer.views
