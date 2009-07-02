@@ -9,10 +9,10 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.resources,
  org.eclipse.ui.forms,
  org.eclipse.emf.common.ui,
- org.eclipse.uml2.uml,
- org.topcased.sysml,
  org.topcased.document.parser,
- org.topcased.doc2model.parser
+ org.topcased.doc2model.parser,
+ org.eclipse.uml2.uml,
+ org.topcased.sysml
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Import-Package: org.topcased.regexviewer.views
