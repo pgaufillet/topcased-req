@@ -32,6 +32,10 @@
       <import plugin="org.topcased.facilities"/>
       <import plugin="org.eclipse.gef"/>
       <import plugin="org.eclipse.uml2.uml"/>
+      <import plugin="org.eclipse.emf.common.ui"/>
+      <import plugin="org.topcased.sysml"/>
+      <import plugin="org.topcased.document.parser"/>
+      <import plugin="org.topcased.doc2model.parser"/>
    </requires>
 
    <plugin
@@ -50,6 +54,13 @@
 
    <plugin
          id="org.topcased.requirement.generic.merge"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.topcased.requirement.generic.importrequirement"
          download-size="0"
          install-size="0"
          version="0.0.0"
