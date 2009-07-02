@@ -97,11 +97,11 @@ public class Doc2ModelCreatorRequirement implements Doc2ModelCreatorSpecific
      * @see org.topcased.doc2model.requirement.doc2model.Doc2ModelCreatorSpecific#getInjectionElement(java.lang.String,
      * boolean)
      */
-    public InjectionElement getInjectionElement(String stereo, boolean isFlat)
+    public InjectionElement getInjectionElement(String stereo, boolean isFlat, boolean isSpreadsheet)
     {
         // Create composition injection requirement
         InjectionElement injectionE = null;
-        if (isFlat)
+        if (isFlat || isSpreadsheet)
         {
             CompositionInjection injection = Doc2modelMappingFactory.eINSTANCE.createCompositionInjection();
             injectionE = injection;
@@ -113,7 +113,7 @@ public class Doc2ModelCreatorRequirement implements Doc2ModelCreatorSpecific
             injection.setOwningClass("Requirement");
             injection.setSpecificNamespaceURI(Constants.METAMODEL_TRACEABILITY);
         }
-        else
+        else if (!isFlat)
         {
             NewClassInjection injection = Doc2modelMappingFactory.eINSTANCE.createNewClassInjection();
             injectionE = injection;

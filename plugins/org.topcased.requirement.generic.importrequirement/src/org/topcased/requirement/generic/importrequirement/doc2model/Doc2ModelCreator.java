@@ -195,7 +195,7 @@ public class Doc2ModelCreator
             {
                 source = stereotype.getName();
             }
-            InjectionElement injectionElement = creatorSpecific.getInjectionElement(source, !isHierarchical);
+            InjectionElement injectionElement = creatorSpecific.getInjectionElement(source, !isHierarchical, isSpreadsheet);
             linkedElement.setInjection(injectionElement);
             if (identification instanceof Style)
             {

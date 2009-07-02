@@ -90,7 +90,7 @@ public class Doc2ModelCreatorUml implements Doc2ModelCreatorSpecific
      * @see org.topcased.doc2model.requirement.doc2model.Doc2ModelCreatorSpecific#getInjectionElement(java.lang.String,
      * boolean)
      */
-    public InjectionElement getInjectionElement(String stereo, boolean isFlat)
+    public InjectionElement getInjectionElement(String stereo, boolean isFlat,boolean isSpreadsheet)
     {
         // Create class injection
         NewClassInjection injection = Doc2modelMappingFactory.eINSTANCE.createNewClassInjection();

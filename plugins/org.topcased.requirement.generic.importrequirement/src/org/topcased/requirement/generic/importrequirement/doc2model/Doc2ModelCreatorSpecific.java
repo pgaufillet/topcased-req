@@ -40,10 +40,11 @@ public interface Doc2ModelCreatorSpecific
      * 
      * @param stereo the stereo
      * @param isFlat the is flat
+     * @param isSpreadsheet 
      * 
      * @return the injection element
      */
-    public InjectionElement getInjectionElement(String stereo, boolean isFlat);
+    public InjectionElement getInjectionElement(String stereo, boolean isFlat, boolean isSpreadsheet);
 
     /**
      * Gets the column attribute.

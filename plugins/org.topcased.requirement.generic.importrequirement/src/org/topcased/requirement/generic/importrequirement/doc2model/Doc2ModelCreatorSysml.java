@@ -59,7 +59,7 @@ public class Doc2ModelCreatorSysml extends Doc2ModelCreatorUml
      * @see org.topcased.doc2model.requirement.doc2model.Doc2ModelCreatorUml#getInjectionElement(java.lang.String,
      * boolean)
      */
-    public InjectionElement getInjectionElement(String stereo, boolean isFlat)
+    public InjectionElement getInjectionElement(String stereo, boolean isFlat, boolean isSpreadsheet)
     {
 
         // Create class injection
