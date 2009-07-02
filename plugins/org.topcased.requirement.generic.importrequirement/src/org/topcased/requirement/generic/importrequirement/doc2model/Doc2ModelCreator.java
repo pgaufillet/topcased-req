@@ -76,13 +76,15 @@ public class Doc2ModelCreator
 
     /** The Constant metaModels. */
     static final HashMap<String, String> metaModels = new HashMap<String, String>();
+
+    private String pathForDebug;
     static
     {
         metaModels.put(Constants.UML_EXTENSION, "http://www.eclipse.org/uml2/2.1.0/UML");
         metaModels.put(Constants.SYSML_EXTENSION, "http://www.topcased.org/2.0/sysML");
         metaModels.put(Constants.REQUIREMENT_EXTENSION, "http://org.topcased.requirement/1.0");
     }
-
+    
     /**
      * Instantiates a new doc2 model creator.
      * 
@@ -96,6 +98,23 @@ public class Doc2ModelCreator
      */
     public Doc2ModelCreator(Collection<Mapping> listMapping, String modelType, boolean inputType, String profile, Stereotype stereotype, boolean isHierarchical, RecognizedElement identification)
     {
+        this(listMapping,modelType,inputType,profile,stereotype,isHierarchical,identification,null);
+    }
+    
+    /**
+     * Instantiates a new doc2 model creator.
+     * 
+     * @param listMapping the list mapping
+     * @param modelType the model type
+     * @param inputType the input type
+     * @param profile the profile
+     * @param stereotype the stereotype
+     * @param isHierarchical the is hierarchical
+     * @param identification the identification
+     * @param pathFordebug the path folder to store the doc2model mapping
+     */
+    public Doc2ModelCreator(Collection<Mapping> listMapping, String modelType, boolean inputType, String profile, Stereotype stereotype, boolean isHierarchical, RecognizedElement identification,String pathFordebug)
+    {
         super();
         this.listMapping = listMapping;
         this.modelType = modelType;
@@ -104,6 +123,7 @@ public class Doc2ModelCreator
         this.stereotype = stereotype;
         this.isHierarchical = isHierarchical;
         this.identification = identification;
+        this.pathForDebug = pathFordebug;
 
         if (Constants.UML_EXTENSION.equals(modelType))
         {
@@ -135,10 +155,19 @@ public class Doc2ModelCreator
         doc2model doc = Doc2modelMappingFactory.eINSTANCE.createdoc2model();
 
         // create a resource
-         ResourceSet set = new ResourceSetImpl();
-         Resource r =
-         set.createResource(URI.createURI("file://D:/TFE/TRV/Topcased-Ganymede/runtime-EclipseApplication/090414TestDoc2Model/Models/tata.doc2modelmapping"));
-         r.getContents().add(doc);
+        Resource r = null ;
+        if (pathForDebug != null && pathForDebug.length() > 0)
+        {
+            pathForDebug = pathForDebug.replace("\\", "/");
+            if (!pathForDebug.endsWith("/"))
+            {
+                pathForDebug += "/";
+            }
+            ResourceSet set = new ResourceSetImpl();
+            r =
+                set.createResource(URI.createFileURI(pathForDebug + "debug.doc2modelmapping"));
+            r.getContents().add(doc);
+        }
 
         // Set the Extension (sysml, uml or requirement)
         doc.setExtension(modelType);
@@ -190,14 +219,17 @@ public class Doc2ModelCreator
         getAllAttributes(linkedElement);
 
         // Save the Resource
-         try
-         {
-         r.save(Collections.EMPTY_MAP);
-         }
-         catch (IOException e)
-         {
-         e.printStackTrace();
-         }
+        if (r != null && pathForDebug != null)
+        {
+            try
+            {
+                r.save(Collections.EMPTY_MAP);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
         return doc;
     }
 

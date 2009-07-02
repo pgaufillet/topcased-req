@@ -20,6 +20,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -59,6 +61,8 @@ import doc2modelMapping.doc2model;
  */
 public class ImportRequirementWizard extends Wizard implements IImportWizard
 {
+
+    private static final String CONSTANT_DEBUG = "ADMIN_DOC_MAPPING";
 
     /** The current file. */
     private IFile currentFile;
@@ -124,10 +128,10 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
     @Override
     public boolean performFinish()
     {
-
-        /** Treatment **/
+        String pathForDebug = getPathForDebug(page1.getLevel());
+        /** Process **/
         Doc2ModelCreator d2mc = new Doc2ModelCreator(page3.getListMapping(), page1.getModelType(), page2.isSpreadsheet(), page1.getProfileURI(), page1.getStereotype(), page2.getIsHiearachical(),
-                page2.getIdentification());
+                page2.getIdentification(),pathForDebug);
         final doc2model model = d2mc.createDoc2Model();
         if (model != null)
         {
@@ -253,6 +257,18 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
         Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageMapping.PREFERENCE_FOR_LIST_MAPPING, page3.getListMappingPref());
 
         return true;
+    }
+
+    private String getPathForDebug(String level)
+    {
+        String result = null ;
+        Pattern p = Pattern.compile(CONSTANT_DEBUG + " (.*)");
+        Matcher m = p.matcher(level);
+        if (m.matches())
+        {
+            result = m.group(1);
+        }
+        return result;
     }
 
     /**

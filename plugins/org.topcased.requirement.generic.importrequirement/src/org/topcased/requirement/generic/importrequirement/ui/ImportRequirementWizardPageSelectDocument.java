@@ -361,7 +361,7 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
     {
         toolkit.createLabel(composite, "Level: "); //$NON-NLS-1$
         String helpText = Messages.ImportRequirementWizardPageSelectDocument_EANNOTATION;
-        levelComponent = new ComponentHelpTextField(this, composite, toolkit, SWT.NONE, helpText, Activator.getDefault().getPluginPreferences().getString(PREFERENCE_FOR_LEVEL));
+        levelComponent = new ComponentHelpTextField(this, composite, toolkit, SWT.NONE, helpText);
         fill(levelComponent);
     }
 
