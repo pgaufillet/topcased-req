@@ -55,29 +55,26 @@ public class AttributeRequirement extends Attribute
     {
         // // Create the composition Injection
         CompositionInjection c = Doc2modelMappingFactory.eINSTANCE.createCompositionInjection();
-        c.setAssociationName("attributes");
         c.setNewInstanceForEachComposition(true);
         c.setSpecificNamespaceURI(Constants.METAMODEL_TRACEABILITY);
         c.setDependsWith((ElementCreationInjection) element.getInjection());
         if (isReference())
         {
-            c.setOwningClass("AttributeLink");
-            c.setAttributeName("name");
+            c.setAssociationName("navigationLinks");
+            c.setOwningClass("NavigationLink");
             c.setName(this.getName());
-            TextFormatter t = Doc2modelMappingFactory.eINSTANCE.createTextFormatter();
-            t.setPattern(this.getOriginalName());
-            c.setStringFormat(t);
             // create the reference injection
             ReferenceInjection a = Doc2modelMappingFactory.eINSTANCE.createReferenceInjection();
             a.setAttributeToFind("ident");
             a.setClassReferenced("Requirement");
             a.setIsStereotypeReference(false);
             a.setDependsWith(c);
-            a.setReferenceAttribute("value");
+            a.setReferenceAttribute("to");
             c.getStandardOptionalInjections().add(a);
         }
         else
         {
+            c.setAssociationName("attributes");
             c.setOwningClass("Attribute");
             c.setAttributeName("value");
             c.setName(this.getName());
