@@ -24,7 +24,7 @@ public class Utils
 
     public static void error(String string)
     {
-        MessageDialog.openError(Display.getDefault().getActiveShell(), "erro", string);
+        MessageDialog.openError(Display.getDefault().getActiveShell(), "Error", string);
     }
 
 }
