@@ -10,7 +10,7 @@
  * Contributors:
  *  Tristan FAURE (ATOS ORIGIN INTEGRATION) tristan.faure@atosorigin.com - Initial API and implementation
  *
-  *****************************************************************************/
+ *****************************************************************************/
 package org.topcased.requirement.generic.actions;
 
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -24,11 +24,9 @@ import org.topcased.sam.requirement.core.views.current.CurrentRequirementView;
 import org.topcased.ttm.Requirement;
 
 /**
- * The listener interface for receiving upstreamSelectionChanged events.
- * The class that is interested in processing a upstreamSelectionChanged
- * event implements this interface, and the object created
- * with that class is registered with a component using the
- * component's <code>addUpstreamSelectionChangedListener<code> method. When
+ * The listener interface for receiving upstreamSelectionChanged events. The class that is interested in processing a
+ * upstreamSelectionChanged event implements this interface, and the object created with that class is registered with a
+ * component using the component's <code>addUpstreamSelectionChangedListener<code> method. When
  * the upstreamSelectionChanged event occurs, that object's appropriate
  * method is invoked.
  * 
@@ -82,6 +80,9 @@ public class UpstreamSelectionChangedListener implements ISelectionChangedListen
                     {
                         viewer.removeFilter(viewer.getFilters()[i]);
                     }
+                    // we set the selection to null to avoid stack overflow
+                    // ie : the current page will not try to restore a selection which is not visible
+                    viewer.setSelection(null);
                     currentFilter = CurrentRequirementFilter.getInstance();
                     currentFilter.setSearched(current.getIdent());
                     viewer.addFilter(currentFilter);
