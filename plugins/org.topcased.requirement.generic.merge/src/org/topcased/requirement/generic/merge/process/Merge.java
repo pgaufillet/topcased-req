@@ -33,6 +33,8 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -52,6 +54,7 @@ import org.topcased.sam.requirement.HierarchicalElement;
 import org.topcased.sam.requirement.ProblemChapter;
 import org.topcased.sam.requirement.Requirement;
 import org.topcased.sam.requirement.RequirementFactory;
+import org.topcased.sam.requirement.RequirementPackage;
 import org.topcased.sam.requirement.RequirementProject;
 import org.topcased.sam.requirement.SpecialChapter;
 import org.topcased.sam.requirement.TrashChapter;
@@ -460,7 +463,12 @@ public class Merge
                 if (current.eContainer() instanceof HierarchicalElement)
                 {
                     HierarchicalElement hier = (HierarchicalElement) current.eContainer();
-                    if (hier.getSamElement().eResource().getURI().equals(t.getModel().eResource().getURI()))
+                    EObject samE = hier.getSamElement() ;
+                    if (samE.eIsProxy())
+                    {
+                        samE = (EObject) hier.eGet(RequirementPackage.Literals.HIERARCHICAL_ELEMENT__SAM_ELEMENT,true);
+                    }
+                    if (samE != null && !samE.eIsProxy() && hier.getSamElement().eResource().getURI().equals(t.getModel().eResource().getURI()))
                     {
                         HierarchicalElement hierToAdd = get(hier.getSamElement());
                         if (hierToAdd != null)
