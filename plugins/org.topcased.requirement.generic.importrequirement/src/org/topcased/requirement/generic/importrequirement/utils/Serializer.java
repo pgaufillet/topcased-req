@@ -18,9 +18,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 
 /**
  * The Class Serializer.
@@ -40,15 +37,13 @@ public class Serializer<T>
         if (stringToUnSerialize != null && stringToUnSerialize.length() > 0)
         {
             String myParam = "";
-            try
+            myParam = stringToUnSerialize;
+            byte[] bytes = getBytes(myParam);
+            if (bytes == null)
             {
-                myParam = URLDecoder.decode(stringToUnSerialize, "UTF-8");
+                return null;
             }
-            catch (UnsupportedEncodingException e1)
-            {
-                e1.printStackTrace();
-            }
-            ByteArrayInputStream bis = new ByteArrayInputStream(myParam.getBytes());
+            ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
             try
             {
                 ObjectInputStream obj_in = new ObjectInputStream(bis);
@@ -71,6 +66,24 @@ public class Serializer<T>
 
     }
 
+    private byte[] getBytes(String myParam)
+    {
+        byte[] bytes = null;
+        try
+        {
+            String[] strings = myParam.split(",");
+            bytes = new byte[strings.length];
+            for (int i = 0; i < strings.length; i++)
+            {
+                bytes[i] = Byte.parseByte(strings[i]);
+            }
+        }
+        catch (NumberFormatException e)
+        {
+        }
+        return bytes;
+    }
+
     /**
      * Serialize.
      * 
@@ -89,8 +102,17 @@ public class Serializer<T>
             try
             {
                 objstream.writeObject(objToSerialze);
-                encoded = writer.toString();
-                encoded = URLEncoder.encode(encoded, "UTF-8");
+                byte[] bytes = writer.toByteArray();
+                StringBuffer buffer = new StringBuffer();
+                for (int i = 0; i < bytes.length; i++)
+                {
+                    if (i != 0)
+                    {
+                        buffer.append(",");
+                    }
+                    buffer.append(bytes[i]);
+                }
+                encoded = buffer.toString();
             }
             catch (IOException e)
             {
