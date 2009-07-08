@@ -766,7 +766,8 @@ public class ImportRequirementWizardPageMapping extends WizardPage
                 for (Iterator<Attribute> iterator = paramDecoded.iterator(); iterator.hasNext();)
                 {
                     Attribute next = (Attribute) iterator.next();
-                    if ((Constants.SYSML_EXTENSION.equals(modelType) && "Requirement".equals(next.getSource())) || (Constants.UML_EXTENSION.equals(modelType) && "Class".equals(next.getSource())))
+                    if ((Constants.SYSML_EXTENSION.equals(modelType) && "Requirement".equals(next.getSource())) || (Constants.UML_EXTENSION.equals(modelType) && "Class".equals(next.getSource()))
+                            || next instanceof AttributeRequirement)
                     {
                         listAttributes.add(next);
                     }
