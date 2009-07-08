@@ -790,10 +790,10 @@ public class ImportRequirementWizardPageMapping extends WizardPage
         if (selectedRule.getParent() != null)
         {
             OwnerElement parent = selectedRule.getParent();
-            boolean toSelect = true ;
+            boolean toSelect = true;
             if (parent instanceof RecognizedElement)
             {
-                RecognizedElement rParent = (RecognizedElement)parent;
+                RecognizedElement rParent = (RecognizedElement) parent;
                 if (rParent.getChildren() != null)
                 {
                     for (RecognizedElement r : rParent.getChildren())

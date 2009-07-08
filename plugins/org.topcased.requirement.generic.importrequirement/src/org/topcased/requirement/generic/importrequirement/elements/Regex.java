@@ -27,7 +27,8 @@ public class Regex extends AbstractRecognizedElement implements Serializable
 
     /** The value. */
     private String value;
-
+    private transient int flag = 0 ;
+    
     /** The results. */
     Vector<RecognizedElement> results = null;
 
@@ -81,31 +82,10 @@ public class Regex extends AbstractRecognizedElement implements Serializable
      */
     public Vector<RecognizedElement> getChildren()
     {
-        if (results == null)
+        if (results == null || flag < 2)
         {
-            results = new Vector<RecognizedElement>();
-            for (int i = 0; i < value.length(); i++)
-            {
-                if ('(' == value.charAt(i))
-                {
-                    String tmp = "";
-                    char aChar;
-                    do
-                    {
-                        aChar = value.charAt(i);
-                        i++;
-                        tmp += aChar;
-                    }
-                    while (i < value.length() && value.charAt(i) != ')');
-                    if (value.charAt(i) == ')')
-                    {
-                        tmp += value.charAt(i);
-                        i--;
-                        results.add(new Regex(tmp, this));
-                    }
-                }
-
-            }
+            results = getGroups();
+            flag++;
         }
         if (results.size() <= 1)
         {
@@ -114,4 +94,30 @@ public class Regex extends AbstractRecognizedElement implements Serializable
         return results;
     }
 
+    private Vector<RecognizedElement> getGroups()
+    {
+        Vector<RecognizedElement> vector = new Vector<RecognizedElement>();
+        for (int i = 0; i < value.length(); i++)
+        {
+            if ('(' == value.charAt(i))
+            {
+                String tmp = "";
+                char aChar;
+                do
+                {
+                    aChar = value.charAt(i);
+                    i++;
+                    tmp += aChar;
+                }
+                while (i < value.length() && value.charAt(i) != ')');
+                if (value.charAt(i) == ')')
+                {
+                    tmp += value.charAt(i);
+                    i--;
+                    vector.add(new Regex(tmp, this));
+                }
+            }
+        }
+        return vector;
+    }
 }

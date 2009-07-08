@@ -115,7 +115,7 @@ public class PopupRegexDialog extends Dialog implements NotifyElement
         componentHelpTextField.setLayoutData(data);
 
         // Add regex viewer component to the dialog
-        regex = new RegexViewerComposite(form.getBody(), SWT.NONE, RegexViewerComposite.EXPANDABLE | RegexViewerComposite.MATCH | RegexViewerComposite.DESCRIPTION);
+        regex = new RegexViewerComposite(form.getBody(), SWT.NONE, RegexViewerComposite.EXPANDABLE | RegexViewerComposite.MATCH | RegexViewerComposite.DESCRIPTION | RegexViewerComposite.GROUP);
         regex.setDescription("Regex Test Area"); //$NON-NLS-1$
         regex.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 
