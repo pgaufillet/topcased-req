@@ -99,10 +99,18 @@ public class IStructuredContentProviderTree implements ITreeContentProvider
     {
         if (parentElement instanceof RecognizedElement)
         {
+            Collection toDisplay = new LinkedList();
             RecognizedElement element = (RecognizedElement) parentElement;
             if (element.getChildren() != null)
             {
-                return element.getChildren().toArray();
+                for (RecognizedElement r : element.getChildren())
+                {
+                    if (!r.isSelected())
+                    {
+                        toDisplay.add(r);
+                    }
+                }
+                return toDisplay.toArray();
             }
         }
         else if (parentElement instanceof RecognizedTree)

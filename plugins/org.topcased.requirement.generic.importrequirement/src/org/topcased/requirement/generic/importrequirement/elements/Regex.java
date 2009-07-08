@@ -107,7 +107,7 @@ public class Regex extends AbstractRecognizedElement implements Serializable
 
             }
         }
-        if (results.size() == 1)
+        if (results.size() <= 1)
         {
             results = null;
         }

@@ -52,6 +52,7 @@ import org.topcased.requirement.generic.importrequirement.elements.AttributeSysm
 import org.topcased.requirement.generic.importrequirement.elements.AttributeUml;
 import org.topcased.requirement.generic.importrequirement.elements.IStructuredContentProviderTree;
 import org.topcased.requirement.generic.importrequirement.elements.Mapping;
+import org.topcased.requirement.generic.importrequirement.elements.OwnerElement;
 import org.topcased.requirement.generic.importrequirement.elements.RecognizedElement;
 import org.topcased.requirement.generic.importrequirement.elements.RecognizedTree;
 import org.topcased.requirement.generic.importrequirement.utils.Constants;
@@ -451,7 +452,6 @@ public class ImportRequirementWizardPageMapping extends WizardPage
         // Set the content provider
         listViewerAttributes.setContentProvider(new IStructuredContentProvider()
         {
-
             public Object[] getElements(Object inputElement)
             {
                 if (inputElement instanceof Collection)
@@ -539,7 +539,6 @@ public class ImportRequirementWizardPageMapping extends WizardPage
         // Set the content provider
         listViewerMapping.setContentProvider(new IStructuredContentProvider()
         {
-
             public Object[] getElements(Object inputElement)
             {
                 if (inputElement instanceof Collection)
@@ -788,5 +787,25 @@ public class ImportRequirementWizardPageMapping extends WizardPage
         listMapping.add(new Mapping(selectedRule, a));
         listAttributes.remove(a);
         selectedRule.setSelected(true);
+        if (selectedRule.getParent() != null)
+        {
+            OwnerElement parent = selectedRule.getParent();
+            boolean toSelect = true ;
+            if (parent instanceof RecognizedElement)
+            {
+                RecognizedElement rParent = (RecognizedElement)parent;
+                if (rParent.getChildren() != null)
+                {
+                    for (RecognizedElement r : rParent.getChildren())
+                    {
+                        toSelect &= r.isSelected();
+                    }
+                }
+                if (toSelect)
+                {
+                    rParent.setSelected(true);
+                }
+            }
+        }
     }
 }
