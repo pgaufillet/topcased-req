@@ -32,6 +32,7 @@ public class AttributeRequirement extends Attribute
 
     /** This is for the serializable. */
     private static final long serialVersionUID = 7222453599466072771L;
+    private boolean isText;
 
     /**
      * Instantiates a new attribute requirement.
@@ -42,9 +43,15 @@ public class AttributeRequirement extends Attribute
      */
     public AttributeRequirement(String name, boolean isReference, String source)
     {
-        super(name, isReference, source);
+        this(name, isReference,false, source);
     }
 
+    public AttributeRequirement(String name, boolean isReference, boolean isText, String source)
+    {
+        super(name, isReference, source);
+        this.isText = isText ; 
+    }
+    
     /*
      * (non-Javadoc)
      * 
@@ -74,14 +81,22 @@ public class AttributeRequirement extends Attribute
         }
         else
         {
-            c.setAssociationName("attributes");
-            c.setOwningClass("Attribute");
+            AttributeInjection a = Doc2modelMappingFactory.eINSTANCE.createAttributeInjection();
+            if (isText)
+            {
+                c.setOwningClass("Text");
+                c.setAssociationName("texts");
+            }
+            else
+            {
+                c.setOwningClass("Attribute");
+                c.setAssociationName("attributes");
+                a.setInstanceAttribute("name");
+            }
             c.setAttributeName("value");
             c.setName(this.getName());
             // Create the attribute injection
-            AttributeInjection a = Doc2modelMappingFactory.eINSTANCE.createAttributeInjection();
             a.setDependsWith(c);
-            a.setInstanceAttribute("name");
             c.getStandardOptionalInjections().add(a);
             TextFormatter t = Doc2modelMappingFactory.eINSTANCE.createTextFormatter();
             t.setPattern(this.getOriginalName());

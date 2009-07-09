@@ -306,10 +306,11 @@ public class ImportRequirementWizardPageMapping extends WizardPage
                 if (selection instanceof IStructuredSelection)
                 {
                     IStructuredSelection stru = (IStructuredSelection) selection;
-
                     // Get the selection
                     if (stru.getFirstElement() instanceof RecognizedElement)
+                    {
                         selectedRule = (RecognizedElement) stru.getFirstElement();
+                    }
                 }
             }
         });
@@ -388,7 +389,7 @@ public class ImportRequirementWizardPageMapping extends WizardPage
                     }
                     else
                     {
-                        listAttributes.add(new AttributeRequirement(dialog.getAttributeName(), dialog.isReference(), "Requirement"));
+                        listAttributes.add(new AttributeRequirement(dialog.getAttributeName() == null ? "Text" : dialog.getAttributeName(), dialog.isReference(),dialog.getAttributeName() == null || dialog.getAttributeName().length() == 0, "Requirement"));
                     }
                     listViewerAttributes.refresh();
                 }

@@ -449,7 +449,7 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
      * 
      * @return true, if successful
      */
-    private boolean contains(Collection<Attribute> listAttributes, Attribute att)
+    public static boolean contains(Collection<Attribute> listAttributes, Attribute att)
     {
         for (Attribute a : listAttributes)
         {
