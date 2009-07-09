@@ -62,6 +62,7 @@ import org.topcased.requirement.generic.importrequirement.component.ComponentHel
 import org.topcased.requirement.generic.importrequirement.component.CustomPopupDialog;
 import org.topcased.requirement.generic.importrequirement.component.HelpDialog;
 import org.topcased.requirement.generic.importrequirement.utils.Constants;
+import org.topcased.requirement.generic.importrequirement.utils.Messages;
 import org.topcased.sysml.SysMLPackage;
 
 /**
@@ -71,10 +72,10 @@ public class SelectStereotypeDialog extends CustomPopupDialog
 {
 
     /** The Constant PREFERENCE_FOR_PROFILE_URI. */
-    public static final String PREFERENCE_FOR_PROFILE_URI = "profile_uri_csvimport";
+    public static final String PREFERENCE_FOR_PROFILE_URI = "profile_uri_csvimport"; //$NON-NLS-1$
 
     /** The Constant PREFERENCE_FOR_STEREO. */
-    public static final String PREFERENCE_FOR_STEREO = "stereo_csvimport";
+    public static final String PREFERENCE_FOR_STEREO = "stereo_csvimport"; //$NON-NLS-1$
 
     /** The list viewer. */
     private ListViewer listViewer;
@@ -119,7 +120,7 @@ public class SelectStereotypeDialog extends CustomPopupDialog
      */
     public SelectStereotypeDialog(Shell parentShell, Point point, NotifyElement pageParent, String model)
     {
-        super(parentShell, point, "Stereotype Selection");
+        super(parentShell, point, "Stereotype Selection"); //$NON-NLS-1$
         if (pageParent instanceof ImportRequirementWizardPageSelectDocument)
         {
             wizard = (ImportRequirementWizardPageSelectDocument) pageParent;
@@ -159,13 +160,13 @@ public class SelectStereotypeDialog extends CustomPopupDialog
     @Override
     public void createSubsection()
     {
-        section = createSection(formHead.getForm(), "Select a profile", "", 2);
+        section = createSection(formHead.getForm(), "Select a profile", "", 2); //$NON-NLS-1$ //$NON-NLS-2$
         Composite compo = (Composite) section.getClient();
         compo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
         createList(compo);
-        createLabel(compo, "Selected Profile : ", labelProfile);
+        createLabel(compo, "Selected Profile : ", labelProfile); //$NON-NLS-1$
         createFieldBrows(compo);
-        createLabel(compo, "Selected Stereotype : ", labelStereotype);
+        createLabel(compo, "Selected Stereotype : ", labelStereotype); //$NON-NLS-1$
         createListStereotypes(compo);
 
         // Load profile from a previous use
@@ -250,12 +251,12 @@ public class SelectStereotypeDialog extends CustomPopupDialog
                     // Display error if there 0 stereotype
                     if (countStereo == 0)
                     {
-                        section.setDescription("No stereotype applicable on requirement element in the selected profile");
+                        section.setDescription("No stereotype applicable on requirement element in the selected profile"); //$NON-NLS-1$
                         section.layout(true);
                     }
                     else
                     {
-                        section.setDescription("");
+                        section.setDescription(""); //$NON-NLS-1$
                         section.layout(true);
                     }
                     return result.toArray();
@@ -312,10 +313,10 @@ public class SelectStereotypeDialog extends CustomPopupDialog
      */
     private void createFieldBrows(Composite section)
     {
-        textForURI = toolkit.createText(section, "", SWT.BORDER);
+        textForURI = toolkit.createText(section, "", SWT.BORDER); //$NON-NLS-1$
         textForURI.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         textForURI.setEnabled(false);
-        Button b = toolkit.createButton(section, "browse", SWT.PUSH);
+        Button b = toolkit.createButton(section, "browse", SWT.PUSH); //$NON-NLS-1$
         b.addSelectionListener(new SelectionListener()
         {
             public void widgetDefaultSelected(SelectionEvent e)
@@ -324,7 +325,7 @@ public class SelectStereotypeDialog extends CustomPopupDialog
 
             public void widgetSelected(SelectionEvent e)
             {
-                ResourceDialog dialog = new ResourceDialog(getShell(), "Select a profile", SWT.OPEN);
+                ResourceDialog dialog = new ResourceDialog(getShell(), "Select a profile", SWT.OPEN); //$NON-NLS-1$
                 if (dialog.open() == ResourceDialog.OK)
                 {
                     loadProfile(dialog.getURIText());
@@ -352,7 +353,7 @@ public class SelectStereotypeDialog extends CustomPopupDialog
         }
         else
         {
-            MessageDialog.openError(getShell(), "Problem", "The selected model is not a profile");
+            MessageDialog.openError(getShell(), "Problem", "The selected model is not a profile"); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 
@@ -458,7 +459,7 @@ public class SelectStereotypeDialog extends CustomPopupDialog
          */
         public void run()
         {
-            HelpDialog dialog = new HelpDialog(getShell(), Display.getDefault().getCursorLocation(), "Help", "Select a stereotype to applid on the generated class or requirement");
+            HelpDialog dialog = new HelpDialog(getShell(), Display.getDefault().getCursorLocation(), "Help", Messages.SelectStereotypeDialog_HelpDForStereotypeSelection); //$NON-NLS-1$
             dialog.open();
         }
     }
@@ -476,7 +477,7 @@ public class SelectStereotypeDialog extends CustomPopupDialog
          */
         public ImageDescriptor getImageDescriptor()
         {
-            return ImageDescriptor.createFromURL(Activator.getDefault().getBundle().getResource("icons/save_edit-1.gif"));
+            return ImageDescriptor.createFromURL(Activator.getDefault().getBundle().getResource("icons/save_edit-1.gif")); //$NON-NLS-1$
         }
 
         /*

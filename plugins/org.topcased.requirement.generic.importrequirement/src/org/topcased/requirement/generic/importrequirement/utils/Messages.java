@@ -50,6 +50,8 @@ public class Messages extends NLS
 
     /** The New column popup_ column. */
     public static String NewColumnPopup_COLUMN;
+    
+    public static String SelectStereotypeDialog_HelpDForStereotypeSelection;
 
     /** The Popup regex dialog_ regex. */
     public static String PopupRegexDialog_REGEX;
