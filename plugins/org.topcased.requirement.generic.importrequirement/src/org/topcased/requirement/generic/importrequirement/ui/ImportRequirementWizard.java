@@ -53,6 +53,7 @@ import org.topcased.requirement.generic.importrequirement.elements.AttributeUml;
 import org.topcased.requirement.generic.importrequirement.elements.Mapping;
 import org.topcased.requirement.generic.importrequirement.elements.RecognizedTree;
 import org.topcased.requirement.generic.importrequirement.utils.Constants;
+import org.topcased.sam.requirement.RequirementFactory;
 import org.topcased.sam.requirement.RequirementProject;
 import org.topcased.sam.requirement.core.preferences.CurrentPreferenceHelper;
 
@@ -200,6 +201,9 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
                             myMonitor.beginTask("Load attribute configuration", 1);
                             RequirementProject project = (RequirementProject) result;
                             project.setAttributeConfiguration(CurrentPreferenceHelper.getConfigurationInWorkspace());
+                            project.getChapter().add(RequirementFactory.eINSTANCE.createProblemChapter());
+                            project.getChapter().add(RequirementFactory.eINSTANCE.createTrashChapter());
+                            project.getChapter().add(RequirementFactory.eINSTANCE.createUntracedChapter());
                             try
                             {
                                 result.eResource().save(Collections.EMPTY_MAP);
