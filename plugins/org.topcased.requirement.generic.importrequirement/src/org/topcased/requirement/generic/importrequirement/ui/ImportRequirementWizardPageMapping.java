@@ -389,7 +389,7 @@ public class ImportRequirementWizardPageMapping extends WizardPage
                     }
                     else
                     {
-                        listAttributes.add(new AttributeRequirement(dialog.getAttributeName() == null ? "Text" : dialog.getAttributeName(), dialog.isReference(),dialog.getAttributeName() == null || dialog.getAttributeName().length() == 0, "Requirement"));
+                        listAttributes.add(new AttributeRequirement(dialog.getAttributeName() == null || dialog.getAttributeName().length() == 0 ? "Text" : dialog.getAttributeName(), dialog.isReference(),dialog.getAttributeName() == null || dialog.getAttributeName().length() == 0, "Requirement"));
                     }
                     listViewerAttributes.refresh();
                 }
