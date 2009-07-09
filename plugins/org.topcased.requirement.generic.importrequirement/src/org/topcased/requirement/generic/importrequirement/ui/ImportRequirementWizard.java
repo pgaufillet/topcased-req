@@ -53,6 +53,8 @@ import org.topcased.requirement.generic.importrequirement.elements.AttributeUml;
 import org.topcased.requirement.generic.importrequirement.elements.Mapping;
 import org.topcased.requirement.generic.importrequirement.elements.RecognizedTree;
 import org.topcased.requirement.generic.importrequirement.utils.Constants;
+import org.topcased.sam.requirement.RequirementProject;
+import org.topcased.sam.requirement.core.preferences.CurrentPreferenceHelper;
 
 import doc2modelMapping.doc2model;
 
@@ -171,7 +173,12 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
                                     return myMonitor.isCanceled();
                                 }
                             });
+                            // post processes
                             assignLevel(myMonitor, result);
+                            if (Constants.REQUIREMENT_EXTENSION.equals(page1.getModelType()))
+                            {
+                                assignAttributeConfiguration(myMonitor,result);
+                            }
                             myMonitor.done();
                         }
                         catch (FileNotFoundException e)
@@ -180,6 +187,36 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
                         }
                     }
 
+                    /**
+                     * Assign attribute configuration. for attribute type
+                     * 
+                     * @param myMonitor the my monitor
+                     * @param result the result
+                     */
+                    private void assignAttributeConfiguration(IProgressMonitor myMonitor, EObject result)
+                    {
+                        if (result instanceof RequirementProject)
+                        {
+                            myMonitor.beginTask("Load attribute configuration", 1);
+                            RequirementProject project = (RequirementProject) result;
+                            project.setAttributeConfiguration(CurrentPreferenceHelper.getConfigurationInWorkspace());
+                            try
+                            {
+                                result.eResource().save(Collections.EMPTY_MAP);
+                            }
+                            catch (IOException e)
+                            {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    /**
+                     * Assign level.
+                     * 
+                     * @param myMonitor the my monitor
+                     * @param result the result
+                     */
                     private void assignLevel(final IProgressMonitor myMonitor, EObject result)
                     {
                         // sysml or uml so we apply eannotations

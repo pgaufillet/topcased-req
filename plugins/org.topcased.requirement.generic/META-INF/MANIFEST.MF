@@ -2,15 +2,15 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Generic Plug-in
 Bundle-SymbolicName: org.topcased.requirement.generic;singleton:=true
-Bundle-Version: 2.0.1
+Bundle-Version: 2.0.2
 Bundle-Activator: org.topcased.requirement.generic.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.emf.ecore,
  org.eclipse.emf.ecore.edit,
  org.eclipse.emf.edit.ui,
- org.topcased.sam.requirement,
- org.topcased.sam.requirement.core,
+ org.topcased.sam.requirement;visibility:=reexport,
+ org.topcased.sam.requirement.core;visibility:=reexport,
  org.topcased.modeler
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Eclipse-LazyStart: true

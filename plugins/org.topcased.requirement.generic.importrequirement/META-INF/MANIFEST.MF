@@ -12,7 +12,8 @@ Require-Bundle: org.eclipse.ui,
  org.topcased.document.parser,
  org.topcased.doc2model.parser,
  org.eclipse.uml2.uml,
- org.topcased.sysml
+ org.topcased.sysml,
+ org.topcased.requirement.generic
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Import-Package: org.topcased.regexviewer.views
