@@ -8,9 +8,9 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *  Amine Bouchiki (ATOS ORIGIN INTEGRATION) amine.bouchikhi@atosorigin.com - Initial API and implementation
+ *  Amine Bouchikhi (ATOS ORIGIN INTEGRATION) amine.bouchikhi@atosorigin.com - Initial API and implementation
  *
-  *****************************************************************************/
+ *****************************************************************************/
 package org.topcased.requirement.generic.filter.popup.actions;
 
 import java.util.Collection;
@@ -81,7 +81,7 @@ public class RequirementsFilter implements IObjectActionDelegate
         {
             return;
         }
-        for (Iterator<?> i = currentSelection.iterator(); i.hasNext();)
+        for (Iterator< ? > i = currentSelection.iterator(); i.hasNext();)
         {
             Object tmp = i.next();
             if (tmp instanceof IFile)

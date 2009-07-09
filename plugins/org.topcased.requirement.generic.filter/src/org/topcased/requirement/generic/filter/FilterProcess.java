@@ -8,9 +8,9 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *  Amine Bouchiki (ATOS ORIGIN INTEGRATION) amine.bouchikhi@atosorigin.com - Initial API and implementation
+ *  Amine Bouchikhi (ATOS ORIGIN INTEGRATION) amine.bouchikhi@atosorigin.com - Initial API and implementation
  *
-  *****************************************************************************/
+ *****************************************************************************/
 package org.topcased.requirement.generic.filter;
 
 import java.io.IOException;
@@ -62,6 +62,8 @@ public class FilterProcess
 
     private final List<String> regexes;
 
+    private final String nameRegex;
+
     /**
      * Instantiates a new filter process.
      * 
@@ -69,10 +71,11 @@ public class FilterProcess
      * @param match all elements
      * @param path of requirements file(s) to filter
      */
-    public FilterProcess(List<String> attributes, List<String> regexes, boolean andSelected, IPath... ipathes)
+    public FilterProcess(List<String> attributes, List<String> regexes, String nameRegex, boolean andSelected, IPath... ipathes)
     {
         this.attributes = attributes;
         this.regexes = regexes;
+        this.nameRegex = nameRegex;
         pathes = ipathes;
         algoAnd = andSelected;
     }
@@ -110,6 +113,15 @@ public class FilterProcess
             {
                 log(e);
             }
+        }
+        try
+        {
+            Pattern p = Pattern.compile(nameRegex);
+            mapRegex.put(nameRegex, p);
+        }
+        catch (PatternSyntaxException e)
+        {
+            log(e);
         }
     }
 
@@ -176,6 +188,11 @@ public class FilterProcess
                 {
                     boolean isGood = algoAnd ? true : false;
                     Requirement req = (Requirement) next;
+                    boolean validName = true;
+                    if (nameRegex != null && nameRegex != "")
+                    {
+                        validName = mapRegex.get(nameRegex).matcher(req.getIdent()).matches();
+                    }
                     for (Attribute a : req.getAttributes())
                     {
                         for (int index = 0; index < regexes.size(); index++)
@@ -194,6 +211,14 @@ public class FilterProcess
                                 }
                             }
                         }
+                    }
+                    if (algoAnd)
+                    {
+                        isGood = isGood && validName;
+                    }
+                    else
+                    {
+                        isGood = isGood || validName;
                     }
                     if (!isGood)
                     {

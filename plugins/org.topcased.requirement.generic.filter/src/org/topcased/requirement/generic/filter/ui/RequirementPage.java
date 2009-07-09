@@ -8,19 +8,11 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *  Amine Bouchiki (ATOS ORIGIN INTEGRATION) amine.bouchikhi@atosorigin.com - Initial API and implementation
+ *  Amine Bouchikhi (ATOS ORIGIN INTEGRATION) amine.bouchikhi@atosorigin.com - Initial API and implementation
  *
-  *****************************************************************************/
+ *****************************************************************************/
 package org.topcased.requirement.generic.filter.ui;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -39,10 +31,13 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Text;
 import org.topcased.requirement.generic.filter.Activator;
+import org.topcased.requirement.generic.importrequirement.utils.Serializer;
 
 /**
  * The Class RequirementPage.
@@ -55,11 +50,10 @@ public class RequirementPage extends WizardPage
 
     private static final String PREFERENCE_FILTER_REGEX = "preferenceFilterRequirement_regex";
 
+    private static final String PREFERENCE_NAME_REGEX = "preferenceNameRequirement_regex";
+
     /** The top composite element. */
     private Composite top;
-
-    /** The current row. */
-    private TableItem currentRow = null;
 
     /** The OR button. */
     private Button OR;
@@ -70,6 +64,10 @@ public class RequirementPage extends WizardPage
     /** The table of regular expressions. */
     private Table table;
 
+    private Composite nameComp;
+
+    private Text tName;
+
     /**
      * Instantiates a new requirement page.
      * 
@@ -78,7 +76,7 @@ public class RequirementPage extends WizardPage
     public RequirementPage(String pageName)
     {
         super(pageName);
-        setMessage("Filter requirements with regular expressions.\nPlease enter the attribute name to filter and add the regular expression to match it.");
+        setMessage("Filter requirements with regular expressions." + "\nPlease enter the attribute name to filter and add the regular expression to match it.");
         setDescription("Filter requirements with regular expressions.");
         setTitle("Requirement Filtering");
     }
@@ -95,6 +93,49 @@ public class RequirementPage extends WizardPage
         // create elements
 
         top.setLayout(new GridLayout(2, false));
+
+        nameComp = new Composite(top, SWT.NONE);
+        nameComp.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 2, 1));
+        nameComp.setLayout(new GridLayout(4, false));
+
+        Label lName = new Label(nameComp, SWT.NONE);
+        lName.setText("Filter on requirement name :");
+        lName.setLayoutData(new GridData(SWT.NONE, SWT.NONE, false, false, 1, 1));
+        tName = new Text(nameComp, SWT.BORDER);
+        tName.setEditable(false);
+        tName.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+        Button bAddName = new Button(nameComp, SWT.NONE);
+        bAddName.setText("add");
+        bAddName.setLayoutData(new GridData(SWT.NONE, SWT.NONE, false, false, 1, 1));
+        bAddName.addSelectionListener(new SelectionAdapter()
+        {
+            public void widgetSelected(SelectionEvent e)
+            {
+
+                NameRegexDialog regexDial = new NameRegexDialog(top.getShell());
+                if (regexDial.open() == Dialog.OK)
+                {
+                    tName.setText(regexDial.getUserRegex());
+                }
+                getWizard().getContainer().updateButtons();
+                getWizard().getContainer().updateMessage();
+            }
+        });
+        ;
+
+        Button bDelName = new Button(nameComp, SWT.NONE);
+        bDelName.setText("del");
+        bDelName.setLayoutData(new GridData(SWT.NONE, SWT.NONE, false, false, 1, 1));
+        bDelName.addSelectionListener(new SelectionAdapter()
+        {
+            public void widgetSelected(SelectionEvent e)
+            {
+                tName.setText("");
+                getWizard().getContainer().updateButtons();
+                getWizard().getContainer().updateMessage();
+            }
+        });
+        ;
         table = new Table(top, SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION);
         table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
         table.setLinesVisible(true);
@@ -134,7 +175,7 @@ public class RequirementPage extends WizardPage
                     // smaller first and then resize the table to
                     // match the client area width
                     table.getColumn(0).setWidth(width / 3);
-                    table.getColumn(1).setWidth(width - table.getColumn(0).getWidth());
+                    table.getColumn(1).setWidth(table.getColumn(0).getWidth());
                     table.setSize(area.width, area.height);
                 }
                 else
@@ -144,7 +185,7 @@ public class RequirementPage extends WizardPage
                     // to match the client area width
                     table.setSize(area.width, area.height);
                     table.getColumn(0).setWidth(width / 3);
-                    table.getColumn(1).setWidth(width - table.getColumn(0).getWidth());
+                    table.getColumn(1).setWidth(table.getColumn(0).getWidth());
                 }
             }
         });
@@ -172,7 +213,6 @@ public class RequirementPage extends WizardPage
                 TableItem item = (TableItem) event.item;
                 if (item == null)
                     return;
-                currentRow = item;
 
             }
         });
@@ -191,7 +231,6 @@ public class RequirementPage extends WizardPage
                     TableItem newRow = new TableItem(table, SWT.NONE);
                     newRow.setText(1, regexDial.getUserRegex());
                     newRow.setText(0, regexDial.getUserAttrName());
-                    currentRow = newRow;
                     table.setSelection(newRow);
                 }
                 getWizard().getContainer().updateButtons();
@@ -207,7 +246,6 @@ public class RequirementPage extends WizardPage
         {
             public void widgetSelected(SelectionEvent e)
             {
-                currentRow = null;
                 table.remove(table.getSelectionIndices());
                 getWizard().getContainer().updateButtons();
                 getWizard().getContainer().updateMessage();
@@ -222,10 +260,10 @@ public class RequirementPage extends WizardPage
         AND = new Button(compoORAND, SWT.RADIO);
         AND.setText("All regular expressions must be matched");
         initFromPreference(table);
-        // int count = 10;
-        // for (int i = 0; i < count; i++) {
-        // TableItem item = new TableItem(table, SWT.NONE);
-        // }
+
+        Label warning = new Label(top, SWT.NONE);
+        warning.setText("\nWarning : At the end of filter process, your file shall be overridded.");
+        warning.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, false, 2, 1));
         top.pack();
         getWizard().getContainer().updateButtons();
         getWizard().getContainer().updateMessage();
@@ -240,8 +278,13 @@ public class RequirementPage extends WizardPage
      */
     private void initFromPreference(Table table)
     {
-        List<String> attributes = getFromPreference(PREFERENCE_FILTER_ATTRIBUTES);
-        List<String> regexes = getFromPreference(PREFERENCE_FILTER_REGEX);
+        List<String> attributes = (List<String>) getFromPreference(PREFERENCE_FILTER_ATTRIBUTES);
+        List<String> regexes = (List<String>) getFromPreference(PREFERENCE_FILTER_REGEX);
+        Object nameFromPreference = getFromPreference(PREFERENCE_NAME_REGEX);
+        if (nameFromPreference != null)
+        {
+            tName.setText((String) nameFromPreference);
+        }
         if (attributes != null && regexes != null)
         {
             for (int i = 0; i < attributes.size(); i++)
@@ -255,37 +298,13 @@ public class RequirementPage extends WizardPage
 
     }
 
-    List<String> getFromPreference(String pref)
+    @SuppressWarnings("unchecked")
+    Object getFromPreference(String pref)
     {
         String s = Activator.getDefault().getPreferenceStore().getString(pref);
-        List<String> paramDecoded = null;
-        if (s != null && s.length() > 0)
-        {
-            String myParam = "";
-            try
-            {
-                myParam = URLDecoder.decode(s, "UTF-8");
-            }
-            catch (UnsupportedEncodingException e1)
-            {
-                e1.printStackTrace();
-            }
-            ByteArrayInputStream bis = new ByteArrayInputStream(myParam.getBytes());
-            try
-            {
-                ObjectInputStream obj_in = new ObjectInputStream(bis);
-                paramDecoded = (List<String>) obj_in.readObject();
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-            catch (ClassNotFoundException e)
-            {
-                e.printStackTrace();
-            }
-        }
-        return paramDecoded;
+        Serializer<Object> ser = new Serializer<Object>();
+        Object value = ser.unSerialize(s);
+        return value;
     }
 
     /**
@@ -293,49 +312,12 @@ public class RequirementPage extends WizardPage
      * 
      * @param map the map
      */
-    public void savePreferences(List<String> attributes, List<String> regexes)
+    public void savePreferences(List<String> attributes, List<String> regexes, String nameRegex)
     {
-        ByteArrayOutputStream writer = new ByteArrayOutputStream();
-        ObjectOutputStream objstream;
-        try
-        {
-            objstream = new ObjectOutputStream(writer);
-            try
-            {
-                // attributes
-                objstream.writeObject(attributes);
-                String encoded = writer.toString();
-                encoded = URLEncoder.encode(encoded, "UTF-8");
-                Activator.getDefault().getPreferenceStore().putValue(PREFERENCE_FILTER_ATTRIBUTES, encoded);
-                // regexes
-                writer = new ByteArrayOutputStream();
-                objstream = new ObjectOutputStream(writer);
-                objstream.writeObject(regexes);
-                String encoded2 = writer.toString();
-                encoded2 = URLEncoder.encode(encoded2, "UTF-8");
-                Activator.getDefault().getPreferenceStore().putValue(PREFERENCE_FILTER_REGEX, encoded2);
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-            finally
-            {
-                try
-                {
-                    objstream.close();
-                }
-                catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        }
-        catch (IOException e1)
-        {
-            e1.printStackTrace();
-        }
-
+        Serializer<Object> ser = new Serializer<Object>();
+        Activator.getDefault().getPreferenceStore().putValue(PREFERENCE_FILTER_ATTRIBUTES, ser.serialize(attributes));
+        Activator.getDefault().getPreferenceStore().putValue(PREFERENCE_FILTER_REGEX, ser.serialize(regexes));
+        Activator.getDefault().getPreferenceStore().putValue(PREFERENCE_NAME_REGEX, ser.serialize(nameRegex));
     }
 
     /*
@@ -356,7 +338,7 @@ public class RequirementPage extends WizardPage
                 numberOfReal++;
             }
         }
-        return result && numberOfReal > 0;
+        return (result && numberOfReal > 0) || (tName.getText() != "");
     }
 
     /**
@@ -367,6 +349,11 @@ public class RequirementPage extends WizardPage
     public boolean isANDSelected()
     {
         return AND.getSelection();
+    }
+
+    public String getNameRegex()
+    {
+        return tName.getText();
     }
 
     public List<String> getRegexes()

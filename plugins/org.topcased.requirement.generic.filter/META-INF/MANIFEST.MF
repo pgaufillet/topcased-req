@@ -12,7 +12,8 @@ Require-Bundle: org.eclipse.ui,
  org.topcased.regexviewer,
  org.eclipse.emf.edit,
  org.eclipse.ui.forms,
- org.topcased.facilities
+ org.topcased.facilities,
+ org.topcased.requirement.generic.importrequirement
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.topcased.requirement.generic.filter,

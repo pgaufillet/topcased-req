@@ -8,9 +8,9 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *  Amine Bouchiki (ATOS ORIGIN INTEGRATION) amine.bouchikhi@atosorigin.com - Initial API and implementation
+ *  Amine Bouchikhi (ATOS ORIGIN INTEGRATION) amine.bouchikhi@atosorigin.com - Initial API and implementation
  *
-  *****************************************************************************/
+ *****************************************************************************/
 package org.topcased.requirement.generic.filter.ui;
 
 import java.lang.reflect.InvocationTargetException;
@@ -86,10 +86,11 @@ public class RequirementFilterWizard extends Wizard
                 {
                     List<String> attributes = page.getAttributes();
                     List<String> regexes = page.getRegexes();
+                    String nameRegex = page.getNameRegex();
                     boolean andSelected = page.isANDSelected();
-                    FilterProcess process = new FilterProcess(attributes, regexes, andSelected, ipathes);
+                    FilterProcess process = new FilterProcess(attributes, regexes, nameRegex, andSelected, ipathes);
                     process.execute(monitor);
-                    page.savePreferences(attributes, regexes);
+                    page.savePreferences(attributes, regexes, nameRegex);
                 }
             });
         }
