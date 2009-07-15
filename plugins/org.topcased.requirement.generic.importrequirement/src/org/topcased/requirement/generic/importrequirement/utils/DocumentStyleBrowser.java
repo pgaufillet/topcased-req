@@ -23,6 +23,7 @@ import java.util.TreeSet;
 import org.topcased.document.parser.Activator;
 import org.topcased.document.parser.documents.Document;
 import org.topcased.document.parser.documents.DocumentFactory;
+import org.topcased.document.parser.documents.Document.PROPERTY;
 
 /**
  * The Class DocumentStyleBrowser.
@@ -88,7 +89,7 @@ public class DocumentStyleBrowser
         boolean ok = doc.next();
         while (ok)
         {
-            String style = doc.getStyle();
+            String style = (String) doc.get(PROPERTY.style);
             if (style != null && style.length() > 0)
             {
                 result.add(style);
