@@ -78,6 +78,7 @@ public class CustomSearchComposite extends Composite
                 }
                 else
                 {
+                    viewer.setSelection(null);
                     setFilter(viewer, CurrentSearchFilter.getInstance());
                     filter.setSearched(text);
                 }
