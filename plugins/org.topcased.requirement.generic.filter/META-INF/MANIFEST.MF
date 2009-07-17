@@ -19,3 +19,4 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.topcased.requirement.generic.filter,
  org.topcased.requirement.generic.filter.ui
 Import-Package: org.eclipse.gef.commands
+Bundle-Vendor: Topcased
