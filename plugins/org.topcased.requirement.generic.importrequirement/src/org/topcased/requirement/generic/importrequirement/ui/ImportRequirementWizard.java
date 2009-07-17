@@ -13,6 +13,7 @@
  *****************************************************************************/
 package org.topcased.requirement.generic.importrequirement.ui;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -87,7 +88,9 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
 
     /** The page3. */
     private ImportRequirementWizardPageMapping page3;
-
+    
+    /** The file   */
+    private File currentFileSystem;
     /*
      * (non-Javadoc)
      * 
@@ -142,12 +145,13 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
             {
                 getContainer().run(false, true, new IRunnableWithProgress()
                 {
+
                     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException
                     {
                         try
                         {
                             final IProgressMonitor myMonitor = monitor;
-                            Doc2ModelParser parser = new Doc2ModelParser(currentFile.getLocation().toString(), model, page1.getOutputModel(), null, false);
+                            Doc2ModelParser parser = new Doc2ModelParser(currentFileSystem.getAbsolutePath(), model, page1.getOutputModel(), null, false);
                             EObject result = parser.parse(new ProgressionObserver()
                             {
                                 public void worked(int i)
@@ -358,18 +362,20 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
             {
                 if (inputDocument.contains("file:"))
                 {
-                    currentFile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(URI.createURI(page1.getInputDocument()).toFileString()));
+                    currentFileSystem = new File(URI.createURI(inputDocument).toFileString());
                 }
                 else if (inputDocument.contains("platform:"))
                 {
                     currentFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(URI.createURI(page1.getInputDocument()).toPlatformString(true)));
+                    currentFileSystem = currentFile.getLocation().toFile();
                 }
                 else
                 {
                     currentFile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(URI.createURI(page1.getInputDocument()).toFileString()));
+                    currentFileSystem = currentFile.getLocation().toFile();
                 }
             }
-            page2.setDocumentFile(currentFile.getLocation().toFile());
+            page2.setDocumentFile(currentFileSystem);
         }
         else if (newPage instanceof ImportRequirementWizardPageMapping)
         {
