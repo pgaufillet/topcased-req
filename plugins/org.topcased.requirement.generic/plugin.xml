@@ -12,7 +12,6 @@
                icon="icons/CurrentRequirement.gif"
                id="org.topcased.requirement.generic.actions.SyncRequirement"
                label="&amp;Define Requirements"
-               menubarPath="sampleMenu/sampleGroup"
                toolbarPath="sampleGroup"
                tooltip="define requirements">
          </action>
