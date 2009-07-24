@@ -73,7 +73,7 @@ public class AttributeRequirement extends Attribute
             // create the reference injection
             ReferenceInjection a = Doc2modelMappingFactory.eINSTANCE.createReferenceInjection();
             a.setAttributeToFind("ident");
-            a.setClassReferenced("Requirement");
+            a.setClassReferenced("Element");
             a.setIsStereotypeReference(false);
             a.setDependsWith(c);
             a.setReferenceAttribute("to");
