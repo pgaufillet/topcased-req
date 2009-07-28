@@ -117,15 +117,19 @@ public class Injector
     {
         if (eobject != null)
         {
+            URI uriOriginal = eobject.eResource().getURI();
             for (TreeIterator<EObject> i = eobject.eAllContents(); i.hasNext();)
             {
                 EObject tmp = i.next();
-                if (tmp instanceof Property)
+                if (tmp.eResource() != null && tmp.eResource().getURI().equals(uriOriginal))
                 {
-                    Property element = (Property) tmp;
-                    if ("requirements".equals(element.getKey()))
+                    if (tmp instanceof Property)
                     {
-                        return element;
+                        Property element = (Property) tmp;
+                        if ("requirements".equals(element.getKey()))
+                        {
+                            return element;
+                        }
                     }
                 }
             }
