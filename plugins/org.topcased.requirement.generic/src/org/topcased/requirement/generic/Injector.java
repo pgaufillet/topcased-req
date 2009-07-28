@@ -223,6 +223,14 @@ public class Injector
      */
     private void createActions(CurrentPage page)
     {
+        manageToolbar(page);
+    }
+    
+    
+
+
+    private void manageToolbar(CurrentPage page)
+    {
         IToolBarManager manager = page.getSite().getActionBars().getToolBarManager();
         manager.add(new NewLinkToAction(page));
         manager.update(true);

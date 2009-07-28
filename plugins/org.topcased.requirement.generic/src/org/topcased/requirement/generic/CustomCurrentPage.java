@@ -14,12 +14,22 @@
 package org.topcased.requirement.generic;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.jface.action.ActionContributionItem;
+import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.PlatformUI;
 import org.topcased.modeler.di.model.Property;
 import org.topcased.modeler.editor.Modeler;
 import org.topcased.requirement.generic.actions.CurrentSearchFilter;
+import org.topcased.requirement.generic.actions.CustomCreateRequirementAction;
+import org.topcased.sam.requirement.core.actions.CreateCurrentRequirementAction;
 import org.topcased.sam.requirement.core.views.SearchComposite;
 import org.topcased.sam.requirement.core.views.current.CurrentPage;
 
@@ -51,8 +61,54 @@ public class CustomCurrentPage extends CurrentPage
             }
         }
         injectSearch();
+        manageMenu();
     }
 
+
+    /**
+     * Cutomize the menu
+     * @param page
+     */
+    private void manageMenu()
+    {
+        Object object = Utils.get(this, "createChildMenuManager");
+        if (!(object instanceof MenuManager))
+        {
+            return ;
+        }
+        MenuManager manager = (MenuManager) object;
+        manager.addMenuListener(new IMenuListener()
+        {
+            public void menuAboutToShow(IMenuManager manager)
+            {
+                IContributionItem[] items = manager.getItems();
+                int index = -1;
+                for (int i = 0 ; i < items.length ; i++)
+                {
+                    if (items[i] instanceof ActionContributionItem && ((ActionContributionItem)items[i]).getAction() instanceof CreateCurrentRequirementAction)
+                    {
+                        index = i ;
+                        break ;
+                    }
+                }
+                if (index != -1)
+                {
+                    CreateCurrentRequirementAction action = (CreateCurrentRequirementAction) ((ActionContributionItem) items[index]).getAction();
+                    ISelection selection = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getSelectionService().getSelection();
+                    if (selection instanceof IStructuredSelection)
+                    {
+                        IStructuredSelection select = (IStructuredSelection) selection;
+                        manager.remove(items[index]);
+                        manager.add(new ActionContributionItem(new CustomCreateRequirementAction(select.getFirstElement())));
+//                        items[index] = ;
+                    }
+                }
+            }
+        });
+        
+        
+    }
+    
     private void injectSearch()
     {
         Composite mainCompo = mainComposite;

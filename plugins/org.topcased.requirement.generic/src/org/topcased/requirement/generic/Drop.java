@@ -86,11 +86,11 @@ import org.topcased.ttm.Section;
  */
 public class Drop extends AbstractTransferDropTargetListener
 {
-    RequirementFactory factory = RequirementFactory.eINSTANCE;
+    static RequirementFactory factory = RequirementFactory.eINSTANCE;
 
     private EditPart currentPart;
 
-    private Requirement source;
+    private static Requirement source;
 
     public Drop(EditPartViewer viewer)
     {
@@ -150,7 +150,7 @@ public class Drop extends AbstractTransferDropTargetListener
      * @param obj
      * @return
      */
-    private HierarchicalElement constructTree(CompoundCommand command, HierarchicalElement stop, EObject eobject, RequirementProject obj)
+    private static HierarchicalElement constructTree(CompoundCommand command, HierarchicalElement stop, EObject eobject, RequirementProject obj)
     {
         EObject parent = eobject;
         HierarchicalElement aNew = null;
@@ -194,7 +194,7 @@ public class Drop extends AbstractTransferDropTargetListener
      * @param eobject the eobject
      * @param obj the obj
      */
-    private void addNewRequirement(EObject eobject, RequirementProject obj)
+    public static void addNewRequirement(EObject eobject, RequirementProject obj)
     {
         // get an existing element
         if (obj == null)
@@ -217,21 +217,26 @@ public class Drop extends AbstractTransferDropTargetListener
         }
         if (hier != null)
         {
-            if (hier.getSamElement() != eobject)
-            {
-                HierarchicalElement subhier = factory.createHierarchicalElement();
-                hier.getChildren().add(subhier);
-                subhier.setSamElement(eobject);
-            }
-            CurrentRequirement req = createRequirement();
-            command.append(AddCommand.create(AdapterFactoryEditingDomain.getEditingDomainFor(obj), hier, RequirementPackage.Literals.HIERARCHICAL_ELEMENT__REQUIREMENT, req));
-            // hier.getRequirement().add(req);
-            // RequirementUtils.saveResource(obj.eResource());
-            AdapterFactoryEditingDomain.getEditingDomainFor(obj).getCommandStack().execute(command);
-            // we call set ident after execution to have the requirement store in the resource
-            setIdent(source, req, hier, eobject);
+            addNewRequirement(eobject, obj, command, hier);
 
         }
+    }
+
+    public static void addNewRequirement(EObject eobject, RequirementProject obj, CompoundCommand command, HierarchicalElement hier)
+    {
+        if (hier.getSamElement() != eobject)
+        {
+            HierarchicalElement subhier = factory.createHierarchicalElement();
+            hier.getChildren().add(subhier);
+            subhier.setSamElement(eobject);
+        }
+        CurrentRequirement req = createRequirement();
+        command.append(AddCommand.create(AdapterFactoryEditingDomain.getEditingDomainFor(obj), hier, RequirementPackage.Literals.HIERARCHICAL_ELEMENT__REQUIREMENT, req));
+        // hier.getRequirement().add(req);
+        // RequirementUtils.saveResource(obj.eResource());
+        AdapterFactoryEditingDomain.getEditingDomainFor(obj).getCommandStack().execute(command);
+        // we call set ident after execution to have the requirement store in the resource
+        setIdent(source, req, hier, eobject);
     }
 
     /**
@@ -242,7 +247,7 @@ public class Drop extends AbstractTransferDropTargetListener
      * @param hier the hier
      * @param target the target
      */
-    private void setIdent(Requirement source2, CurrentRequirement req, HierarchicalElement hier, EObject target)
+    public static void setIdent(Requirement source2, CurrentRequirement req, HierarchicalElement hier, EObject target)
     {
         EditingDomain editingDomainFor = AdapterFactoryEditingDomain.getEditingDomainFor(source2);
         Resource resource = RequirementUtils.getRequirementModel(editingDomainFor);
@@ -275,7 +280,7 @@ public class Drop extends AbstractTransferDropTargetListener
      * 
      * @return the string
      */
-    private String callIdentString(EditingDomain editingDomainFor, HierarchicalElement hier, String identifier)
+    private static String callIdentString(EditingDomain editingDomainFor, HierarchicalElement hier, String identifier)
     {
         String result = "";
         try
@@ -322,7 +327,7 @@ public class Drop extends AbstractTransferDropTargetListener
      * 
      * We inject the format to instance
      */
-    private void setFormatToInstance()
+    private static void setFormatToInstance()
     {
         try
         {
@@ -365,7 +370,7 @@ public class Drop extends AbstractTransferDropTargetListener
      * 
      * @return the string
      */
-    private String processCount(EditingDomain editingDomainFor, HierarchicalElement hier, String format)
+    private static String processCount(EditingDomain editingDomainFor, HierarchicalElement hier, String format)
     {
         String result = "";
         if (format.contains("{number}"))
@@ -375,12 +380,12 @@ public class Drop extends AbstractTransferDropTargetListener
         return result;
     }
 
-    private String getFormat()
+    private static String getFormat()
     {
         return getPreferenceStore().getString(NamingRequirementPreferenceHelper.NAMING_FORMAT_REQUIREMENT_STORE);
     }
 
-    private IPreferenceStore getPreferenceStore()
+    private static IPreferenceStore getPreferenceStore()
     {
         IPreferenceStore result = null;
         try
@@ -420,7 +425,7 @@ public class Drop extends AbstractTransferDropTargetListener
      * 
      * @return the max plus one
      */
-    private String getMaxPlusOne(EditingDomain editingDomainFor, HierarchicalElement hier)
+    private static String getMaxPlusOne(EditingDomain editingDomainFor, HierarchicalElement hier)
     {
         String result = "";
         int max = 0;
@@ -445,7 +450,7 @@ public class Drop extends AbstractTransferDropTargetListener
         return result;
     }
 
-    private int getNumberOfCurrent(CurrentRequirement current)
+    private static int getNumberOfCurrent(CurrentRequirement current)
     {
         int value = -1;
         String format = getFormat();
@@ -464,7 +469,7 @@ public class Drop extends AbstractTransferDropTargetListener
         return value;
     }
 
-    private String applyAttributes(String identBeforeAttributesProcess, EObject target)
+    private static String applyAttributes(String identBeforeAttributesProcess, EObject target)
     {
 
         String result = identBeforeAttributesProcess;
@@ -489,7 +494,7 @@ public class Drop extends AbstractTransferDropTargetListener
      * 
      * @return the label
      */
-    public String getLabel(EObject o, ReflectiveItemProvider provider)
+    public static String getLabel(EObject o, ReflectiveItemProvider provider)
     {
         EClass eClass = o.eClass();
         EAttribute result = null;
@@ -536,7 +541,7 @@ public class Drop extends AbstractTransferDropTargetListener
      * 
      * @return the hierarchical element
      */
-    private HierarchicalElement getHierarchicalElement(EObject eobject, EList<HierarchicalElement> hierarchicalElement)
+    private static HierarchicalElement getHierarchicalElement(EObject eobject, EList<HierarchicalElement> hierarchicalElement)
     {
         HierarchicalElement result = null;
         for (HierarchicalElement e : hierarchicalElement)
@@ -587,7 +592,7 @@ public class Drop extends AbstractTransferDropTargetListener
      * 
      * @return the current requirement
      */
-    private CurrentRequirement createRequirement()
+    private static CurrentRequirement createRequirement()
     {
         CurrentRequirement req = factory.createCurrentRequirement();
         req.setIdentifier(source.getIdent());
@@ -645,7 +650,7 @@ public class Drop extends AbstractTransferDropTargetListener
      * @param name The attribute name
      * @return the attribute object created
      */
-    private ObjectAttribute createAttributeReference(String name)
+    private static ObjectAttribute createAttributeReference(String name)
     {
         ObjectAttribute att = RequirementFactory.eINSTANCE.createObjectAttribute();
         att.setName(name);
@@ -658,7 +663,7 @@ public class Drop extends AbstractTransferDropTargetListener
      * @param name The attribute name
      * @return the attribute allocate created
      */
-    private AttributeAllocate createAttributeAllocate(String name)
+    private static AttributeAllocate createAttributeAllocate(String name)
     {
         AttributeAllocate att = RequirementFactory.eINSTANCE.createAttributeAllocate();
         att.setName(name);
@@ -673,7 +678,7 @@ public class Drop extends AbstractTransferDropTargetListener
      * @param reqSource : the source requirement
      * @return the attribute text created
      */
-    private TextAttribute createAttributeText(ConfiguratedAttribute attribute, Requirement reqSource)
+    private static TextAttribute createAttributeText(ConfiguratedAttribute attribute, Requirement reqSource)
     {
         TextAttribute newAtt = RequirementFactory.eINSTANCE.createTextAttribute();
         newAtt.setName(attribute.getName());
@@ -697,7 +702,7 @@ public class Drop extends AbstractTransferDropTargetListener
      * @param upstream The upstream requirement
      * @return The value of the attribute
      */
-    private String isExist(String attribute, Requirement upstream)
+    private static String isExist(String attribute, Requirement upstream)
     {
         String result = null;
         if (upstream != null)
@@ -719,7 +724,7 @@ public class Drop extends AbstractTransferDropTargetListener
      * @param reqSource The upstream requirement
      * @return collection of link attribute
      */
-    public Collection<AttributeLink> createAttributeLink(Requirement reqSource)
+    public static Collection<AttributeLink> createAttributeLink(Requirement reqSource)
     {
         Collection<AttributeLink> result = new ArrayList<AttributeLink>();
         AttributeConfiguration configuration = RequirementUtils.getAttributeConfiguration(AdapterFactoryEditingDomain.getEditingDomainFor(reqSource));
@@ -740,7 +745,7 @@ public class Drop extends AbstractTransferDropTargetListener
      * @param reqSource The source requirement
      * @return the attribute link created
      */
-    private AttributeLink createAttributeLink(String name, Requirement reqSource)
+    private static AttributeLink createAttributeLink(String name, Requirement reqSource)
     {
         AttributeLink att = RequirementFactory.eINSTANCE.createAttributeLink();
         att.setName(name);
@@ -749,7 +754,7 @@ public class Drop extends AbstractTransferDropTargetListener
         return att;
     }
 
-    private Attribute createAttribute(EClass toCreate, String name, EObject value)
+    private static Attribute createAttribute(EClass toCreate, String name, EObject value)
     {
         Attribute attr = (Attribute) factory.create(toCreate);
         attr.setName(name);
@@ -762,7 +767,7 @@ public class Drop extends AbstractTransferDropTargetListener
         return attr;
     }
 
-    private Attribute createAttribute(EClass toCreate, String name, String value)
+    private static Attribute createAttribute(EClass toCreate, String name, String value)
     {
         Attribute attr = (Attribute) factory.create(toCreate);
         attr.setName(name);
