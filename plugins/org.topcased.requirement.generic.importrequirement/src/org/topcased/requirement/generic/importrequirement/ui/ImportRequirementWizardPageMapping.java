@@ -169,7 +169,7 @@ public class ImportRequirementWizardPageMapping extends WizardPage
         toolkit = new FormToolkit(composite.getDisplay());
         form = toolkit.createForm(composite);
         // create the base form
-        form.setText("Maping");
+        form.setText("Mapping");
         toolkit.decorateFormHeading(form);
         GridLayout layout = new GridLayout(1, false);
         layout.marginHeight = 5;
