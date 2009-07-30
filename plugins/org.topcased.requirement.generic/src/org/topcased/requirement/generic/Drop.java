@@ -48,6 +48,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.ui.PlatformUI;
@@ -92,6 +93,8 @@ public class Drop extends AbstractTransferDropTargetListener
 
     private static Requirement source;
 
+    private static TypeCacheAdapter typeCacheAdapter;
+
     public Drop(EditPartViewer viewer)
     {
         super(viewer, GenericTransfer.getInstance());
@@ -134,7 +137,7 @@ public class Drop extends AbstractTransferDropTargetListener
                     if (((UpstreamRequirementView) UpstreamRequirementView.getInstance()).getCurrentPage() instanceof UpstreamPage)
                     {
                         UpstreamPage page2 = (UpstreamPage) ((UpstreamRequirementView) UpstreamRequirementView.getInstance()).getCurrentPage();
-                        page2.getViewer().refresh();
+                        ((TreeViewer)page2.getViewer()).refresh(source);
 
                     }
                 }
@@ -430,9 +433,9 @@ public class Drop extends AbstractTransferDropTargetListener
         String result = "";
         int max = 0;
         Resource r = hier.eResource();
-        for (Iterator<EObject> i = r.getAllContents(); i.hasNext();)
+        Collection<EObject> currents = getElements(RequirementPackage.Literals.CURRENT_REQUIREMENT,r);
+        for (EObject e : currents)
         {
-            EObject e = i.next();
             if (e instanceof CurrentRequirement)
             {
                 CurrentRequirement current = (CurrentRequirement) e;
@@ -450,6 +453,20 @@ public class Drop extends AbstractTransferDropTargetListener
         return result;
     }
 
+    public static Collection<EObject> getElements(EClass c, Resource r)
+    {
+        if (typeCacheAdapter == null || !r.getResourceSet().eAdapters().contains(typeCacheAdapter))
+        {
+            if (typeCacheAdapter == null)
+            {
+                typeCacheAdapter = new TypeCacheAdapter();
+            }
+            r.getResourceSet().eAdapters().add(typeCacheAdapter);
+        }
+        return typeCacheAdapter.getReachableObjectsOfType(RequirementPackage.Literals.CURRENT_REQUIREMENT, r.getResourceSet()) ;
+//        return typeCacheAdapter.getReachableObjectsOfType(object, type) ;
+    }
+    
     private static int getNumberOfCurrent(CurrentRequirement current)
     {
         int value = -1;
