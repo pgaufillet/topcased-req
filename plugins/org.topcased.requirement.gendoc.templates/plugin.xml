@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.topcased.gendoc.model2docbook.docGenerators">
+      <docGenerator
+        generatorFile="src/org/topcased/requirement/gendoc/templates/acceleotemplates/diagrams_documentation_requirements.mt"
+        id="org.topcased.model2doc.templates.acceleo.diagrams_documentation_requirements"
+        images="true"
+        metaModel="http://www.eclipse.org/uml2/3.0.0/UML"
+        modelExtension="uml"
+        name="diagrams_documentation_requirements"
+        technologyType="Acceleo">
+      </docGenerator>
+   </extension>
+
+</plugin>
