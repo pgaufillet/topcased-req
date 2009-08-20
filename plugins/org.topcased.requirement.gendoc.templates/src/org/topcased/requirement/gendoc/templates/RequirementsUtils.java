@@ -14,13 +14,16 @@
 package org.topcased.requirement.gendoc.templates;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.topcased.model2doc.templates.acceleo.UMLUtils;
 import org.topcased.requirement.generic.Injector;
@@ -62,7 +65,7 @@ public class RequirementsUtils
                 set.getResources().add(project.eResource());
                 EcoreUtil.resolveAll(set);            
                 
-                List<EObject> elementsForADiagram = new UMLUtils().getElementsForADiagram(currentEObject);
+                List<EObject> elementsForADiagram = new UMLUtils().getModelElementsForADiagram(currentEObject);
                 for (EObject eobject: elementsForADiagram)
                 {
                     currentRequirements.addAll(getCurrentRequirementForEObject(eobject, set));
@@ -82,7 +85,7 @@ public class RequirementsUtils
     private List<CurrentRequirement> getCurrentRequirementForEObject(EObject eobject, ResourceSet set)
     {
         List<CurrentRequirement> requirements = new ArrayList<CurrentRequirement>();
-        for (Setting setting: UMLUtils.getUsages(eobject, set))
+        for (Setting setting: getUsages(eobject, set))
         {
             if (setting.getEObject() instanceof HierarchicalElement)
             {
@@ -159,6 +162,28 @@ public class RequirementsUtils
     public String getFormattedName(EObject eObject, String name)
     {
         return name.replaceFirst("#", "").replaceAll("_", " ");
+    }
+    
+    /**
+     * To reach related elements for a specified source element in a resource set
+     * 
+     * @param source the element for which we search references
+     * @param set the specified resourceSet
+     * @return collection of references
+     */
+    public static Collection<EStructuralFeature.Setting> getUsages(EObject source,ResourceSet set)
+    {
+        Collection<EStructuralFeature.Setting> collection = null;
+        ECrossReferenceAdapter crossReferenceAdapter = ECrossReferenceAdapter.getCrossReferenceAdapter(source);
+        if (crossReferenceAdapter != null)
+        {
+            collection = crossReferenceAdapter.getNonNavigableInverseReferences(source);
+        }
+        else
+        {
+            collection = EcoreUtil.UsageCrossReferencer.find(source, set);
+        }
+        return collection;
     }
 
 }

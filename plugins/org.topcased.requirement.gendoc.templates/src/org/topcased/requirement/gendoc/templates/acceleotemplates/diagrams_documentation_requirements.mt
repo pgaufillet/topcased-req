@@ -16,23 +16,23 @@ metamodel http://www.eclipse.org/uml2/3.0.0/UML
 import org.topcased.model2doc.templates.acceleo.UMLUtils
 import org.topcased.requirement.gendoc.templates.RequirementsUtils
 import templates.display_diagram
-import templates.display_diagram_documentation
+import templates.documentation_of_diagram
 import org.topcased.requirement.gendoc.templates.acceleotemplates.display_requirements
 %>
 
 <%-- A template to get the diagrams, documentation and requirement associated with the given root_container --%>
 <%script type="uml.Element" name="diagrams_documentation_requirements" file="<%getOutputFile(getRootContainer(getProperty("root_container")), getProperty("resultFileName"))%>"%>
 <book>
-	<%docbookImage%>
-	<%docbookDiagramDocumentation%>
-	<%docbookRequirement%>
+	<chapter>
+		<%displayImage%>
+		<%docbookDocumentationOfDiagram%>
+		<%docbookRequirement%>
+	</chapter>
 </book>
 
 <%script type="ecore.EObject" name="docbookRequirement"%>
-	<chapter>
-		<%for (getCurrentRequirements()){%>
-			<section>
-				<%display_requirements%>
-			</section>
-		<%}%>
-	</chapter>
+<%for (getCurrentRequirements()){%>
+	<section>
+		<%display_requirements%>
+	</section>
+<%}%>
