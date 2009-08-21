@@ -209,8 +209,13 @@ public class TypeCacheAdapter extends ECrossReferenceAdapter
 
     public void dispose()
     {
-        cache.clear();
+        reinit();
         cache = null;
+    }
+    
+    public void reinit ()
+    {
+        cache.clear();
     }
 
 }

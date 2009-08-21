@@ -93,7 +93,7 @@ public class Drop extends AbstractTransferDropTargetListener
 
     private static Requirement source;
 
-    private static TypeCacheAdapter typeCacheAdapter;
+    public static TypeCacheAdapter typeCacheAdapter;
 
     public Drop(EditPartViewer viewer)
     {
@@ -233,7 +233,7 @@ public class Drop extends AbstractTransferDropTargetListener
             hier.getChildren().add(subhier);
             subhier.setSamElement(eobject);
         }
-        CurrentRequirement req = createRequirement();
+        CurrentRequirement req = createRequirement(obj);
         command.append(AddCommand.create(AdapterFactoryEditingDomain.getEditingDomainFor(obj), hier, RequirementPackage.Literals.HIERARCHICAL_ELEMENT__REQUIREMENT, req));
         // hier.getRequirement().add(req);
         // RequirementUtils.saveResource(obj.eResource());
@@ -252,7 +252,7 @@ public class Drop extends AbstractTransferDropTargetListener
      */
     public static void setIdent(Requirement source2, CurrentRequirement req, HierarchicalElement hier, EObject target)
     {
-        EditingDomain editingDomainFor = AdapterFactoryEditingDomain.getEditingDomainFor(source2);
+        EditingDomain editingDomainFor = AdapterFactoryEditingDomain.getEditingDomainFor(req);
         Resource resource = RequirementUtils.getRequirementModel(editingDomainFor);
         ComputeRequirementIdentifier.INSTANCE.setPreferenceStore(resource);
         String identBeforeAttributesProcess = "";
@@ -470,17 +470,20 @@ public class Drop extends AbstractTransferDropTargetListener
     private static int getNumberOfCurrent(CurrentRequirement current)
     {
         int value = -1;
-        String format = getFormat();
-        String regex = format.replace("{number}", "(\\d*)");
-        regex = regex.replaceAll("\\{[^\\{]*\\}", "\\\\w*");
-        Pattern pat = Pattern.compile(regex);
-        Matcher m = pat.matcher(current.getIdentifier());
-        if (m.matches())
+        if (current.getIdentifier() != null && current.getIdentifier().length() > 0)
         {
-            if (m.groupCount() > 0)
+            String format = getFormat();
+            String regex = format.replace("{number}", "(\\d*)");
+            regex = regex.replaceAll("\\{[^\\{]*\\}", "\\\\w*");
+            Pattern pat = Pattern.compile(regex);
+            Matcher m = pat.matcher(current.getIdentifier());
+            if (m.matches())
             {
-                String number = m.group(1);
-                value = Integer.valueOf(number);
+                if (m.groupCount() > 0)
+                {
+                    String number = m.group(1);
+                    value = Integer.valueOf(number);
+                }
             }
         }
         return value;
@@ -604,21 +607,17 @@ public class Drop extends AbstractTransferDropTargetListener
         return null;
     }
 
-    /**
-     * Creates the requirement.
-     * 
-     * @return the current requirement
-     */
-    private static CurrentRequirement createRequirement()
+    private static CurrentRequirement createRequirement(RequirementProject project)
     {
         CurrentRequirement req = factory.createCurrentRequirement();
-        req.setIdentifier(source.getIdent());
+        if (source != null)
+        {
+            req.setIdentifier(source.getIdent());
+        }
         // we set to true impacted to have the possibility to delete
         req.setImpacted(false);
-        EObject rootContainer = EcoreUtil.getRootContainer(source);
-        if (rootContainer instanceof RequirementProject)
+        if (project != null)
         {
-            RequirementProject project = (RequirementProject) rootContainer;
             AttributeConfiguration config = project.getAttributeConfiguration();
             if (config != null && !config.getListAttributes().isEmpty())
             {
@@ -658,7 +657,24 @@ public class Drop extends AbstractTransferDropTargetListener
             req.getAttribute().add(createAttribute(RequirementPackage.Literals.TEXT_ATTRIBUTE, "#Maturity", "TBD"));
         }
         return req;
-
+    }
+    
+    /**
+     * Creates the requirement.
+     * 
+     * @return the current requirement
+     */
+    private static CurrentRequirement createRequirement()
+    {
+        EObject root = EcoreUtil.getRootContainer(source) ;
+        if (root instanceof RequirementProject)
+        {
+            return createRequirement((RequirementProject) root);
+        }
+        else
+        {
+            return null ;
+        }
     }
 
     /**

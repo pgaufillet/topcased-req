@@ -32,7 +32,11 @@ public class CustomCreateRequirementAction extends Action
         if (selection instanceof HierarchicalElement)
         {
             HierarchicalElement hierarchicalElt = (HierarchicalElement) selection;
-            Drop.addNewRequirement(null,RequirementUtils.getRequirementProject(((HierarchicalElement) selection).eResource()), new CompoundCommand(), hierarchicalElt);
+            if (Drop.typeCacheAdapter != null)
+            {
+                Drop.typeCacheAdapter.reinit();
+            }
+            Drop.addNewRequirement(hierarchicalElt.getSamElement(), RequirementUtils.getRequirementProject(((HierarchicalElement) selection).eResource()), new CompoundCommand(), hierarchicalElt);
         }
     }
 
