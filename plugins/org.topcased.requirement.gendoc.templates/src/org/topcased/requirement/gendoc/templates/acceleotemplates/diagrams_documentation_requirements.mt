@@ -13,7 +13,7 @@
 
 <%
 metamodel http://www.eclipse.org/uml2/3.0.0/UML
-import org.topcased.model2doc.templates.acceleo.UMLUtils
+import org.topcased.model2doc.templates.acceleo.TemplateServices
 import org.topcased.requirement.gendoc.templates.RequirementsUtils
 import templates.display_diagram
 import templates.documentation_of_diagram

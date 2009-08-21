@@ -25,7 +25,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.topcased.model2doc.templates.acceleo.UMLUtils;
+import org.topcased.model2doc.templates.acceleo.TemplateServices;
 import org.topcased.requirement.generic.Injector;
 import org.topcased.sam.requirement.Attribute;
 import org.topcased.sam.requirement.AttributeLink;
@@ -65,7 +65,7 @@ public class RequirementsUtils
                 set.getResources().add(project.eResource());
                 EcoreUtil.resolveAll(set);            
                 
-                List<EObject> elementsForADiagram = new UMLUtils().getModelElementsForADiagram(currentEObject);
+                List<EObject> elementsForADiagram = new TemplateServices().getModelElementsForADiagram(currentEObject);
                 for (EObject eobject: elementsForADiagram)
                 {
                     currentRequirements.addAll(getCurrentRequirementForEObject(eobject, set));
