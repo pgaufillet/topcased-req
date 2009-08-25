@@ -24,11 +24,14 @@ import org.topcased.requirement.gendoc.templates.acceleotemplates.display_requir
 <%script type="uml.Element" name="diagrams_documentation_requirements" file="<%getOutputFile(getRootContainer(getProperty("root_container")), getProperty("resultFileName"))%>"%>
 <book>
 	<chapter>
-		<%displayImage%>
-		<%docbookDocumentationOfDiagram%>
-		<%docbookRequirement%>
+		<%display_diagrams_documentation_requirements%>
 	</chapter>
 </book>
+
+<%script type="uml.Element" name="display_diagrams_documentation_requirements"%>
+<%displayImage%>
+<%docbookDocumentationOfDiagram%>
+<%docbookRequirement%>
 
 <%script type="ecore.EObject" name="docbookRequirement"%>
 <%for (getCurrentRequirements()){%>
