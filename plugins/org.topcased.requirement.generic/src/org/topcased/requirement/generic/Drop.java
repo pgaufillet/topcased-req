@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2009 ATOS ORIGIN INTEGRATION.
+ * Copyright (c) 2009 Atos Origin.
  *
  *    
  * All rights reserved. This program and the accompanying materials
@@ -9,8 +9,9 @@
  *
  * Contributors:
  *  Tristan FAURE (ATOS ORIGIN INTEGRATION) tristan.faure@atosorigin.com - Initial API and implementation
+ *  eperico (Atos Origin) emilien.perico@atosorigin.com - create current without link to upstream when created manually
  *
- *****************************************************************************/
+  *****************************************************************************/
 package org.topcased.requirement.generic;
 
 import java.lang.reflect.Field;
@@ -21,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -94,6 +94,8 @@ public class Drop extends AbstractTransferDropTargetListener
     private static Requirement source;
 
     public static TypeCacheAdapter typeCacheAdapter;
+    
+    private static boolean linkToUpstreamRequirement;
 
     public Drop(EditPartViewer viewer)
     {
@@ -132,6 +134,8 @@ public class Drop extends AbstractTransferDropTargetListener
                 {
                     CurrentPage page = (CurrentPage) view.getCurrentPage();
                     RequirementProject obj = (RequirementProject) page.getViewer().getInput();
+                    // link the new current requirement to the upstream
+                    setLinkToUpstreamRequirement(true);
                     addNewRequirement(eobject, obj);
                     page.getViewer().refresh();
                     if (((UpstreamRequirementView) UpstreamRequirementView.getInstance()).getCurrentPage() instanceof UpstreamPage)
@@ -610,7 +614,7 @@ public class Drop extends AbstractTransferDropTargetListener
     private static CurrentRequirement createRequirement(RequirementProject project)
     {
         CurrentRequirement req = factory.createCurrentRequirement();
-        if (source != null)
+        if (source != null && linkToUpstreamRequirement)
         {
             req.setIdentifier(source.getIdent());
         }
@@ -634,7 +638,7 @@ public class Drop extends AbstractTransferDropTargetListener
                     }
                     else if (req instanceof CurrentRequirement && AttributesType.LINK_VALUE == attribute.getType().getValue())
                     {
-                        newAttribute = createAttributeLink(attribute.getName(), source);
+                        newAttribute = createAttributeLink(attribute.getName(), source, linkToUpstreamRequirement);
                     }
                     else if (AttributesType.OBJECT_VALUE == attribute.getType().getValue())
                     {
@@ -653,9 +657,11 @@ public class Drop extends AbstractTransferDropTargetListener
             req.getAttribute().add(createAttribute(RequirementPackage.Literals.ATTRIBUTE_ALLOCATE, "#Allocate", ""));
             req.getAttribute().add(createAttribute(RequirementPackage.Literals.TEXT_ATTRIBUTE, "#Covered_by", ""));
             req.getAttribute().add(createAttribute(RequirementPackage.Literals.TEXT_ATTRIBUTE, "#Justify", ""));
-            req.getAttribute().add(createAttribute(RequirementPackage.Literals.ATTRIBUTE_LINK, "#Link_to", source));
             req.getAttribute().add(createAttribute(RequirementPackage.Literals.TEXT_ATTRIBUTE, "#Maturity", "TBD"));
+            // manage current requirement with or without link to
+            req.getAttribute().add(createAttributeLink(RequirementPackage.Literals.ATTRIBUTE_LINK, "#Link_to", source, linkToUpstreamRequirement));
         }
+        setLinkToUpstreamRequirement(false);
         return req;
     }
     
@@ -770,6 +776,27 @@ public class Drop extends AbstractTransferDropTargetListener
         }
         return result;
     }
+    
+    /**
+     * Creates an <b>{@link AttributeLink}</b> object. The value is set to the reqSource requirement
+     * 
+     * @param name The attribute name
+     * @param reqSource The source requirement
+     * @param linkToUpstream attribute is link to upstream reqSource if true, not linked if false
+     * 
+     * @return the attribute link created
+     */
+    private static AttributeLink createAttributeLink(String name, Requirement reqSource, boolean linkToUpstream)
+    {
+        if (linkToUpstream)
+        {
+            return createAttributeLink(name, reqSource);
+        }
+        else
+        {
+            return createAttributeLink(name, null);
+        }
+    }
 
     /**
      * Creates an <b>{@link AttributeLink}</b> object. The value is set to the reqSource requirement
@@ -786,6 +813,26 @@ public class Drop extends AbstractTransferDropTargetListener
         att.setPartial(false);
         return att;
     }
+    
+    private static Attribute createAttributeLink(EClass toCreate, String name, EObject value, boolean linkToUpstream)
+    {
+        Attribute attr = (Attribute) factory.create(toCreate);
+        attr.setName(name);
+        if (attr instanceof AttributeLink)
+        {
+            AttributeLink link = (AttributeLink) attr;
+            if (linkToUpstream)
+            {
+                link.setValue(value);                
+            }
+            else
+            {
+                link.setValue(null);
+            }
+            link.setPartial(false);
+        }
+        return attr;
+    }
 
     private static Attribute createAttribute(EClass toCreate, String name, EObject value)
     {
@@ -793,9 +840,9 @@ public class Drop extends AbstractTransferDropTargetListener
         attr.setName(name);
         if (attr instanceof AttributeLink)
         {
-            AttributeLink text = (AttributeLink) attr;
-            text.setValue(value);
-            text.setPartial(false);
+            AttributeLink link = (AttributeLink) attr;
+            link.setValue(value);
+            link.setPartial(false);
         }
         return attr;
     }
@@ -881,6 +928,14 @@ public class Drop extends AbstractTransferDropTargetListener
     @Override
     protected void updateTargetRequest()
     {
+    }
+
+    /**
+     * @param linkToUpstreamRequirement the linkToUpstreamRequirement to set
+     */
+    public static void setLinkToUpstreamRequirement(boolean linkToUpstreamRequirement)
+    {
+        Drop.linkToUpstreamRequirement = linkToUpstreamRequirement;
     }
 
 }
