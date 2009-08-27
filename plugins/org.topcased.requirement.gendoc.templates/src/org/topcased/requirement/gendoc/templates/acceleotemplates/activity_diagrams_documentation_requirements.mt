@@ -36,7 +36,7 @@ import org.topcased.requirement.gendoc.templates.acceleotemplates.diagrams_docum
 <%script type="uml.CallBehaviorAction" name="displayAction"%>
 <%if (behavior != null){%>
 	<section>
-		<title><%behavior.name%></title>
+		<title><![CDATA[<%behavior.name%>]]></title>
 		<%behavior.activityTemplate%>
 	</section>
 <%}%>
