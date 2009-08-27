@@ -29,11 +29,9 @@ import org.topcased.requirement.gendoc.templates.acceleotemplates.diagrams_docum
 
 <%script type="uml.Activity" name="activityTemplate"%>
 <%display_diagrams_documentation_requirements%>
-<%for (node){%>
+<%for (node.filter("CallBehaviorAction")){%>
 	<%displayAction%>
 <%}%>
-
-<%script type="uml.ActivityNode" name="displayAction"%>
 
 <%script type="uml.CallBehaviorAction" name="displayAction"%>
 <%if (behavior != null){%>
