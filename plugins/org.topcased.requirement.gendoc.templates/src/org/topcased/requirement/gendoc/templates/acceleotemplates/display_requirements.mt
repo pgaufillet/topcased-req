@@ -17,7 +17,11 @@ import org.topcased.requirement.gendoc.templates.RequirementsUtils
 
 <%script type="requirement.CurrentRequirement" name="display_requirements" %>
 <para>
-	<%identifier%> : <%shortDescription%>
+	<%if (shortDescription.length() == 0){%>
+		<%identifier%>
+	<%}else{%>
+		<%identifier%> : <%shortDescription%>
+	<%}%>
 </para>
 <%for (attribute){%>
 	<para>
