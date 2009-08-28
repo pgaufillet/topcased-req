@@ -35,8 +35,8 @@ import org.topcased.requirement.gendoc.templates.RequirementsUtils
 <%getFormattedName(name)%> : <%value%>
 
 <%script type="requirement.AttributeLink" name="attribute_template" %>
-<%getFormattedName(name)%> : 
 <%if (isFirstLink()){%>
+	<%getFormattedName(name)%> : 
 	<%for (eContainer().getLinkedUpstreamRequirements()){%>
 		<%ident%>
 	<%}%>
