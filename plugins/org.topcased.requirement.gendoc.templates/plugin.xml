@@ -21,6 +21,24 @@
             name="activity_diagrams_documentation_requirements"
             technologyType="Acceleo">
       </docGenerator>
+      <docGenerator
+            generatorFile="src/org/topcased/requirement/gendoc/templates/acceleotemplates/not_affected_requirements.mt"
+            id="org.topcased.requirement.gendoc.templates.acceleotemplates.not_affected_requirements"
+            images="false"
+            metaModel="http://www.eclipse.org/emf/2002/Ecore"
+            modelExtension="uml"
+            name="not_affected_requirements"
+            technologyType="Acceleo">
+      </docGenerator>
+      <docGenerator
+            generatorFile="src/org/topcased/requirement/gendoc/templates/acceleotemplates/elements_requirements.mt"
+            id="org.topcased.requirement.gendoc.templates.acceleotemplates.elements_requirements"
+            images="false"
+            metaModel="http://www.eclipse.org/uml2/3.0.0/UML"
+            modelExtension="uml"
+            name="elements_requirements"
+            technologyType="Acceleo">
+      </docGenerator>
    </extension>
 
 </plugin>

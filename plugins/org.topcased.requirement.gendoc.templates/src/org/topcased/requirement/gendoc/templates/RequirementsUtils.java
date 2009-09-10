@@ -15,6 +15,7 @@ package org.topcased.requirement.gendoc.templates;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
@@ -32,6 +33,8 @@ import org.topcased.sam.requirement.AttributeLink;
 import org.topcased.sam.requirement.CurrentRequirement;
 import org.topcased.sam.requirement.HierarchicalElement;
 import org.topcased.sam.requirement.RequirementProject;
+import org.topcased.sam.requirement.SpecialChapter;
+import org.topcased.sam.requirement.TrashChapter;
 import org.topcased.ttm.Requirement;
 
 /**
@@ -50,29 +53,52 @@ public class RequirementsUtils
      * 
      * @return the requirements
      */
-    public List<CurrentRequirement> getCurrentRequirements(EObject currentEObject)
+    public List<CurrentRequirement> getCurrentRequirementsForADiagram(EObject currentEObject)
     {        
         List<CurrentRequirement> currentRequirements = new ArrayList<CurrentRequirement>();
-        ResourceSet set = currentEObject.eResource().getResourceSet();
-        
-        // get the requirement resource in the resource set
-        Resource diagramResource = set.getResource(URI.createURI(currentEObject.eResource().getURI().toString() + "di"), true);
-        if (diagramResource != null)
+        RequirementProject project = loadRequirementProject(currentEObject);
+        if (project != null)
         {
-            RequirementProject project = Injector.getRequirementProject(diagramResource.getContents().get(0));
-            if (project != null)
+            List<EObject> elementsForADiagram = new TemplateServices().getModelElementsForADiagram(currentEObject);
+            for (EObject eobject: elementsForADiagram)
             {
-                set.getResources().add(project.eResource());
-                EcoreUtil.resolveAll(set);            
-                
-                List<EObject> elementsForADiagram = new TemplateServices().getModelElementsForADiagram(currentEObject);
-                for (EObject eobject: elementsForADiagram)
-                {
-                    currentRequirements.addAll(getCurrentRequirementForEObject(eobject, set));
-                }                
-            }
+                currentRequirements.addAll(getCurrentRequirementsForEObject(eobject, currentEObject.eResource().getResourceSet()));
+            }                            
         }
         return currentRequirements;        
+    }
+    
+    /**
+     * Gets the not affected requirements.
+     * 
+     * @param currentEObject the current eobject
+     * 
+     * @return the list of unaffected current requirements
+     */
+    public List<CurrentRequirement> getNotAffectedRequirements(EObject currentEObject)
+    {        
+        List<CurrentRequirement> notAffectedRequirements = new ArrayList<CurrentRequirement>();
+        RequirementProject project = loadRequirementProject(currentEObject);
+        if (project != null)
+        {       
+            for (SpecialChapter chapter: project.getChapter())
+            {
+                if (chapter instanceof TrashChapter)
+                {
+                    for (HierarchicalElement elt: chapter.getHierarchicalElement())
+                    {
+                        for (org.topcased.sam.requirement.Requirement req: elt.getRequirement())
+                        {
+                            if (req instanceof CurrentRequirement)
+                            {
+                                notAffectedRequirements.add((CurrentRequirement) req);
+                            }
+                        }
+                    }                        
+                }
+            }
+        }
+        return notAffectedRequirements;        
     }
 
     /**
@@ -82,7 +108,7 @@ public class RequirementsUtils
      * @param set the resource set
      * 
      */
-    private List<CurrentRequirement> getCurrentRequirementForEObject(EObject eobject, ResourceSet set)
+    private List<CurrentRequirement> getCurrentRequirementsForEObject(EObject eobject, ResourceSet set)
     {
         List<CurrentRequirement> requirements = new ArrayList<CurrentRequirement>();
         for (Setting setting: getUsages(eobject, set))
@@ -108,9 +134,14 @@ public class RequirementsUtils
      * 
      * @return the list of current requirements
      */
-    public List<CurrentRequirement> getCurrentRequirementForEObject(EObject eobject)
+    public List<CurrentRequirement> getCurrentRequirementsForEObject(EObject eobject)
     {
-        return getCurrentRequirementForEObject(eobject, eobject.eResource().getResourceSet());
+        RequirementProject project = loadRequirementProject(eobject);
+        if (project != null)
+        {
+            return getCurrentRequirementsForEObject(eobject, eobject.eResource().getResourceSet());            
+        }
+        return Collections.emptyList();
     }
     
     /**
@@ -171,7 +202,7 @@ public class RequirementsUtils
      * @param set the specified resourceSet
      * @return collection of references
      */
-    public static Collection<EStructuralFeature.Setting> getUsages(EObject source,ResourceSet set)
+    public static Collection<EStructuralFeature.Setting> getUsages(EObject source, ResourceSet set)
     {
         Collection<EStructuralFeature.Setting> collection = null;
         ECrossReferenceAdapter crossReferenceAdapter = ECrossReferenceAdapter.getCrossReferenceAdapter(source);
@@ -184,6 +215,33 @@ public class RequirementsUtils
             collection = EcoreUtil.UsageCrossReferencer.find(source, set);
         }
         return collection;
+    }
+    
+    /**
+     * Gets the requirement project for a specified eObject
+     * 
+     * @param eObject the eObject
+     * 
+     * @return the associated requirement project if any
+     */
+    private RequirementProject loadRequirementProject(EObject eObject)
+    {
+        RequirementProject project = null;
+        ResourceSet set = eObject.eResource().getResourceSet();
+        if (set != null)
+        {
+            Resource diagramResource = set.getResource(URI.createURI(eObject.eResource().getURI().toString() + "di"), true);
+            if (diagramResource != null)
+            {
+                project = Injector.getRequirementProject(diagramResource.getContents().get(0));
+                if (project != null)
+                {
+                    set.getResources().add(project.eResource());
+                    EcoreUtil.resolveAll(set);
+                }
+            }            
+        }
+        return project;
     }
 
 }

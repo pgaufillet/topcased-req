@@ -10,31 +10,24 @@
  * API and implementation
  * 
  *****************************************************************************/--%>
-
+ 
 <%
-metamodel http://www.eclipse.org/uml2/3.0.0/UML
+metamodel http://www.eclipse.org/emf/2002/Ecore
 import org.topcased.model2doc.templates.acceleo.TemplateServices
 import org.topcased.requirement.gendoc.templates.RequirementsUtils
-import templates.display_diagram
-import templates.documentation_of_diagram
 import org.topcased.requirement.gendoc.templates.acceleotemplates.display_requirements
 %>
 
-<%-- A template to get the diagrams, documentation and requirement associated with the given root_container --%>
-<%script type="uml.Element" name="diagrams_documentation_requirements" file="<%getOutputFile(getRootContainer(getProperty("root_container")), getProperty("resultFileName"))%>"%>
+<%-- A template to display the unaffected current requirements of a requirement model --%>
+<%script type="ecore.EObject" name="not_affected_requirements" file="<%getOutputFile(getRootContainer(getProperty("root_container")), getProperty("resultFileName"))%>"%>
 <book>
 	<chapter>
-		<%display_diagrams_documentation_requirements%>
+		<%display_not_affected_requirements%>
 	</chapter>
 </book>
 
-<%script type="uml.Element" name="display_diagrams_documentation_requirements"%>
-<%displayImage%>
-<%docbookDocumentationOfDiagram%>
-<%docbookRequirement%>
-
-<%script type="ecore.EObject" name="docbookRequirement"%>
-<%for (getCurrentRequirementsForADiagram()){%>
+<%script type="ecore.EObject" name="display_not_affected_requirements"%>
+<%for (getNotAffectedRequirements()){%>
 	<section>
 		<%display_requirements%>
 	</section>
