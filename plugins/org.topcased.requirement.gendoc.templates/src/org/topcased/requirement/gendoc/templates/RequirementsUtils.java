@@ -237,7 +237,8 @@ public class RequirementsUtils
                 if (project != null)
                 {
                     set.getResources().add(project.eResource());
-                    EcoreUtil.resolveAll(set);
+                    //EcoreUtil.resolveAll(set);
+                    EcoreUtil.resolveAll(eObject.eResource());
                 }
             }            
         }

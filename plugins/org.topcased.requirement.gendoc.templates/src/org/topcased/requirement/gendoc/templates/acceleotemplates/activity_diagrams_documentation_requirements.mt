@@ -28,15 +28,18 @@ import org.topcased.requirement.gendoc.templates.acceleotemplates.diagrams_docum
 <%script type="uml.Behavior" name="activityTemplate"%>
 
 <%script type="uml.Activity" name="activityTemplate"%>
+<%storeEObject()%>
 <%display_diagrams_documentation_requirements%>
 <%for (node.filter("CallBehaviorAction")){%>
 	<%displayAction%>
 <%}%>
 
 <%script type="uml.CallBehaviorAction" name="displayAction"%>
-<%if (behavior != null){%>
+<%-- control if we already performed the activity --%>
+<%if (behavior != null && !behavior.isRegisteredEObject()){%>
 	<section>
 		<title><![CDATA[<%behavior.name%>]]></title>
+		<%-- the template is only called if the object has not been processed --%>
 		<%behavior.activityTemplate%>
 	</section>
 <%}%>
