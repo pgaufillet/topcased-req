@@ -47,6 +47,7 @@ public class AdapterFactory implements IAdapterFactory
         if (adapterType == IUpstreamRequirementPage.class && adaptableObject instanceof Modeler)
         {
             upstreamPage = new CustomUpstreamPage((Modeler) adaptableObject);
+            Injector.getInstance().syncFollowLinkTo();
             return upstreamPage;
         }
         else if (adapterType == ICurrentRequirementPage.class && adaptableObject instanceof Modeler)

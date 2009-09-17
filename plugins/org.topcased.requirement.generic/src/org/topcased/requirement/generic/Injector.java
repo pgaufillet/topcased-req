@@ -10,7 +10,7 @@
  * Contributors:
  *  Tristan FAURE (ATOS ORIGIN INTEGRATION) tristan.faure@atosorigin.com - Initial API and implementation
  *
-  *****************************************************************************/
+ *****************************************************************************/
 package org.topcased.requirement.generic;
 
 import java.lang.reflect.Field;
@@ -18,6 +18,9 @@ import java.lang.reflect.Field;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.command.CompoundCommand;
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.ui.dialogs.ResourceDialog;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
@@ -37,6 +40,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -52,6 +56,7 @@ import org.topcased.requirement.generic.actions.UpstreamSelectionChangedListener
 import org.topcased.sam.presentation.SAMEditor;
 import org.topcased.sam.requirement.AttributeLink;
 import org.topcased.sam.requirement.CurrentRequirement;
+import org.topcased.sam.requirement.ObjectAttribute;
 import org.topcased.sam.requirement.RequirementFactory;
 import org.topcased.sam.requirement.RequirementPackage;
 import org.topcased.sam.requirement.RequirementProject;
@@ -76,6 +81,8 @@ public class Injector
 
     private UpstreamPage upstream = null;
 
+    private FollowLinkToAction followLinkTo;
+
     /**
      * Gets the requirement project.
      * 
@@ -87,7 +94,7 @@ public class Injector
     {
         return getRequirementProject(getProperty(eobject));
     }
-    
+
     /**
      * Gets the requirement project.
      * 
@@ -136,7 +143,7 @@ public class Injector
         }
         return null;
     }
-    
+
     public static Injector getInstance()
     {
         return instance;
@@ -188,16 +195,16 @@ public class Injector
 
     protected void initUpstream(UpstreamPage page, IEditorPart m, String uri)
     {
-//        System.out.println("DEBUT init");
+        // System.out.println("DEBUT init");
         upstream = page;
         RequirementProject project = RequirementProjectManager.getInstance().getRequirementProject(uri, m);
         if (project != null)
         {
-//            System.out.println("Project OK");
+            // System.out.println("Project OK");
             page.getViewer().setInput(project.getUpstreamModel());
             if (current != null)
             {
-//                System.out.println("Input OK");
+                // System.out.println("Input OK");
                 page.getViewer().addSelectionChangedListener(new UpstreamSelectionChangedListener(current));
             }
             enableActions(page);
@@ -213,6 +220,77 @@ public class Injector
         {
             upstream.getViewer().addSelectionChangedListener(new UpstreamSelectionChangedListener(page));
         }
+        // listener for attribute management to avoid stack overflow
+        current.getViewer().addSelectionChangedListener(new ISelectionChangedListener()
+        {
+            public void selectionChanged(SelectionChangedEvent event)
+            {
+                ISelection selection = event.getSelection();
+                if (selection instanceof IStructuredSelection)
+                {
+                    IStructuredSelection strucSelection = (IStructuredSelection) selection;
+                    if (strucSelection.getFirstElement() instanceof ObjectAttribute)
+                    {
+                        ObjectAttribute attribute = (ObjectAttribute) strucSelection.getFirstElement();
+                        manageAttributeListener(attribute);
+                    }
+                }
+            }
+            
+            EObject previous = null ;
+            private Adapter adapter = null;
+            private void manageAttributeListener(ObjectAttribute attribute)
+            {
+                if (previous != null)
+                {
+                    previous.eAdapters().remove(adapter);
+                }
+                previous = attribute ;
+                adapter = new Adapter()
+                {
+                    public Notifier getTarget()
+                    {
+                        return null;
+                    }
+
+                    public boolean isAdapterForType(Object type)
+                    {
+                        return false;
+                    }
+
+                    public void notifyChanged(Notification notification)
+                    {
+                        if (notification.getEventType() == Notification.SET || notification.getEventType()  == Notification.UNSET)
+                        {
+                            if (upstream != null)
+                            {
+                                ((UpstreamRequirementView)UpstreamRequirementView.getInstance()).setSelection(null);
+                                if (CurrentRequirementView.getInstance() instanceof CurrentRequirementView)
+                                {
+                                    CurrentRequirementView curr = (CurrentRequirementView) CurrentRequirementView.getInstance();
+                                    if (curr.getCurrentPage() instanceof CurrentPage)
+                                    {
+                                        CurrentPage currPage = (CurrentPage) curr.getCurrentPage();
+                                        if (currPage.getViewer() instanceof TreeViewer)
+                                        {
+                                            TreeViewer viewer = (TreeViewer) currPage.getViewer();
+                                            viewer.update(previous, new String[]{});
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    public void setTarget(Notifier newTarget)
+                    {
+                        
+                    }
+                    
+                };
+                previous.eAdapters().add(0,adapter);
+            }
+        });
         createActions(page);
     }
 
@@ -225,14 +303,13 @@ public class Injector
     {
         manageToolbar(page);
     }
-    
-    
-
 
     private void manageToolbar(CurrentPage page)
     {
         IToolBarManager manager = page.getSite().getActionBars().getToolBarManager();
         manager.add(new NewLinkToAction(page));
+        followLinkTo = new FollowLinkToAction(page);
+        manager.add(followLinkTo);
         manager.update(true);
     }
 
@@ -380,6 +457,89 @@ public class Injector
         return "";
     }
 
+    public void syncFollowLinkTo()
+    {
+        if (followLinkTo != null)
+        {
+            followLinkTo.run();
+        }
+    }
+    
+    /**
+     * The class which disable the linkto
+     * @author tfaure
+     */
+    private class FollowLinkToAction extends Action
+    {
+        private static final String PREFERENCES_FOR_FOLLOW_LINK_TO = "PREFERENCES_FOR_FOLLOW_LINK_TO";
+
+        public FollowLinkToAction(CurrentPage page)
+        {
+            super("Follow linkto", Action.AS_CHECK_BOX);
+            Activator.getDefault().getPreferenceStore().setDefault(PREFERENCES_FOR_FOLLOW_LINK_TO, String.valueOf(Boolean.FALSE));
+            boolean noFollowLink = manageFollowLink();
+            setChecked(noFollowLink);
+            setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(Activator.PLUGIN_ID, "icons/checkout_action-1.gif"));
+        }
+
+        private boolean manageFollowLink()
+        {
+            boolean noFollowLink = getEnabled();
+            if (noFollowLink)
+            {
+                disableFollowLink();
+            }
+            else
+            {
+                enableFollowLink();
+            }
+            return noFollowLink;
+        }
+
+        private void disableFollowLink()
+        {
+            if (((CurrentRequirementView) CurrentRequirementView.getInstance()) != null)
+            {
+                ((CurrentRequirementView) CurrentRequirementView.getInstance()).unhookListener();
+                Activator.getDefault().getPreferenceStore().putValue(PREFERENCES_FOR_FOLLOW_LINK_TO, String.valueOf(Boolean.FALSE));
+            }
+        }
+
+        private void enableFollowLink()
+        {
+            if (((CurrentRequirementView) CurrentRequirementView.getInstance()) != null)
+            {
+                ((CurrentRequirementView) CurrentRequirementView.getInstance()).hookListener();
+                Activator.getDefault().getPreferenceStore().putValue(PREFERENCES_FOR_FOLLOW_LINK_TO, String.valueOf(Boolean.TRUE));
+            }
+
+        }
+
+        private boolean getEnabled()
+        {
+            boolean result = Activator.getDefault().getPreferenceStore().getBoolean(PREFERENCES_FOR_FOLLOW_LINK_TO);
+            return result;
+        }
+
+        @Override
+        public void run()
+        {
+            if (isChecked())
+            {
+                enableFollowLink();
+            }
+            else
+            {
+                disableFollowLink();
+            }
+        }
+    }
+
+    public boolean isFollowLinkAction()
+    {
+        return followLinkTo.isChecked();
+    }
+
     /**
      * The Class NewLinkToAction.
      */
@@ -393,6 +553,7 @@ public class Injector
             setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(Activator.PLUGIN_ID, "icons/link_obj.gif"));
             setText("add link to selection");
             currentPage = page;
+
             currentPage.getViewer().addSelectionChangedListener(new ISelectionChangedListener()
             {
                 public void selectionChanged(SelectionChangedEvent event)
