@@ -53,6 +53,7 @@ public class AdapterFactory implements IAdapterFactory
         else if (adapterType == ICurrentRequirementPage.class && adaptableObject instanceof Modeler)
         {
             currentPage = new CustomCurrentPage((Modeler) adaptableObject);
+            Injector.getInstance().syncFollowLinkTo();
             return currentPage;
         }
         return null;
