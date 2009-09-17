@@ -57,6 +57,10 @@ public class CurrentRequirementFilter extends ViewerFilter
      */
     public boolean select(Viewer viewer, Object parentElement, Object element)
     {
+        if (searched == null)
+        {
+            return true ;
+        }
         if (element instanceof RequirementProject || element instanceof IdentifiedElement || element instanceof AttributeConfiguration || element instanceof ConfiguratedAttribute
                 || element instanceof AttributeValue || element instanceof CurrentRequirement || element instanceof Attribute || element instanceof TrashChapter || element instanceof ProblemChapter
                 || element instanceof UntracedChapter)

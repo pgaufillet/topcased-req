@@ -122,6 +122,7 @@ public class CustomCurrentPage extends CurrentPage
         }
         CustomSearchComposite search = new CustomSearchComposite(mainCompo, SWT.None);
         search.setFilter(getViewer(), CurrentSearchFilter.getInstance());
+        CurrentSearchFilter.getInstance().setSearched(null);
         mainCompo.layout(true);
     }
 

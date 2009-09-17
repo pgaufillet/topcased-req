@@ -104,7 +104,7 @@ public class UpstreamSelectionChangedListener implements ISelectionChangedListen
                 {
                     if (currentFilter != null)
                     {
-                        currentFilter.setSearched("");
+                        currentFilter.setSearched(null);
                         viewer.refresh();
                     }
                 }
