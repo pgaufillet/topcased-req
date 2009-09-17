@@ -28,6 +28,7 @@ import org.topcased.requirement.gendoc.templates.acceleotemplates.diagrams_docum
 <%script type="uml.Behavior" name="activityTemplate"%>
 
 <%script type="uml.Activity" name="activityTemplate"%>
+<para><![CDATA[<%name%>]]></para>
 <%storeEObject()%>
 <%display_diagrams_documentation_requirements%>
 <%for (node.filter("CallBehaviorAction")){%>
