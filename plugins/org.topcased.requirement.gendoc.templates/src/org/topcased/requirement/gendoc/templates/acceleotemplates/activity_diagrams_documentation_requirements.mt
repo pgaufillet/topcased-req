@@ -25,9 +25,15 @@ import org.topcased.requirement.gendoc.templates.acceleotemplates.diagrams_docum
 	</chapter>
 </book>
 
-<%script type="uml.Behavior" name="activityTemplate"%>
-
 <%script type="uml.Activity" name="activityTemplate"%>
+<%if (name != null && name.length() != 0){%>
+	<title><![CDATA[<%name%>]]></title>
+<%}%>
+<%loopOnActivityTemplate%>
+
+<%script type="uml.Behavior" name="loopOnActivityTemplate"%>
+
+<%script type="uml.Activity" name="loopOnActivityTemplate"%>
 <%storeEObject()%>
 <%display_diagrams_documentation_requirements%>
 <%for (node.filter("CallBehaviorAction")){%>
@@ -40,7 +46,7 @@ import org.topcased.requirement.gendoc.templates.acceleotemplates.diagrams_docum
 	<section>
 		<title><![CDATA[<%behavior.name%>]]></title>
 		<%-- the template is only called if the object has not been processed --%>
-		<%behavior.activityTemplate%>
+		<%behavior.loopOnActivityTemplate%>
 	</section>
 <%}%>
 
