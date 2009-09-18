@@ -39,11 +39,15 @@ import org.topcased.requirement.gendoc.templates.RequirementsUtils
 <%if (isFirstAttributeLink()){%>
 	<%setFirstAttributeLink(false)%>
 	<phrase><markup role="Attributes"><%getTabChar()%><%getFormattedName(name)%> : </markup></phrase>
-	<phrase><markup role="<%getStyleNameFromName(name)%>">
+			<%getStyleNameFromName(name).put("attributeNameStyle")%>
 	<%for (eContainer().getLinkedUpstreamRequirements()){%>
-		<%ident%>
+		<phrase>
+			<markup role="<%get("attributeNameStyle")%>">
+				<%ident%>&#160;
+			</markup>
+		</phrase>
 	<%}%>
-	</markup></phrase>
+			
 <%}%>
 
 <%script type="requirement.ObjectAttribute" name="attribute_template" %>
