@@ -16,6 +16,7 @@ import org.topcased.requirement.gendoc.templates.RequirementsUtils
 %>
 
 <%script type="requirement.CurrentRequirement" name="display_requirements" %>
+<%setFirstAttributeLink(true)%>
 <para>
 	<%if (shortDescription.length() == 0){%>
 		<%identifier%>
@@ -32,18 +33,21 @@ import org.topcased.requirement.gendoc.templates.RequirementsUtils
 <%script type="requirement.Attribute" name="attribute_template" %>
 
 <%script type="requirement.TextAttribute" name="attribute_template" %>
-<%getFormattedName(name)%> : <%value%>
+<phrase><markup role="Attributes"><%getTabChar()%><%getFormattedName(name)%> : </markup></phrase><phrase><markup role="<%getStyleNameFromName(name)%>"><%value%></markup></phrase>
 
 <%script type="requirement.AttributeLink" name="attribute_template" %>
-<%if (isFirstLink()){%>
-	<%getFormattedName(name)%> : 
+<%if (isFirstAttributeLink()){%>
+	<%setFirstAttributeLink(false)%>
+	<phrase><markup role="Attributes"><%getTabChar()%><%getFormattedName(name)%> : </markup></phrase>
+	<phrase><markup role="<%getStyleNameFromName(name)%>">
 	<%for (eContainer().getLinkedUpstreamRequirements()){%>
 		<%ident%>
 	<%}%>
+	</markup></phrase>
 <%}%>
 
 <%script type="requirement.ObjectAttribute" name="attribute_template" %>
-<%getFormattedName(name)%> : <%value%>
+<phrase><markup role="Attributes"><%getTabChar()%><%getFormattedName(name)%> : </markup></phrase> <phrase><markup role="<%getStyleNameFromName(name)%>"><%value%></markup></phrase>
 
 <%script type="requirement.AttributeAllocate" name="attribute_template" %>
-<%getFormattedName(name)%> : <%value%>
+<phrase><markup role="Attributes"><%getTabChar()%><%getFormattedName(name)%> : </markup></phrase><phrase><markup role="<%getStyleNameFromName(name)%>"><%value%></markup></phrase>

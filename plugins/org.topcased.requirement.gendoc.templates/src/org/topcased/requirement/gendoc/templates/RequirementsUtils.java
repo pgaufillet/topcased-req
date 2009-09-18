@@ -46,6 +46,12 @@ import org.topcased.ttm.Requirement;
 public class RequirementsUtils
 {
     
+    /** tab characters for spaces */
+    private static String tabChars="&#160;&#160;&#160;&#160;&#160;";
+    
+    /** to know if current "Link To" is the first attribute link. */
+    private boolean isFirstAttributeLink = true;
+
     /**
      * Gets the associated requirements of elements in the diagram of the rootContainer
      * 
@@ -169,20 +175,6 @@ public class RequirementsUtils
     }
     
     /**
-     * Checks if is first link_to attribute.
-     * 
-     * @param attribute the specified attribute
-     * 
-     * @return true, if is first link
-     */
-    public boolean isFirstLink(Attribute attribute)
-    {
-        CurrentRequirement req = (CurrentRequirement) attribute.eContainer();
-        // 3 is the position of Link_to Attribute
-        return req.getAttribute().indexOf(attribute) == 3 ;
-    }
-    
-    /**
      * Clean the attribute name to have the right formatter
      * 
      * @param eObject the e object
@@ -244,5 +236,55 @@ public class RequirementsUtils
         }
         return project;
     }
+    
+    /**
+     * Gets the style name for the specified name.
+     * 
+     * @param eObject the current eObject
+     * @param name the name
+     * 
+     * @return the style name for the name
+     */
+    public String getStyleNameFromName(EObject eObject, String name)
+    {
+        String formattedName = getFormattedName(eObject, name);
+        formattedName = formattedName.replaceAll("[^1-z]", "");
+        return formattedName;
+    }
 
+    
+    /**
+     * Gets the tabCharacter for spaces
+     * 
+     * @param currentEObject the current eObject
+     * 
+     * @return the tab char
+     */
+    public String getTabChar(EObject currentEObject){
+        return tabChars;
+    }
+    
+    /**
+     * Checks if is first attribute link.
+     * 
+     * @param attribute the attribute
+     * 
+     * @return true, if is first attribute link
+     */
+    public boolean isFirstAttributeLink(Attribute attribute)
+    {
+        return isFirstAttributeLink;
+    }
+
+    /**
+     * Sets the first attribute link.
+     * 
+     * @param eObject the e object
+     * @param newBooleanValue the new boolean value
+     */
+    public void setFirstAttributeLink(EObject eObject, boolean newBooleanValue)
+    {
+        isFirstAttributeLink = newBooleanValue;
+    }
+    
 }
