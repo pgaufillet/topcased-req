@@ -47,7 +47,16 @@ public class CustomUpstreamPage extends UpstreamPage
                 injector.initUpstream(this, modeler, uri);
             }
         }
-
     }
+
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        editingDomain = null ;
+        modeler = null ;
+    }
+    
+    
 
 }

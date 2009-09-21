@@ -46,6 +46,18 @@ public class CustomCurrentPage extends CurrentPage
         modeler = adaptableObject;
     }
 
+    
+    
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        modeler = null ;
+        editingDomain = null ;
+    }
+
+
+
     @Override
     public void createControl(Composite parent)
     {

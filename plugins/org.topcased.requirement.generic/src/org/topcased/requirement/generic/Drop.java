@@ -51,7 +51,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
+import org.topcased.modeler.dialogs.InformationDialog;
 import org.topcased.modeler.edit.DiagramEditPart;
 import org.topcased.modeler.edit.EMFGraphEdgeEditPart;
 import org.topcased.modeler.edit.EMFGraphNodeEditPart;
@@ -130,7 +132,7 @@ public class Drop extends AbstractTransferDropTargetListener
             if (eobject != null)
             {
                 CurrentRequirementView view = (CurrentRequirementView) CurrentRequirementView.getInstance();
-                if (view.getCurrentPage() instanceof CurrentPage)
+                if (view != null && view.getCurrentPage() instanceof CurrentPage)
                 {
                     CurrentPage page = (CurrentPage) view.getCurrentPage();
                     RequirementProject obj = (RequirementProject) page.getViewer().getInput();
