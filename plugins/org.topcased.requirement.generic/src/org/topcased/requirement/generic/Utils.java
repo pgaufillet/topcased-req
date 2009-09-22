@@ -30,37 +30,8 @@ public class Utils
     }
     
     public static Object get(Object o, String propertyName) {
-        if (o == null || o.getClass() == null)
-        {
-           return null ; 
-        }
-        if (propertyName == null || propertyName.length() == 0)
-        {
-           return null ; 
-        }   
-        Class c = o.getClass() ;
-        Field field = null;
+        Field field = getField(o,propertyName); 
         Object result = null ;
-        try {
-           try
-           {
-              field = c.getDeclaredField(propertyName);
-           }
-           catch (NoSuchFieldException e) {
-           }
-           while (c.getSuperclass() != null && result == null)
-           {
-              c = c.getSuperclass();
-              try
-              {
-                 field = c.getDeclaredField(propertyName);
-              }
-              catch (NoSuchFieldException e) {
-              }
-           }
-        } catch (SecurityException e) {
-           e.printStackTrace();
-        } 
         if (field != null)
         {
            field.setAccessible(true);
@@ -75,5 +46,56 @@ public class Utils
         }
         return result;
      }
+    
+    public static void set(Object o, String propertyName,Object value) {
+        Field field = getField(o,propertyName); 
+        if (field != null)
+        {
+           field.setAccessible(true);
+           try {
+              field.set(o,value);
+           } catch (IllegalArgumentException e) {
+              e.printStackTrace();
+           } catch (IllegalAccessException e) {
+              e.printStackTrace();
+           }
+           field.setAccessible(false);
+        }
+     }
+
+    private static Field getField(Object o, String propertyName)
+    {
+        Field field = null ;
+        if (o == null || o.getClass() == null)
+        {
+           return null ; 
+        }
+        if (propertyName == null || propertyName.length() == 0)
+        {
+           return null ; 
+        }   
+        Class c = o.getClass() ;
+        try {
+           try
+           {
+              field = c.getDeclaredField(propertyName);
+           }
+           catch (NoSuchFieldException e) {
+           }
+           while (c.getSuperclass() != null)
+           {
+              c = c.getSuperclass();
+              try
+              {
+                 field = c.getDeclaredField(propertyName);
+              }
+              catch (NoSuchFieldException e) {
+              }
+           }
+        } catch (SecurityException e) {
+           e.printStackTrace();
+        }
+        return field ;
+    }
 
 }

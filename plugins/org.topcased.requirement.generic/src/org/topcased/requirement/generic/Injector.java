@@ -461,7 +461,7 @@ public class Injector
     {
         if (followLinkTo != null)
         {
-            followLinkTo.run();
+            followLinkTo.manageFollowLink();
         }
     }
     
@@ -476,24 +476,24 @@ public class Injector
         public FollowLinkToAction(CurrentPage page)
         {
             super("Follow linkto", Action.AS_CHECK_BOX);
-            Activator.getDefault().getPreferenceStore().setDefault(PREFERENCES_FOR_FOLLOW_LINK_TO, String.valueOf(Boolean.FALSE));
-            boolean noFollowLink = manageFollowLink();
-            setChecked(noFollowLink);
+            Activator.getDefault().getPreferenceStore().setDefault(PREFERENCES_FOR_FOLLOW_LINK_TO, String.valueOf(Boolean.TRUE));
+            setChecked(getEnabled());
+            manageFollowLink();
             setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(Activator.PLUGIN_ID, "icons/checkout_action-1.gif"));
         }
 
         private boolean manageFollowLink()
         {
-            boolean noFollowLink = getEnabled();
-            if (noFollowLink)
-            {
-                disableFollowLink();
-            }
-            else
+            boolean checked = getEnabled();
+            if (checked)
             {
                 enableFollowLink();
             }
-            return noFollowLink;
+            else
+            {
+                disableFollowLink();
+            }
+            return checked;
         }
 
         private void disableFollowLink()

@@ -20,7 +20,10 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -49,6 +52,15 @@ public class CustomCurrentPage extends CurrentPage
     
     
     @Override
+    protected void hookListeners()
+    {
+        super.hookListeners();
+        Injector.getInstance().syncFollowLinkTo();
+    }
+
+
+
+    @Override
     public void dispose()
     {
         super.dispose();
@@ -72,11 +84,20 @@ public class CustomCurrentPage extends CurrentPage
                 injector.initCurrent(this, modeler, uri);
             }
         }
+        ((TreeViewer)getViewer()).addSelectionChangedListener(new ISelectionChangedListener()
+        {
+            
+            public void selectionChanged(SelectionChangedEvent event)
+            {
+               Injector.getInstance().syncFollowLinkTo();
+            }
+        });
         injectSearch();
         manageMenu();
     }
 
-
+    
+    
     /**
      * Cutomize the menu
      * @param page
@@ -137,5 +158,7 @@ public class CustomCurrentPage extends CurrentPage
         CurrentSearchFilter.getInstance().setSearched(null);
         mainCompo.layout(true);
     }
+    
+    
 
 }
