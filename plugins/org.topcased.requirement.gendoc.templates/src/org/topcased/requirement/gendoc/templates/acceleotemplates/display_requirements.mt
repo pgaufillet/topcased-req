@@ -17,13 +17,13 @@ import org.topcased.requirement.gendoc.templates.RequirementsUtils
 
 <%script type="requirement.CurrentRequirement" name="display_requirements" %>
 <%setFirstAttributeLink(true)%>
-<para>
+<title>
 	<%if (shortDescription.length() == 0){%>
-		<%identifier%>
+		<![CDATA[<%identifier%>]]>
 	<%}else{%>
-		<%identifier%> : <%shortDescription%>
+		<![CDATA[<%identifier%> : <%shortDescription%>]]>
 	<%}%>
-</para>
+</title>
 <%for (attribute){%>
 	<para>
 		<%attribute_template%>
