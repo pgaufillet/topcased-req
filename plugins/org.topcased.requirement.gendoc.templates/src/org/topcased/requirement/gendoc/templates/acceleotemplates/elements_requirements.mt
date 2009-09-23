@@ -19,9 +19,12 @@ import org.topcased.requirement.gendoc.templates.acceleotemplates.display_requir
 %>
 
 <%-- A template to display children name and associated requirements of a specified element --%>
-<%script type="uml.Element" name="elements_requirements" file="<%getOutputFile(getRootContainer(getProperty("root_container")), getProperty("resultFileName"))%>"%>
+<%script type="uml.NamedElement" name="elements_requirements" file="<%getOutputFile(getRootContainer(getProperty("root_container")), getProperty("resultFileName"))%>"%>
 <book>
 	<chapter>
+		<%if (name != null && name.length() != 0){%>
+			<title><![CDATA[<%name%>]]></title>
+		<%}%>
 		<%for (allOwnedElements().filter("NamedElement")){%>
 			<%displayElementName%>
 			<%docbookRequirement%>
