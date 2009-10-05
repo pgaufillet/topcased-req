@@ -17,13 +17,14 @@ import org.topcased.requirement.gendoc.templates.RequirementsUtils
 
 <%script type="requirement.CurrentRequirement" name="display_requirements" %>
 <%setFirstAttributeLink(true)%>
-<title>
+<para>
 	<%if (shortDescription.length() == 0){%>
-		<![CDATA[<%identifier%>]]>
+		<phrase><markup role="CAREIdent"><![CDATA[<%identifier%>]]></markup></phrase>
 	<%}else{%>
-		<![CDATA[<%identifier%> : <%shortDescription%>]]>
+		<phrase><markup role="CAREIdent"><![CDATA[<%identifier%> : ]]></markup></phrase>
+		<phrase><markup role="NormalIdent"><![CDATA[<%shortDescription%>]]></markup></phrase>
 	<%}%>
-</title>
+</para>
 <%for (attribute){%>
 	<para>
 		<%attribute_template%>
@@ -43,7 +44,7 @@ import org.topcased.requirement.gendoc.templates.RequirementsUtils
 	<%for (eContainer().getLinkedUpstreamRequirements()){%>
 		<phrase>
 			<markup role="<%get("attributeNameStyle")%>">
-				<%ident%>&#160;
+				<%ident%>,&#160;
 			</markup>
 		</phrase>
 	<%}%>
