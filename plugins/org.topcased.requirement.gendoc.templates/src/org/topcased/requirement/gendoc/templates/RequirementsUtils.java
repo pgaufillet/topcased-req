@@ -10,13 +10,16 @@
  * Contributors:
  *  eperico (atos origin) emilien.perico@atosorigin.com - Initial API and implementation
  *
-  *****************************************************************************/
+ *****************************************************************************/
 package org.topcased.requirement.gendoc.templates;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -41,16 +44,19 @@ import org.topcased.ttm.Requirement;
  * Class that manages objects of the requirement metamodel (org.topcased.sam.requirement)
  * 
  * @author eperico
- *
+ * 
  */
 public class RequirementsUtils
 {
-    
+
     /** tab characters for spaces */
-    private static String tabChars="&#160;&#160;&#160;&#160;&#160;";
-    
+    private static String tabChars = "&#160;&#160;&#160;&#160;&#160;";
+
     /** to know if current "Link To" is the first attribute link. */
     private boolean isFirstAttributeLink = true;
+
+    /** The map to store requirement project of a di file */
+    private Map<URI, RequirementProject> map = new HashMap<URI, RequirementProject>();
 
     /**
      * Gets the associated requirements of elements in the diagram of the rootContainer
@@ -60,20 +66,20 @@ public class RequirementsUtils
      * @return the requirements
      */
     public List<CurrentRequirement> getCurrentRequirementsForADiagram(EObject currentEObject)
-    {        
+    {
         List<CurrentRequirement> currentRequirements = new ArrayList<CurrentRequirement>();
         RequirementProject project = loadRequirementProject(currentEObject);
         if (project != null)
         {
             List<EObject> elementsForADiagram = new TemplateServices().getModelElementsForADiagram(currentEObject);
-            for (EObject eobject: elementsForADiagram)
+            for (EObject eobject : elementsForADiagram)
             {
                 currentRequirements.addAll(getCurrentRequirementsForEObject(eobject, currentEObject.eResource().getResourceSet()));
-            }                            
+            }
         }
-        return currentRequirements;        
+        return currentRequirements;
     }
-    
+
     /**
      * Gets the not affected requirements.
      * 
@@ -82,29 +88,29 @@ public class RequirementsUtils
      * @return the list of unaffected current requirements
      */
     public List<CurrentRequirement> getNotAffectedRequirements(EObject currentEObject)
-    {        
+    {
         List<CurrentRequirement> notAffectedRequirements = new ArrayList<CurrentRequirement>();
         RequirementProject project = loadRequirementProject(currentEObject);
         if (project != null)
-        {       
-            for (SpecialChapter chapter: project.getChapter())
+        {
+            for (SpecialChapter chapter : project.getChapter())
             {
                 if (chapter instanceof TrashChapter)
                 {
-                    for (HierarchicalElement elt: chapter.getHierarchicalElement())
+                    for (HierarchicalElement elt : chapter.getHierarchicalElement())
                     {
-                        for (org.topcased.sam.requirement.Requirement req: elt.getRequirement())
+                        for (org.topcased.sam.requirement.Requirement req : elt.getRequirement())
                         {
                             if (req instanceof CurrentRequirement)
                             {
                                 notAffectedRequirements.add((CurrentRequirement) req);
                             }
                         }
-                    }                        
+                    }
                 }
             }
         }
-        return notAffectedRequirements;        
+        return notAffectedRequirements;
     }
 
     /**
@@ -117,11 +123,11 @@ public class RequirementsUtils
     private List<CurrentRequirement> getCurrentRequirementsForEObject(EObject eobject, ResourceSet set)
     {
         List<CurrentRequirement> requirements = new ArrayList<CurrentRequirement>();
-        for (Setting setting: getUsages(eobject, set))
+        for (Setting setting : getUsages(eobject, set))
         {
             if (setting.getEObject() instanceof HierarchicalElement)
             {
-                for (org.topcased.sam.requirement.Requirement req: ((HierarchicalElement) setting.getEObject()).getRequirement())
+                for (org.topcased.sam.requirement.Requirement req : ((HierarchicalElement) setting.getEObject()).getRequirement())
                 {
                     if (req instanceof CurrentRequirement)
                     {
@@ -132,7 +138,7 @@ public class RequirementsUtils
         }
         return requirements;
     }
-    
+
     /**
      * Gets the current requirement for a specified EObject.
      * 
@@ -145,11 +151,11 @@ public class RequirementsUtils
         RequirementProject project = loadRequirementProject(eobject);
         if (project != null)
         {
-            return getCurrentRequirementsForEObject(eobject, eobject.eResource().getResourceSet());            
+            return getCurrentRequirementsForEObject(eobject, eobject.eResource().getResourceSet());
         }
         return Collections.emptyList();
     }
-    
+
     /**
      * Gets the upstream requirements linked to the current requirement.
      * 
@@ -160,20 +166,20 @@ public class RequirementsUtils
     public List<Requirement> getLinkedUpstreamRequirements(CurrentRequirement requirement)
     {
         List<Requirement> links = new ArrayList<Requirement>();
-        for (Attribute att: requirement.getAttribute())
+        for (Attribute att : requirement.getAttribute())
         {
             if (att instanceof AttributeLink)
             {
                 EObject value = ((AttributeLink) att).getValue();
                 if (value instanceof Requirement)
                 {
-                    links.add((Requirement) value);                    
+                    links.add((Requirement) value);
                 }
             }
         }
         return links;
     }
-    
+
     /**
      * Clean the attribute name to have the right formatter
      * 
@@ -186,7 +192,7 @@ public class RequirementsUtils
     {
         return name.replaceFirst("#", "").replaceAll("_", " ");
     }
-    
+
     /**
      * To reach related elements for a specified source element in a resource set
      * 
@@ -208,7 +214,7 @@ public class RequirementsUtils
         }
         return collection;
     }
-    
+
     /**
      * Gets the requirement project for a specified eObject
      * 
@@ -222,21 +228,32 @@ public class RequirementsUtils
         ResourceSet set = eObject.eResource().getResourceSet();
         if (set != null)
         {
-            Resource diagramResource = set.getResource(URI.createURI(eObject.eResource().getURI().toString() + "di"), true);
+            URI createURI = URI.createURI(eObject.eResource().getURI().toString() + "di");
+            Resource diagramResource = set.getResource(createURI, true);
             if (diagramResource != null)
             {
-                project = Injector.getRequirementProject(diagramResource.getContents().get(0));
-                if (project != null)
+                project = map.get(createURI);
+                if (project == null)
+                {
+                    project = Injector.getRequirementProject(diagramResource.getContents().get(0));
+                    map.put(createURI, project);
+                }
+                boolean found = false;
+                for (Iterator<Resource> i = set.getResources().iterator() ; i.hasNext() && ! found ;)
+                {
+                    found |= i.next().getURI().equals(project.eResource().getURI());
+                }
+                if (!found)
                 {
                     set.getResources().add(project.eResource());
-                    //EcoreUtil.resolveAll(set);
+                    // EcoreUtil.resolveAll(set);
                     EcoreUtil.resolveAll(eObject.eResource());
                 }
-            }            
+            }
         }
         return project;
     }
-    
+
     /**
      * Gets the style name for the specified name.
      * 
@@ -252,7 +269,6 @@ public class RequirementsUtils
         return formattedName;
     }
 
-    
     /**
      * Gets the tabCharacter for spaces
      * 
@@ -260,10 +276,11 @@ public class RequirementsUtils
      * 
      * @return the tab char
      */
-    public String getTabChar(EObject currentEObject){
+    public String getTabChar(EObject currentEObject)
+    {
         return tabChars;
     }
-    
+
     /**
      * Checks if is first attribute link.
      * 
@@ -286,5 +303,5 @@ public class RequirementsUtils
     {
         isFirstAttributeLink = newBooleanValue;
     }
-    
+
 }
