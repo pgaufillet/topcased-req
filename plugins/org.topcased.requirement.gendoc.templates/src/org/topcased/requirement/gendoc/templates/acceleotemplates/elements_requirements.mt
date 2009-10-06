@@ -26,19 +26,21 @@ import org.topcased.requirement.gendoc.templates.acceleotemplates.display_requir
 			<title><![CDATA[<%name%>]]></title>
 		<%}%>
 		<%for (allOwnedElements().filter("NamedElement")){%>
-			<%displayElementName%>
-			<%docbookRequirement%>
+			<%displayElementAndRequirements%>
 		<%}%>
 	</chapter>
 </book>
 
-<%script type="uml.NamedElement" name="displayElementName"%>
-<para><%name%></para>
-
-<%script type="ecore.EObject" name="docbookRequirement"%>
-<%for (getCurrentRequirementsForEObject()){%>
+<%-- this script is only used with NamedElement --%>
+<%script type="uml.NamedElement" name="displayElementAndRequirements"%>
+<%getCurrentRequirementsForEObject().put("RequirementsList")%>
+<%if (get("RequirementsList") != null && get("RequirementsList").length() != 0){%>
 	<section>
-		<%display_requirements%>
+		<title><![CDATA[<%name%> (<%getObjectTypeName()%>)]]></title>
+		<%for (get("ReqList")){%>
+			<%display_requirements%>
+		<%}%>
 	</section>
 <%}%>
+
 

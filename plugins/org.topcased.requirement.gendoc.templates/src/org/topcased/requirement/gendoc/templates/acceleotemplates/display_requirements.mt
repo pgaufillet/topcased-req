@@ -44,7 +44,7 @@ import org.topcased.requirement.gendoc.templates.RequirementsUtils
 	<%for (eContainer().getLinkedUpstreamRequirements()){%>
 		<phrase>
 			<markup role="<%get("attributeNameStyle")%>">
-				<%ident%>,&#160;
+				<%if (i() != 0){%>,&#160;<%}%><%ident%>
 			</markup>
 		</phrase>
 	<%}%>
