@@ -29,7 +29,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.topcased.model2doc.templates.acceleo.TemplateServices;
 import org.topcased.requirement.generic.Injector;
 import org.topcased.sam.requirement.Attribute;
 import org.topcased.sam.requirement.AttributeLink;
@@ -58,27 +57,27 @@ public class RequirementsUtils
     /** The map to store requirement project of a di file */
     private Map<URI, RequirementProject> map = new HashMap<URI, RequirementProject>();
 
-    /**
-     * Gets the associated requirements of elements in the diagram of the rootContainer
-     * 
-     * @param currentEObject the selected rootContainer
-     * 
-     * @return the requirements
-     */
-    public List<CurrentRequirement> getCurrentRequirementsForADiagram(EObject currentEObject)
-    {
-        List<CurrentRequirement> currentRequirements = new ArrayList<CurrentRequirement>();
-        RequirementProject project = loadRequirementProject(currentEObject);
-        if (project != null)
-        {
-            List<EObject> elementsForADiagram = new TemplateServices().getModelElementsForADiagram(currentEObject);
-            for (EObject eobject : elementsForADiagram)
-            {
-                currentRequirements.addAll(getCurrentRequirementsForEObject(eobject, currentEObject.eResource().getResourceSet()));
-            }
-        }
-        return currentRequirements;
-    }
+//    /**
+//     * Gets the associated requirements of elements in the diagram of the rootContainer
+//     * 
+//     * @param currentEObject the selected rootContainer
+//     * 
+//     * @return the requirements
+//     */
+//    public List<CurrentRequirement> getCurrentRequirementsForADiagram(EObject currentEObject)
+//    {
+//        List<CurrentRequirement> currentRequirements = new ArrayList<CurrentRequirement>();
+//        RequirementProject project = loadRequirementProject(currentEObject);
+//        if (project != null)
+//        {
+//            List<EObject> elementsForADiagram = new TemplateServices().getModelElementsForADiagram(currentEObject);
+//            for (EObject eobject : elementsForADiagram)
+//            {
+//                currentRequirements.addAll(getCurrentRequirementsForEObject(eobject, currentEObject.eResource().getResourceSet()));
+//            }
+//        }
+//        return currentRequirements;
+//    }
 
     /**
      * Gets the not affected requirements.

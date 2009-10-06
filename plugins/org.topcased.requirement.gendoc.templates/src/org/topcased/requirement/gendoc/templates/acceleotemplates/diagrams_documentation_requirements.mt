@@ -18,6 +18,7 @@ import org.topcased.requirement.gendoc.templates.RequirementsUtils
 import templates.display_diagram
 import templates.documentation_of_diagram
 import org.topcased.requirement.gendoc.templates.acceleotemplates.display_requirements
+import org.topcased.requirement.gendoc.templates.acceleotemplates.elements_requirements
 %>
 
 <%-- A template to get the diagrams, documentation and requirement associated with the given root_container --%>
@@ -37,8 +38,6 @@ import org.topcased.requirement.gendoc.templates.acceleotemplates.display_requir
 <%docbookRequirement%>
 
 <%script type="ecore.EObject" name="docbookRequirement"%>
-<%for (getCurrentRequirementsForADiagram()){%>
-	<section>
-		<%display_requirements%>
-	</section>
+<%for (service::getModelElementsForADiagram()){%>
+	<%displayElementAndRequirements%>
 <%}%>

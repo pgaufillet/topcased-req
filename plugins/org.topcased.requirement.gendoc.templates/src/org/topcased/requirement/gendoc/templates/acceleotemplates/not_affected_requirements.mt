@@ -29,6 +29,7 @@ import org.topcased.requirement.gendoc.templates.acceleotemplates.display_requir
 <%script type="ecore.EObject" name="display_not_affected_requirements"%>
 <%for (getNotAffectedRequirements()){%>
 	<section>
+		<title> </title>
 		<%display_requirements%>
 	</section>
 <%}%>

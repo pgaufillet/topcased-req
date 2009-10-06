@@ -12,31 +12,30 @@
  *****************************************************************************/--%>
 
 <%
-metamodel http://www.eclipse.org/uml2/3.0.0/UML
+metamodel http://www.eclipse.org/emf/2002/Ecore
 import org.topcased.model2doc.templates.acceleo.TemplateServices
 import org.topcased.requirement.gendoc.templates.RequirementsUtils
 import org.topcased.requirement.gendoc.templates.acceleotemplates.display_requirements
 %>
 
 <%-- A template to display children name and associated requirements of a specified element --%>
-<%script type="uml.NamedElement" name="elements_requirements" file="<%getOutputFile(getRootContainer(getProperty("root_container")), getProperty("resultFileName"))%>"%>
+<%script type="ecore.EObject" name="elements_requirements" file="<%getOutputFile(getRootContainer(getProperty("root_container")), getProperty("resultFileName"))%>"%>
 <book>
 	<chapter>
-		<%if (name != null && name.length() != 0){%>
-			<title><![CDATA[<%name%>]]></title>
-		<%}%>
-		<%for (allOwnedElements().filter("NamedElement")){%>
+		<title><![CDATA[<%getLabelForEObject()%>]]></title>
+		<%for (eContents()){%>
 			<%displayElementAndRequirements%>
 		<%}%>
 	</chapter>
 </book>
 
-<%-- this script is only used with NamedElement --%>
-<%script type="uml.NamedElement" name="displayElementAndRequirements"%>
+<%-- display the associated Object name and type as title --%>
+<%script type="ecore.EObject" name="displayElementAndRequirements"%>
+<%getLabelForEObject().put("ObjectLabel")%>
 <%getCurrentRequirementsForEObject().put("RequirementsList")%>
 <%if (get("RequirementsList") != null && get("RequirementsList").length() != 0){%>
 	<section>
-		<title><![CDATA[<%name%> (<%getObjectTypeName()%>)]]></title>
+		<title><![CDATA[<%getLabelForEObject()%>]]></title>
 		<%for (get("RequirementsList")){%>
 			<%display_requirements%>
 		<%}%>
