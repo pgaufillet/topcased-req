@@ -22,14 +22,12 @@ import org.topcased.requirement.gendoc.templates.acceleotemplates.display_requir
 <%script type="ecore.EObject" name="not_affected_requirements" file="<%getOutputFile(getRootContainer(getProperty("root_container")), getProperty("resultFileName"))%>"%>
 <book>
 	<chapter>
+		<title><![CDATA[<%getLabelForEObject()%>]]></title>
 		<%display_not_affected_requirements%>
 	</chapter>
 </book>
 
 <%script type="ecore.EObject" name="display_not_affected_requirements"%>
 <%for (getNotAffectedRequirements()){%>
-	<section>
-		<title> </title>
-		<%display_requirements%>
-	</section>
+	<%display_requirements%><para></para>
 <%}%>
