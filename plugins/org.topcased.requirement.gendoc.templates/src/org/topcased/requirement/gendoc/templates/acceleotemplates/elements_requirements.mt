@@ -37,7 +37,7 @@ import org.topcased.requirement.gendoc.templates.acceleotemplates.display_requir
 <%if (get("RequirementsList") != null && get("RequirementsList").length() != 0){%>
 	<section>
 		<title><![CDATA[<%name%> (<%getObjectTypeName()%>)]]></title>
-		<%for (get("ReqList")){%>
+		<%for (get("RequirementsList")){%>
 			<%display_requirements%>
 		<%}%>
 	</section>
