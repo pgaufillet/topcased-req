@@ -27,6 +27,7 @@ import org.topcased.sam.requirement.ProblemChapter;
 import org.topcased.sam.requirement.RequirementProject;
 import org.topcased.sam.requirement.TrashChapter;
 import org.topcased.sam.requirement.UntracedChapter;
+import org.topcased.sam.requirement.UpstreamModel;
 import org.topcased.ttm.Requirement;
 
 /**
@@ -59,7 +60,7 @@ public class CurrentRequirementFilter extends ViewerFilter
     {
         if (searched == null)
         {
-            return true ;
+            return !(element instanceof UpstreamModel) ;
         }
         if (element instanceof RequirementProject || element instanceof IdentifiedElement || element instanceof AttributeConfiguration || element instanceof ConfiguratedAttribute
                 || element instanceof AttributeValue || element instanceof CurrentRequirement || element instanceof Attribute || element instanceof TrashChapter || element instanceof ProblemChapter
