@@ -47,7 +47,6 @@ import org.topcased.ttm.Requirement;
  */
 public class RequirementsUtils
 {
-
     /** tab characters for spaces */
     private static String tabChars = "&#160;&#160;&#160;&#160;&#160;";
 
@@ -57,28 +56,49 @@ public class RequirementsUtils
     /** The map to store requirement project of a di file */
     private Map<URI, RequirementProject> map = new HashMap<URI, RequirementProject>();
 
-//    /**
-//     * Gets the associated requirements of elements in the diagram of the rootContainer
-//     * 
-//     * @param currentEObject the selected rootContainer
-//     * 
-//     * @return the requirements
-//     */
-//    public List<CurrentRequirement> getCurrentRequirementsForADiagram(EObject currentEObject)
-//    {
-//        List<CurrentRequirement> currentRequirements = new ArrayList<CurrentRequirement>();
-//        RequirementProject project = loadRequirementProject(currentEObject);
-//        if (project != null)
-//        {
-//            List<EObject> elementsForADiagram = new TemplateServices().getModelElementsForADiagram(currentEObject);
-//            for (EObject eobject : elementsForADiagram)
-//            {
-//                currentRequirements.addAll(getCurrentRequirementsForEObject(eobject, currentEObject.eResource().getResourceSet()));
-//            }
-//        }
-//        return currentRequirements;
-//    }
-
+    /**
+     * Gets the current requirement for a specified EObject.
+     * 
+     * @param eobject the eobject
+     * 
+     * @return the list of current requirements
+     */
+    public List<CurrentRequirement> getCurrentRequirementsForEObject(EObject eobject)
+    {
+        RequirementProject project = loadRequirementProject(eobject);
+        if (project != null)
+        {
+            return getCurrentRequirementsForEObject(eobject, eobject.eResource().getResourceSet());
+        }
+        return Collections.emptyList();
+    }
+    
+    /**
+     * Get the current requirements list for a specified EObject
+     * 
+     * @param eobject the current object
+     * @param set the resource set
+     * 
+     */
+    private List<CurrentRequirement> getCurrentRequirementsForEObject(EObject eobject, ResourceSet set)
+    {
+        List<CurrentRequirement> requirements = new ArrayList<CurrentRequirement>();
+        for (Setting setting : getUsages(eobject, set))
+        {
+            if (setting.getEObject() instanceof HierarchicalElement)
+            {
+                for (org.topcased.sam.requirement.Requirement req : ((HierarchicalElement) setting.getEObject()).getRequirement())
+                {
+                    if (req instanceof CurrentRequirement)
+                    {
+                        requirements.add((CurrentRequirement) req);
+                    }
+                }
+            }
+        }
+        return requirements;
+    }
+    
     /**
      * Gets the not affected requirements.
      * 
@@ -111,50 +131,7 @@ public class RequirementsUtils
         }
         return notAffectedRequirements;
     }
-
-    /**
-     * Get the current requirements list for a specified EObject
-     * 
-     * @param eobject the current object
-     * @param set the resource set
-     * 
-     */
-    private List<CurrentRequirement> getCurrentRequirementsForEObject(EObject eobject, ResourceSet set)
-    {
-        List<CurrentRequirement> requirements = new ArrayList<CurrentRequirement>();
-        for (Setting setting : getUsages(eobject, set))
-        {
-            if (setting.getEObject() instanceof HierarchicalElement)
-            {
-                for (org.topcased.sam.requirement.Requirement req : ((HierarchicalElement) setting.getEObject()).getRequirement())
-                {
-                    if (req instanceof CurrentRequirement)
-                    {
-                        requirements.add((CurrentRequirement) req);
-                    }
-                }
-            }
-        }
-        return requirements;
-    }
-
-    /**
-     * Gets the current requirement for a specified EObject.
-     * 
-     * @param eobject the eobject
-     * 
-     * @return the list of current requirements
-     */
-    public List<CurrentRequirement> getCurrentRequirementsForEObject(EObject eobject)
-    {
-        RequirementProject project = loadRequirementProject(eobject);
-        if (project != null)
-        {
-            return getCurrentRequirementsForEObject(eobject, eobject.eResource().getResourceSet());
-        }
-        return Collections.emptyList();
-    }
-
+    
     /**
      * Gets the upstream requirements linked to the current requirement.
      * 
@@ -178,6 +155,28 @@ public class RequirementsUtils
         }
         return links;
     }
+
+//    /**
+//     * Gets the associated requirements of elements in the diagram of the rootContainer
+//     * 
+//     * @param currentEObject the selected rootContainer
+//     * 
+//     * @return the requirements
+//     */
+//    public List<CurrentRequirement> getCurrentRequirementsForADiagram(EObject currentEObject)
+//    {
+//        List<CurrentRequirement> currentRequirements = new ArrayList<CurrentRequirement>();
+//        RequirementProject project = loadRequirementProject(currentEObject);
+//        if (project != null)
+//        {
+//            List<EObject> elementsForADiagram = new TemplateServices().getModelElementsForADiagram(currentEObject);
+//            for (EObject eobject : elementsForADiagram)
+//            {
+//                currentRequirements.addAll(getCurrentRequirementsForEObject(eobject, currentEObject.eResource().getResourceSet()));
+//            }
+//        }
+//        return currentRequirements;
+//    }
 
     /**
      * Clean the attribute name to have the right formatter
@@ -224,29 +223,32 @@ public class RequirementsUtils
     private RequirementProject loadRequirementProject(EObject eObject)
     {
         RequirementProject project = null;
-        ResourceSet set = eObject.eResource().getResourceSet();
-        if (set != null)
+        if (eObject.eResource() != null)
         {
-            URI createURI = URI.createURI(eObject.eResource().getURI().toString() + "di");
-            Resource diagramResource = set.getResource(createURI, true);
-            if (diagramResource != null)
+            ResourceSet set = eObject.eResource().getResourceSet();            
+            if (set != null)
             {
-                project = map.get(createURI);
-                if (project == null)
+                URI createURI = URI.createURI(eObject.eResource().getURI().toString() + "di");
+                Resource diagramResource = set.getResource(createURI, true);
+                if (diagramResource != null)
                 {
-                    project = Injector.getRequirementProject(diagramResource.getContents().get(0));
-                    map.put(createURI, project);
-                }
-                boolean found = false;
-                for (Iterator<Resource> i = set.getResources().iterator() ; i.hasNext() && ! found ;)
-                {
-                    found |= i.next().getURI().equals(project.eResource().getURI());
-                }
-                if (!found)
-                {
-                    set.getResources().add(project.eResource());
-                    // EcoreUtil.resolveAll(set);
-                    EcoreUtil.resolveAll(eObject.eResource());
+                    project = map.get(createURI);
+                    if (project == null)
+                    {
+                        project = Injector.getRequirementProject(diagramResource.getContents().get(0));
+                        map.put(createURI, project);
+                    }
+                    boolean found = false;
+                    for (Iterator<Resource> i = set.getResources().iterator() ; i.hasNext() && ! found ;)
+                    {
+                        found |= i.next().getURI().equals(project.eResource().getURI());
+                    }
+                    if (!found)
+                    {
+                        set.getResources().add(project.eResource());
+                        // EcoreUtil.resolveAll(set);
+                        EcoreUtil.resolveAll(eObject.eResource());
+                    }
                 }
             }
         }
