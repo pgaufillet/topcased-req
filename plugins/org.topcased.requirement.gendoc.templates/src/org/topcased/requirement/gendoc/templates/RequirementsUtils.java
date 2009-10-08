@@ -236,18 +236,21 @@ public class RequirementsUtils
                     if (project == null)
                     {
                         project = Injector.getRequirementProject(diagramResource.getContents().get(0));
-                        map.put(createURI, project);
-                    }
-                    boolean found = false;
-                    for (Iterator<Resource> i = set.getResources().iterator() ; i.hasNext() && ! found ;)
-                    {
-                        found |= i.next().getURI().equals(project.eResource().getURI());
-                    }
-                    if (!found)
-                    {
-                        set.getResources().add(project.eResource());
-                        // EcoreUtil.resolveAll(set);
-                        EcoreUtil.resolveAll(eObject.eResource());
+                        if (project != null)
+                        {
+                            map.put(createURI, project);                            
+                            boolean found = false;
+                            for (Iterator<Resource> i = set.getResources().iterator() ; i.hasNext() && ! found ;)
+                            {
+                                found |= i.next().getURI().equals(project.eResource().getURI());
+                            }
+                            if (!found)
+                            {
+                                set.getResources().add(project.eResource());
+                                // EcoreUtil.resolveAll(set);
+                                EcoreUtil.resolveAll(eObject.eResource());
+                            }
+                        }
                     }
                 }
             }
