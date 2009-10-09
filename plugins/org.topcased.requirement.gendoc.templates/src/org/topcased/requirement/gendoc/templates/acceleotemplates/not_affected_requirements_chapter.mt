@@ -14,17 +14,14 @@
 <%
 metamodel http://www.eclipse.org/emf/2002/Ecore
 import org.topcased.model2doc.templates.acceleo.TemplateServices
-import org.topcased.requirement.gendoc.templates.RequirementsUtils
-import org.topcased.requirement.gendoc.templates.acceleotemplates.display_requirements
+import org.topcased.requirement.gendoc.templates.acceleotemplates.not_affected_requirements
 %>
 
 <%-- A template to display the unaffected current requirements of a requirement model --%>
 <%script type="ecore.EObject" name="not_affected_requirements" file="<%getOutputFile(getRootContainer(getProperty("root_container")), getProperty("resultFileName"))%>"%>
 <book>
-	<%display_not_affected_requirements%>
+	<chapter>
+		<title><![CDATA[<%getLabelForEObject()%>]]></title>
+		<%display_not_affected_requirements%>
+	</chapter>
 </book>
-
-<%script type="ecore.EObject" name="display_not_affected_requirements"%>
-<%for (getNotAffectedRequirements()){%>
-	<%display_requirements%><para></para>
-<%}%>

@@ -24,12 +24,7 @@ import org.topcased.requirement.gendoc.templates.acceleotemplates.elements_requi
 <%-- A template to get the diagrams, documentation and requirement associated with the given root_container --%>
 <%script type="uml.NamedElement" name="diagrams_documentation_requirements" file="<%getOutputFile(getRootContainer(getProperty("root_container")), getProperty("resultFileName"))%>"%>
 <book>
-	<chapter>
-		<%if (name != null && name.length() != 0){%>
-			<title><![CDATA[<%name%>]]></title>
-		<%}%>
-		<%display_diagrams_documentation_requirements%>
-	</chapter>
+	<%display_diagrams_documentation_requirements%>
 </book>
 
 <%script type="uml.NamedElement" name="display_diagrams_documentation_requirements"%>

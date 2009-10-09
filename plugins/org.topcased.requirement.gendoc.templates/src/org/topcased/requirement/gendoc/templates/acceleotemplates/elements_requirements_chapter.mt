@@ -14,29 +14,16 @@
 <%
 metamodel http://www.eclipse.org/emf/2002/Ecore
 import org.topcased.model2doc.templates.acceleo.TemplateServices
-import org.topcased.requirement.gendoc.templates.RequirementsUtils
-import org.topcased.requirement.gendoc.templates.acceleotemplates.display_requirements
+import org.topcased.requirement.gendoc.templates.acceleotemplates.elements_requirements
 %>
 
 <%-- A template to display children name and associated requirements of a specified element --%>
 <%script type="ecore.EObject" name="elements_requirements" file="<%getOutputFile(getRootContainer(getProperty("root_container")), getProperty("resultFileName"))%>"%>
 <book>
-	<%for (eContents()){%>
-		<%displayElementAndRequirements%>
-	<%}%>
-</book>
-
-<%-- display the associated Object name and type as title --%>
-<%script type="ecore.EObject" name="displayElementAndRequirements"%>
-<%getLabelForEObject().put("ObjectLabel")%>
-<%getCurrentRequirementsForEObject().put("RequirementsList")%>
-<%if (get("RequirementsList") != null && get("RequirementsList").length() != 0){%>
-	<section>
+	<chapter>
 		<title><![CDATA[<%getLabelForEObject()%>]]></title>
-		<%for (get("RequirementsList")){%>
-			<%display_requirements%>
+		<%for (eContents()){%>
+			<%displayElementAndRequirements%>
 		<%}%>
-	</section>
-<%}%>
-
-
+	</chapter>
+</book>
