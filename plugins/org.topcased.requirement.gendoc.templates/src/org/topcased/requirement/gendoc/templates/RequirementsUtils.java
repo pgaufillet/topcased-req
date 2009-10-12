@@ -56,7 +56,7 @@ public class RequirementsUtils
     private boolean isFirstAttributeLink = true;
 
     /** The map to store requirement project of a di file */
-    private Map<URI, RequirementProject> map = new HashMap<URI, RequirementProject>();
+    private Map<URI, RequirementProject> requirementProjectsMap = new HashMap<URI, RequirementProject>();
     
 
     /**
@@ -112,7 +112,7 @@ public class RequirementsUtils
     public List<CurrentRequirement> getNotAffectedRequirements(EObject currentEObject)
     {
         List<CurrentRequirement> notAffectedRequirements = new ArrayList<CurrentRequirement>();
-        RequirementProject project = loadRequirementProject(currentEObject);
+        RequirementProject project = loadCorrespondingRequirementProject(currentEObject);
         if (project != null)
         {
             for (SpecialChapter chapter : project.getChapter())
@@ -158,28 +158,6 @@ public class RequirementsUtils
         }
         return links;
     }
-
-//    /**
-//     * Gets the associated requirements of elements in the diagram of the rootContainer
-//     * 
-//     * @param currentEObject the selected rootContainer
-//     * 
-//     * @return the requirements
-//     */
-//    public List<CurrentRequirement> getCurrentRequirementsForADiagram(EObject currentEObject)
-//    {
-//        List<CurrentRequirement> currentRequirements = new ArrayList<CurrentRequirement>();
-//        RequirementProject project = loadRequirementProject(currentEObject);
-//        if (project != null)
-//        {
-//            List<EObject> elementsForADiagram = new TemplateServices().getModelElementsForADiagram(currentEObject);
-//            for (EObject eobject : elementsForADiagram)
-//            {
-//                currentRequirements.addAll(getCurrentRequirementsForEObject(eobject, currentEObject.eResource().getResourceSet()));
-//            }
-//        }
-//        return currentRequirements;
-//    }
 
     /**
      * Clean the attribute name to have the right formatter
@@ -251,13 +229,13 @@ public class RequirementsUtils
                     if (diResource != null && diResource.getErrors().size() == 0)
                     {
                         URI diagramURI = diResource.getURI();
-                        project = map.get(diagramURI);
+                        project = requirementProjectsMap.get(diagramURI);
                         if (project == null)
                         {
                             project = Injector.getRequirementProject(diResource.getContents().get(0));
                             if (project != null)
                             {
-                                map.put(diagramURI, project);                            
+                                requirementProjectsMap.put(diagramURI, project);                            
                                 boolean found = false;
                                 for (Iterator<Resource> j = set.getResources().iterator() ; j.hasNext() && ! found ;)
                                 {
@@ -278,50 +256,25 @@ public class RequirementsUtils
             }
         }
     }
-
+    
     /**
-     * Gets the requirement project for a specified eObject
-     * 
-     * @param eObject the eObject
-     * 
-     * @return the associated requirement project if any
-     * TODO several requirements can be linked to the di resource
-     */
-    private RequirementProject loadRequirementProject(EObject eObject)
+    * Load corresponding requirement project.
+    * 
+    * @param currentEObject the current e object
+    * 
+    * @return the requirement project
+    */
+    public RequirementProject loadCorrespondingRequirementProject(EObject currentEObject)
     {
-        RequirementProject project = null;
-        if (eObject.eResource() != null)
+        loadRequirementProjects(currentEObject);
+        URI uri = null;
+        if (currentEObject.eResource() != null)
         {
-            ResourceSet set = eObject.eResource().getResourceSet();            
-            if (set != null)
-            {
-                URI createURI = URI.createURI(eObject.eResource().getURI().toString() + "di");
-                Resource diagramResource = set.getResource(createURI, true);
-                if (diagramResource != null)
-                {
-                    project = map.get(createURI);
-                    if (project == null)
-                    {
-                        project = Injector.getRequirementProject(diagramResource.getContents().get(0));
-                        if (project != null)
-                        {
-                            map.put(createURI, project);                            
-                            boolean found = false;
-                            for (Iterator<Resource> i = set.getResources().iterator() ; i.hasNext() && ! found ;)
-                            {
-                                found |= i.next().getURI().equals(project.eResource().getURI());
-                            }
-                            if (!found)
-                            {
-                                set.getResources().add(project.eResource());
-                                EcoreUtil.resolveAll(eObject.eResource());
-                            }
-                        }
-                    }
-                }
-            }
+            uri = URI.createURI(currentEObject.eResource().getURI().toString() + "di");
+            // TODO only get requirement project for currentEObjet's model
+            return requirementProjectsMap.get(uri);
         }
-        return project;
+        return null;
     }
 
     /**
