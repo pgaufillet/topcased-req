@@ -47,6 +47,8 @@ import org.topcased.ttm.Requirement;
  */
 public class RequirementsUtils
 {
+    private static final String REQUIREMENT_EXTENSION = "requirement";
+
     /** tab characters for spaces */
     private static String tabChars = "&#160;&#160;&#160;&#160;&#160;";
 
@@ -55,20 +57,21 @@ public class RequirementsUtils
 
     /** The map to store requirement project of a di file */
     private Map<URI, RequirementProject> map = new HashMap<URI, RequirementProject>();
+    
 
     /**
      * Gets the current requirement for a specified EObject.
      * 
-     * @param eobject the eobject
+     * @param eObject the eobject
      * 
      * @return the list of current requirements
      */
-    public List<CurrentRequirement> getCurrentRequirementsForEObject(EObject eobject)
+    public List<CurrentRequirement> getCurrentRequirementsForEObject(EObject eObject)
     {
-        RequirementProject project = loadRequirementProject(eobject);
-        if (project != null)
+        loadRequirementProjects(eObject);
+        if (eObject.eResource() != null)
         {
-            return getCurrentRequirementsForEObject(eobject, eobject.eResource().getResourceSet());
+            return getCurrentRequirementsForEObject(eObject, eObject.eResource().getResourceSet());            
         }
         return Collections.emptyList();
     }
@@ -212,6 +215,66 @@ public class RequirementsUtils
         }
         return collection;
     }
+    
+    /**
+     * Load requirement projects.
+     * 
+     * @param eObject the eObject for which we search attached requirements
+     */
+    private void loadRequirementProjects(EObject eObject)
+    {
+        RequirementProject project = null;
+        if (eObject.eResource() != null)
+        {
+            ResourceSet set = eObject.eResource().getResourceSet();            
+            if (set != null)
+            {
+                for (int i = 0; i < set.getResources().size(); i++)
+                {
+                    Resource res = set.getResources().get(i);
+                    Resource diagramResource = null;
+                    URI uri = res.getURI();
+                    
+                    if (uri != null && !REQUIREMENT_EXTENSION.equals(uri.fileExtension()))
+                    {
+                        if (uri.fileExtension().endsWith("di"))
+                        {
+                            diagramResource = res;
+                        }
+                        else
+                        {
+                            URI createURI = URI.createURI(uri.toString() + "di");
+                            diagramResource = set.getResource(createURI, true);
+                        }
+                    }
+                    
+                    if (diagramResource != null && diagramResource.getErrors().size() == 0)
+                    {
+                        URI diagramURI = diagramResource.getURI();
+                        project = map.get(diagramURI);
+                        if (project == null)
+                        {
+                            project = Injector.getRequirementProject(diagramResource.getContents().get(0));
+                            if (project != null)
+                            {
+                                map.put(diagramURI, project);                            
+                                boolean found = false;
+                                for (Iterator<Resource> j = set.getResources().iterator() ; j.hasNext() && ! found ;)
+                                {
+                                    found |= j.next().getURI().equals(project.eResource().getURI());
+                                }
+                                if (!found)
+                                {
+                                    set.getResources().add(project.eResource());
+                                    EcoreUtil.resolveAll(diagramResource);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * Gets the requirement project for a specified eObject
@@ -219,6 +282,7 @@ public class RequirementsUtils
      * @param eObject the eObject
      * 
      * @return the associated requirement project if any
+     * TODO several requirements can be linked to the di resource
      */
     private RequirementProject loadRequirementProject(EObject eObject)
     {
@@ -247,7 +311,6 @@ public class RequirementsUtils
                             if (!found)
                             {
                                 set.getResources().add(project.eResource());
-                                // EcoreUtil.resolveAll(set);
                                 EcoreUtil.resolveAll(eObject.eResource());
                             }
                         }
