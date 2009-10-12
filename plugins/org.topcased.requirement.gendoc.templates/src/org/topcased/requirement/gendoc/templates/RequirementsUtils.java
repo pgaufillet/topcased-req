@@ -231,30 +231,30 @@ public class RequirementsUtils
             {
                 for (int i = 0; i < set.getResources().size(); i++)
                 {
-                    Resource res = set.getResources().get(i);
-                    Resource diagramResource = null;
-                    URI uri = res.getURI();
+                    Resource resource = set.getResources().get(i);
+                    Resource diResource = null;
+                    URI uri = resource.getURI();
                     
                     if (uri != null && !REQUIREMENT_EXTENSION.equals(uri.fileExtension()))
                     {
                         if (uri.fileExtension().endsWith("di"))
                         {
-                            diagramResource = res;
+                            diResource = resource;
                         }
                         else
                         {
                             URI createURI = URI.createURI(uri.toString() + "di");
-                            diagramResource = set.getResource(createURI, true);
+                            diResource = set.getResource(createURI, true);
                         }
                     }
                     
-                    if (diagramResource != null && diagramResource.getErrors().size() == 0)
+                    if (diResource != null && diResource.getErrors().size() == 0)
                     {
-                        URI diagramURI = diagramResource.getURI();
+                        URI diagramURI = diResource.getURI();
                         project = map.get(diagramURI);
                         if (project == null)
                         {
-                            project = Injector.getRequirementProject(diagramResource.getContents().get(0));
+                            project = Injector.getRequirementProject(diResource.getContents().get(0));
                             if (project != null)
                             {
                                 map.put(diagramURI, project);                            
@@ -266,7 +266,10 @@ public class RequirementsUtils
                                 if (!found)
                                 {
                                     set.getResources().add(project.eResource());
-                                    EcoreUtil.resolveAll(diagramResource);
+                                    // resolve resource to reach controlled resources if any
+                                    //EcoreUtil.resolveAll(resource);
+                                    // resolve diResource to reach requirement project
+                                    EcoreUtil.resolveAll(diResource);
                                 }
                             }
                         }
