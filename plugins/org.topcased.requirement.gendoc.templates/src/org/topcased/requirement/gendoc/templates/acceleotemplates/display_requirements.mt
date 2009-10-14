@@ -13,6 +13,8 @@
 <%
 metamodel http://org.topcased.requirement/1.0
 import org.topcased.requirement.gendoc.templates.RequirementsUtils
+import org.topcased.model2doc.templates.acceleo.TemplateServices
+import org.topcased.requirement.gendoc.templates.FormattingUtils
 %>
 
 <%script type="requirement.CurrentRequirement" name="display_requirements" %>
@@ -25,34 +27,38 @@ import org.topcased.requirement.gendoc.templates.RequirementsUtils
 		<phrase><markup role="NormalIdent"><![CDATA[<%shortDescription%>]]></markup></phrase>
 	<%}%>
 </para>
+<table frame='none'><tgroup><tbody>
 <%for (attribute){%>
-	<para>
-		<%attribute_template%>
-	</para>	
+	<%attribute_template%>
 <%}%>
+</tbody></tgroup></table>
 
 <%script type="requirement.Attribute" name="attribute_template" %>
 
 <%script type="requirement.TextAttribute" name="attribute_template" %>
-<phrase><markup role="Attributes"><%getTabChar()%><%getFormattedName(name)%>&#160;: </markup></phrase><phrase><markup role="<%getStyleNameFromName(name)%>"><%value%></markup></phrase>
+<row>
+<entry><para><phrase><markup role="Attributes"><%getTabChar()%><%getFormattedName(name)%>&#160;: </markup></phrase></para></entry>
+<entry><%value.insertFormattedAttribute(getStyleNameFromName(name))%></entry>
+</row>
 
 <%script type="requirement.AttributeLink" name="attribute_template" %>
 <%if (isFirstAttributeLink()){%>
+	<row>
 	<%setFirstAttributeLink(false)%>
-	<phrase><markup role="Attributes"><%getTabChar()%><%getFormattedName(name)%>&#160;: </markup></phrase>
-			<%getStyleNameFromName(name).put("attributeNameStyle")%>
-	<%for (eContainer().getLinkedUpstreamRequirements()){%>
-		<phrase>
-			<markup role="<%get("attributeNameStyle")%>">
-				<%if (i() != 0){%>,&#160;<%}%><%ident%>
-			</markup>
-		</phrase>
-	<%}%>
-			
+	<entry><para><phrase><markup role="Attributes"><%getTabChar()%><%getFormattedName(name)%>&#160;: </markup></phrase></para></entry>
+	<%getStyleNameFromName(name).put("attributeNameStyle")%>
+	<entry><para><phrase><markup role="<%get("attributeNameStyle")%>"><%for (eContainer().getLinkedUpstreamRequirements()){%><%if (i() != 0){%>, <%}%><%ident%><%}%></markup></phrase></para></entry>
+	</row>
 <%}%>
 
 <%script type="requirement.ObjectAttribute" name="attribute_template" %>
-<phrase><markup role="Attributes"><%getTabChar()%><%getFormattedName(name)%>&#160;: </markup></phrase> <phrase><markup role="<%getStyleNameFromName(name)%>"><%value%></markup></phrase>
+<row>
+<entry><para><phrase><markup role="Attributes"><%getTabChar()%><%getFormattedName(name)%>&#160;: </markup></phrase></para></entry>
+<entry><para><phrase><markup role="<%getStyleNameFromName(name)%>"><%value%></markup></phrase></para></entry>
+</row>
 
 <%script type="requirement.AttributeAllocate" name="attribute_template" %>
-<phrase><markup role="Attributes"><%getTabChar()%><%getFormattedName(name)%>&#160;: </markup></phrase><phrase><markup role="<%getStyleNameFromName(name)%>"><%value%></markup></phrase>
+<row>
+<entry><para><phrase><markup role="Attributes"><%getTabChar()%><%getFormattedName(name)%>&#160;: </markup></phrase></para></entry>
+<entry><para><phrase><markup role="<%getStyleNameFromName(name)%>"><%value%></markup></phrase></para></entry>
+</row>
