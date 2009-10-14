@@ -169,7 +169,7 @@ public class RequirementsUtils
      */
     public String getFormattedName(EObject eObject, String name)
     {
-        return name.replaceFirst("#", "").replaceAll("_", " ");
+        return name.replaceFirst("#", "").replaceAll("_", "&#160;").replaceAll(" ", "&#160;");
     }
 
     /**
@@ -287,7 +287,7 @@ public class RequirementsUtils
      */
     public String getStyleNameFromName(EObject eObject, String name)
     {
-        String formattedName = getFormattedName(eObject, name);
+        String formattedName = name.replaceFirst("#", "").replaceAll("_", " ");
         formattedName = formattedName.replaceAll("[^1-z]", "");
         return formattedName;
     }

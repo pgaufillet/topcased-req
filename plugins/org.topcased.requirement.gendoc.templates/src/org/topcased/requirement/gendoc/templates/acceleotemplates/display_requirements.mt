@@ -34,12 +34,12 @@ import org.topcased.requirement.gendoc.templates.RequirementsUtils
 <%script type="requirement.Attribute" name="attribute_template" %>
 
 <%script type="requirement.TextAttribute" name="attribute_template" %>
-<phrase><markup role="Attributes"><%getTabChar()%><%getFormattedName(name)%> : </markup></phrase><phrase><markup role="<%getStyleNameFromName(name)%>"><%value%></markup></phrase>
+<phrase><markup role="Attributes"><%getTabChar()%><%getFormattedName(name)%>&#160;: </markup></phrase><phrase><markup role="<%getStyleNameFromName(name)%>"><%value%></markup></phrase>
 
 <%script type="requirement.AttributeLink" name="attribute_template" %>
 <%if (isFirstAttributeLink()){%>
 	<%setFirstAttributeLink(false)%>
-	<phrase><markup role="Attributes"><%getTabChar()%><%getFormattedName(name)%> : </markup></phrase>
+	<phrase><markup role="Attributes"><%getTabChar()%><%getFormattedName(name)%>&#160;: </markup></phrase>
 			<%getStyleNameFromName(name).put("attributeNameStyle")%>
 	<%for (eContainer().getLinkedUpstreamRequirements()){%>
 		<phrase>
@@ -52,7 +52,7 @@ import org.topcased.requirement.gendoc.templates.RequirementsUtils
 <%}%>
 
 <%script type="requirement.ObjectAttribute" name="attribute_template" %>
-<phrase><markup role="Attributes"><%getTabChar()%><%getFormattedName(name)%> : </markup></phrase> <phrase><markup role="<%getStyleNameFromName(name)%>"><%value%></markup></phrase>
+<phrase><markup role="Attributes"><%getTabChar()%><%getFormattedName(name)%>&#160;: </markup></phrase> <phrase><markup role="<%getStyleNameFromName(name)%>"><%value%></markup></phrase>
 
 <%script type="requirement.AttributeAllocate" name="attribute_template" %>
-<phrase><markup role="Attributes"><%getTabChar()%><%getFormattedName(name)%> : </markup></phrase><phrase><markup role="<%getStyleNameFromName(name)%>"><%value%></markup></phrase>
+<phrase><markup role="Attributes"><%getTabChar()%><%getFormattedName(name)%>&#160;: </markup></phrase><phrase><markup role="<%getStyleNameFromName(name)%>"><%value%></markup></phrase>
