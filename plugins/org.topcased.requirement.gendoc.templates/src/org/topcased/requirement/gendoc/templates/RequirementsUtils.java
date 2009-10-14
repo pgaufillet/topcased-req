@@ -64,11 +64,11 @@ public class RequirementsUtils
         loadRequirementProjects(eObject);
         if (eObject.eResource() != null)
         {
-            return getCurrentRequirementsForEObject(eObject, eObject.eResource().getResourceSet());            
+            return getCurrentRequirementsForEObject(eObject, eObject.eResource().getResourceSet());
         }
         return Collections.emptyList();
     }
-    
+
     /**
      * Get the current requirements list for a specified EObject
      * 
@@ -94,7 +94,7 @@ public class RequirementsUtils
         }
         return requirements;
     }
-    
+
     /**
      * Gets the not affected requirements.
      * 
@@ -127,7 +127,7 @@ public class RequirementsUtils
         }
         return notAffectedRequirements;
     }
-    
+
     /**
      * Gets the upstream requirements linked to the current requirement.
      * 
@@ -173,7 +173,7 @@ public class RequirementsUtils
         }
         return collection;
     }
-    
+
     /**
      * Load requirement projects.
      * 
@@ -184,7 +184,7 @@ public class RequirementsUtils
         RequirementProject project = null;
         if (eObject.eResource() != null)
         {
-            ResourceSet set = eObject.eResource().getResourceSet();            
+            ResourceSet set = eObject.eResource().getResourceSet();
             if (set != null)
             {
                 for (int i = 0; i < set.getResources().size(); i++)
@@ -192,8 +192,8 @@ public class RequirementsUtils
                     Resource resource = set.getResources().get(i);
                     Resource diResource = null;
                     URI uri = resource.getURI();
-                    
-                    if (uri != null && !REQUIREMENT_EXTENSION.equals(uri.fileExtension()))
+
+                    if (uri != null && !REQUIREMENT_EXTENSION.equals(uri.fileExtension()) && !uri.toString().contains("pathmap"))
                     {
                         if (uri.fileExtension().endsWith("di"))
                         {
@@ -205,7 +205,7 @@ public class RequirementsUtils
                             diResource = set.getResource(createURI, true);
                         }
                     }
-                    
+
                     if (diResource != null && diResource.getErrors().size() == 0)
                     {
                         URI diagramURI = diResource.getURI();
@@ -215,9 +215,9 @@ public class RequirementsUtils
                             project = Injector.getRequirementProject(diResource.getContents().get(0));
                             if (project != null)
                             {
-                                requirementProjectsMap.put(diagramURI, project);                            
+                                requirementProjectsMap.put(diagramURI, project);
                                 boolean found = false;
-                                for (Iterator<Resource> j = set.getResources().iterator() ; j.hasNext() && ! found ;)
+                                for (Iterator<Resource> j = set.getResources().iterator(); j.hasNext() && !found;)
                                 {
                                     found |= j.next().getURI().equals(project.eResource().getURI());
                                 }
@@ -225,7 +225,7 @@ public class RequirementsUtils
                                 {
                                     set.getResources().add(project.eResource());
                                     // resolve resource to reach controlled resources if any
-                                    //EcoreUtil.resolveAll(resource);
+                                    // EcoreUtil.resolveAll(resource);
                                     // resolve diResource to reach requirement project
                                     EcoreUtil.resolveAll(diResource);
                                 }
@@ -236,14 +236,14 @@ public class RequirementsUtils
             }
         }
     }
-    
+
     /**
-    * Load corresponding requirement project.
-    * 
-    * @param currentEObject the current e object
-    * 
-    * @return the requirement project
-    */
+     * Load corresponding requirement project.
+     * 
+     * @param currentEObject the current e object
+     * 
+     * @return the requirement project
+     */
     public RequirementProject loadCorrespondingRequirementProject(EObject currentEObject)
     {
         loadRequirementProjects(currentEObject);
@@ -256,5 +256,5 @@ public class RequirementsUtils
         }
         return null;
     }
-    
+
 }
