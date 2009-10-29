@@ -14,6 +14,7 @@
 package org.topcased.requirement.generic;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.edit.domain.IEditingDomainProvider;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuListener;
@@ -27,6 +28,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.topcased.modeler.di.model.Property;
 import org.topcased.modeler.editor.Modeler;
@@ -49,6 +51,7 @@ public class CustomCurrentPage extends CurrentPage
         modeler = adaptableObject;
     }
 
+    
     
     
     @Override
@@ -98,6 +101,20 @@ public class CustomCurrentPage extends CurrentPage
 
     
     
+    @Override
+    public void selectionChanged(IWorkbenchPart part, ISelection theSelection)
+    {
+        if (editingDomain == null && part instanceof IEditingDomainProvider)
+        {
+            IEditingDomainProvider provider = (IEditingDomainProvider) part;
+            setEditingDomain(provider.getEditingDomain());
+        }
+        super.selectionChanged(part, theSelection);
+    }
+
+
+
+
     /**
      * Cutomize the menu
      * @param page
