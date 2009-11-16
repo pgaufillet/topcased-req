@@ -127,7 +127,7 @@ public class AdapterFactory implements IAdapterFactory
         if (!objects.isEmpty())
         {
             ISelection selection = new TreeSelection(objects.toArray(new TreePath[0]));
-            CurrentRequirementFilter.getInstance().setSearched("");
+            CurrentRequirementFilter.getInstance().setSearchedRequirement(null);
             ((TreeViewer) page.getViewer()).setSelection(selection, true);
         }
     }

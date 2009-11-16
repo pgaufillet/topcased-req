@@ -84,7 +84,7 @@ public class UpstreamSelectionChangedListener implements ISelectionChangedListen
                     // ie : the current page will not try to restore a selection which is not visible
                     viewer.setSelection(null);
                     currentFilter = CurrentRequirementFilter.getInstance();
-                    currentFilter.setSearched(current.getIdent());
+                    currentFilter.setSearchedRequirement(current);
                     viewer.addFilter(currentFilter);
                     viewer.expandAll();
                     for (Object element : viewer.getExpandedElements())
@@ -104,7 +104,7 @@ public class UpstreamSelectionChangedListener implements ISelectionChangedListen
                 {
                     if (currentFilter != null)
                     {
-                        currentFilter.setSearched(null);
+                        currentFilter.setSearchedRequirement(null);
                         viewer.refresh();
                     }
                 }

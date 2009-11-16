@@ -38,7 +38,9 @@ import org.topcased.ttm.Requirement;
  */
 public class CurrentRequirementFilter extends ViewerFilter
 {
-    private static CurrentRequirementFilter instance = new CurrentRequirementFilter();
+    private static final String LINK_TO = "#Link_to";
+    
+	private static CurrentRequirementFilter instance = new CurrentRequirementFilter();
 
     public static CurrentRequirementFilter getInstance()
     {
@@ -50,7 +52,7 @@ public class CurrentRequirementFilter extends ViewerFilter
 
     }
 
-    private String searched;
+    private Requirement searchedRequirement;
 
     /**
      * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
@@ -58,7 +60,7 @@ public class CurrentRequirementFilter extends ViewerFilter
      */
     public boolean select(Viewer viewer, Object parentElement, Object element)
     {
-        if (searched == null)
+        if (searchedRequirement == null)
         {
             return !(element instanceof UpstreamModel) ;
         }
@@ -84,7 +86,7 @@ public class CurrentRequirementFilter extends ViewerFilter
                 }
                 return result;
             }
-            else if (searched != null && searched.length() > 0)
+            else if (searchedRequirement != null)
             {
                 if (element instanceof HierarchicalElement)
                 {
@@ -111,21 +113,16 @@ public class CurrentRequirementFilter extends ViewerFilter
     {
         Boolean display = false;
 
-        // Filter the name of the requirement
-        for (Attribute a : requirement.getAttribute())
+        if (searchedRequirement != null)
         {
-            if (a instanceof AttributeLink)
-            {
-                AttributeLink link = (AttributeLink) a;
-                EObject value = link.getValue();
-                if (value instanceof Requirement)
-                {
-                    Requirement req = (Requirement) value;
-                    if (req.getIdent() != null && searched != null)
-                    {
-                        display |= "#Link_to".equals(link.getName()) && req.getIdent().indexOf(searched) > -1;
-                    }
-                }
+	        // Filter the requirement itself (not its name)
+	        for (Attribute a : requirement.getAttribute())
+	        {
+	            if (a instanceof AttributeLink)
+	            {
+	                AttributeLink link = (AttributeLink) a;
+	                display |= LINK_TO.equals(link.getName()) && searchedRequirement.equals(link.getValue());     
+	            }
             }
         }
         return display;
@@ -161,9 +158,9 @@ public class CurrentRequirementFilter extends ViewerFilter
         return display;
     }
 
-    public void setSearched(String request)
+    public void setSearchedRequirement(Requirement current)
     {
-        this.searched = request;
+        this.searchedRequirement = current;
     }
 
 }
