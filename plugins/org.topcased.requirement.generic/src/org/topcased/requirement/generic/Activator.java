@@ -103,6 +103,10 @@ public class Activator extends AbstractUIPlugin
 
     public static boolean currentEditorHasRequirements()
     {
+        if (PlatformUI.getWorkbench() == null || PlatformUI.getWorkbench().getActiveWorkbenchWindow() == null || PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() == null)
+        {
+            return false ;
+        }
         return UpstreamRequirementView.getInstance() != null && ((UpstreamRequirementView) UpstreamRequirementView.getInstance()).getCurrentPage() instanceof UpstreamPage
                 && ((UpstreamPage) ((UpstreamRequirementView) UpstreamRequirementView.getInstance()).getCurrentPage()).getViewer() != null
                 && ((UpstreamPage) ((UpstreamRequirementView) UpstreamRequirementView.getInstance()).getCurrentPage()).getViewer().getInput() != null;
