@@ -92,7 +92,19 @@ public class Injector
      */
     public static synchronized RequirementProject getRequirementProject(EObject eobject)
     {
-        return getRequirementProject(getProperty(eobject));
+        return getRequirementProject(getProperty(eobject),null);
+    }
+    
+    /**
+     * Gets the requirement project.
+     * 
+     * @param property the property
+     * 
+     * @return the requirement project
+     */
+    public static synchronized RequirementProject getRequirementProject(EObject eobject,ResourceSet set)
+    {
+        return getRequirementProject(getProperty(eobject),set);
     }
 
     /**
@@ -104,11 +116,27 @@ public class Injector
      */
     public static synchronized RequirementProject getRequirementProject(Property property)
     {
+        return getRequirementProject(property,null);
+    }
+    
+    /**
+     * Gets the requirement project.
+     * 
+     * @param property the property
+     * 
+     * @return the requirement project
+     */
+    public static synchronized RequirementProject getRequirementProject(Property property, ResourceSet set)
+    {
+        if (set == null)
+        {
+            set = new ResourceSetImpl() ;
+        }
         RequirementProject result = null;
         if (property != null)
         {
             String uri = URI.createURI(property.getValue()).trimFragment().resolve(property.eResource().getURI()).toString();
-            result = (RequirementProject) new ResourceSetImpl().getResource(URI.createURI(uri), true).getContents().get(0);
+            result = (RequirementProject) set.getResource(URI.createURI(uri), true).getContents().get(0);
         }
         return result;
     }
@@ -192,7 +220,7 @@ public class Injector
         }
 
     }
-
+    
     protected void initUpstream(UpstreamPage page, IEditorPart m, String uri)
     {
         // System.out.println("DEBUT init");
@@ -215,7 +243,8 @@ public class Injector
     protected void initCurrent(CurrentPage page, IEditorPart m, String uri)
     {
         current = page;
-        applyCurrent(RequirementProjectManager.getInstance().getRequirementProject(uri, m), page);
+        RequirementProject requirementProject = RequirementProjectManager.getInstance().getRequirementProject(uri, m);
+        applyCurrent(requirementProject, page);
         if (upstream != null)
         {
             upstream.getViewer().addSelectionChangedListener(new UpstreamSelectionChangedListener(page));
