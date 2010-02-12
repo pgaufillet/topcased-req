@@ -236,33 +236,6 @@ public final class RequirementUtils
     }
 
     /**
-     * Compute the label for an eobject
-     * 
-     * @return the label
-     */
-    public static String getLabelAttibute(EObject o)
-    {
-        String label = ""; //$NON-NLS-1$
-        if (o != null)
-        {
-            // label += o.eClass().getName() + " ";
-            if (o instanceof NamedItem && ((NamedItem) o).getName() != null)
-            {
-                label += ((NamedItem) o).getName();
-            }
-            else if (o instanceof Requirement && ((Requirement) o).getIdent() != null)
-            {
-                label += ((Requirement) o).getIdent();
-            }
-            else if (o instanceof EObject)
-            {
-                label += o.toString();
-            }
-        }
-        return label;
-    }
-
-    /**
      * Determines if the upstream requirement is linked (link_to attribute) to a current requirement
      * 
      * @param an upstream requirement
@@ -477,14 +450,12 @@ public final class RequirementUtils
         {
             if ("sam".equals(resource.getURI().fileExtension())) //$NON-NLS-1$
             {
-                System.out.println("getModels : sam");
                 toReturn.add(resource);
             }
             if ("uml".equals(resource.getURI().fileExtension())) //$NON-NLS-1$
             {
-                System.out.println("getModels : uml");
                 toReturn.add(resource);
-                
+
             }
         }
         return toReturn;

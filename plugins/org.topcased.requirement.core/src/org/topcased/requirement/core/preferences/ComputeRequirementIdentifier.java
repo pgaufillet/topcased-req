@@ -24,8 +24,9 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.ENamedElement;
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.domain.EditingDomain;
@@ -33,11 +34,11 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
-import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.Requirement;
 import org.topcased.requirement.RequirementProject;
+import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
@@ -129,7 +130,7 @@ public class ComputeRequirementIdentifier
         Resource requirement = RequirementUtils.getRequirementModel(domain);
         Map<Integer, String> map = new HashMap<Integer, String>();
         map.put(NamingRequirementPreferenceHelper.PROJECT, ((RequirementProject) requirement.getContents().get(0)).getIdentifier());
-        map.put(NamingRequirementPreferenceHelper.HIERARCHICAL_ELEMENT, getSystemIdent(element));
+        map.put(NamingRequirementPreferenceHelper.HIERARCHICAL_ELEMENT, getHierarchicalElementIdentifier(element));
         map.put(NamingRequirementPreferenceHelper.UPSTREAM_IDENT, source);
         map.put(NamingRequirementPreferenceHelper.NUMBER, number);
         return convert(map);
@@ -138,19 +139,24 @@ public class ComputeRequirementIdentifier
     /**
      * Get the identifier of the target element
      * 
-     * @param system : the target hierarchical element
+     * @param hierarchicalElt : the target hierarchical element
      * 
      * @return the identifier of the target element
      */
-    private String getSystemIdent(HierarchicalElement system)
+    private String getHierarchicalElementIdentifier(HierarchicalElement hierarchicalElt)
     {
         String result = "";
 
-        if (system.getElement() != null)
+        if (hierarchicalElt.getElement() != null)
         {
-            if ( system.getElement() instanceof ENamedElement)
+            EObject obj = hierarchicalElt.getElement();
+            for (EAttribute attribute : obj.eClass().getEAllAttributes())
             {
-                result += ((ENamedElement) system.getElement()).getName();
+                if (attribute.getName().equals(EcorePackage.eINSTANCE.getENamedElement_Name().getName()))
+                {
+                    result = (String) obj.eGet(attribute);
+                    break;
+                }
             }
         }
         else
@@ -206,7 +212,7 @@ public class ComputeRequirementIdentifier
 
         if (this.numberAllDocument)
         {
-            this.nRequirement = countRequirement(requirementModel);
+            this.setnRequirement(countRequirement(requirementModel));
         }
     }
 
@@ -266,6 +272,16 @@ public class ComputeRequirementIdentifier
             }
         }
         return n;
+    }
+
+    public void setnRequirement(int nRequirement)
+    {
+        this.nRequirement = nRequirement;
+    }
+
+    public int getnRequirement()
+    {
+        return nRequirement;
     }
 
 }

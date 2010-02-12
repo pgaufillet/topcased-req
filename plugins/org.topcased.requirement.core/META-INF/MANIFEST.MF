@@ -6,12 +6,12 @@ Bundle-Version: 3.3.0.qualifier
 Bundle-Activator: org.topcased.requirement.core.RequirementCorePlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.topcased.requirement,
+ org.topcased.requirement;visibility:=reexport,
  org.topcased.modeler,
  org.eclipse.emf.compare.diff,
  org.eclipse.emf.compare.match,
  org.topcased.sam,
- org.topcased.sam.requirement.import
+ org.topcased.sam.requirement.import;bundle-version="2.5.1"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.topcased.requirement.core,
