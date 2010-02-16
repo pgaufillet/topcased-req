@@ -14,11 +14,14 @@ package org.topcased.requirement.core;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.topcased.sam.presentation.SAMEditor;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -31,6 +34,8 @@ public class RequirementCorePlugin extends AbstractUIPlugin
 
     // The shared instance
     private static RequirementCorePlugin plugin;
+    
+    protected static boolean once = false;
 
     /**
      * The constructor
@@ -61,7 +66,22 @@ public class RequirementCorePlugin extends AbstractUIPlugin
     {
         return plugin;
     }
-    
+
+    /**
+     * Returns the active editor or <code>null</code> if none.
+     * 
+     * @return the active editor
+     */
+    public static IEditorPart getActiveEditor()
+    {
+        IWorkbenchPage page = getActivePage();
+        if (page != null)
+        {
+            return page.getActiveEditor();
+        }
+        return null;
+    }
+
     /**
      * Returns the active workbench page or <code>null</code> if none.
      * 
@@ -76,7 +96,7 @@ public class RequirementCorePlugin extends AbstractUIPlugin
         }
         return null;
     }
-    
+
     /**
      * Returns the active workbench window
      * 
@@ -126,7 +146,7 @@ public class RequirementCorePlugin extends AbstractUIPlugin
     {
         log(e.getMessage(), IStatus.ERROR, e);
     }
-    
+
     /**
      * Logs a message with a given level into the PDE Error Log
      * 
@@ -139,5 +159,14 @@ public class RequirementCorePlugin extends AbstractUIPlugin
         IStatus status = new Status(severity, getId(), severity, message, e);
         getDefault().getLog().log(status);
     }
-
+    
+    public static boolean getOnce()
+    {
+        return once;
+    }
+    
+    public static void setOnce(boolean once1)
+    {
+        once = once1;
+    }
 }

@@ -28,6 +28,8 @@ import org.eclipse.ui.part.PageBookView;
 import org.topcased.modeler.di.model.GraphElement;
 import org.topcased.modeler.editor.Modeler;
 import org.topcased.modeler.utils.Utils;
+import org.topcased.requirement.core.RequirementCorePlugin;
+import org.topcased.requirement.core.dnd.RequirementDropListener;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.sam.Model;
 import org.topcased.sam.ModelContent;
@@ -210,6 +212,11 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
                                 try
                                 {
                                     RequirementUtils.loadRequirementModel(path.eResource().getURI(), modeler.getEditingDomain());
+                                    if (RequirementCorePlugin.getOnce() == false)
+                                    {
+                                        RequirementCorePlugin.setOnce(true);
+                                        modeler.getGraphicalViewer().addDropTargetListener(new RequirementDropListener(modeler.getGraphicalViewer()));
+                                    }
                                     updatePage(page);
                                 }
                                 catch (WrappedException e)
