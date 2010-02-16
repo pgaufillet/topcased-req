@@ -167,10 +167,13 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
             boolean parentToFocusAvailable = hierarchicalElementToFocusAfterRequirementDeletion != null && stillExistInModel(hierarchicalElementToFocusAfterRequirementDeletion);
             if (event.getSelection().isEmpty() && previousRequirementDeleted && parentToFocusAvailable)
             {
+                if (!(hierarchicalElementToFocusAfterRequirementDeletion.getRequirement().isEmpty()))
+                {
                 // When a requirement is deleted from this page, we set focus on its container.
                 CurrentPage.this.getViewer().setSelection(new StructuredSelection(hierarchicalElementToFocusAfterRequirementDeletion));
                 // New selection will not produce another re-selection since it is not empty (Infinite loop avoided).
                 return true;
+                }
             }
             return false;
         }
