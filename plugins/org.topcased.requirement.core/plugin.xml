@@ -448,5 +448,20 @@
          </adapter>
       </factory>
    </extension>
+   <extension
+         point="org.topcased.modeler.commandsStackListeners">
+      <command
+            commandStackListener="org.topcased.requirement.core.commands.DeleteCommandResolver">
+      </command>
+      <command
+            commandStackListener="org.topcased.requirement.core.commands.CutCommandResolver">
+      </command>
+      <command
+            commandStackListener="org.topcased.requirement.core.commands.PasteCommandResolver">
+      </command>
+      <command
+            commandStackListener="org.topcased.requirement.core.commands.CopyCommandResolver">
+      </command>
+   </extension>
 
 </plugin>
