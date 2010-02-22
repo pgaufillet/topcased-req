@@ -25,6 +25,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.topcased.modeler.commands.CommandStack;
 import org.topcased.modeler.commands.EMFtoGEFCommandWrapper;
+import org.topcased.modeler.editor.TopcasedAdapterFactoryEditingDomain;
 import org.topcased.requirement.core.actions.HierarchicalElementTransfer;
 
 /**
@@ -50,10 +51,10 @@ public class CutCommandResolver extends AdditionalCommand<CutToClipboardCommand>
     }
 
     /**
-     * @see org.topcased.requirement.core.commands.AdditionalCommand#post_execute(java.util.List)
+     * @see org.topcased.requirement.core.commands.AdditionalCommand#pre_execute(java.util.List)
      */
     @Override
-    protected void post_execute(List<CutToClipboardCommand> cutCommands)
+    protected void pre_execute(List<CutToClipboardCommand> cutCommands)
     {
         CompoundCommand command = new CompoundCommand();
         HierarchicalElementTransfer.INSTANCE.clear();
@@ -63,8 +64,9 @@ public class CutCommandResolver extends AdditionalCommand<CutToClipboardCommand>
 
             for (Object e : eObjects)
             {
+                TopcasedAdapterFactoryEditingDomain.getEditingDomainFor(e);
                 if (e instanceof EObject)
-                {
+                {                    
                     RemoveHierarchicalElementCommand cmd = new RemoveHierarchicalElementCommand((EObject) e);
                     command.add(new EMFtoGEFCommandWrapper(cmd));
                     HierarchicalElementTransfer.INSTANCE.setResult(cmd.getResult());

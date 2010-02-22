@@ -11,7 +11,6 @@
 package org.topcased.requirement.core.commands;
 
 import org.eclipse.emf.common.command.CompoundCommand;
-import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
@@ -89,12 +88,11 @@ public class RenameRequirementCommand extends CompoundCommand
                 if (requirement instanceof CurrentRequirement)
                 {
                     String identifier = requirement.getIdentifier();
-                    ENamedElement namedItem = (ENamedElement) elt.getElement();
-                    if (namedItem.getName() == null)
+                    if (oldName == null)
                     {
                         identifier = identifier.replaceFirst("null", newName); // null is the default value
                     }
-                    else if ("".equals(namedItem.getName()))
+                    else if ("".equals(oldName))
                     {
                         identifier = identifier.replaceFirst("__", "_" + newName + "_"); 
                     }

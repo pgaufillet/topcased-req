@@ -66,9 +66,8 @@ public class DeleteCommandResolver extends AdditionalCommand<DeleteModelCommand>
             {
                 RemoveRequirementCommand com = new RemoveRequirementCommand(AdapterFactoryEditingDomain.getEditingDomainFor(e), e);
                 command.add(new EMFtoGEFCommandWrapper(com));
+                commands.put(deleteModelCommand, command);
             }
-
-            commands.put(deleteModelCommand, command);
         }
         command.execute();
     }

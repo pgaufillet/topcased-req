@@ -18,7 +18,6 @@ import org.topcased.facilities.dialogs.ChooseDialog;
 import org.topcased.modeler.editor.TopcasedAdapterFactoryEditingDomain;
 import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.core.utils.RequirementUtils;
-import org.topcased.sam.NamedItem;
 
 import ttm.Requirement;
 
@@ -61,11 +60,6 @@ public class AdvancedRequirementLabelProvider extends CurrentRequirementLabelPro
             EObject requirement = (org.topcased.requirement.Requirement) object;
             RequirementProject project = RequirementUtils.getRequirementProject(domain);
             return getTreePathText(project.getHierarchicalElement(), requirement);
-        }
-        else if (object instanceof NamedItem)
-        {
-            NamedItem modelElt = (NamedItem) object;
-            return modelElt.getQualifiedName(); 
         }
         return "";
     }
