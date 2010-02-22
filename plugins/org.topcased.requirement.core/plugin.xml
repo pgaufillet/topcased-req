@@ -462,6 +462,18 @@
       <command
             commandStackListener="org.topcased.requirement.core.commands.CopyCommandResolver">
       </command>
+      <command
+            commandStackListener="org.topcased.requirement.core.commands.RenameCommandResolver">
+      </command>
+      <command
+            commandStackListener="org.topcased.requirement.core.commands.DragAndDropCommandResolver">
+      </command>
+      <command
+            commandStackListener="org.topcased.requirement.core.commands.SetNameCommandResolver">
+      </command>
+      <command
+            commandStackListener="org.topcased.requirement.core.commands.ReplaceNodeCommandResolver">
+      </command>
    </extension>
 
 </plugin>
