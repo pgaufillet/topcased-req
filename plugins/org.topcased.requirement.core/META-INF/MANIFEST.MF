@@ -7,11 +7,11 @@ Bundle-Activator: org.topcased.requirement.core.RequirementCorePlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.topcased.requirement;visibility:=reexport,
- org.topcased.modeler,
+ org.topcased.modeler;visibility:=reexport,
  org.eclipse.emf.compare.diff,
  org.eclipse.emf.compare.match,
- org.topcased.sam,
- org.topcased.sam.requirement.import
+ org.topcased.sam.requirement.import,
+ org.topcased.sam
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.topcased.requirement.core,

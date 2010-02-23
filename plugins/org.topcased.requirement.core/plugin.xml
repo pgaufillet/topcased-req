@@ -471,9 +471,6 @@
       <command
             commandStackListener="org.topcased.requirement.core.commands.SetNameCommandResolver">
       </command>
-      <command
-            commandStackListener="org.topcased.requirement.core.commands.ReplaceNodeCommandResolver">
-      </command>
    </extension>
 
 </plugin>

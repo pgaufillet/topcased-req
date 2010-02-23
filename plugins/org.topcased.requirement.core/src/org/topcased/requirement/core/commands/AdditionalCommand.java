@@ -31,6 +31,8 @@ import org.topcased.modeler.utils.Utils;
 public abstract class AdditionalCommand<T> implements CommandStackEventListener
 {
     private Class< ? super T> theClass = null;
+    
+    private Modeler modeler;
 
     public AdditionalCommand(Class< ? super T> clazz)
     {
@@ -40,7 +42,7 @@ public abstract class AdditionalCommand<T> implements CommandStackEventListener
     
     final public void stackChanged(CommandStackEvent event)
     {
-        Modeler modeler = Utils.getCurrentModeler();
+        modeler = Utils.getCurrentModeler();
         if (modeler != null)
         {
             Object o = getSpecificCommands(event.getCommand(), theClass);
@@ -112,5 +114,10 @@ public abstract class AdditionalCommand<T> implements CommandStackEventListener
     protected void pre_execute(List<T> command)
     {
         // override this method if you want to add behavior
+    }
+    
+    protected Modeler getModeler()
+    {
+        return modeler;
     }
 }
