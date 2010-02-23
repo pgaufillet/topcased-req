@@ -58,18 +58,20 @@ public class DeleteCommandResolver extends AdditionalCommand<DeleteModelCommand>
     @Override
     protected void pre_execute(List<DeleteModelCommand> deleteModelCommands)
     {
-        CompoundCommand command = new CompoundCommand();
+
         for (DeleteModelCommand deleteModelCommand : deleteModelCommands)
         {
             Collection<EObject> eObjects = deleteModelCommand.getObjectsDeleting();
+            CompoundCommand command = new CompoundCommand();
             for (EObject e : eObjects)
             {
                 RemoveRequirementCommand com = new RemoveRequirementCommand(AdapterFactoryEditingDomain.getEditingDomainFor(e), e);
                 command.add(new EMFtoGEFCommandWrapper(com));
-                commands.put(deleteModelCommand, command);
             }
+            command.execute();
+            commands.put(deleteModelCommand, command);
         }
-        command.execute();
+
     }
 
     /**
@@ -114,7 +116,7 @@ public class DeleteCommandResolver extends AdditionalCommand<DeleteModelCommand>
     {
         List<Object> result = new LinkedList<Object>();
         
-     // deals with DeleteModelContentCommand (specific behaviour)
+     // deals with DeleteModelContentCommand (specific behaviour of SAM)
         if (command instanceof CompoundCommand)
         {
             CompoundCommand compound = (CompoundCommand) command;

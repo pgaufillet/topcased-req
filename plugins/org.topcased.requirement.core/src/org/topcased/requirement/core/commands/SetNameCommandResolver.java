@@ -21,7 +21,6 @@ import java.util.Map;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.commands.CompoundCommand;
 import org.topcased.modeler.commands.CommandStack;
 import org.topcased.modeler.commands.EMFtoGEFCommandWrapper;
 import org.topcased.modeler.editor.TopcasedAdapterFactoryEditingDomain.TopcasedAdapterFactoryLabeler;
@@ -35,12 +34,12 @@ import org.topcased.modeler.editor.TopcasedAdapterFactoryEditingDomain.TopcasedA
 public class SetNameCommandResolver extends AdditionalCommand<SetCommand>
 {
 
-    private Map<SetCommand, CompoundCommand> commands;
+    private Map<SetCommand, EMFtoGEFCommandWrapper> commands;
 
     public SetNameCommandResolver()
     {
         this(SetCommand.class);
-        commands = new HashMap<SetCommand, CompoundCommand>();
+        commands = new HashMap<SetCommand, EMFtoGEFCommandWrapper>();
     }
 
     public SetNameCommandResolver(Class< ? super SetCommand> clazz)
@@ -53,20 +52,17 @@ public class SetNameCommandResolver extends AdditionalCommand<SetCommand>
      */
     @Override
     protected void pre_execute(List<SetCommand> setCommands)
-    {
-        CompoundCommand command = new CompoundCommand();
-        
-        
+    {   
         for (SetCommand setCommand : setCommands)
         {
             EStructuralFeature efs = TopcasedAdapterFactoryLabeler.getInstance().getLabelFeature(setCommand.getOwner());
             if (efs.equals(setCommand.getFeature()))
             {
-                command.add(new EMFtoGEFCommandWrapper(new RenameRequirementCommand(setCommand.getOwner(),(String) setCommand.getOldValue(),(String) setCommand.getValue())));
-                commands.put(setCommand, command);
+                EMFtoGEFCommandWrapper cmd = new EMFtoGEFCommandWrapper(new RenameRequirementCommand(setCommand.getOwner(),(String) setCommand.getOldValue(),(String) setCommand.getValue()));
+                cmd.execute();
+                commands.put(setCommand, cmd);
             }
         }
-        command.execute();
     }
 
     /**
@@ -77,7 +73,7 @@ public class SetNameCommandResolver extends AdditionalCommand<SetCommand>
     {
         for (SetCommand setCommand : setCommands)
         {
-            CompoundCommand compound = commands.get(setCommand);
+            EMFtoGEFCommandWrapper compound = commands.get(setCommand);
             if (compound != null)
             {
                 compound.redo();
@@ -94,7 +90,7 @@ public class SetNameCommandResolver extends AdditionalCommand<SetCommand>
         for (ListIterator<SetCommand> i = setCommands.listIterator(setCommands.size()); i.hasPrevious();)
         {
             SetCommand dndCommand = i.previous();
-            CompoundCommand compound = commands.get(dndCommand);
+            EMFtoGEFCommandWrapper compound = commands.get(dndCommand);
             if (compound != null)
             {
                 compound.undo();

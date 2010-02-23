@@ -14,7 +14,6 @@ package org.topcased.requirement.core.commands;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -73,8 +72,9 @@ public class CutCommandResolver extends AdditionalCommand<CutToClipboardCommand>
                 }
             }
             commands.put(cutCommand, command);
+            command.execute();
         }
-        command.execute();
+
     }
 
     /**
@@ -117,57 +117,6 @@ public class CutCommandResolver extends AdditionalCommand<CutToClipboardCommand>
     @Override
     protected List<Object> getSpecificCommands(Command command, Class< ? > clazz)
     {
-        List<Object> result = new LinkedList<Object>();
-
-        // deals with CutToClipboardCommand (specific behaviour)
-        if (command instanceof CompoundCommand)
-        {
-            CompoundCommand compound = (CompoundCommand) command;
-            List< ? > commands = compound.getCommands();
-            for (Object o : commands)
-            {
-
-                if (o instanceof EMFtoGEFCommandWrapper)
-                {
-                    org.eclipse.emf.common.command.Command cmd = ((EMFtoGEFCommandWrapper) o).getEMFCommand();
-                    if (cmd instanceof CutToClipboardCommand)
-                    {
-                        if (((CutToClipboardCommand) cmd).getClass().equals(clazz))
-                        {
-                            result.add((CutToClipboardCommand) cmd);
-                        }
-                    }
-                    else
-                    {
-                        // same algo than CommandStack.getCommands
-                        List<Object> tmp = CommandStack.getCommands((Command) o, clazz);
-                        if (!(tmp.isEmpty()))
-                        {
-                            result.add(tmp);
-                        }
-                    }
-                }
-                else
-                {
-                    // same algo than CommandStack.getCommands
-                    List<Object> tmp = CommandStack.getCommands((Command) o, clazz);
-                    if (!(tmp.isEmpty()))
-                    {
-                        result.add(tmp);
-                    }
-                }
-            }
-        }
-        else
-        {
-            // same algo than CommandStack.getCommands
-            List<Object> tmp = CommandStack.getCommands(command, clazz);
-            if (!(tmp.isEmpty()))
-            {
-                result.add(tmp);
-            }
-        }
-        return result;
-
+        return CommandStack.getCommands(command, clazz);
     }
 }
