@@ -15,6 +15,9 @@
       <command
             commandStackListener="org.topcased.requirement.sam.resolvers.MoveElementCommandResolver">
       </command>
+      <command
+            commandStackListener="org.topcased.requirement.sam.resolvers.DeletePortCommandResolver">
+      </command>
    </extension>
 
 </plugin>

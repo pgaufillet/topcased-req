@@ -12,8 +12,8 @@
 
 package org.topcased.requirement.core.resolvers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -106,7 +106,7 @@ public class SetNameCommandResolver extends AdditionalCommand<SetCommand>
     @Override
     protected List<Object> getSpecificCommands(Command command, Class< ? > clazz)
     {
-        List<Object> result = new LinkedList<Object>();
+        List<Object> result = new ArrayList<Object>();
         
         // deals with SetCommand (specific behaviour)
         if (command instanceof EMFtoGEFCommandWrapper)
@@ -139,15 +139,6 @@ public class SetNameCommandResolver extends AdditionalCommand<SetCommand>
                                 }
                             }
                     }
-                }
-            }
-            else
-            {
-                // same algo than CommandStack.getCommands
-                List<Object> tmp = CommandStack.getCommands(command, clazz);
-                if (!(tmp.isEmpty()))
-                {
-                    result.add(tmp);
                 }
             }
         }
