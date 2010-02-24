@@ -451,25 +451,25 @@
    <extension
          point="org.topcased.modeler.commandsStackListeners">
       <command
-            commandStackListener="org.topcased.requirement.core.commands.DeleteCommandResolver">
+            commandStackListener="org.topcased.requirement.core.resolvers.DeleteCommandResolver">
       </command>
       <command
-            commandStackListener="org.topcased.requirement.core.commands.CutCommandResolver">
+            commandStackListener="org.topcased.requirement.core.resolvers.CutCommandResolver">
       </command>
       <command
-            commandStackListener="org.topcased.requirement.core.commands.PasteCommandResolver">
+            commandStackListener="org.topcased.requirement.core.resolvers.PasteCommandResolver">
       </command>
       <command
-            commandStackListener="org.topcased.requirement.core.commands.CopyCommandResolver">
+            commandStackListener="org.topcased.requirement.core.resolvers.CopyCommandResolver">
       </command>
       <command
-            commandStackListener="org.topcased.requirement.core.commands.RenameCommandResolver">
+            commandStackListener="org.topcased.requirement.core.resolvers.RenameCommandResolver">
       </command>
       <command
-            commandStackListener="org.topcased.requirement.core.commands.DragAndDropCommandResolver">
+            commandStackListener="org.topcased.requirement.core.resolvers.DragAndDropCommandResolver">
       </command>
       <command
-            commandStackListener="org.topcased.requirement.core.commands.SetNameCommandResolver">
+            commandStackListener="org.topcased.requirement.core.resolvers.SetNameCommandResolver">
       </command>
    </extension>
 

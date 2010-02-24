@@ -11,7 +11,7 @@
  *  Maxime AUDRAIN (CS) - API changes
  *
   *****************************************************************************/
-package org.topcased.requirement.core.commands;
+package org.topcased.requirement.core.resolvers;
 
 import java.util.List;
 

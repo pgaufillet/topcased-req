@@ -10,7 +10,7 @@
  * 
  *****************************************************************************/
 
-package org.topcased.requirement.sam.commands;
+package org.topcased.requirement.sam.resolvers;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,38 +20,39 @@ import java.util.Map;
 import org.eclipse.gef.commands.Command;
 import org.topcased.modeler.commands.CommandStack;
 import org.topcased.modeler.commands.EMFtoGEFCommandWrapper;
-import org.topcased.modeler.sam.systemdiagram.commands.internal.ChangeGraphEdgeCommand;
-import org.topcased.requirement.core.commands.AdditionalCommand;
+import org.topcased.modeler.sam.systemdiagram.commands.internal.ChangeGraphNodeCommand;
+import org.topcased.requirement.core.resolvers.AdditionalCommand;
+import org.topcased.requirement.sam.commands.ChangeHierarchicalElementCommand;
 
 /**
- * This Class handle specific behaviour for requirements when a ChangeGraphEdgeCommand is executed.
+ * This Class handle specific behaviour for requirements when a ChangeGraphNodeCommand is executed.
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  * 
  */
-public class ChangeGraphEdgeCommandResolver extends AdditionalCommand<ChangeGraphEdgeCommand>
+public class ChangeGraphNodeCommandResolver extends AdditionalCommand<ChangeGraphNodeCommand>
 {
 
-    private Map<ChangeGraphEdgeCommand, EMFtoGEFCommandWrapper> commands;
+    private Map<ChangeGraphNodeCommand, EMFtoGEFCommandWrapper> commands;
 
-    public ChangeGraphEdgeCommandResolver()
+    public ChangeGraphNodeCommandResolver()
     {
-        this(ChangeGraphEdgeCommand.class);
-        commands = new HashMap<ChangeGraphEdgeCommand, EMFtoGEFCommandWrapper>();
+        this(ChangeGraphNodeCommand.class);
+        commands = new HashMap<ChangeGraphNodeCommand, EMFtoGEFCommandWrapper>();
     }
 
-    public ChangeGraphEdgeCommandResolver(Class< ? super ChangeGraphEdgeCommand> clazz)
+    public ChangeGraphNodeCommandResolver(Class< ? super ChangeGraphNodeCommand> clazz)
     {
         super(clazz);
     }
 
     /**
-     * @see org.topcased.requirement.core.commands.AdditionalCommand#pre_execute(java.util.List)
+     * @see org.topcased.requirement.core.resolvers.AdditionalCommand#pre_execute(java.util.List)
      */
     @Override
-    protected void post_execute(List<ChangeGraphEdgeCommand> changeCommands)
+    protected void post_execute(List<ChangeGraphNodeCommand> changeCommands)
     {   
-        for (ChangeGraphEdgeCommand changeCommand : changeCommands)
+        for (ChangeGraphNodeCommand changeCommand : changeCommands)
         {
                 // Change Requirement model
                 EMFtoGEFCommandWrapper command =new EMFtoGEFCommandWrapper( new ChangeHierarchicalElementCommand(changeCommand.getTransformation()));
@@ -62,12 +63,12 @@ public class ChangeGraphEdgeCommandResolver extends AdditionalCommand<ChangeGrap
     }
 
     /**
-     * @see org.topcased.requirement.core.commands.AdditionalCommand#pre_redo(java.util.List)
+     * @see org.topcased.requirement.core.resolvers.AdditionalCommand#pre_redo(java.util.List)
      */
     @Override
-    protected void pre_redo(List<ChangeGraphEdgeCommand> changeCommands)
+    protected void pre_redo(List<ChangeGraphNodeCommand> changeCommands)
     {
-        for (ChangeGraphEdgeCommand changeCommand : changeCommands)
+        for (ChangeGraphNodeCommand changeCommand : changeCommands)
         {
             EMFtoGEFCommandWrapper compound = commands.get(changeCommand);
             if (compound != null)
@@ -78,14 +79,14 @@ public class ChangeGraphEdgeCommandResolver extends AdditionalCommand<ChangeGrap
     }
 
     /**
-     * @see org.topcased.requirement.core.commands.AdditionalCommand#post_undo(java.util.List)
+     * @see org.topcased.requirement.core.resolvers.AdditionalCommand#post_undo(java.util.List)
      */
     @Override
-    protected void post_undo(List<ChangeGraphEdgeCommand> changeCommands)
+    protected void post_undo(List<ChangeGraphNodeCommand> changeCommands)
     {
-        for (ListIterator<ChangeGraphEdgeCommand> i = changeCommands.listIterator(changeCommands.size()); i.hasPrevious();)
+        for (ListIterator<ChangeGraphNodeCommand> i = changeCommands.listIterator(changeCommands.size()); i.hasPrevious();)
         {
-            ChangeGraphEdgeCommand changeCommand = i.previous();
+            ChangeGraphNodeCommand changeCommand = i.previous();
             EMFtoGEFCommandWrapper compound = commands.get(changeCommand);
             if (compound != null)
             {
@@ -95,7 +96,7 @@ public class ChangeGraphEdgeCommandResolver extends AdditionalCommand<ChangeGrap
     }
 
     /**
-     * @see org.topcased.requirement.core.commands.AdditionalCommand#getSpecificCommands(org.eclipse.gef.commands.Command,
+     * @see org.topcased.requirement.core.resolvers.AdditionalCommand#getSpecificCommands(org.eclipse.gef.commands.Command,
      *      java.lang.Class)
      */
     @Override

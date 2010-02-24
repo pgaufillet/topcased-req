@@ -10,7 +10,7 @@
  * 
  *****************************************************************************/
 
-package org.topcased.requirement.sam.commands;
+package org.topcased.requirement.sam.resolvers;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,8 +26,8 @@ import org.topcased.modeler.commands.CommandStack;
 import org.topcased.modeler.commands.EMFtoGEFCommandWrapper;
 import org.topcased.modeler.editor.TopcasedAdapterFactoryEditingDomain;
 import org.topcased.modeler.sam.commands.MovePortCommand;
-import org.topcased.requirement.core.commands.AdditionalCommand;
 import org.topcased.requirement.core.commands.RemoveHierarchicalElementCommand;
+import org.topcased.requirement.core.resolvers.AdditionalCommand;
 
 /**
  * This Class handle specific behaviour for requirements when a MovePortCommand is executed.
@@ -52,7 +52,7 @@ public class MovePortCommandResolver extends AdditionalCommand<MovePortCommand>
     }
 
     /**
-     * @see org.topcased.requirement.core.commands.AdditionalCommand#pre_execute(java.util.List)
+     * @see org.topcased.requirement.core.resolvers.AdditionalCommand#pre_execute(java.util.List)
      */
     @Override
     protected void post_execute(List<MovePortCommand> moveCommands)
@@ -74,7 +74,7 @@ public class MovePortCommandResolver extends AdditionalCommand<MovePortCommand>
     }
 
     /**
-     * @see org.topcased.requirement.core.commands.AdditionalCommand#pre_redo(java.util.List)
+     * @see org.topcased.requirement.core.resolvers.AdditionalCommand#pre_redo(java.util.List)
      */
     @Override
     protected void pre_redo(List<MovePortCommand> moveCommands)
@@ -90,7 +90,7 @@ public class MovePortCommandResolver extends AdditionalCommand<MovePortCommand>
     }
 
     /**
-     * @see org.topcased.requirement.core.commands.AdditionalCommand#post_undo(java.util.List)
+     * @see org.topcased.requirement.core.resolvers.AdditionalCommand#post_undo(java.util.List)
      */
     @Override
     protected void post_undo(List<MovePortCommand> moveCommands)
@@ -107,7 +107,7 @@ public class MovePortCommandResolver extends AdditionalCommand<MovePortCommand>
     }
 
     /**
-     * @see org.topcased.requirement.core.commands.AdditionalCommand#getSpecificCommands(org.eclipse.gef.commands.Command,
+     * @see org.topcased.requirement.core.resolvers.AdditionalCommand#getSpecificCommands(org.eclipse.gef.commands.Command,
      *      java.lang.Class)
      */
     @Override

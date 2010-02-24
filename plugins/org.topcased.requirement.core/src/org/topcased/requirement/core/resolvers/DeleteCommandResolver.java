@@ -12,7 +12,7 @@
  *
   *****************************************************************************/
 
-package org.topcased.requirement.core.commands;
+package org.topcased.requirement.core.resolvers;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -28,6 +28,7 @@ import org.eclipse.gef.commands.CompoundCommand;
 import org.topcased.modeler.commands.CommandStack;
 import org.topcased.modeler.commands.DeleteModelCommand;
 import org.topcased.modeler.commands.EMFtoGEFCommandWrapper;
+import org.topcased.requirement.core.commands.RemoveRequirementCommand;
 
 /**
  * This Class handle specific behaviour for requirements when a DeleteModelCommand is executed.
@@ -53,7 +54,7 @@ public class DeleteCommandResolver extends AdditionalCommand<DeleteModelCommand>
     }
 
     /**
-     * @see org.topcased.requirement.core.commands.AdditionalCommand#pre_execute(java.util.List)
+     * @see org.topcased.requirement.core.resolvers.AdditionalCommand#pre_execute(java.util.List)
      */
     @Override
     protected void pre_execute(List<DeleteModelCommand> deleteModelCommands)
@@ -75,7 +76,7 @@ public class DeleteCommandResolver extends AdditionalCommand<DeleteModelCommand>
     }
 
     /**
-     * @see org.topcased.requirement.core.commands.AdditionalCommand#pre_redo(java.util.List)
+     * @see org.topcased.requirement.core.resolvers.AdditionalCommand#pre_redo(java.util.List)
      */
     @Override
     protected void pre_redo(List<DeleteModelCommand> deleteModelCommands)
@@ -91,7 +92,7 @@ public class DeleteCommandResolver extends AdditionalCommand<DeleteModelCommand>
     }
 
     /**
-     * @see org.topcased.requirement.core.commands.AdditionalCommand#post_undo(java.util.List)
+     * @see org.topcased.requirement.core.resolvers.AdditionalCommand#post_undo(java.util.List)
      */
     @Override
     protected void post_undo(List<DeleteModelCommand> deleteModelCommands)
@@ -109,7 +110,7 @@ public class DeleteCommandResolver extends AdditionalCommand<DeleteModelCommand>
 
 
     /**
-     * @see org.topcased.requirement.core.commands.AdditionalCommand#getSpecificCommands(org.eclipse.gef.commands.Command, java.lang.Class)
+     * @see org.topcased.requirement.core.resolvers.AdditionalCommand#getSpecificCommands(org.eclipse.gef.commands.Command, java.lang.Class)
      */
     @Override
     protected List<Object> getSpecificCommands(Command command, Class< ? > clazz)

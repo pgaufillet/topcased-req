@@ -4,16 +4,16 @@
    <extension
          point="org.topcased.modeler.commandsStackListeners">
       <command
-            commandStackListener="org.topcased.requirement.sam.commands.ChangeGraphEdgeCommandResolver">
+            commandStackListener="org.topcased.requirement.sam.resolvers.ChangeGraphEdgeCommandResolver">
       </command>
       <command
-            commandStackListener="org.topcased.requirement.sam.commands.MovePortCommandResolver">
+            commandStackListener="org.topcased.requirement.sam.resolvers.MovePortCommandResolver">
       </command>
       <command
-            commandStackListener="org.topcased.requirement.sam.commands.ChangeGraphNodeCommandResolver">
+            commandStackListener="org.topcased.requirement.sam.resolvers.ChangeGraphNodeCommandResolver">
       </command>
       <command
-            commandStackListener="org.topcased.requirement.sam.commands.MoveElementCommandResolver">
+            commandStackListener="org.topcased.requirement.sam.resolvers.MoveElementCommandResolver">
       </command>
    </extension>
 

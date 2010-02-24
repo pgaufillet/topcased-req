@@ -10,7 +10,7 @@
  * 
  *****************************************************************************/
 
-package org.topcased.requirement.core.commands;
+package org.topcased.requirement.core.resolvers;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +22,7 @@ import org.eclipse.gef.commands.UnexecutableCommand;
 import org.topcased.modeler.commands.ChangeLabelTextCommand;
 import org.topcased.modeler.commands.CommandStack;
 import org.topcased.modeler.commands.EMFtoGEFCommandWrapper;
+import org.topcased.requirement.core.commands.RenameRequirementCommand;
 
 /**
  * This Class handle specific behaviour for requirements when a ChangeLabelTextCommand is executed.
@@ -46,7 +47,7 @@ public class RenameCommandResolver extends AdditionalCommand<ChangeLabelTextComm
     }
 
     /**
-     * @see org.topcased.requirement.core.commands.AdditionalCommand#post_execute(java.util.List)
+     * @see org.topcased.requirement.core.resolvers.AdditionalCommand#post_execute(java.util.List)
      */
     @Override
     protected void post_execute(List<ChangeLabelTextCommand> renameCommands)
@@ -63,7 +64,7 @@ public class RenameCommandResolver extends AdditionalCommand<ChangeLabelTextComm
     }
 
     /**
-     * @see org.topcased.requirement.core.commands.AdditionalCommand#pre_redo(java.util.List)
+     * @see org.topcased.requirement.core.resolvers.AdditionalCommand#pre_redo(java.util.List)
      */
     @Override
     protected void pre_redo(List<ChangeLabelTextCommand> renameCommands)
@@ -79,7 +80,7 @@ public class RenameCommandResolver extends AdditionalCommand<ChangeLabelTextComm
     }
 
     /**
-     * @see org.topcased.requirement.core.commands.AdditionalCommand#post_undo(java.util.List)
+     * @see org.topcased.requirement.core.resolvers.AdditionalCommand#post_undo(java.util.List)
      */
     @Override
     protected void post_undo(List<ChangeLabelTextCommand> renameCommands)
@@ -96,7 +97,7 @@ public class RenameCommandResolver extends AdditionalCommand<ChangeLabelTextComm
     }
 
     /**
-     * @see org.topcased.requirement.core.commands.AdditionalCommand#getSpecificCommands(org.eclipse.gef.commands.Command,
+     * @see org.topcased.requirement.core.resolvers.AdditionalCommand#getSpecificCommands(org.eclipse.gef.commands.Command,
      *      java.lang.Class)
      */
     @Override

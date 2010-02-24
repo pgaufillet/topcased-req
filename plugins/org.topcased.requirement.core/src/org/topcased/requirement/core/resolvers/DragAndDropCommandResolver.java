@@ -12,7 +12,7 @@
  *
   *****************************************************************************/
 
-package org.topcased.requirement.core.commands;
+package org.topcased.requirement.core.resolvers;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +24,7 @@ import org.eclipse.emf.edit.command.DragAndDropCommand;
 import org.eclipse.gef.commands.Command;
 import org.topcased.modeler.commands.CommandStack;
 import org.topcased.modeler.commands.EMFtoGEFCommandWrapper;
+import org.topcased.requirement.core.commands.MoveHierarchicalElementCommand;
 
 /**
  *
@@ -50,7 +51,7 @@ public class DragAndDropCommandResolver extends AdditionalCommand<DragAndDropCom
     }
 
     /**
-     * @see org.topcased.requirement.core.commands.AdditionalCommand#post_execute(java.util.List)
+     * @see org.topcased.requirement.core.resolvers.AdditionalCommand#post_execute(java.util.List)
      */
     @Override
     protected void post_execute(List<DragAndDropCommand> dndCommands)
@@ -65,7 +66,7 @@ public class DragAndDropCommandResolver extends AdditionalCommand<DragAndDropCom
     }
 
     /**
-     * @see org.topcased.requirement.core.commands.AdditionalCommand#pre_redo(java.util.List)
+     * @see org.topcased.requirement.core.resolvers.AdditionalCommand#pre_redo(java.util.List)
      */
     @Override
     protected void pre_redo(List<DragAndDropCommand> dndCommands)
@@ -81,7 +82,7 @@ public class DragAndDropCommandResolver extends AdditionalCommand<DragAndDropCom
     }
 
     /**
-     * @see org.topcased.requirement.core.commands.AdditionalCommand#post_undo(java.util.List)
+     * @see org.topcased.requirement.core.resolvers.AdditionalCommand#post_undo(java.util.List)
      */
     @Override
     protected void post_undo(List<DragAndDropCommand> dndCommands)
@@ -98,7 +99,7 @@ public class DragAndDropCommandResolver extends AdditionalCommand<DragAndDropCom
     }
 
     /**
-     * @see org.topcased.requirement.core.commands.AdditionalCommand#getSpecificCommands(org.eclipse.gef.commands.Command,
+     * @see org.topcased.requirement.core.resolvers.AdditionalCommand#getSpecificCommands(org.eclipse.gef.commands.Command,
      *      java.lang.Class)
      */
     @Override

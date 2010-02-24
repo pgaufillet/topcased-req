@@ -9,7 +9,7 @@
  * Contributors : Maxime AUDRAIN (CS) - initial API and implementation
  * 
  *****************************************************************************/
-package org.topcased.requirement.core.commands;
+package org.topcased.requirement.core.resolvers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +45,7 @@ public class CopyCommandResolver extends AdditionalCommand<CopyToClipboardComman
     }
 
     /**
-     * @see org.topcased.requirement.core.commands.AdditionalCommand#post_execute(java.util.List)
+     * @see org.topcased.requirement.core.resolvers.AdditionalCommand#post_execute(java.util.List)
      */
     @Override
     protected void post_execute(List<CopyToClipboardCommand> copyCommands)
@@ -74,7 +74,7 @@ public class CopyCommandResolver extends AdditionalCommand<CopyToClipboardComman
     }
 
     /**
-     * @see org.topcased.requirement.core.commands.AdditionalCommand#getSpecificCommands(org.eclipse.gef.commands.Command, java.lang.Class)
+     * @see org.topcased.requirement.core.resolvers.AdditionalCommand#getSpecificCommands(org.eclipse.gef.commands.Command, java.lang.Class)
      */
     @Override
     protected List<Object> getSpecificCommands(Command command, Class< ? > clazz)

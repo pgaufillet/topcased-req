@@ -10,7 +10,7 @@
  * 
  *****************************************************************************/
 
-package org.topcased.requirement.core.commands;
+package org.topcased.requirement.core.resolvers;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -26,6 +26,7 @@ import org.topcased.modeler.commands.CommandStack;
 import org.topcased.modeler.commands.EMFtoGEFCommandWrapper;
 import org.topcased.modeler.editor.TopcasedAdapterFactoryEditingDomain;
 import org.topcased.requirement.core.actions.HierarchicalElementTransfer;
+import org.topcased.requirement.core.commands.RemoveHierarchicalElementCommand;
 
 /**
  * This Class handle specific behaviour for requirements when a CutToClipboardCommand is executed.
@@ -50,7 +51,7 @@ public class CutCommandResolver extends AdditionalCommand<CutToClipboardCommand>
     }
 
     /**
-     * @see org.topcased.requirement.core.commands.AdditionalCommand#pre_execute(java.util.List)
+     * @see org.topcased.requirement.core.resolvers.AdditionalCommand#pre_execute(java.util.List)
      */
     @Override
     protected void pre_execute(List<CutToClipboardCommand> cutCommands)
@@ -78,7 +79,7 @@ public class CutCommandResolver extends AdditionalCommand<CutToClipboardCommand>
     }
 
     /**
-     * @see org.topcased.requirement.core.commands.AdditionalCommand#pre_redo(java.util.List)
+     * @see org.topcased.requirement.core.resolvers.AdditionalCommand#pre_redo(java.util.List)
      */
     @Override
     protected void pre_redo(List<CutToClipboardCommand> cutCommands)
@@ -94,7 +95,7 @@ public class CutCommandResolver extends AdditionalCommand<CutToClipboardCommand>
     }
 
     /**
-     * @see org.topcased.requirement.core.commands.AdditionalCommand#post_undo(java.util.List)
+     * @see org.topcased.requirement.core.resolvers.AdditionalCommand#post_undo(java.util.List)
      */
     @Override
     protected void post_undo(List<CutToClipboardCommand> cutCommands)
@@ -111,7 +112,7 @@ public class CutCommandResolver extends AdditionalCommand<CutToClipboardCommand>
     }
 
     /**
-     * @see org.topcased.requirement.core.commands.AdditionalCommand#getSpecificCommands(org.eclipse.gef.commands.Command,
+     * @see org.topcased.requirement.core.resolvers.AdditionalCommand#getSpecificCommands(org.eclipse.gef.commands.Command,
      *      java.lang.Class)
      */
     @Override

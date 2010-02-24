@@ -10,7 +10,7 @@
  * 
  *****************************************************************************/
 
-package org.topcased.requirement.sam.commands;
+package org.topcased.requirement.sam.resolvers;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,8 +21,8 @@ import org.eclipse.gef.commands.Command;
 import org.topcased.modeler.commands.CommandStack;
 import org.topcased.modeler.commands.EMFtoGEFCommandWrapper;
 import org.topcased.modeler.sam.commands.MoveElementCommand;
-import org.topcased.requirement.core.commands.AdditionalCommand;
 import org.topcased.requirement.core.commands.MoveHierarchicalElementCommand;
+import org.topcased.requirement.core.resolvers.AdditionalCommand;
 
 /**
  * This Class handle specific behaviour for requirements when a MoveElementCommand is executed.
@@ -46,7 +46,7 @@ public class MoveElementCommandResolver extends AdditionalCommand<MoveElementCom
     }
 
     /**
-     * @see org.topcased.requirement.core.commands.AdditionalCommand#pre_execute(java.util.List)
+     * @see org.topcased.requirement.core.resolvers.AdditionalCommand#pre_execute(java.util.List)
      */
     @Override
     protected void post_execute(List<MoveElementCommand> moveCommands)
@@ -62,7 +62,7 @@ public class MoveElementCommandResolver extends AdditionalCommand<MoveElementCom
     }
 
     /**
-     * @see org.topcased.requirement.core.commands.AdditionalCommand#pre_redo(java.util.List)
+     * @see org.topcased.requirement.core.resolvers.AdditionalCommand#pre_redo(java.util.List)
      */
     @Override
     protected void pre_redo(List<MoveElementCommand> moveCommands)
@@ -78,7 +78,7 @@ public class MoveElementCommandResolver extends AdditionalCommand<MoveElementCom
     }
 
     /**
-     * @see org.topcased.requirement.core.commands.AdditionalCommand#post_undo(java.util.List)
+     * @see org.topcased.requirement.core.resolvers.AdditionalCommand#post_undo(java.util.List)
      */
     @Override
     protected void post_undo(List<MoveElementCommand> moveCommands)
@@ -95,7 +95,7 @@ public class MoveElementCommandResolver extends AdditionalCommand<MoveElementCom
     }
 
     /**
-     * @see org.topcased.requirement.core.commands.AdditionalCommand#getSpecificCommands(org.eclipse.gef.commands.Command,
+     * @see org.topcased.requirement.core.resolvers.AdditionalCommand#getSpecificCommands(org.eclipse.gef.commands.Command,
      *      java.lang.Class)
      */
     @Override
