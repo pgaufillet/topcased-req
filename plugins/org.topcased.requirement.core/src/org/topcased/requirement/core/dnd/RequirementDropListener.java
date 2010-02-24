@@ -6,6 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors: Sebastien GABEL (CS) - initial API and implementation
+ *               Maxime AUDRAIN (CS) - API Changes
  * 
  **********************************************************************************************************************/
 package org.topcased.requirement.core.dnd;

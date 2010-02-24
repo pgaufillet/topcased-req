@@ -6,12 +6,14 @@
  * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors: Sebastien GABEL (CS) - initial API and implementation
+ *               Maxime AUDRAIN (CS) - API Changes
  * 
  **********************************************************************************************************************/
 package org.topcased.requirement.core.dialogs;
 
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -145,5 +147,16 @@ public class ChooseTargetDialog extends Dialog
     {
         FlowGroup flowGroup = flow.getGroup();
         return adapter != null ? adapter.getText(flowGroup) : "FlowGroup";
+    }
+    
+    
+    /**
+     * @see org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
+     */
+    @Override
+    protected void createButtonsForButtonBar(Composite parent) {
+        // just create an OK button
+        createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL,
+                true);
     }
 }
