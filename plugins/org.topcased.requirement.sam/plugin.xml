@@ -19,5 +19,17 @@
             commandStackListener="org.topcased.requirement.sam.resolvers.DeletePortCommandResolver">
       </command>
    </extension>
+   <extension
+         point="org.topcased.requirement.core.dropRestriction">
+      <element
+            value="org.topcased.sam.Port">
+      </element>
+      <element
+            value="org.topcased.sam.MultiPort">
+      </element>
+      <element
+            value="org.topcased.sam.State">
+      </element>
+   </extension>
 
 </plugin>

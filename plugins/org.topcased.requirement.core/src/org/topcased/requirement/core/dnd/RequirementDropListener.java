@@ -32,6 +32,7 @@ import org.topcased.modeler.edit.IModelElementEditPart;
 import org.topcased.requirement.core.Messages;
 import org.topcased.requirement.core.commands.CreateCurrentReqCommand;
 import org.topcased.requirement.core.commands.CreateRequirementCommand;
+import org.topcased.requirement.core.extensions.DropRestrictionManager;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.current.CurrentPage;
 import org.topcased.requirement.core.views.current.CurrentRequirementView;
@@ -47,11 +48,13 @@ import ttm.Section;
  */
 public class RequirementDropListener extends AbstractTransferDropTargetListener
 {
-    
+
     private EditPart currentPart;
 
     /**
-     * Constructor
+     * the command who will be executed private Command cmdWrapp;
+     * 
+     * /** Constructor
      * 
      * @param viewer the GraphicalViewer of the editing window
      */
@@ -94,24 +97,17 @@ public class RequirementDropListener extends AbstractTransferDropTargetListener
                 CurrentRequirementView view = (CurrentRequirementView) CurrentRequirementView.getInstance();
                 if (view != null && view.getCurrentPage() instanceof CurrentPage)
                 {
-                    CurrentPage page = (CurrentPage) view.getCurrentPage();
-    
-                    ISelection selection = ((RequirementTransfer) getTransfer()).getSelection();
-                    Collection< ? > source = extractDragSource(selection);
-                    CreateRequirementCommand cmdCreate = new CreateCurrentReqCommand(Messages.getString("CreateCurrentRequirementAction.0"));
-                    ((CreateRequirementCommand) cmdCreate).setRequirements(source);
-                    ((CreateRequirementCommand) cmdCreate).setTarget(getEObject()); 
-                    
-                    Command cmdWrapp = new EMFtoGEFCommandWrapper(cmdCreate);
-                    if (cmdCreate != null && cmdCreate.canExecute())
+                    CurrentPage page = (CurrentPage) view.getCurrentPage();                    
+                    if(DropRestrictionManager.getInstance().isDropAllowed(eobject))
                     {
-                        getViewer().getEditDomain().getCommandStack().execute(cmdWrapp);
+                        //execution of the requirement creation
+                        executeRequirementCreation(eobject);
                     }
-                    
                     page.getViewer().refresh();
                 }
             }
         }
+        super.drop(event);
     }
 
     /**
@@ -125,6 +121,16 @@ public class RequirementDropListener extends AbstractTransferDropTargetListener
 
         event.detail = DND.DROP_COPY;
 
+        if (currentPart != null)
+        {
+            EObject eobject = getEObject();
+            if(!(DropRestrictionManager.getInstance().isDropAllowed(eobject)))
+            {
+                event.operations = DND.DROP_NONE;
+                event.detail = DND.DROP_NONE;
+
+            }
+        }
         for (Object s : source)
         {
             if (!(s instanceof Requirement) && !(s instanceof org.topcased.requirement.Requirement))
@@ -144,7 +150,7 @@ public class RequirementDropListener extends AbstractTransferDropTargetListener
      * @param object The selection provided by a viewer
      * @return sorted collection of the dragged objects
      */
-    protected Collection<?> extractDragSource(Object object)
+    protected Collection< ? > extractDragSource(Object object)
     {
         // Transfer the data and convert the structured selection to a collection of objects.
         if (object instanceof IStructuredSelection)
@@ -189,8 +195,7 @@ public class RequirementDropListener extends AbstractTransferDropTargetListener
         }
         return semanticModelObject;
     }
-    
-    
+
     @Override
     protected EditPart getTargetEditPart()
     {
@@ -209,4 +214,19 @@ public class RequirementDropListener extends AbstractTransferDropTargetListener
         }
         return currentPart;
     }
+    
+    protected void executeRequirementCreation(EObject eobject)
+    {
+        ISelection selection = ((RequirementTransfer) getTransfer()).getSelection();
+        Collection< ? > source = extractDragSource(selection);
+        CreateRequirementCommand cmdCreate = new CreateCurrentReqCommand(Messages.getString("CreateCurrentRequirementAction.0"));
+        ((CreateRequirementCommand) cmdCreate).setRequirements(source);
+        ((CreateRequirementCommand) cmdCreate).setTarget(eobject);
+        Command cmdWrapp = new EMFtoGEFCommandWrapper(cmdCreate);
+        if (cmdCreate != null && cmdCreate.canExecute())
+        {
+            getViewer().getEditDomain().getCommandStack().execute(cmdWrapp);
+        }
+    }
+    
 }
