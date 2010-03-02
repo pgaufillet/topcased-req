@@ -111,16 +111,17 @@ public class RequirementDropListener extends AbstractTransferDropTargetListener
 
                     // handle specific actions on drop                    
                     Command dropCmd = null;
+                    ISpecificDropAction action=null;
                     String uri = EcoreUtil.getURI(eobject.eClass().getEPackage()).trimFragment().toString();
                     SpecificDropActionDescriptor descriptor = SpecificDropActionManager.getInstance().find(uri);
                     if (descriptor != null)
                     {
-                        ISpecificDropAction action = descriptor.getActionFor((EObject) eobject);
-                        if (action != null)
-                        {
-                            dropCmd = action.createSpecificDropAction(source, eobject);
-                        }
-                    }                   
+                        action = descriptor.getActionFor((EObject) eobject);
+                    }
+                    if (action != null)
+                    {
+                        dropCmd = action.createSpecificDropAction(source, eobject);
+                    }
                     // execution of the requirement creation
                     else if (eobject != null)
                     {
