@@ -52,7 +52,7 @@
          <attribute name="value" type="string" use="required">
             <annotation>
                <documentation>
-                  the model element who will have drop disable
+                  the model element who will have drop disabled
                </documentation>
                <appInfo>
                   <meta.attribute kind="java" basedOn=":org.eclipse.emf.ecore.EObject"/>
@@ -70,7 +70,7 @@
          <attribute name="metamodel" type="string" use="required">
             <annotation>
                <documentation>
-                  The metamodel of the restricted elements
+                  The metamodel URI of the restricted elements
                </documentation>
             </annotation>
          </attribute>

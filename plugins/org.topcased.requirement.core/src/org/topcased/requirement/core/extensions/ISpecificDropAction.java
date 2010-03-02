@@ -18,11 +18,22 @@ import org.eclipse.emf.ecore.EObject;
 
 
 /**
- * @author Maxime AUDRAIN (CS)
+ * This interface defines the behavior to implement for the "specificDropAction" extension point
+ * This method get in parameter the source objects and the target object of a requirement drag and drop
+ * This method return a command who will be executed in the drop listener {@link RequirementDropListener}
+ * 
+ * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  *
  */
 public interface ISpecificDropAction
 {
-
+    
+    /**
+     * implement this method to add new action before command execution when a drag'n'drop occur
+     * 
+     * @param source the source elements of the dnd
+     * @param target the target element of the dnd
+     * @return the command you want to execute when a drag'n'drop occur
+     */
     public Command createSpecificDropAction(Collection< ? > source, EObject target);
 }

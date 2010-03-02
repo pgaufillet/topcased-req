@@ -52,7 +52,7 @@
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  Need to Implements IHandleSpecificActions to handle specific actions on drop
+                  Need to Implements ISpecificDropAction to handle specific actions on drop
                </documentation>
                <appInfo>
                   <meta.attribute kind="java" basedOn=":org.topcased.requirement.core.extensions.ISpecificDropAction"/>
@@ -80,7 +80,7 @@
          <attribute name="metamodel" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  The metamodel URI of the drag&apos;n&apos;drop target elements
                </documentation>
             </annotation>
          </attribute>

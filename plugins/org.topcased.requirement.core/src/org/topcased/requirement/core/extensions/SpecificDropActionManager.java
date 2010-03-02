@@ -21,7 +21,10 @@ import org.topcased.facilities.extensions.AbstractExtensionManager;
 import org.topcased.requirement.core.RequirementCorePlugin;
 
 /**
- * @author Maxime AUDRAIN (CS)
+ * Define the manager of the extension point "specificDropAction" 
+ * who enable to create action for an element when a drag and drop occurs on it
+ * 
+ * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  *
  */
 public class SpecificDropActionManager extends AbstractExtensionManager
@@ -93,7 +96,7 @@ public class SpecificDropActionManager extends AbstractExtensionManager
     }
 
     /**
-     * Finds by uri's a descriptor into the registry.
+     * Finds the descriptor by uri
      * 
      * @param uri the searched uri
      * @return the specific action descriptor or <code>null</code> if not found

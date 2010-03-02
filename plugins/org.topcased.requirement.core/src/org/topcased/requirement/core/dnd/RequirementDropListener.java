@@ -109,7 +109,7 @@ public class RequirementDropListener extends AbstractTransferDropTargetListener
                     //get the current page
                     CurrentPage page = (CurrentPage) view.getCurrentPage();
 
-                    // handle specific actions on drop                    
+                    // handle specific action on drop                    
                     Command dropCmd = null;
                     ISpecificDropAction action=null;
                     String uri = EcoreUtil.getURI(eobject.eClass().getEPackage()).trimFragment().toString();
@@ -122,7 +122,7 @@ public class RequirementDropListener extends AbstractTransferDropTargetListener
                     {
                         dropCmd = action.createSpecificDropAction(source, eobject);
                     }
-                    // execution of the requirement creation
+                    // default requirement creation
                     else if (eobject != null)
                     {
                         dropCmd = new CreateCurrentReqCommand(Messages.getString("CreateCurrentRequirementAction.0"));

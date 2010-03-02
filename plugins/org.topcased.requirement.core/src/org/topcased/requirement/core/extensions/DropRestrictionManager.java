@@ -24,13 +24,12 @@ import org.eclipse.emf.ecore.EObject;
 import org.topcased.facilities.extensions.AbstractExtensionManager;
 import org.topcased.requirement.core.RequirementCorePlugin;
 
-/**
- * @author Maxime AUDRAIN (CS)
- *
- */
-/**
- * @author maudrain
+/** 
+ * Define the manager of the extension point "dropRestriction" 
+ * who can disable drop on objects specified in the extension
  * 
+ * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
+ *
  */
 public class DropRestrictionManager extends AbstractExtensionManager
 {
@@ -47,6 +46,7 @@ public class DropRestrictionManager extends AbstractExtensionManager
     /** the shared instance */
     private static DropRestrictionManager manager;
 
+    /**Map of an uri of the metamodel and the metamodel object to restrict */
     public Map<String, Collection<Class< ? >>> map;
 
     /**
@@ -127,7 +127,7 @@ public class DropRestrictionManager extends AbstractExtensionManager
     }
 
     /**
-     * Check if the eobject in parameter is an instance of the objects defined in the extension
+     * Check if the eobject in parameter is an instance of (at least one of) the objects defined in the extension
      * 
      * @param EObject eobject
      * @return boolean allowed

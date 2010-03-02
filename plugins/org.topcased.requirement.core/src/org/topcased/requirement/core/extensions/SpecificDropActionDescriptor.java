@@ -22,7 +22,10 @@ import org.eclipse.emf.ecore.EObject;
 import org.topcased.requirement.core.RequirementCorePlugin;
 
 /**
- * @author Maxime AUDRAIN (CS)
+ * Define the descriptor (attribute storing) of the extension point "specificDropAction" 
+ * who enable to create action for an element when a drag and drop occurs on it
+ * 
+ * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  * 
  */
 public class SpecificDropActionDescriptor
@@ -46,6 +49,7 @@ public class SpecificDropActionDescriptor
     /** Keeps a reference to the configuration elements that describes the Action. */
     private final IConfigurationElement element;
 
+    /** Map of model element (key) and action for this element*/
     public Map<Class< ? >, ISpecificDropAction> map;
 
     /**
@@ -72,7 +76,7 @@ public class SpecificDropActionDescriptor
     }
 
     /**
-     * Load all the attributes
+     * Load all the attributes in the HashMap
      * 
      * @throws ClassNotFoundException
      * @throws InvalidRegistryObjectException
