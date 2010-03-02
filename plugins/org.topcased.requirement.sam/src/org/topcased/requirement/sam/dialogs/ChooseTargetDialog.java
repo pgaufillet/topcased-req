@@ -9,7 +9,7 @@
  *               Maxime AUDRAIN (CS) - API Changes
  * 
  **********************************************************************************************************************/
-package org.topcased.requirement.core.dialogs;
+package org.topcased.requirement.sam.dialogs;
 
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.dialogs.Dialog;

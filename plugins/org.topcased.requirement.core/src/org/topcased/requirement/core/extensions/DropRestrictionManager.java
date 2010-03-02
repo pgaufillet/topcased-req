@@ -12,7 +12,10 @@
 
 package org.topcased.requirement.core.extensions;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -21,14 +24,13 @@ import org.eclipse.emf.ecore.EObject;
 import org.topcased.facilities.extensions.AbstractExtensionManager;
 import org.topcased.requirement.core.RequirementCorePlugin;
 
-
 /**
  * @author Maxime AUDRAIN (CS)
  *
  */
 /**
  * @author maudrain
- *
+ * 
  */
 public class DropRestrictionManager extends AbstractExtensionManager
 {
@@ -36,13 +38,16 @@ public class DropRestrictionManager extends AbstractExtensionManager
     /** constant representing the name of the extension point */
     private static final String DROP_RESTRICTION_EXTENSION_POINT = "dropRestriction"; //$NON-NLS-1$
 
+    /** Value of the extension point attribute corresponding to the value given to the metamodel. */
+    static final String ATT_METAMODEL = "metamodel"; //$NON-NLS-1$
+
     /** Value of the extension point attribute corresponding to the value given to the model element. */
     static final String ATT_VALUE = "value"; //$NON-NLS-1$
 
     /** the shared instance */
     private static DropRestrictionManager manager;
 
-    public Set<Class< ? >> eobjects;
+    public Map<String, Collection<Class< ? >>> map;
 
     /**
      * Private constructor
@@ -50,7 +55,7 @@ public class DropRestrictionManager extends AbstractExtensionManager
     private DropRestrictionManager()
     {
         super(RequirementCorePlugin.getId() + "." + DROP_RESTRICTION_EXTENSION_POINT);
-        eobjects = new HashSet<Class< ? >>();
+        map = new HashMap<String, Collection<Class< ? >>>();
         readRegistry();
     }
 
@@ -77,14 +82,30 @@ public class DropRestrictionManager extends AbstractExtensionManager
         IConfigurationElement[] elements = extension.getConfigurationElements();
         for (IConfigurationElement confElt : elements)
         {
-            String elt = confElt.getAttribute(ATT_VALUE);
-            try
+            String model = confElt.getAttribute(ATT_METAMODEL);
+            IConfigurationElement[] childElements = confElt.getChildren();
+            for (IConfigurationElement childElt : childElements)
             {
-                eobjects.add(Class.forName(elt));
-            }
-            catch (ClassNotFoundException e)
-            {
-                RequirementCorePlugin.log(e);
+                String elt = childElt.getAttribute(ATT_VALUE);
+                try
+                {
+                    Set<Class< ? >> values = null;
+                    if (map.containsKey(model))
+                    {
+                        values = (Set<Class< ? >>) map.get(model);
+                    }
+                    else
+                    {
+                        values = new HashSet<Class< ? >>();
+                        map.put(model, values);
+                    }
+                    values.add(Class.forName(elt));
+
+                }
+                catch (ClassNotFoundException e)
+                {
+                    RequirementCorePlugin.log(e);
+                }
             }
         }
 
@@ -99,15 +120,8 @@ public class DropRestrictionManager extends AbstractExtensionManager
         IConfigurationElement[] elements = extension.getConfigurationElements();
         for (IConfigurationElement confElt : elements)
         {
-            String elt = confElt.getAttribute(ATT_VALUE);
-            try
-            {
-                eobjects.remove(Class.forName(elt));
-            }
-            catch (ClassNotFoundException e)
-            {
-                RequirementCorePlugin.log(e);
-            }
+            String elt = confElt.getAttribute(ATT_METAMODEL);
+            map.remove(elt);
         }
 
     }
@@ -118,21 +132,19 @@ public class DropRestrictionManager extends AbstractExtensionManager
      * @param EObject eobject
      * @return boolean allowed
      */
-    public boolean isDropAllowed(EObject eobject)
+    public boolean isDropAllowed(String uri, EObject eobject)
     {
-        boolean allowed = true;
-
-        if (eobjects != null)
+        if (map.containsKey(uri))
         {
-            for (Class< ? > clazz : eobjects)
+            for (Class< ? > clazz : map.get(uri))
             {
                 if (clazz.isInstance(eobject))
                 {
-                    allowed = false;
+                    return false;
                 }
             }
         }
-        return allowed;
+        return true;
     }
 
 }

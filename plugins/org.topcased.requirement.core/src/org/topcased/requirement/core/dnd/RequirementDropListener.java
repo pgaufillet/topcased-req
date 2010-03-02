@@ -16,11 +16,12 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.Request;
-import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.dnd.AbstractTransferDropTargetListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -33,6 +34,9 @@ import org.topcased.requirement.core.Messages;
 import org.topcased.requirement.core.commands.CreateCurrentReqCommand;
 import org.topcased.requirement.core.commands.CreateRequirementCommand;
 import org.topcased.requirement.core.extensions.DropRestrictionManager;
+import org.topcased.requirement.core.extensions.ISpecificDropAction;
+import org.topcased.requirement.core.extensions.SpecificDropActionDescriptor;
+import org.topcased.requirement.core.extensions.SpecificDropActionManager;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.current.CurrentPage;
 import org.topcased.requirement.core.views.current.CurrentRequirementView;
@@ -45,6 +49,7 @@ import ttm.Section;
  * Listener that manages the drag from the requirements view to an EditPart.<br>
  * 
  * @author <a href="mailto:sebastien.gabel@c-s.fr">Sebastien GABEL</a>
+ * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  */
 public class RequirementDropListener extends AbstractTransferDropTargetListener
 {
@@ -97,12 +102,40 @@ public class RequirementDropListener extends AbstractTransferDropTargetListener
                 CurrentRequirementView view = (CurrentRequirementView) CurrentRequirementView.getInstance();
                 if (view != null && view.getCurrentPage() instanceof CurrentPage)
                 {
-                    CurrentPage page = (CurrentPage) view.getCurrentPage();                    
-                    if(DropRestrictionManager.getInstance().isDropAllowed(eobject))
+                    // extract source objects
+                    ISelection selection = ((RequirementTransfer) getTransfer()).getSelection();
+                    Collection< ? > source = extractDragSource(selection);
+                    
+                    //get the current page
+                    CurrentPage page = (CurrentPage) view.getCurrentPage();
+
+                    // handle specific actions on drop                    
+                    Command dropCmd = null;
+                    String uri = EcoreUtil.getURI(eobject.eClass().getEPackage()).trimFragment().toString();
+                    SpecificDropActionDescriptor descriptor = SpecificDropActionManager.getInstance().find(uri);
+                    if (descriptor != null)
                     {
-                        //execution of the requirement creation
-                        executeRequirementCreation(eobject);
+                        ISpecificDropAction action = descriptor.getActionFor((EObject) eobject);
+                        if (action != null)
+                        {
+                            dropCmd = action.createSpecificDropAction(source, eobject);
+                        }
+                    }                   
+                    // execution of the requirement creation
+                    else if (eobject != null)
+                    {
+                        dropCmd = new CreateCurrentReqCommand(Messages.getString("CreateCurrentRequirementAction.0"));
+                        ((CreateRequirementCommand) dropCmd).setRequirements(source);
+                        ((CreateRequirementCommand) dropCmd).setTarget(eobject);
                     }
+                    
+                    //execution of the command
+                    if (dropCmd != null && dropCmd.canExecute())
+                    {
+                        getViewer().getEditDomain().getCommandStack().execute(new EMFtoGEFCommandWrapper(dropCmd));
+                    }
+                    
+                    //refresh the current page
                     page.getViewer().refresh();
                 }
             }
@@ -121,14 +154,16 @@ public class RequirementDropListener extends AbstractTransferDropTargetListener
 
         event.detail = DND.DROP_COPY;
 
-        if (currentPart != null)
+        if (currentPart instanceof IModelElementEditPart)
         {
             EObject eobject = getEObject();
-            if(!(DropRestrictionManager.getInstance().isDropAllowed(eobject)))
+            String uri = EcoreUtil.getURI(eobject.eClass().getEPackage()).trimFragment().toString();
+            
+            //if the target is restricted by the extension dropRestriction
+            if (!(DropRestrictionManager.getInstance().isDropAllowed(uri, eobject)))
             {
                 event.operations = DND.DROP_NONE;
                 event.detail = DND.DROP_NONE;
-
             }
         }
         for (Object s : source)
@@ -214,19 +249,5 @@ public class RequirementDropListener extends AbstractTransferDropTargetListener
         }
         return currentPart;
     }
-    
-    protected void executeRequirementCreation(EObject eobject)
-    {
-        ISelection selection = ((RequirementTransfer) getTransfer()).getSelection();
-        Collection< ? > source = extractDragSource(selection);
-        CreateRequirementCommand cmdCreate = new CreateCurrentReqCommand(Messages.getString("CreateCurrentRequirementAction.0"));
-        ((CreateRequirementCommand) cmdCreate).setRequirements(source);
-        ((CreateRequirementCommand) cmdCreate).setTarget(eobject);
-        Command cmdWrapp = new EMFtoGEFCommandWrapper(cmdCreate);
-        if (cmdCreate != null && cmdCreate.canExecute())
-        {
-            getViewer().getEditDomain().getCommandStack().execute(cmdWrapp);
-        }
-    }
-    
+
 }

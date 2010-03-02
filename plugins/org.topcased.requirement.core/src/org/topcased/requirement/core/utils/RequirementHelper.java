@@ -26,9 +26,7 @@ import org.eclipse.emf.edit.command.DeleteCommand;
 import org.eclipse.emf.edit.command.MoveCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.swt.widgets.Display;
 import org.topcased.requirement.AnonymousRequirement;
 import org.topcased.requirement.AttributeAllocate;
 import org.topcased.requirement.AttributeConfiguration;
@@ -43,14 +41,11 @@ import org.topcased.requirement.RequirementPackage;
 import org.topcased.requirement.SpecialChapter;
 import org.topcased.requirement.TextAttribute;
 import org.topcased.requirement.core.Messages;
-import org.topcased.requirement.core.dialogs.ChooseTargetDialog;
 import org.topcased.requirement.core.preferences.ComputeRequirementIdentifier;
 import org.topcased.requirement.core.views.AddRequirementMarker;
 import org.topcased.requirement.core.views.current.CurrentPage;
 import org.topcased.requirement.core.views.current.CurrentRequirementView;
 import org.topcased.requirement.core.views.upstream.UpstreamPage;
-import org.topcased.sam.Flow;
-import org.topcased.sam.FlowGroup;
 
 import ttm.Requirement;
 
@@ -134,8 +129,6 @@ public final class RequirementHelper
         CompoundCommand globalCmd = new CompoundCommand();
         if (targetObject != null)
         {
-            // Special case when the targetObject is a Flow (since Topcased 2.4.0)
-            targetObject = handleDropOnFlow(targetObject);
 
             List<org.topcased.requirement.Requirement> createdRequirements = new ArrayList<org.topcased.requirement.Requirement>();
             HierarchicalElement hierarchicalElement = getHierarchicalElement(targetObject, globalCmd);
@@ -167,33 +160,6 @@ public final class RequirementHelper
     }
 
     /**
-     * Special case concerning Flow model objects.
-     * 
-     * @param target The target eObject
-     * @return The real target that can also be a {@link FlowGroup}
-     * @since Topcased 2.4.0
-     */
-    private EObject handleDropOnFlow(EObject target)
-    {
-        EObject toReturn = target;
-        if (target instanceof Flow)
-        {
-            Flow flow = (Flow) target;
-            // the dialog should be opened to ask the user if he wants to attach requirement to flow goup.
-            Dialog dialog = new ChooseTargetDialog(Display.getCurrent().getActiveShell(), flow);
-            if (dialog.open() == Dialog.OK)
-            {
-                int result = dialog.getReturnCode();
-                if (result == 1)
-                {
-                    return flow.getGroup();
-                }
-            }
-        }
-        return toReturn;
-    }
-
-    /**
      * Gets the hierarchical element corresponding to the targeted model object.<br>
      * If the corresponding hierarchical element does not already exist, it is created and returned.<br>
      * Note that all the hierarchy is implicitly created when a new element is created.
@@ -209,18 +175,7 @@ public final class RequirementHelper
         if (hierarchicalElement == null)
         {
             hierarchicalElement = createHierarchicalElement(targetObject);
-
-            // particular case if the targetObject is a FlowGroup
-            if (targetObject instanceof FlowGroup)
-            {
-                // take the first since Flows are ordered
-                Flow firstFlow = ((FlowGroup) targetObject).getFlows().get(0);
-                attach(firstFlow.eContainer(), hierarchicalElement, globalCmd);
-            }
-            else
-            {
-                attach(targetObject.eContainer(), hierarchicalElement, globalCmd);
-            }
+            attach(targetObject.eContainer(), hierarchicalElement, globalCmd);
         }
         return hierarchicalElement;
     }

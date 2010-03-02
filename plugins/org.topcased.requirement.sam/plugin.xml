@@ -21,15 +21,28 @@
    </extension>
    <extension
          point="org.topcased.requirement.core.dropRestriction">
-      <element
-            value="org.topcased.sam.Port">
-      </element>
-      <element
-            value="org.topcased.sam.MultiPort">
-      </element>
-      <element
-            value="org.topcased.sam.State">
-      </element>
+      <model
+            metamodel="http://www.topcased.org/SAM/1.3">
+         <element
+               value="org.topcased.sam.Port">
+         </element>
+         <element
+               value="org.topcased.sam.MultiPort">
+         </element>
+         <element
+               value="org.topcased.sam.AbstractState">
+         </element>
+      </model>
+   </extension>
+   <extension
+         point="org.topcased.requirement.core.specificDropAction">
+      <model
+            metamodel="http://www.topcased.org/SAM/1.3">
+         <action
+               class="org.topcased.requirement.sam.actions.HandleDropOnFlow"
+               element="org.topcased.sam.Flow">
+         </action>
+      </model>
    </extension>
 
 </plugin>

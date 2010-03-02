@@ -3,10 +3,10 @@
 <schema targetNamespace="org.topcased.requirement.core" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.topcased.requirement.core" id="dropRestriction" name="Drop Restriction"/>
+         <meta.schema plugin="org.topcased.requirement.core" id="specificDropAction" name="Define creation of specific actions on requirement drop"/>
       </appInfo>
       <documentation>
-         This extension point permits to forbid requirement drag&apos;n&apos;drop on elements of the modeler
+         Define creation of specific actions on requirement drop
       </documentation>
    </annotation>
 
@@ -47,12 +47,22 @@
       </complexType>
    </element>
 
-   <element name="element">
+   <element name="action">
       <complexType>
-         <attribute name="value" type="string" use="required">
+         <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  the model element who will have drop disable
+                  Need to Implements IHandleSpecificActions to handle specific actions on drop
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn=":org.topcased.requirement.core.extensions.ISpecificDropAction"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="element" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The type of the element who will have the action
                </documentation>
                <appInfo>
                   <meta.attribute kind="java" basedOn=":org.eclipse.emf.ecore.EObject"/>
@@ -65,12 +75,12 @@
    <element name="model">
       <complexType>
          <sequence minOccurs="1" maxOccurs="unbounded">
-            <element ref="element"/>
+            <element ref="action"/>
          </sequence>
          <attribute name="metamodel" type="string" use="required">
             <annotation>
                <documentation>
-                  The metamodel of the restricted elements
+                  
                </documentation>
             </annotation>
          </attribute>
