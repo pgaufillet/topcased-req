@@ -1,14 +1,15 @@
 /*****************************************************************************
- * Copyright (c) 2008 TOPCASED consortium.
- *
- * Contributors: Christophe Mertz (CS) christophe.mertz@c-s.fr
- *    
- * All rights reserved. This program and the accompanying materials
+ * Copyright (c) 2010 Communication & Systems
+ * 
+ * All rights reserved. This program and the accompanying materials 
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
- ******************************************************************************/
+ * 
+ * Contributors : Maxime AUDRAIN (CS) - initial API and implementation
+ * 
+ *****************************************************************************/
+
 package org.topcased.requirement.core;
 
 import org.eclipse.core.runtime.IStatus;
@@ -33,7 +34,7 @@ public class RequirementCorePlugin extends AbstractUIPlugin
     // The shared instance
     private static RequirementCorePlugin plugin;
     
-    protected static boolean once = false;
+    protected static boolean createDropListener = true;
 
     /**
      * The constructor
@@ -158,13 +159,13 @@ public class RequirementCorePlugin extends AbstractUIPlugin
         getDefault().getLog().log(status);
     }
     
-    public static boolean getOnce()
+    public static boolean getCreateDropListener()
     {
-        return once;
+        return createDropListener;
     }
     
-    public static void setOnce(boolean once1)
+    public static void setCreateDropListener(boolean once1)
     {
-        once = once1;
+        createDropListener = once1;
     }
 }

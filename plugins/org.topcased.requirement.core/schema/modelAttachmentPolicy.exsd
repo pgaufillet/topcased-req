@@ -3,10 +3,10 @@
 <schema targetNamespace="org.topcased.requirement.core" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.topcased.requirement.core" id="modelAttachementPolicy" name="enable to attach a topcased model to a requirement model"/>
+         <meta.schema plugin="org.topcased.requirement.core" id="modelAttachmentPolicy" name="enable to attach a topcased model to a requirement model"/>
       </appInfo>
       <documentation>
-         [Enter description of this extension point.]
+         This extension point enable to link a topcased model to a requirement model
       </documentation>
    </annotation>
 
@@ -18,7 +18,7 @@
       </annotation>
       <complexType>
          <sequence minOccurs="1" maxOccurs="unbounded">
-            <element ref="model"/>
+            <element ref="policy"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -47,9 +47,16 @@
       </complexType>
    </element>
 
-   <element name="model">
+   <element name="policy">
       <complexType>
-         <attribute name="metamodel" type="string" use="required">
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Unique identifier for this policy
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="uri" type="string" use="required">
             <annotation>
                <documentation>
                   The URI of the metamodel you want to attach
@@ -59,11 +66,18 @@
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  You need to implement the IModelAttachementPolicy interface to define the strategy of the metamodel attachement
+                  You need to implement the IModelAttachmentPolicy interface to define the strategy of the requirement model attachement
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn=":org.topcased.requirement.core.extensions.IModelAttachementPolicy"/>
+                  <meta.attribute kind="java" basedOn=":org.topcased.requirement.core.extensions.IModelAttachmentPolicy"/>
                </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="enableFor" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Enter here your file extension that you want to work on with requirements
+               </documentation>
             </annotation>
          </attribute>
       </complexType>
@@ -74,25 +88,17 @@
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         [Enter the first release in which this extension point appears.]
+         3.4.0
       </documentation>
    </annotation>
 
-   <annotation>
-      <appInfo>
-         <meta.section type="examples"/>
-      </appInfo>
-      <documentation>
-         [Enter extension point usage example here.]
-      </documentation>
-   </annotation>
 
    <annotation>
       <appInfo>
          <meta.section type="apiinfo"/>
       </appInfo>
       <documentation>
-         [Enter API information here.]
+         none
       </documentation>
    </annotation>
 
@@ -101,9 +107,21 @@
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         [Enter information about supplied implementation of this extension point.]
+         none
       </documentation>
    </annotation>
 
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         Copyright (c) 2010 Communication &amp; Systems 
+All rights reserved. This program and the accompanying materials 
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+      </documentation>
+   </annotation>
 
 </schema>

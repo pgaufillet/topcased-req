@@ -13,7 +13,14 @@
 package org.topcased.requirement.core.views;
 
 import org.eclipse.core.runtime.IAdapterFactory;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.topcased.modeler.di.model.Property;
 import org.topcased.modeler.editor.Modeler;
+import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
+import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
+import org.topcased.requirement.core.utils.DefaultAttachmentPolicy;
+import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.current.CurrentPage;
 import org.topcased.requirement.core.views.current.ICurrentRequirementPage;
 import org.topcased.requirement.core.views.upstream.IUpstreamRequirementPage;
@@ -21,6 +28,8 @@ import org.topcased.requirement.core.views.upstream.UpstreamPage;
 
 /**
  * A factory for creating Adapter objects.
+ * 
+ * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  */
 public class RequirementAdapterFactory implements IAdapterFactory
 {
@@ -31,11 +40,64 @@ public class RequirementAdapterFactory implements IAdapterFactory
 
         if (adapterType == IUpstreamRequirementPage.class && adaptableObject instanceof Modeler)
         {
-            return new UpstreamPage();
+            Modeler modeler = (Modeler) adaptableObject;
+            
+            IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(modeler.getEditingDomain());
+            if (policy != null)
+            {
+                Resource targetModel = policy.getLinkedTargetModel(modeler.getEditingDomain().getResourceSet());
+                if (targetModel != null)
+                {
+                    return new UpstreamPage();
+                }
+            }
+            else
+            {
+                if (DefaultAttachmentPolicy.getInstance().getLinkedTargetModel(modeler.getEditingDomain().getResourceSet()) != null)
+                {
+                    if (RequirementUtils.getRequirementModel(modeler.getEditingDomain()) == null)
+                    {
+                        Property requirementProperty = DefaultAttachmentPolicy.getInstance().getProperty(modeler.getActiveDiagram());
+                        if ( requirementProperty != null)
+                        {
+                            URI uri = URI.createURI(requirementProperty.getValue()).trimFragment().resolve(requirementProperty.eResource().getURI());
+                            RequirementUtils.loadRequirementModel(uri, modeler.getEditingDomain());
+                        }
+                    }
+                    return new UpstreamPage();
+                }
+                    
+            }
         }
         else if (adapterType == ICurrentRequirementPage.class && adaptableObject instanceof Modeler)
         {
-            return new CurrentPage();
+            Modeler modeler = (Modeler) adaptableObject;
+                        
+            IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(modeler.getEditingDomain());
+            if (policy != null)
+            {
+                Resource targetModel = policy.getLinkedTargetModel(modeler.getEditingDomain().getResourceSet());
+                if (targetModel != null)
+                {                    
+                    return new CurrentPage();
+                }
+            }
+            else
+            {   
+                if (DefaultAttachmentPolicy.getInstance().getLinkedTargetModel(modeler.getEditingDomain().getResourceSet()) != null)
+                {
+                    if (RequirementUtils.getRequirementModel(modeler.getEditingDomain()) == null)
+                    {
+                        Property requirementProperty = DefaultAttachmentPolicy.getInstance().getProperty(modeler.getActiveDiagram());
+                        if ( requirementProperty != null)
+                        {
+                            URI uri = URI.createURI(requirementProperty.getValue()).trimFragment().resolve(requirementProperty.eResource().getURI());
+                            RequirementUtils.loadRequirementModel(uri, modeler.getEditingDomain());
+                        }
+                    }
+                    return new CurrentPage();
+                }
+            }
         }
         return null;
     }

@@ -18,7 +18,7 @@
       </annotation>
       <complexType>
          <sequence minOccurs="1" maxOccurs="unbounded">
-            <element ref="model"/>
+            <element ref="metamodel"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -49,6 +49,13 @@
 
    <element name="action">
       <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Unique identifier for this action
+               </documentation>
+            </annotation>
+         </attribute>
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
@@ -72,12 +79,12 @@
       </complexType>
    </element>
 
-   <element name="model">
+   <element name="metamodel">
       <complexType>
          <sequence minOccurs="1" maxOccurs="unbounded">
             <element ref="action"/>
          </sequence>
-         <attribute name="metamodel" type="string" use="required">
+         <attribute name="uri" type="string" use="required">
             <annotation>
                <documentation>
                   The metamodel URI of the drag&apos;n&apos;drop target elements

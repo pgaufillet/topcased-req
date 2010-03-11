@@ -18,8 +18,8 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.ENamedElement;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
@@ -57,7 +57,7 @@ import org.topcased.requirement.core.utils.RequirementUtils;
  * A dialog for the attribute modification
  * 
  * @author <a href="mailto:christophe.mertz@c-s.fr">Christophe Mertz</a>
- *
+ * 
  */
 public class UpdateAttributeDialog extends TitleAreaDialog
 {
@@ -108,7 +108,7 @@ public class UpdateAttributeDialog extends TitleAreaDialog
     {
         setTitle(Messages.getString("UpdateAttributeDialog.1")); //$NON-NLS-1$
         setMessage(Messages.getString("UpdateAttributeDialog.2")); //$NON-NLS-1$
-        
+
         final Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayout(new GridLayout(2, false));
         composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -117,7 +117,7 @@ public class UpdateAttributeDialog extends TitleAreaDialog
         group.setLayout(new GridLayout(2, false));
         group.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         group.setText(Messages.getString("UpdateAttributeDialog.6")); //$NON-NLS-1$
-        
+
         getLabelAttribute(group);
         getComboAttribute(group);
 
@@ -148,10 +148,10 @@ public class UpdateAttributeDialog extends TitleAreaDialog
             List<String> labelList = new ArrayList<String>();
             for (ConfiguratedAttribute anAttribute : configuration.getListAttributes())
             {
-                labelList.add(anAttribute.getName());  
+                labelList.add(anAttribute.getName());
                 comboAttribute.setData(anAttribute.getName(), anAttribute.getListValue());
             }
-            
+
             comboAttribute.setItems(labelList.toArray(new String[0]));
             comboAttribute.addSelectionListener(new AttributeSelectionListener());
             comboAttribute.addModifyListener(new ModifyListener()
@@ -201,7 +201,7 @@ public class UpdateAttributeDialog extends TitleAreaDialog
         });
     }
 
-    private String[] listToArray(Collection<? extends EObject> list)
+    private String[] listToArray(Collection< ? extends EObject> list)
     {
         Collection<String> toReturn = new ArrayList<String>();
         for (EObject o : list)
@@ -215,7 +215,7 @@ public class UpdateAttributeDialog extends TitleAreaDialog
      * Manage the selection of an attribute in the dialog
      * 
      * @author <a href="mailto:christophe.mertz@c-s.fr">Christophe Mertz</a>
-     *
+     * 
      */
     private class AttributeSelectionListener extends SelectionAdapter
     {
@@ -224,12 +224,12 @@ public class UpdateAttributeDialog extends TitleAreaDialog
         {
             EObject currObject = (EObject) selection.getFirstElement();
             listEObjects = new ArrayList<EObject>();
-            
+
             if (currObject instanceof Requirement)
             {
                 Attribute attribute = CurrentPreferenceHelper.getAttribute((Requirement) currObject, comboAttribute.getText());
                 EList<AttributeValue> values = (EList<AttributeValue>) comboAttribute.getData(comboAttribute.getText());
-                
+
                 if (attribute instanceof TextAttribute && values.size() > 0)
                 {
                     comboValue.setEnabled(true);
@@ -242,7 +242,7 @@ public class UpdateAttributeDialog extends TitleAreaDialog
                 {
                     comboValue.setEnabled(true);
                     textValue.setEnabled(false);
-                    listEObjects.addAll(RequirementUtils.getAllObjects((EObject) currObject, ENamedElement.class));
+                    listEObjects.addAll(RequirementUtils.getAllObjects(EcorePackage.eINSTANCE.getEModelElement()));
                     comboValue.setItems(listToArray(listEObjects));
                     comboValue.setSelection(new Point(0, comboValue.getText().length()));
                 }
@@ -261,7 +261,7 @@ public class UpdateAttributeDialog extends TitleAreaDialog
                     textValue.setEnabled(false);
                     listEObjects.addAll(RequirementUtils.getAllUpstreams(currObject.eResource()));
                     listEObjects.addAll(RequirementUtils.getAllCurrents(currObject.eResource()));
-                    listEObjects.addAll(RequirementUtils.getAllObjects((EObject) currObject, ENamedElement.class));
+                    listEObjects.addAll(RequirementUtils.getAllObjects(EcorePackage.eINSTANCE.getEModelElement()));
                     comboValue.setItems(listToArray(listEObjects));
                     comboValue.setSelection(new Point(0, comboValue.getText().length()));
                 }

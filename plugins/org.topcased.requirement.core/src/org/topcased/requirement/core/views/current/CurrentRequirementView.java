@@ -13,7 +13,6 @@ package org.topcased.requirement.core.views.current;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.IPage;
@@ -158,15 +157,10 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
      */
     public void hookListener()
     {
-        // avoid useless and already done registration
-        IViewReference upstreamRef = getSite().getPage().findViewReference(UpstreamRequirementView.VIEW_ID);
-        if (upstreamRef != null)
+        IViewPart upstreamPart = UpstreamRequirementView.getInstance();
+        if (upstreamPart instanceof UpstreamRequirementView)
         {
-            IViewPart upstreamPart = upstreamRef.getView(false);
-            if (upstreamPart instanceof UpstreamRequirementView)
-            {
-                addSelectionChangedListener((UpstreamRequirementView) upstreamPart);
-            }
+            addSelectionChangedListener((UpstreamRequirementView) upstreamPart);
         }
     }
 
@@ -175,7 +169,7 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
      */
     public void unhookListener()
     {
-        IViewPart upstreamPart = getSite().getPage().findView(UpstreamRequirementView.VIEW_ID);
+        IViewPart upstreamPart = UpstreamRequirementView.getInstance();
         if (upstreamPart instanceof UpstreamRequirementView)
         {
             removeSelectionChangedListener((UpstreamRequirementView) upstreamPart);

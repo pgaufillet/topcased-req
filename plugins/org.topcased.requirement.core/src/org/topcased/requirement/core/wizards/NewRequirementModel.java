@@ -130,12 +130,12 @@ public class NewRequirementModel extends Wizard implements INewWizard
             if (page.getEmptySource())
             {
                 // Do the work within an operation.
-                operation = new EmptyRequirementModelCreationOperation(page.getModelFile(), page.getDestModelFile());
+                operation = new EmptyRequirementModelCreationOperation(page.getTargetModelFile(), page.getDestModelFile());
             }
             else
             {
                 // Do the work within an operation.
-                operation = new RequirementModelCreationOperation(page.getModelFile(), page.getSourceModelFile(), page.getDestModelFile());
+                operation = new RequirementModelCreationOperation(page.getTargetModelFile(), page.getSourceModelFile(), page.getDestModelFile());
             }
             operation.setProjectInformations(projectName, projectDescription);
             new ProgressMonitorDialog(getShell()).run(false, false, operation);

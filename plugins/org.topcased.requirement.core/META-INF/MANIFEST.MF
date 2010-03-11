@@ -10,8 +10,7 @@ Require-Bundle: org.eclipse.ui,
  org.topcased.modeler;visibility:=reexport,
  org.eclipse.emf.compare.diff,
  org.eclipse.emf.compare.match,
- org.topcased.sam.requirement.import,
- org.topcased.sam
+ org.topcased.sam.requirement.import
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.topcased.requirement.core,
@@ -25,5 +24,7 @@ Export-Package: org.topcased.requirement.core,
  org.topcased.requirement.core.utils,
  org.topcased.requirement.core.views,
  org.topcased.requirement.core.views.current,
- org.topcased.requirement.core.views.upstream
+ org.topcased.requirement.core.views.upstream,
+ org.topcased.requirement.core.wizards,
+ org.topcased.requirement.core.wizards.operation
 Bundle-Vendor: %providerName

@@ -3,7 +3,7 @@
 <plugin>
    <extension-point id="dropRestriction" name="Drop Restriction" schema="schema/dropRestriction.exsd"/>
    <extension-point id="specificDropAction" name="Define creation of specific actions on requirement drop" schema="schema/specificDropAction.exsd"/>
-   <extension-point id="modelAttachementPolicy" name="enable to attach a topcased model to a requirement model" schema="schema/modelAttachementPolicy.exsd"/>
+   <extension-point id="modelAttachmentPolicy" name="enable to attach a topcased model to a requirement model" schema="schema/modelAttachmentPolicy.exsd"/>
 
    <extension
          point="org.eclipse.ui.views">

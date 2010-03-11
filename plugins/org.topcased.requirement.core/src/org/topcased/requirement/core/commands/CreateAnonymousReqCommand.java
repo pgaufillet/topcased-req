@@ -34,9 +34,7 @@ public class CreateAnonymousReqCommand extends CreateRequirementCommand
     }
 
     /**
-     * Overridden method.
-     * 
-     * @see org.topcased.requirement.core.commands.sam.systemdiagram.commands.CreateRequirementCommand#execute()
+     * @see org.eclipse.emf.common.command.Command#execute()
      */
     public void execute()
     {

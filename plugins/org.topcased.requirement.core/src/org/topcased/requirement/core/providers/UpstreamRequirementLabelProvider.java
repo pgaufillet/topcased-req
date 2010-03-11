@@ -20,7 +20,6 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Display;
 import org.topcased.requirement.core.utils.RequirementUtils;
-
 import ttm.Requirement;
 
 /**
@@ -44,6 +43,8 @@ public class UpstreamRequirementLabelProvider extends AdapterFactoryLabelProvide
     public UpstreamRequirementLabelProvider(AdapterFactory adapterFactory)
     {
         super(adapterFactory);
+        initialFont = getStyledFont(Display.getCurrent().getSystemFont(), SWT.NONE);
+        boldItalicFont = getStyledFont(Display.getCurrent().getSystemFont(), SWT.BOLD | SWT.ITALIC);
     }
 
     /**
@@ -55,16 +56,8 @@ public class UpstreamRequirementLabelProvider extends AdapterFactoryLabelProvide
         {
             if (RequirementUtils.isLinked((Requirement) element))
             {
-                if (boldItalicFont == null)
-                {
-                    boldItalicFont = getStyledFont(Display.getCurrent().getSystemFont(), SWT.BOLD | SWT.ITALIC);
-                }
                 return boldItalicFont;
             }
-        }
-        if (initialFont == null)
-        {
-            initialFont = getStyledFont(Display.getCurrent().getSystemFont(), SWT.NONE);
         }
         return initialFont;
     }

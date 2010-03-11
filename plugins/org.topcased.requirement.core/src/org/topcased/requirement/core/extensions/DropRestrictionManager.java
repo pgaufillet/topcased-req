@@ -20,6 +20,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EObject;
 import org.topcased.facilities.extensions.AbstractExtensionManager;
 import org.topcased.requirement.core.RequirementCorePlugin;
@@ -38,7 +39,7 @@ public class DropRestrictionManager extends AbstractExtensionManager
     private static final String DROP_RESTRICTION_EXTENSION_POINT = "dropRestriction"; //$NON-NLS-1$
 
     /** Value of the extension point attribute corresponding to the value given to the metamodel. */
-    static final String ATT_METAMODEL = "metamodel"; //$NON-NLS-1$
+    static final String ATT_URI = "uri"; //$NON-NLS-1$
 
     /** Value of the extension point attribute corresponding to the value given to the model element. */
     static final String ATT_VALUE = "value"; //$NON-NLS-1$
@@ -82,7 +83,7 @@ public class DropRestrictionManager extends AbstractExtensionManager
         IConfigurationElement[] elements = extension.getConfigurationElements();
         for (IConfigurationElement confElt : elements)
         {
-            String model = confElt.getAttribute(ATT_METAMODEL);
+            String model = confElt.getAttribute(ATT_URI);
             IConfigurationElement[] childElements = confElt.getChildren();
             for (IConfigurationElement childElt : childElements)
             {
@@ -99,7 +100,8 @@ public class DropRestrictionManager extends AbstractExtensionManager
                         values = new HashSet<Class< ? >>();
                         map.put(model, values);
                     }
-                    values.add(Class.forName(elt));
+                    values.add(Platform.getBundle(childElt.getContributor().getName()).loadClass(elt));
+                    
 
                 }
                 catch (ClassNotFoundException e)
@@ -120,7 +122,7 @@ public class DropRestrictionManager extends AbstractExtensionManager
         IConfigurationElement[] elements = extension.getConfigurationElements();
         for (IConfigurationElement confElt : elements)
         {
-            String elt = confElt.getAttribute(ATT_METAMODEL);
+            String elt = confElt.getAttribute(ATT_URI);
             map.remove(elt);
         }
 

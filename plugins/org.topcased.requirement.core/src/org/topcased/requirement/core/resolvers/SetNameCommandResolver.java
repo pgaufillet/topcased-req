@@ -131,7 +131,7 @@ public class SetNameCommandResolver extends AdditionalCommand<SetCommand>
                             }
                             else
                             {
-                                // same algo than CommandStack.getCommands
+                                // same algorithm than CommandStack.getCommands
                                 List<Object> tmp = CommandStack.getCommands((Command) o, clazz);
                                 if (!(tmp.isEmpty()))
                                 {

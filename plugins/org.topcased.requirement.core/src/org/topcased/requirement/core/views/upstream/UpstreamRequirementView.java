@@ -23,14 +23,15 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.part.IPageBookViewPage;
 import org.topcased.modeler.documentation.IDocPage;
+import org.topcased.requirement.ObjectAttribute;
+import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.core.documentation.upstream.UpstreamDescPage;
 import org.topcased.requirement.core.utils.RequirementCoverageComputer;
 import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.AbstractRequirementView;
 import org.topcased.requirement.core.views.current.CurrentRequirementView;
-import org.topcased.requirement.ObjectAttribute;
-import org.topcased.requirement.RequirementProject;
+
 import ttm.Requirement;
 
 /**
@@ -78,7 +79,7 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
     {
         return IUpstreamRequirementPage.class;
     }
-    
+
     /**
      * Returns the instance of this view
      * 
@@ -124,7 +125,7 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
      */
     public void hookListener()
     {
-        IViewPart currentPart = getInstance();
+        IViewPart currentPart = CurrentRequirementView.getInstance();
         if (currentPart instanceof CurrentRequirementView)
         {
             ((CurrentRequirementView) currentPart).addSelectionChangedListener(this);
@@ -136,7 +137,7 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
      */
     public void unhookListener()
     {
-        IViewPart currentPart = getInstance();
+        IViewPart currentPart = CurrentRequirementView.getInstance();
         if (currentPart instanceof CurrentRequirementView)
         {
             ((CurrentRequirementView) currentPart).removeSelectionChangedListener(this);

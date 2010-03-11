@@ -18,6 +18,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.InvalidRegistryObjectException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EObject;
 import org.topcased.requirement.core.RequirementCorePlugin;
 
@@ -31,10 +32,10 @@ import org.topcased.requirement.core.RequirementCorePlugin;
 public class SpecificDropActionDescriptor
 {
 
-    static final String TAG_MODEL = "model"; //$NON-NLS-1$
+    static final String TAG_MODEL = "metamodel"; //$NON-NLS-1$
 
-    /** Value of the extension point attribute corresponding to the value given to the metamodel. */
-    static final String ATT_METAMODEL = "metamodel"; //$NON-NLS-1$
+    /** Value of the extension point attribute corresponding to the value given to the uri. */
+    static final String ATT_URI = "uri"; //$NON-NLS-1$
 
     /** Value of the extension point attribute corresponding to the value given to the class. */
     static final String ATT_CLASS = "class"; //$NON-NLS-1$
@@ -83,14 +84,14 @@ public class SpecificDropActionDescriptor
      */
     private void load()
     {
-        uri = element.getAttribute(ATT_METAMODEL);
+        uri = element.getAttribute(ATT_URI);
         IConfigurationElement[] childElements = element.getChildren();
         for (IConfigurationElement childElt : childElements)
         {
             Class< ? > clazz;
             try
             {
-                clazz = Class.forName(childElt.getAttribute(ATT_ELEMENT));
+                clazz = Platform.getBundle(childElt.getContributor().getName()).loadClass(childElt.getAttribute(ATT_ELEMENT));
                 ISpecificDropAction act = (ISpecificDropAction) childElt.createExecutableExtension(ATT_CLASS);
     
                 if (!map.containsKey(clazz))

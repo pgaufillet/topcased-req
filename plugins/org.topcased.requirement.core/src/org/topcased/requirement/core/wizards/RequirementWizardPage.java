@@ -35,12 +35,14 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ResourceSelectionDialog;
 import org.topcased.requirement.core.Messages;
+import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
 
 /**
  * The "New" wizard page allows setting the container for the new file as well as the file name. The page will only
  * accept file name without the extension OR with the extension that matches the expected one.
  * 
  * @author <a href="mailto:christophe.mertz@c-s.fr">Christophe Mertz</a>
+ * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  */
 public class RequirementWizardPage extends WizardPage
 {
@@ -54,11 +56,11 @@ public class RequirementWizardPage extends WizardPage
     private Group mainGroup;
 
     /*
-     * Model SAM
+     * target Model
      */
-    private Text modelSAMFd;
+    private Text targetModelFd;
 
-    private Button modelSAMBt;
+    private Button targetModelBt;
 
     /*
      * Model Ttm
@@ -150,12 +152,12 @@ public class RequirementWizardPage extends WizardPage
         Label modelLbl = new Label(mainGroup, SWT.NONE);
         modelLbl.setText(Messages.getString("RequirementWizardPage.6")); //$NON-NLS-1$
 
-        modelSAMFd = new Text(mainGroup, SWT.BORDER);
-        modelSAMFd.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        modelSAMFd.setEditable(false);
+        targetModelFd = new Text(mainGroup, SWT.BORDER);
+        targetModelFd.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        targetModelFd.setEditable(false);
 
-        modelSAMBt = new Button(mainGroup, SWT.PUSH);
-        modelSAMBt.setText(BROWSE_TEXT);
+        targetModelBt = new Button(mainGroup, SWT.PUSH);
+        targetModelBt.setText(BROWSE_TEXT);
 
         /*
          * Selection of the upsteam requirement to import
@@ -212,17 +214,17 @@ public class RequirementWizardPage extends WizardPage
      */
     private void hookListeners()
     {
-        modelSAMFd.addModifyListener(validationListener);
+        targetModelFd.addModifyListener(validationListener);
         importTtmFd.addModifyListener(validationListener);
         requirementNameFd.addModifyListener(validationListener);
         projectFd.addModifyListener(validationListener);
         emptySource.addSelectionListener(selectionListener);
 
-        modelSAMBt.addSelectionListener(new SelectionAdapter()
+        targetModelBt.addSelectionListener(new SelectionAdapter()
         {
             public void widgetSelected(SelectionEvent e)
             {
-                handleSAMModelChoose();
+                handleTargetModelChoose();
                 dialogChanged();
             }
         });
@@ -254,7 +256,7 @@ public class RequirementWizardPage extends WizardPage
     /**
      * Handles the model choice
      */
-    protected void handleSAMModelChoose()
+    protected void handleTargetModelChoose()
     {
         ResourceSelectionDialog dialog = new ResourceSelectionDialog(getShell(), ResourcesPlugin.getWorkspace().getRoot(), Messages.getString("RequirementWizardPage.12")); //$NON-NLS-1$
         if (dialog.open() == Window.OK)
@@ -263,7 +265,7 @@ public class RequirementWizardPage extends WizardPage
 
             if (results.length == 1 && results[0] instanceof IFile)
             {
-                modelSAMFd.setText(((IFile) results[0]).getFullPath().toString());
+                targetModelFd.setText(((IFile) results[0]).getFullPath().toString());
 
             }
         }
@@ -305,7 +307,7 @@ public class RequirementWizardPage extends WizardPage
             if (obj instanceof IFile)
             {
                 name = ((IFile) obj).getLocation().removeFileExtension().lastSegment();
-                modelSAMFd.setText(((IResource) obj).getFullPath().toString());
+                targetModelFd.setText(((IResource) obj).getFullPath().toString());
             }
         }
         setPageComplete(false);
@@ -322,9 +324,16 @@ public class RequirementWizardPage extends WizardPage
          */
         String newModel = getRequirementNameFd();
         String message = null;
-        if (getModelFile() != null && !getModelFile().getFileExtension().equals("sam")) //$NON-NLS-1$
+        
+        if (getTargetModelFile() != null) //$NON-NLS-1$
         {
-            message = Messages.getString("RequirementWizardPage.1"); //$NON-NLS-1$
+            if(!ModelAttachmentPolicyManager.getInstance().isEnableFor(getTargetModelFile().getFileExtension()))
+            {
+                if (!getTargetModelFile().getFileExtension().endsWith("di"))
+                {
+                    message = Messages.getString("RequirementWizardPage.1"); //$NON-NLS-1$
+                }
+            }
         }
         else if (newModel.length() == 0)
         {
@@ -362,13 +371,13 @@ public class RequirementWizardPage extends WizardPage
         }
         else
         {
-            if ((getModelSAMFd() == null) || ((getImportTtmFd() == null) && (!emptySource.getSelection())) || (getRequirementNameFd() == null))
+            if ((getTargetModelFd() == null) || ((getImportTtmFd() == null) && (!emptySource.getSelection())) || (getRequirementNameFd() == null))
             {
                 result = false;
             }
             else
             {
-                if (getModelSAMFd().length() > 0 && ((emptySource.getSelection()) || ((getImportTtmFd().length() > 0) && (!emptySource.getSelection()))) && getRequirementNameFd().length() > 0)
+                if (getTargetModelFd().length() > 0 && ((emptySource.getSelection()) || ((getImportTtmFd().length() > 0) && (!emptySource.getSelection()))) && getRequirementNameFd().length() > 0)
                 {
                     result = true;
                 }
@@ -393,13 +402,13 @@ public class RequirementWizardPage extends WizardPage
     }
 
     /**
-     * Gets the SAM model
+     * Gets the target model file
      * 
      * @return IFile : the import file
      */
-    public IFile getModelFile()
+    public IFile getTargetModelFile()
     {
-        Path path = new Path(getModelSAMFd());
+        Path path = new Path(getTargetModelFd());
         if (path.getFileExtension() != null)
         {
             return ResourcesPlugin.getWorkspace().getRoot().getFile(path);
@@ -414,7 +423,7 @@ public class RequirementWizardPage extends WizardPage
      */
     public IFile getDestModelFile()
     {
-        IPath pathModelSource = new Path(getModelSAMFd());
+        IPath pathModelSource = new Path(getTargetModelFd());
         IPath pathNewModel = new Path(pathModelSource.removeLastSegments(1).toString());
         return ResourcesPlugin.getWorkspace().getRoot().getFile(pathNewModel.append(getRequirementNameFd()));
     }
@@ -470,13 +479,13 @@ public class RequirementWizardPage extends WizardPage
     }
 
     /**
-     * The getter of the name of the SAM model selected
+     * The getter of the name of the target model selected
      * 
-     * @return the name of the SAM model selected
+     * @return the name of the target model selected
      */
-    protected String getModelSAMFd()
+    protected String getTargetModelFd()
     {
-        return modelSAMFd.getText();
+        return targetModelFd.getText();
     }
 
     /**

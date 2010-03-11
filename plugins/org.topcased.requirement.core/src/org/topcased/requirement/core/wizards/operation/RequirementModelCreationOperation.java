@@ -43,13 +43,13 @@ public class RequirementModelCreationOperation extends AbstractModelCreationOper
     /**
      * The constructor
      * 
-     * @param samFile
+     * @param targetFile
      * @param sourceFile
      * @param destFile
      */
-    public RequirementModelCreationOperation(IFile samFile, IFile sourceFile, IFile destFile)
+    public RequirementModelCreationOperation(IFile targetFile, IFile sourceFile, IFile reqFile)
     {
-        super(samFile, destFile);
+        super(targetFile, reqFile);
         sourceModelFile = sourceFile;
     }
 
@@ -58,8 +58,9 @@ public class RequirementModelCreationOperation extends AbstractModelCreationOper
      */
     protected void execute(IProgressMonitor monitor)
     {
-        IFile fileDest = ResourcesPlugin.getWorkspace().getRoot().getFile(destModelFile.getFullPath().addFileExtension(MODEL_EXTENSION));
-        if (fileDest.exists())
+        IFile fileDest = ResourcesPlugin.getWorkspace().getRoot().getFile(requirementModelFile.getFullPath().addFileExtension(MODEL_EXTENSION));
+        boolean requirementMerge = fileDest.exists();
+        if (requirementMerge)
         {
             // Merge the existing requirement model
             mergeRequirementModel(monitor);
@@ -82,11 +83,11 @@ public class RequirementModelCreationOperation extends AbstractModelCreationOper
         // Process the ATL transformation to create the requirement model
         monitor.subTask("importing requirement model");
         monitor.worked(1);
-        transformation(sourceModelFile, destModelFile);
+        transformation(sourceModelFile, requirementModelFile);
         monitor.worked(1);
 
         // Get a resource of the destination file
-        requirementResource = RequirementUtils.getResource(destModelFile.getFullPath().addFileExtension(MODEL_EXTENSION));
+        requirementResource = RequirementUtils.getResource(requirementModelFile.getFullPath().addFileExtension(MODEL_EXTENSION));
 
         // Add the initial model object to the contents
         createInitialModel(requirementResource);
@@ -96,13 +97,13 @@ public class RequirementModelCreationOperation extends AbstractModelCreationOper
         RequirementUtils.saveResource(requirementResource);
         monitor.worked(1);
 
-        // Update the SAM model
+        // Update the target model
         updateRequirementReference(monitor);
         monitor.worked(1);
     }
 
     /**
-     * Creates an Requirement model
+     * Creates a Requirement model
      * 
      * @param resource : the requirement model
      */
@@ -125,20 +126,20 @@ public class RequirementModelCreationOperation extends AbstractModelCreationOper
         // 1) import operation of temporary model
         monitor.subTask("importing requirement model");
         monitor.worked(1);
-        IPath mergePath = destModelFile.getFullPath().addFileExtension(MODEL_TMP);
+        IPath mergePath = requirementModelFile.getFullPath().addFileExtension(MODEL_TMP);
         IFile mergeFile = ResourcesPlugin.getWorkspace().getRoot().getFile(mergePath);
 
         // Process the ATL transformation to create the requirement model
         transformation(sourceModelFile, mergeFile);
 
         // Get a resource of the destination file
-        requirementResource = RequirementUtils.getResource(destModelFile.getFullPath().addFileExtension(MODEL_EXTENSION));
+        requirementResource = RequirementUtils.getResource(requirementModelFile.getFullPath().addFileExtension(MODEL_EXTENSION));
 
         // Get the resource to update/merge
-        Resource requirementMerge = RequirementUtils.getResource(mergePath.addFileExtension(MODEL_EXTENSION));
+        Resource requirementResourceMerged = RequirementUtils.getResource(mergePath.addFileExtension(MODEL_EXTENSION));
 
         // Add the initial model object to the contents
-        createInitialModel(requirementMerge);
+        createInitialModel(requirementResourceMerged);
         monitor.worked(1);
 
         // 2) merge operation
@@ -146,11 +147,15 @@ public class RequirementModelCreationOperation extends AbstractModelCreationOper
         try
         {
             // Close the corresponding diagram if open
-            IPath diagramFile = samModelFile.getFullPath().removeFileExtension().addFileExtension("samdi");
-            boolean closed = RequirementUtils.closeSAMDiagramEditor(diagramFile);
+            IPath diagramFile = targetModelFile.getFullPath();
+            if (!diagramFile.getFileExtension().endsWith("di"))
+            {
+                diagramFile = diagramFile.removeFileExtension().addFileExtension(diagramFile.getFileExtension() + "di");
+            }
+            boolean closed = RequirementUtils.closeDiagramEditor(diagramFile);
 
             // Call the EMF comparison service in order to merge/update the current requirement model
-            MergeRequirement.INSTANCE.merge(requirementResource, requirementMerge, monitor);
+            MergeRequirement.INSTANCE.merge(requirementResource, requirementResourceMerged, monitor);
             monitor.worked(1);
 
             // Save the contents of the resource to the file system
@@ -159,7 +164,7 @@ public class RequirementModelCreationOperation extends AbstractModelCreationOper
             // The diagram is re-opened if needed.
             if (closed)
             {
-                RequirementUtils.openSAMDiagramEditor(diagramFile);
+                RequirementUtils.openDiagramEditor(diagramFile);
             }
         }
         catch (InterruptedException e)

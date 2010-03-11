@@ -28,6 +28,9 @@ import org.eclipse.ui.PlatformUI;
 import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.core.RequirementCorePlugin;
+import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
+import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
+import org.topcased.requirement.core.utils.DefaultAttachmentPolicy;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.wizards.NewRequirementModel;
 
@@ -35,6 +38,7 @@ import org.topcased.requirement.core.wizards.NewRequirementModel;
  * This action allows to add/remove/update documents and/or requirements for a model.
  * 
  * @author <a href="mailto:sebastien.gabel@c-s.fr">Sebastien GABEL</a>
+ * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  * 
  */
 public class UpdateRequirementModelAction extends Action
@@ -56,24 +60,37 @@ public class UpdateRequirementModelAction extends Action
      */
     public void run()
     {
+        Resource targetModel = null;
+        
         Resource requirement = RequirementUtils.getRequirementModel(editingDomain);
         RequirementProject requirementProject = (RequirementProject) requirement.getContents().get(0);
         NewRequirementModel wizard = new NewRequirementModel(requirementProject.getIdentifier(), requirementProject.getShortDescription());
-        Resource samModel = RequirementUtils.getSAMModel(editingDomain);
-        IFile samFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(samModel.getURI().toPlatformString(true)));
-        wizard.init(PlatformUI.getWorkbench(), new StructuredSelection(samFile));
-
-        // launch the wizard allowing to perform the operations
-        WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wizard)
+        IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(editingDomain);
+        if (policy != null)
         {
-            protected void configureShell(Shell newShell)
+            targetModel = policy.getLinkedTargetModel(editingDomain.getResourceSet());
+        }
+        else
+        {
+            targetModel = DefaultAttachmentPolicy.getInstance().getLinkedTargetModel(editingDomain.getResourceSet());
+        }
+        if (targetModel != null)
+        {
+            IFile targetFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(targetModel.getURI().toPlatformString(true)));
+            wizard.init(PlatformUI.getWorkbench(), new StructuredSelection(targetFile));
+    
+            // launch the wizard allowing to perform the operations
+            WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wizard)
             {
-                super.configureShell(newShell);
-                newShell.setMinimumSize(530, 580);
-                newShell.setSize(530, 580);
-            }
-        };
-        wizardDialog.open();
+                protected void configureShell(Shell newShell)
+                {
+                    super.configureShell(newShell);
+                    newShell.setMinimumSize(530, 580);
+                    newShell.setSize(530, 580);
+                }
+            };
+            wizardDialog.open();
+        }
     }
 
     /**

@@ -133,6 +133,7 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
         createToolBarActions();
 
         getSite().setSelectionProvider(viewer);
+        this.refreshViewer(true);
     }
 
     /**

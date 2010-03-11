@@ -10,9 +10,7 @@
  **********************************************************************************************************************/
 package org.topcased.requirement.core.views;
 
-import org.eclipse.emf.common.util.WrappedException;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.domain.IEditingDomainProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -25,14 +23,13 @@ import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.part.IPageBookViewPage;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.part.PageBookView;
-import org.topcased.modeler.di.model.GraphElement;
 import org.topcased.modeler.editor.Modeler;
-import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.dnd.RequirementDropListener;
+import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
+import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
+import org.topcased.requirement.core.utils.DefaultAttachmentPolicy;
 import org.topcased.requirement.core.utils.RequirementUtils;
-import org.topcased.sam.Model;
-import org.topcased.sam.ModelContent;
 
 
 /**
@@ -42,6 +39,7 @@ import org.topcased.sam.ModelContent;
  * 
  * @author <a href="mailto:sebastien.gabel@c-s.fr">Sebastien GABEL</a>
  * @author <a href="mailto:christophe.mertz@c-s.fr">Christophe MERTZ</a>
+ * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  * 
  */
 public abstract class AbstractRequirementView extends PageBookView implements ISelectionProvider
@@ -88,7 +86,7 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
     {
         // provide an empty implementation
     }
-    
+
     /**
      * @see org.eclipse.ui.part.PageBookView#getBootstrapPart()
      */
@@ -102,11 +100,11 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
         }
         return null;
     }
-
+    
     /**
      * @see org.eclipse.ui.part.PageBookView#createDefaultPage(org.eclipse.ui.part.PageBook)
      */
-    protected IPage createDefaultPage(PageBook book)
+    public IPage createDefaultPage(PageBook book)
     {
         IPageBookViewPage defaultPage = getEmptyPage();
         initPage(defaultPage);
@@ -159,8 +157,10 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
      */
     protected void doDestroyPage(IWorkbenchPart part, PageRec pageRecord)
     {
+        RequirementCorePlugin.setCreateDropListener(true);
         pageRecord.page.dispose();
         pageRecord.dispose();
+       
     }
 
     /**
@@ -194,37 +194,32 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
             Modeler modeler = (Modeler) part;
             // Bug 1970 : in case where the model is exported and contain no diagram. See
             if (modeler.getActiveDiagram() != null)
-            {
-                GraphElement rootGraphElt = modeler.getActiveDiagram().getSemanticModel().getGraphElement();
-                EObject eObject = Utils.getDiagramModelObject(rootGraphElt);
-                if (eObject != null)
+            {               
+                IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(modeler.getEditingDomain());
+                if (policy != null)
                 {
-                    // the root is either an Automaton or a System diagram
-                    if (eObject instanceof ModelContent)
+                    Resource targetModel = policy.getLinkedTargetModel(modeler.getEditingDomain().getResourceSet());
+                    if (targetModel != null)
                     {
-                        // Gets the root model object
-                        EObject root = EcoreUtil.getRootContainer(eObject, true);
-                        if (root instanceof Model)
+                        RequirementUtils.loadRequirementModel(targetModel.getURI(), modeler.getEditingDomain());
+                        if (RequirementCorePlugin.getCreateDropListener() == true)
                         {
-                            EObject path = ((Model) root).getRequirementModel();
-                            if (path != null)
-                            {
-                                try
-                                {
-                                    RequirementUtils.loadRequirementModel(path.eResource().getURI(), modeler.getEditingDomain());
-                                    if (RequirementCorePlugin.getOnce() == false)
-                                    {
-                                        RequirementCorePlugin.setOnce(true);
-                                        modeler.getGraphicalViewer().addDropTargetListener(new RequirementDropListener(modeler.getGraphicalViewer()));
-                                    }
-                                    updatePage(page);
-                                }
-                                catch (WrappedException e)
-                                {
-                                    // avoid a blocking exception but nothing to log because already logged.
-                                }
-                            }
+                            RequirementCorePlugin.setCreateDropListener(false);
+                            modeler.getGraphicalViewer().addDropTargetListener(new RequirementDropListener(modeler.getGraphicalViewer()));
                         }
+                        updatePage(page);
+                    }
+                }
+                else
+                {
+                    if ( DefaultAttachmentPolicy.getInstance().getLinkedTargetModel(modeler.getEditingDomain().getResourceSet()) != null)
+                    {
+                        if (RequirementCorePlugin.getCreateDropListener() == true)
+                        {
+                            RequirementCorePlugin.setCreateDropListener(false);
+                            modeler.getGraphicalViewer().addDropTargetListener(new RequirementDropListener(modeler.getGraphicalViewer()));
+                        }
+                        updatePage(page);
                     }
                 }
             }

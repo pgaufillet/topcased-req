@@ -26,7 +26,7 @@ import org.topcased.requirement.RequirementPackage;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
- * Adapter used to create hierarchical elements hierarchy when action 'Duplicate subtree' is used from the SAM modeler.
+ * Adapter used to create hierarchical elements hierarchy when action 'Duplicate subtree' is used from the target modeler.
  * 
  * @author <a href="mailto:sebastien.gabel@c-s.fr">Sebastien GABEL</a>
  * @since Topcased 2.3.0

@@ -117,7 +117,7 @@ public class DeleteCommandResolver extends AdditionalCommand<DeleteModelCommand>
     {
         List<Object> result = new LinkedList<Object>();
         
-     // deals with DeleteModelContentCommand (specific behaviour of SAM)
+     // deals with DeleteModelContentCommand (specific behaviour)
         if (command instanceof CompoundCommand)
         {
             CompoundCommand compound = (CompoundCommand) command;
@@ -131,7 +131,7 @@ public class DeleteCommandResolver extends AdditionalCommand<DeleteModelCommand>
                 }
                 else
                 {
-                    // same algo than CommandStack.getCommands
+                    // same algorithm than CommandStack.getCommands
                     List<Object> tmp = CommandStack.getCommands((Command) o, clazz);
                     if (!(tmp.isEmpty()))
                     {
@@ -142,7 +142,7 @@ public class DeleteCommandResolver extends AdditionalCommand<DeleteModelCommand>
         }
         else
         {
-            // same algo than CommandStack.getCommands
+            // same algorithm than CommandStack.getCommands
             List<Object> tmp = CommandStack.getCommands(command, clazz);
             if (!(tmp.isEmpty()))
             {

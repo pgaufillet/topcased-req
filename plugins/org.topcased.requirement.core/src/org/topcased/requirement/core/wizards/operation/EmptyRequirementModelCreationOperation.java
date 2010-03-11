@@ -63,14 +63,25 @@ public class EmptyRequirementModelCreationOperation extends AbstractModelCreatio
     {
         monitor.subTask("creating empty requirement model");
         ResourceSet resourceSet = new ResourceSetImpl();
-        URI fileURI = URI.createPlatformResourceURI(destModelFile.getFullPath().addFileExtension(MODEL_EXTENSION).toString(), true);
+        URI fileURI = URI.createPlatformResourceURI(requirementModelFile.getFullPath().addFileExtension(MODEL_EXTENSION).toString(), true);
         requirementResource = resourceSet.createResource(fileURI);
         monitor.worked(1);
 
         // Add the initial model object to the contents.
         RequirementProject newProject = RequirementFactory.eINSTANCE.createRequirementProject();
         requirementResource.getContents().add(newProject);
-        createEmptyModel();
+
+
+        RequirementProject rootObject = (RequirementProject) RequirementUtils.getRoot(requirementResource, RequirementProject.class);
+        updateRequirementProject(rootObject);
+
+        // additional operation
+        rootObject.setUpstreamModel(RequirementFactory.eINSTANCE.createUpstreamModel());
+        rootObject.getChapter().add(RequirementFactory.eINSTANCE.createProblemChapter());
+        rootObject.getChapter().add(RequirementFactory.eINSTANCE.createTrashChapter());
+        rootObject.getChapter().add(RequirementFactory.eINSTANCE.createUntracedChapter());
+        createAttributeConfiguration(rootObject);
+        
         monitor.worked(1);
 
         // Save the contents of the resource to the file system
@@ -84,15 +95,6 @@ public class EmptyRequirementModelCreationOperation extends AbstractModelCreatio
     protected void createEmptyModel()
     {
 
-        RequirementProject rootObject = (RequirementProject) RequirementUtils.getRoot(requirementResource, RequirementProject.class);
-        updateRequirementProject(rootObject);
-
-        // additional operation
-        rootObject.setUpstreamModel(RequirementFactory.eINSTANCE.createUpstreamModel());
-        rootObject.getChapter().add(RequirementFactory.eINSTANCE.createProblemChapter());
-        rootObject.getChapter().add(RequirementFactory.eINSTANCE.createTrashChapter());
-        rootObject.getChapter().add(RequirementFactory.eINSTANCE.createUntracedChapter());
-        createAttributeConfiguration(rootObject);
     }
 
 }

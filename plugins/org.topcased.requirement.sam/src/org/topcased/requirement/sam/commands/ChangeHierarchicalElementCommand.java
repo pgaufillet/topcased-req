@@ -82,9 +82,9 @@ public class ChangeHierarchicalElementCommand extends AbstractCommand
         }
         if (hierarchicalElt == null)
         {
-            if (after!=null)
+            if (after != null)
             {
-            hierarchicalElt = RequirementUtils.getHierarchicalElementFor(after);
+                hierarchicalElt = RequirementUtils.getHierarchicalElementFor(after);
             }
         }
     }

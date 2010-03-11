@@ -88,7 +88,7 @@ public class SpecificDropActionManager extends AbstractExtensionManager
         {
             if (SpecificDropActionDescriptor.TAG_MODEL.equals(confElt.getName()))
             {
-                String id = confElt.getAttribute(SpecificDropActionDescriptor.ATT_METAMODEL);
+                String id = confElt.getAttribute(SpecificDropActionDescriptor.ATT_URI);
                 SpecificDropActionDescriptor descriptor = find(id);
                 actions.remove(descriptor);
             }

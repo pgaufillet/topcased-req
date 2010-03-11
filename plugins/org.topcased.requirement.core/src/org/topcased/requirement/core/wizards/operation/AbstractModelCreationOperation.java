@@ -11,22 +11,25 @@
 package org.topcased.requirement.core.wizards.operation;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.topcased.requirement.AttributeConfiguration;
 import org.topcased.requirement.RequirementProject;
+import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
+import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
 import org.topcased.requirement.core.preferences.CurrentPreferenceHelper;
+import org.topcased.requirement.core.utils.DefaultAttachmentPolicy;
 import org.topcased.requirement.core.utils.RequirementUtils;
-import org.topcased.sam.Model;
 
 /**
  * 
  * This class provides abstract operation to create the requirement model.
  * 
  * @author <a href="mailto:sebastien.gabel@c-s.fr">Sebastien GABEL</a>
+ * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  * 
  * @since 2.1.0
  * 
@@ -38,9 +41,9 @@ public abstract class AbstractModelCreationOperation extends WorkspaceModifyOper
 
     protected Resource requirementResource;
 
-    protected IFile samModelFile; // Sam model
+    protected IFile targetModelFile; // target model
 
-    protected IFile destModelFile; // Requirement model to create
+    protected IFile requirementModelFile; // Requirement model to create
 
     private String projectName;
 
@@ -49,13 +52,13 @@ public abstract class AbstractModelCreationOperation extends WorkspaceModifyOper
     /**
      * Constructor
      * 
-     * @param samFile The SAM mode l
+     * @param targetFile The target model
      * @param destFile The Requirement model to create
      */
-    public AbstractModelCreationOperation(IFile samFile, IFile destFile)
+    public AbstractModelCreationOperation(IFile targetFile, IFile reqFile)
     {
-        samModelFile = samFile;
-        destModelFile = destFile;
+        targetModelFile = targetFile;
+        requirementModelFile = reqFile;
     }
 
     /**
@@ -71,28 +74,28 @@ public abstract class AbstractModelCreationOperation extends WorkspaceModifyOper
     }
 
     /**
-     * Updates into the SAM model the reference to the requirement model
+     *
+     * Updates into the target model the reference to the requirement model
      */
     protected void updateRequirementReference(IProgressMonitor monitor)
     {
-        monitor.subTask("updating references in SAM model");
-        // Close the corresponding diagram if open
-        IPath diagramFile = samModelFile.getFullPath().removeFileExtension().addFileExtension("samdi");
-        boolean closed = RequirementUtils.closeSAMDiagramEditor(diagramFile);
-
-        Resource samResource = RequirementUtils.getResource(samModelFile.getFullPath());
-        Model root = (Model) RequirementUtils.getRoot(samResource, Model.class);
-        EObject reqObject = RequirementUtils.getRoot(requirementResource, RequirementProject.class);
-        root.setRequirementModel(reqObject);
-
-        // Save the contents of the resource to the file system.
-        RequirementUtils.saveResource(samResource);
-
-        // The diagram is re-opened if needed.
-        if (closed)
+        monitor.subTask("updating references in target model");
+        
+        Resource targetModelResource = RequirementUtils.getResource(targetModelFile.getFullPath());
+        
+        EObject root = targetModelResource.getContents().get(0);
+        String uri = EcoreUtil.getURI(root.eClass().getEPackage()).trimFragment().toString();
+        IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(uri);
+        
+        if (policy != null)
+        {            
+            policy.linkRequirementModel(targetModelResource, requirementResource);         
+        } 
+        else
         {
-            RequirementUtils.openSAMDiagramEditor(diagramFile);
+            DefaultAttachmentPolicy.getInstance().linkRequirementModel(targetModelResource, requirementResource);
         }
+        
         monitor.worked(1);
     }
 

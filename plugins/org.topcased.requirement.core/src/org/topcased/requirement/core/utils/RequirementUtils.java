@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2008,2009 Communication & Systems.
+ * Copyright (c) 2008,2010 Communication & Systems.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -29,8 +29,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -40,15 +43,13 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
-import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
-import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.topcased.facilities.util.EditorUtil;
 import org.topcased.modeler.editor.Modeler;
-import org.topcased.modeler.editor.TopcasedAdapterFactoryEditingDomain;
+import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.AttributeAllocate;
 import org.topcased.requirement.AttributeConfiguration;
 import org.topcased.requirement.AttributeLink;
@@ -59,12 +60,7 @@ import org.topcased.requirement.SpecialChapter;
 import org.topcased.requirement.TrashChapter;
 import org.topcased.requirement.UpstreamModel;
 import org.topcased.requirement.core.RequirementCorePlugin;
-import org.topcased.requirement.provider.RequirementItemProviderAdapterFactory;
-import org.topcased.requirement.util.RequirementAdapterFactory;
-import org.topcased.sam.Model;
-import org.topcased.sam.NamedItem;
-import org.topcased.sam.provider.SAMItemProviderAdapterFactory;
-import org.topcased.sam.util.SAMAdapterFactory;
+import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
 
 import ttm.Requirement;
 
@@ -73,6 +69,7 @@ import ttm.Requirement;
  * 
  * @author <a href="mailto:christophe.mertz@c-s.fr">Christophe Mertz</a>
  * @author <a href="mailto:sebastien.gabel@c-s.fr">Sebastien GABEL</a>
+ * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  * 
  */
 public final class RequirementUtils
@@ -86,12 +83,6 @@ public final class RequirementUtils
     {
         // Create an adapter factory that yields item providers.
         adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
-        adapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
-        adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
-        adapterFactory.addAdapterFactory(new RequirementAdapterFactory());
-        adapterFactory.addAdapterFactory(new RequirementItemProviderAdapterFactory());
-        adapterFactory.addAdapterFactory(new SAMAdapterFactory());
-        adapterFactory.addAdapterFactory(new SAMItemProviderAdapterFactory());
     }
 
     /**
@@ -124,7 +115,7 @@ public final class RequirementUtils
         Collection<EObject> result = new ArrayList<EObject>();
         if (resource != null)
         {
-            for (Iterator<EObject> h = resource.getAllContents(); h.hasNext();)
+            for (Iterator<EObject> h = resource.getContents().get(0).eAllContents(); h.hasNext();)
             {
                 EObject currEo = h.next();
                 if (clazz.isInstance(currEo))
@@ -137,25 +128,31 @@ public final class RequirementUtils
     }
 
     /**
-     * Gets all objects instance of clazz in the model referenced in the model of requirement
+     * Gets all objects instance of clazz in the target model referenced in the model of requirement
      * 
-     * @param object
      * @param the clazz to search
      * 
      * @return
      */
-    public static Collection<EObject> getAllObjects(EObject object, java.lang.Class< ? > clazz)
+    public static Collection<EObject> getAllObjects(EClass classifier)
     {
         Collection<EObject> result = new ArrayList<EObject>();
 
-        // Get all models referenced in the model requirement
-        EditingDomain ed = TopcasedAdapterFactoryEditingDomain.getEditingDomainFor(object);
-        Set<Resource> allSamModel = RequirementUtils.getModels(ed);
+        // Get all target models referenced in the DSL model (excluding diagrams model)
+        Set<Resource> alltargetModels = RequirementUtils.getTargetModels();
 
-        // Get all EObject element in the models
-        for (Resource r : allSamModel)
+        // Get all EObject element in the target models
+        for (Resource r : alltargetModels)
         {
-            result.addAll(getAllObjects(r, clazz));
+            Collection<EObject> collection = new ArrayList<EObject>();
+            if (r != null)
+            {
+                for (Iterator<EObject> h = r.getContents().get(0).eAllContents(); h.hasNext();)
+                {
+                    collection.add(h.next());
+                }
+            }
+            result.addAll(collection);
         }
 
         return result;
@@ -182,7 +179,7 @@ public final class RequirementUtils
     }
 
     /**
-     * Gets all {@link org.topcased.requirement.Requirement} starting from a starting point that should be of type
+     * Gets all {@link org.topcased.sam.requirement.Requirement} starting from a starting point that should be of type
      * {@link HierarchicalElement}.
      * 
      * @param starting The model object representing the starting point.
@@ -243,11 +240,18 @@ public final class RequirementUtils
      */
     public static Boolean isLinked(Requirement req)
     {
+        EObject reqRoot = EcoreUtil.getRootContainer(req);
+        // FIXME : the cache adapter is unadapted and contain weird values
         for (Setting setting : getCrossReferences(req))
         {
             if (setting.getEObject() instanceof AttributeLink)
             {
-                return true;
+                EObject attLinkroot = EcoreUtil.getRootContainer(setting.getEObject());
+                // container must be the same
+                if (reqRoot == attLinkroot)
+                {
+                    return true;
+                }
             }
         }
         return false;
@@ -261,18 +265,27 @@ public final class RequirementUtils
      */
     public static Boolean isPartial(Requirement req)
     {
-        Boolean result = false;
         for (Setting setting : getCrossReferences(req))
         {
             if (setting.getEObject() instanceof AttributeLink)
             {
                 AttributeLink link = (AttributeLink) setting.getEObject();
-                result |= link.getPartial();
+                if (link.getPartial())
+                {
+                    return true;
+                }
             }
         }
-        return result;
+        return false;
     }
 
+    /**
+     * FIXME : Requirement component must provide its own cache adapter. This one is not sufficient and contain too much
+     * values already deleted from the model.
+     * 
+     * @param source
+     * @return
+     */
     public static Collection<Setting> getCrossReferences(EObject source)
     {
         Collection<Setting> collection = null;
@@ -317,7 +330,7 @@ public final class RequirementUtils
     }
 
     /**
-     * Get a resource to the file
+     * Get a resource from a file
      * 
      * @param file The model path
      * @return the resource
@@ -327,6 +340,20 @@ public final class RequirementUtils
         ResourceSet resourceSet = new ResourceSetImpl();
         URI fileURI = URI.createPlatformResourceURI(file.toString(), true);
         return resourceSet.getResource(fileURI, true);
+    }
+
+    /**
+     * Get a file from a resource
+     * 
+     * @param file The model path
+     * @return the resource
+     */
+    public static IPath getFile(Resource resource)
+    {
+        URI uri = resource.getURI();
+        uri.toPlatformString(true);
+        IPath path = Path.fromPortableString(uri.toPlatformString(true));
+        return path;
     }
 
     /**
@@ -418,6 +445,7 @@ public final class RequirementUtils
     {
         Resource requirementRsc = getRequirementModel(domain);
         requirementRsc.unload();
+        domain.getResourceSet().getResources();
         return domain.getResourceSet().getResources().remove(requirementRsc);
     }
 
@@ -439,47 +467,34 @@ public final class RequirementUtils
     }
 
     /**
-     * Gets a set of models loaded in the Topcased editing domain.
+     * FIXME : find a better way to get the model from the di
      * 
-     * @return all models loaded as a set of Resources.
+     * Gets a set of target models loaded in the Topcased editing domain.
+     * 
+     * @return all target models loaded as a set of Resources.
      */
-    public static Set<Resource> getModels(EditingDomain editingDomain)
+    public static Set<Resource> getTargetModels()
     {
         Set<Resource> toReturn = new HashSet<Resource>();
+        Modeler modeler = Utils.getCurrentModeler();
+        EditingDomain editingDomain = modeler.getEditingDomain();
+        String fileExtension = ModelAttachmentPolicyManager.getInstance().getFileExtension(editingDomain);
         for (Resource resource : editingDomain.getResourceSet().getResources())
         {
-            if ("sam".equals(resource.getURI().fileExtension())) //$NON-NLS-1$
+            if (fileExtension != null)
             {
-                toReturn.add(resource);
+                if (fileExtension.equals(resource.getURI().fileExtension())) //$NON-NLS-1$
+                {
+                    toReturn.add(resource);
+                }
             }
-            if ("uml".equals(resource.getURI().fileExtension())) //$NON-NLS-1$
+            else if (resource.getURI().fileExtension().endsWith("di"))
             {
-                toReturn.add(resource);
-
+                toReturn.add(editingDomain.getResourceSet().getResource(
+                        URI.createURI(resource.getURI().toString().replaceFirst("[a-zA-Z_0-9]+di", resource.getURI().fileExtension().replace("di", "")), true), false));
             }
         }
         return toReturn;
-    }
-
-    /**
-     * Gets a the model link with requirement.
-     * 
-     * @return the model links with requirement model.
-     */
-    public static Resource getSAMModel(EditingDomain editingDomain)
-    {
-        for (Resource resource : getModels(editingDomain))
-        {
-            EObject model = resource.getContents().get(0);
-            if (model instanceof Model)
-            {
-                if (((Model) model).getRequirementModel() != null)
-                {
-                    return resource;
-                }
-            }
-        }
-        return null;
     }
 
     /**
@@ -585,13 +600,13 @@ public final class RequirementUtils
         if (selected instanceof AttributeAllocate)
         {
             // add all the model elements
-            listObjects.addAll(RequirementUtils.getAllObjects((EObject) selected, NamedItem.class));
+            listObjects.addAll(RequirementUtils.getAllObjects(EcorePackage.eINSTANCE.getEModelElement()));
         }
         else
         {
             if (!(selected instanceof AttributeLink))
             {
-                listObjects.addAll(RequirementUtils.getAllObjects((EObject) selected, NamedItem.class));
+                listObjects.addAll(RequirementUtils.getAllObjects(EcorePackage.eINSTANCE.getEModelElement()));
             }
             ObjectAttribute objAtt = (ObjectAttribute) selected;
             listObjects.addAll(RequirementUtils.getAllUpstreams(objAtt.eResource()));
@@ -637,11 +652,11 @@ public final class RequirementUtils
      * @param resourceToClose The diagram resource to close
      * @return <code>true</code> if the diagram editor has been closed, <code>false</code> otherwise.
      */
-    public static void openSAMDiagramEditor(IPath resourceToClose)
+    public static void openDiagramEditor(IPath resourceToOpen)
     {
         try
         {
-            IFile fileToOpen = ResourcesPlugin.getWorkspace().getRoot().getFile(resourceToClose);
+            IFile fileToOpen = ResourcesPlugin.getWorkspace().getRoot().getFile(resourceToOpen);
             EditorUtil.open(fileToOpen);
         }
         catch (PartInitException e)
@@ -656,10 +671,10 @@ public final class RequirementUtils
      * @param resourceToClose The diagram resource to close
      * @return <code>true</code> if the diagram editor has been closed, <code>false</code> otherwise.
      */
-    public static boolean closeSAMDiagramEditor(IPath resourceToClose)
+    public static boolean closeDiagramEditor(IPath resourceToClose)
     {
         boolean closed = false;
-        // Look for a reference to the editor ?
+        // Look for a reference to the target model editor ?
         for (IEditorReference editorRef : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences())
         {
             try
@@ -683,5 +698,4 @@ public final class RequirementUtils
         }
         return closed;
     }
-
 }

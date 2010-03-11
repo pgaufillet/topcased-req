@@ -12,23 +12,26 @@
  ******************************************************************************/
 package org.topcased.requirement.core.actions;
 
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
+import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.core.Messages;
 import org.topcased.requirement.core.RequirementCorePlugin;
+import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
+import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
+import org.topcased.requirement.core.utils.DefaultAttachmentPolicy;
 import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
-import org.topcased.sam.Model;
 
 /**
  * This action sets to <code>null</code> the <b>Requirement</b> feature of a model.
  * 
  * @author <a href="mailto:christophe.mertz@c-s.fr">Christophe Mertz</a>
  * @author <a href="mailto:sebastien.gabel@c-s.fr">Sebastien GABEL</a>
+ * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  * 
  */
 public class UnlinkRequirementModelAction extends Action
@@ -54,32 +57,35 @@ public class UnlinkRequirementModelAction extends Action
     public void run()
     {
         boolean result = MessageDialog.openConfirm(Display.getCurrent().getActiveShell(), Messages.getString("UnlinkRequirementModelAction.0"), //$NON-NLS-1$
-                Messages.getString("UnlinkRequirementModelAction.1")); //$NON-NLS-1$
+        Messages.getString("UnlinkRequirementModelAction.1")); //$NON-NLS-1$
+        
         if (result)
         {
-            // update references for each SAM model contained in the editing domain.
-            Resource model = RequirementUtils.getSAMModel(editingDomain);
-            Model root = (Model) model.getContents().get(0);
-            root.setRequirementModel(null);
-            RequirementUtils.saveResource(model);
+            IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(editingDomain);
             
-            // unload and delete from file system the requirement model.
-            Resource requirementRsc = RequirementUtils.getRequirementModel(editingDomain);
-            if (RequirementUtils.unloadRequirementModel(editingDomain))
+            if (policy != null)
             {
-                RequirementUtils.deleteResource(requirementRsc);
+                policy.unlinkRequirementModel(policy.getLinkedTargetModel(editingDomain.getResourceSet()), RequirementUtils.getRequirementModel(editingDomain));         
             }
+            else
+            {
+                DefaultAttachmentPolicy.getInstance().unlinkRequirementModel(Utils.getCurrentModeler().getResourceSet().getResources().get(0),RequirementUtils.getRequirementModel(editingDomain));
+            }
+            
+
             // the content of each page (Upstream & Current) is updated
             if (RequirementHelper.INSTANCE.getCurrentPage() != null)
             {
                 RequirementHelper.INSTANCE.getCurrentPage().getViewer().setInput(null);
-                RequirementHelper.INSTANCE.getCurrentPage().refreshViewer(true);
+                RequirementHelper.INSTANCE.getCurrentPage().getViewer();
             }
             if (RequirementHelper.INSTANCE.getUpstreamPage() != null)
             {
                 RequirementHelper.INSTANCE.getUpstreamPage().getViewer().setInput(null);
                 RequirementHelper.INSTANCE.getUpstreamPage().refreshViewer(true);
             }
+            
+            RequirementCorePlugin.setCreateDropListener(true);
             setEnabled(isEnabled());
         }
     }
