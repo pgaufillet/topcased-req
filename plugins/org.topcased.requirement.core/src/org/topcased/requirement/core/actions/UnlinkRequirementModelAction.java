@@ -22,6 +22,7 @@ import org.topcased.requirement.core.Messages;
 import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
 import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
+import org.topcased.requirement.core.preferences.NamingRequirementPreferenceHelper;
 import org.topcased.requirement.core.utils.DefaultAttachmentPolicy;
 import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
@@ -86,6 +87,7 @@ public class UnlinkRequirementModelAction extends Action
             }
             
             RequirementCorePlugin.setCreateDropListener(true);
+            NamingRequirementPreferenceHelper.KEY_WORDS.clear();
             setEnabled(isEnabled());
         }
     }

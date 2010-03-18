@@ -170,9 +170,27 @@ public abstract class RequirementAbstractEMFAction extends Action
             monitor.setTaskName(Messages.getString("RequirementAbstractEMFAction.2")); //$NON-NLS-1$
             preAction(compoundCmd);
             monitor.worked(1);
-
+           
             compoundCmd.appendIfCanExecute(editingDomain.createCommand(getCommand(), getParam()));
 
+//            if (command.equals(DeleteCommand.class))
+//            {
+//                CommandParameter cmdParam = getParam();
+//                for( Object obj :  cmdParam.collection)
+//                {
+//                    if (obj instanceof Requirement)
+//                    {
+//                        if (editingDomain != null)
+//                        {
+//                            IRequirementIdentifierDefinition definition = RequirementIdentifierDefinitionManager.getInstance().getIdentifierDefinition(editingDomain);
+//                            if (definition != null)
+//                            {
+//                                definition.decreaseIndexWhenDeleteRequirement(((Requirement) obj));
+//                            }
+//                        }
+//                    }
+//                }
+//            }
             monitor.setTaskName(Messages.getString("RequirementAbstractEMFAction.3")); //$NON-NLS-1$
             postAction(compoundCmd);
             monitor.worked(1);

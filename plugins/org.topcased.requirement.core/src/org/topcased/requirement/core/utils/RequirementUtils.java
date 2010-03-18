@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -343,17 +344,43 @@ public final class RequirementUtils
     }
 
     /**
-     * Get a file from a resource
+     * Get a file path from a resource
      * 
      * @param file The model path
      * @return the resource
      */
-    public static IPath getFile(Resource resource)
+    public static IPath getPath(Resource resource)
     {
         URI uri = resource.getURI();
-        uri.toPlatformString(true);
-        IPath path = Path.fromPortableString(uri.toPlatformString(true));
+        String scheme = uri.scheme();
+        IPath path = null;
+        if ("platform".equals(scheme))
+        {
+            path = Path.fromPortableString(uri.toPlatformString(true));
+        }
+        else if ("file".equals(scheme))
+        {
+            path = Path.fromPortableString(uri.toFileString());
+        }
         return path;
+    }
+
+    /**
+     * Gets the IFile of a resource
+     * 
+     * @param resource
+     * 
+     * @return the IFile of a resource
+     */
+    public static IFile getFile(Resource resource)
+    {
+        IPath path = getPath(resource);
+
+        if (path != null)
+        {
+            return ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+        }
+        return null;
     }
 
     /**
@@ -519,7 +546,7 @@ public final class RequirementUtils
     {
         return (RequirementProject) getRoot(requirement, RequirementProject.class);
     }
-
+    
     /**
      * Gets the {@link AttributeConfiguration} model object contained in a {@link RequirementProject}.
      * 
@@ -640,10 +667,34 @@ public final class RequirementUtils
         {
             if (setting.getEObject() instanceof HierarchicalElement)
             {
+                if(stillExistInModel(setting.getEObject()))
+                {
                 return (HierarchicalElement) setting.getEObject();
+                }
             }
         }
         return null;
+    }
+    
+    /**
+     * Check if object exists in the model
+     * 
+     * @param eObjectToCheck the object
+     * @return true if object is present in the model
+     */
+    private static boolean stillExistInModel(EObject eObjectToCheck)
+    {
+        RequirementProject project = getRequirementProject(Utils.getCurrentModeler().getEditingDomain());
+        TreeIterator<EObject> allContents = project.eAllContents();
+        while (allContents.hasNext())
+        {
+            EObject object = (EObject) allContents.next();
+            if (object.equals(eObjectToCheck))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

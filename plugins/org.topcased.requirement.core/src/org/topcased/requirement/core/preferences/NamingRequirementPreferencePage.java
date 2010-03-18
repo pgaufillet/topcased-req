@@ -8,16 +8,17 @@
  *
  * Contributors:
  *  	Christophe Mertz (CS) <christophe.mertz@c-s.fr>
+ *      Maxime AUDRAIN (CS) <maxime.audrain@c-s.fr>
  *    
  ******************************************************************************/
 package org.topcased.requirement.core.preferences;
 
-import org.eclipse.jface.preference.BooleanFieldEditor;
+import java.util.List;
+
 import org.eclipse.jface.preference.StringFieldEditor;
-import org.eclipse.jface.viewers.CheckboxTableViewer;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -27,28 +28,33 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.topcased.facilities.preferences.AbstractTopcasedPreferencePage;
-import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.Messages;
+import org.topcased.requirement.core.RequirementCorePlugin;
 
 /**
  * Manages the preference store for the Requirements naming's format
  * 
  * @author <a href="mailto:christophe.mertz@c-s.fr">Christophe Mertz</a>
+ * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  * 
  */
 public class NamingRequirementPreferencePage extends AbstractTopcasedPreferencePage implements IWorkbenchPreferencePage
 {
     private Text formatText;
 
-    private CheckboxTableViewer tableViewer;
+    private Text stepText;
+
+    private Table tableViewer;
 
     private StringFieldEditor formatRequirement;
 
-    private BooleanFieldEditor checkNumberDocument;
+//    private Combo algorithmCombo;
 
     /**
      * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
@@ -58,91 +64,98 @@ public class NamingRequirementPreferencePage extends AbstractTopcasedPreferenceP
     {
         // Main Composite
         final Composite mainComposite = new Composite(parent, SWT.NONE);
-        final GridLayout mainLayout = new GridLayout();
-        mainLayout.marginHeight = 0;
-        mainLayout.marginWidth = 0;
-        mainComposite.setLayout(mainLayout);
+        final GridLayout layout = new GridLayout();
+        layout.marginHeight = 0;
+        layout.marginWidth = 0;
+        mainComposite.setLayout(layout);
 
         // Main Group
         final Group mainGroup = new Group(mainComposite, SWT.NONE);
-        GridData mainGroupGridData = new GridData(SWT.FILL, SWT.NONE, true, true);
-        mainGroup.setLayoutData(mainGroupGridData);
         mainGroup.setLayout(new GridLayout(2, false));
+        mainGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         mainGroup.setText(Messages.getString("NamingRequirementPreferencePage.0")); //$NON-NLS-1$
 
-        // Composite format
-        final Composite formatComposite = new Composite(mainGroup, SWT.NONE);
-        final GridLayout formatLayout = new GridLayout(2, false);
-        formatLayout.marginHeight = 0;
-        formatLayout.marginWidth = 0;
-        final GridData formatLayoutData = new GridData(SWT.FILL, SWT.NONE, true, false);
-        formatLayoutData.horizontalSpan = 2;
-        formatComposite.setLayoutData(formatLayoutData);
-        formatComposite.setLayout(formatLayout);
+        // Composite Text format
+        final Composite textComposite = new Composite(mainGroup, SWT.NONE);
+        final GridLayout textCompoLayout = new GridLayout(2, false);
+        textCompoLayout.marginHeight = 0;
+        textCompoLayout.marginWidth = 0;
+        textComposite.setLayout(textCompoLayout);
+        final GridData textLayoutData = new GridData(SWT.FILL, SWT.NONE, true, false);
+        textLayoutData.horizontalSpan = 2;
+        textComposite.setLayoutData(textLayoutData);
 
         // Text format
-        formatRequirement = new StringFieldEditor(NamingRequirementPreferenceHelper.NAMING_FORMAT_REQUIREMENT_STORE, "", formatComposite); //$NON-NLS-1$
+        formatRequirement = new StringFieldEditor(NamingRequirementPreferenceHelper.NAMING_FORMAT_REQUIREMENT_STORE, "", textComposite); //$NON-NLS-1$
         formatRequirement.setPreferenceStore(getPreferenceStore());
-        formatText = formatRequirement.getTextControl(formatComposite);
+        formatRequirement.setLabelText("Pattern : ");
+        formatText = formatRequirement.getTextControl(textComposite);
+        formatText.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
 
         // Select Label
-        GridData selectLayoutData = new GridData(SWT.FILL, SWT.NONE, true, true);
+        GridData selectLayoutData = new GridData(SWT.FILL, SWT.NONE, true, false);
         selectLayoutData.horizontalSpan = 2;
         final Label selectLabel = new Label(mainGroup, SWT.NONE);
-        selectLabel.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false));
-        selectLabel.setText(Messages.getString("NamingRequirementPreferencePage.2")); //$NON-NLS-1$
+        selectLabel.setText(Messages.getString("NamingRequirementPreferencePage.1")); //$NON-NLS-1$
         selectLabel.setLayoutData(selectLayoutData);
 
         // Key words Table
-        tableViewer = CheckboxTableViewer.newCheckList(mainGroup, SWT.BORDER);
-        tableViewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, true));
-        tableViewer.setContentProvider(new KeyWordContentProvider());
-        tableViewer.setInput(NamingRequirementPreferenceHelper.KEY_WORDS);
-
-        // Composite Button
-        final Composite buttonsComposite = new Composite(mainGroup, SWT.NONE);
-        final GridLayout buttonsCompoLayout = new GridLayout();
-        buttonsCompoLayout.marginHeight = 0;
-        buttonsCompoLayout.marginWidth = 0;
-        buttonsComposite.setLayout(buttonsCompoLayout);
-        buttonsComposite.setLayoutData(new GridData(SWT.NONE, SWT.TOP, false, true));
+        tableViewer = new Table(mainGroup, SWT.BORDER);
+        setTableData(NamingRequirementPreferenceHelper.KEY_WORDS, tableViewer);
+        tableViewer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
         // Add Button
-        final Button addButton = new Button(buttonsComposite, SWT.PUSH);
-        final GridData addDataLayout = new GridData(SWT.FILL, SWT.FILL, true, true);
+        final GridData addDataLayout = new GridData(SWT.FILL, SWT.NONE, false, false);
         addDataLayout.widthHint = 75;
+
+        final Button addButton = new Button(mainGroup, SWT.PUSH);
+        addButton.setText(Messages.getString("NamingRequirementPreferencePage.2")); //$NON-NLS-1$
         addButton.setLayoutData(addDataLayout);
-        addButton.setText(Messages.getString("NamingRequirementPreferencePage.3")); //$NON-NLS-1$
-        addButton.addSelectionListener(new SelectionAdapter()
-        {
-            public void widgetSelected(SelectionEvent e)
-            {
-                String toAdd = ""; //$NON-NLS-1$
-                Object[] selections = tableViewer.getCheckedElements();
-                for (int i = 0; i < selections.length; i++)
-                {
-                    toAdd += selections[i];
-                }
-                String currValue = formatText.getText();
-                int pos = formatText.getCaretPosition();
-                formatText.setText(currValue.substring(0, pos) + toAdd + currValue.substring(pos, currValue.length()));
-            }
-        });
+        addButton.addSelectionListener(new AddButtonSelectionListener());
 
-        // Composite Check
-        final Composite checkComposite = new Composite(mainGroup, SWT.NONE);
-        final GridLayout checkCompoLayout = new GridLayout();
-        checkCompoLayout.marginHeight = 0;
-        checkCompoLayout.marginWidth = 0;
-        checkComposite.setLayout(checkCompoLayout);
-        checkComposite.setLayoutData(new GridData(SWT.NONE, SWT.TOP, false, true));
+        // Index Step Composite
+        final Composite stepComposite = new Composite(mainGroup, SWT.NONE);
+        final GridLayout stepCompoLayout = new GridLayout(2, false);
+        final GridData stepLayoutData = new GridData(SWT.FILL, SWT.NONE, true, false);
+        stepLayoutData.horizontalSpan = 2;
+        stepCompoLayout.marginHeight = 0;
+        stepCompoLayout.marginWidth = 0;
+        stepComposite.setLayout(stepCompoLayout);
+        stepComposite.setLayoutData(stepLayoutData);
 
-        checkNumberDocument = new BooleanFieldEditor(NamingRequirementPreferenceHelper.NUMBER_REQUIREMENT_STORE, Messages.getString("NamingRequirementPreferencePage.5"), checkComposite); //$NON-NLS-1$
-        checkNumberDocument.setPreferenceStore(getPreferenceStore());
+        // Index Step label
+        Label stepLabel = new Label(stepComposite, SWT.NONE);
+        stepLabel.setText(Messages.getString("NamingRequirementPreferencePage.3")); //$NON-NLS-1$
+
+        // Index Step Field
+        GridData layoutData = new GridData(SWT.NONE, SWT.NONE, true, false);
+        stepText = new Text(stepComposite, SWT.BORDER);
+        stepText.setTextLimit(4);
+        layoutData.widthHint = 25;
+        stepText.addModifyListener(new StepTextModifyListener());
+        stepText.setLayoutData(layoutData);
+//
+//        // Algorithm Composite
+//        final Composite algorithmComposite = new Composite(mainGroup, SWT.NONE);
+//        final GridLayout algorithmCompoLayout = new GridLayout(2, false);
+//        algorithmCompoLayout.marginHeight = 0;
+//        algorithmCompoLayout.marginWidth = 0;
+//        algorithmComposite.setLayout(algorithmCompoLayout);
+//        algorithmComposite.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+//
+//        // Algorithm label
+//        Label algoritmLabel = new Label(algorithmComposite, SWT.NONE);
+//        algoritmLabel.setText(Messages.getString("NamingRequirementPreferencePage.5")); //$NON-NLS-1$
+//
+//        // Algorithm combo
+//        algorithmCombo = new Combo(algorithmComposite, SWT.NULL);
+//        for (int i = 0; i < NamingRequirementPreferenceHelper.COUNT_ALGORITHMS.length; i++)
+//        {
+//            algorithmCombo.add(NamingRequirementPreferenceHelper.COUNT_ALGORITHMS[i]);
+//        }
+//        algorithmCombo.addSelectionListener(new ComboSelectionListener());
 
         loadPreferences();
-
-        tableViewer.refresh(true);
 
         return mainComposite;
     }
@@ -153,7 +166,7 @@ public class NamingRequirementPreferencePage extends AbstractTopcasedPreferenceP
     private void loadPreferences()
     {
         formatRequirement.load();
-        checkNumberDocument.load();
+        stepText.setText(String.valueOf(NamingRequirementPreferenceHelper.getRequirementStep()));
     }
 
     /**
@@ -162,7 +175,6 @@ public class NamingRequirementPreferencePage extends AbstractTopcasedPreferenceP
     private void storePreferences()
     {
         formatRequirement.store();
-        checkNumberDocument.store();
     }
 
     /**
@@ -171,7 +183,6 @@ public class NamingRequirementPreferencePage extends AbstractTopcasedPreferenceP
     private void loadDefaultPreferences()
     {
         formatRequirement.loadDefault();
-        checkNumberDocument.loadDefault();
     }
 
     /**
@@ -181,6 +192,7 @@ public class NamingRequirementPreferencePage extends AbstractTopcasedPreferenceP
     public boolean performOk()
     {
         storePreferences();
+        NamingRequirementPreferenceHelper.setRequirementStep(stepText.getText());
         return super.performOk();
     }
 
@@ -207,26 +219,94 @@ public class NamingRequirementPreferencePage extends AbstractTopcasedPreferenceP
      */
     public void init(IWorkbench workbench)
     {
-        // Nothing to do
+
     }
 
     /**
-     * @author <a href="mailto:christophe.mertz@c-s.fr">Christophe Mertz</a>
+     * Set the contents of the table
+     * 
+     * @param data list of strings
+     * @param table the parent table
      */
-    private class KeyWordContentProvider implements IStructuredContentProvider
+    private void setTableData(List<String> data, Table table)
     {
-        public Object[] getElements(Object inputElement)
+        for (String element : data)
         {
-            return (Object[]) inputElement;
-        }
-
-        public void dispose()
-        {
-        }
-
-        public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
-        {
+            TableItem item = new TableItem(table, SWT.NONE);
+            item.setText(element);
         }
     }
 
+    /**
+     * Listener for the Add Button
+     * 
+     */
+    private class AddButtonSelectionListener extends SelectionAdapter
+    {
+        public void widgetSelected(SelectionEvent e)
+        {
+            String toAdd = ""; //$NON-NLS-1$
+            TableItem[] selections = tableViewer.getSelection();
+            for (int i = 0; i < selections.length; i++)
+            {
+                toAdd += selections[i].getText();
+            }
+            String currValue = formatText.getText();
+            int pos = formatText.getCaretPosition();
+            formatText.setText(currValue.substring(0, pos) + toAdd + currValue.substring(pos, currValue.length()));
+        }
+    }
+
+    /**
+     * Listener for the Step Text field
+     * 
+     */
+    private class StepTextModifyListener implements ModifyListener
+    {
+        public void modifyText(ModifyEvent e)
+        {
+            try
+            {
+                Integer.parseInt("".equals(stepText.getText()) ? "0" : stepText.getText());
+                setErrorMessage(null);
+                setValid(true);
+            }
+            catch (NumberFormatException e1)
+            {
+                setErrorMessage(Messages.getString("NamingRequirementPreferencePage.4")); //$NON-NLS-1$
+                setValid(false);
+            }
+        }
+    }
+
+//    /**
+//     * Listener for the Algorithm Combo
+//     * 
+//     */
+//    private class ComboSelectionListener implements SelectionListener
+//    {
+//
+//        public void widgetSelected(SelectionEvent e)
+//        {
+//            System.out.println("Selected index: " + algorithmCombo.getSelectionIndex() + ", selected item: " + algorithmCombo.getItem(algorithmCombo.getSelectionIndex())
+//                    + ", text content in the text field: " + algorithmCombo.getText());
+//        }
+//
+//        public void widgetDefaultSelected(SelectionEvent e)
+//        {
+//            System.out.println("Default selected index: " + algorithmCombo.getSelectionIndex() + ", selected item: "
+//                    + (algorithmCombo.getSelectionIndex() == -1 ? "<null>" : algorithmCombo.getItem(algorithmCombo.getSelectionIndex())) + ", text content in the text field: "
+//                    + algorithmCombo.getText());
+//            String text = algorithmCombo.getText();
+//            if (algorithmCombo.indexOf(text) < 0)
+//            { // Not in the list yet.
+//                algorithmCombo.add(text);
+//                // Re-sort
+//                String[] items = algorithmCombo.getItems();
+//                Arrays.sort(items);
+//                algorithmCombo.setItems(items);
+//            }
+//        }
+//
+//    }
 }

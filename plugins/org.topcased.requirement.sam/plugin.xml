@@ -54,5 +54,12 @@
             uri="http://www.topcased.org/SAM/1.3">
       </policy>
    </extension>
+   <extension
+         point="org.topcased.requirement.core.requirementIdentifierDefinition">
+      <metamodel
+            class="org.topcased.requirement.sam.policies.SAMRequirementIdentifierDefinition"
+            uri="http://www.topcased.org/SAM/1.3">
+      </metamodel>
+   </extension>
 
 </plugin>

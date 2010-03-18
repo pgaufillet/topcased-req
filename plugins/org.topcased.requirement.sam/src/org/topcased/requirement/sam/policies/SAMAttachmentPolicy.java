@@ -45,7 +45,7 @@ public class SAMAttachmentPolicy implements IModelAttachmentPolicy
     public void linkRequirementModel(Resource targetModel, Resource requirementModel)
     {
         // Try to close the SAM diagram
-        IPath samModelPath = RequirementUtils.getFile(targetModel);
+        IPath samModelPath = RequirementUtils.getPath(targetModel);
         String fileExtension = samModelPath.getFileExtension();
         IPath diagramFile = samModelPath.removeFileExtension().addFileExtension(fileExtension + "di");
         boolean closed = RequirementUtils.closeDiagramEditor(diagramFile);

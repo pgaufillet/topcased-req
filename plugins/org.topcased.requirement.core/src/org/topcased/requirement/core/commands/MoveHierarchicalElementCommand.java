@@ -129,25 +129,6 @@ public class MoveHierarchicalElementCommand extends CompoundCommand
     }
 
     /**
-     * Adjusts the target when a drag'n'drop is performed from the same container.
-     * 
-     * @param source The first source object dragged and dropped.
-     */
-//    private void adjustTarget(Object firstSource)
-//    {
-//        if (!targetCreated)
-//        {
-//            EObject targetObj = (EObject) container;
-//            EObject sourceObj = (EObject) firstSource;
-//
-//            if (sourceObj.eContainer().equals(container))
-//            {
-//                container = targetObj.eContainer();
-//            }
-//        }
-//    }
-
-    /**
      * Refreshes the current page viewer
      */
     private void refreshViewer()

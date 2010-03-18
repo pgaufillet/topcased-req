@@ -27,8 +27,12 @@ import org.topcased.modeler.editor.Modeler;
 import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.dnd.RequirementDropListener;
 import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
+import org.topcased.requirement.core.extensions.IRequirementIdentifierDefinition;
 import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
+import org.topcased.requirement.core.extensions.RequirementIdentifierDefinitionManager;
+import org.topcased.requirement.core.preferences.NamingRequirementPreferenceHelper;
 import org.topcased.requirement.core.utils.DefaultAttachmentPolicy;
+import org.topcased.requirement.core.utils.DefaultRequirementIdentifierDefinition;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
 
@@ -158,6 +162,7 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
     protected void doDestroyPage(IWorkbenchPart part, PageRec pageRecord)
     {
         RequirementCorePlugin.setCreateDropListener(true);
+        NamingRequirementPreferenceHelper.KEY_WORDS.clear();
         pageRecord.page.dispose();
         pageRecord.dispose();
        
@@ -206,6 +211,12 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
                         {
                             RequirementCorePlugin.setCreateDropListener(false);
                             modeler.getGraphicalViewer().addDropTargetListener(new RequirementDropListener(modeler.getGraphicalViewer()));
+                            IRequirementIdentifierDefinition definition = RequirementIdentifierDefinitionManager.getInstance().getIdentifierDefinition(modeler.getEditingDomain());
+                            NamingRequirementPreferenceHelper.addKeyWord(DefaultRequirementIdentifierDefinition.getInstance().addPatterns());
+                            if (definition != null)
+                            {
+                                NamingRequirementPreferenceHelper.addKeyWord(definition.addPatterns());
+                            }
                         }
                         updatePage(page);
                     }
@@ -218,6 +229,12 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
                         {
                             RequirementCorePlugin.setCreateDropListener(false);
                             modeler.getGraphicalViewer().addDropTargetListener(new RequirementDropListener(modeler.getGraphicalViewer()));
+                            IRequirementIdentifierDefinition definition = RequirementIdentifierDefinitionManager.getInstance().getIdentifierDefinition(modeler.getEditingDomain());
+                            NamingRequirementPreferenceHelper.addKeyWord(DefaultRequirementIdentifierDefinition.getInstance().addPatterns());
+                            if (definition != null)
+                            {
+                                NamingRequirementPreferenceHelper.addKeyWord(definition.addPatterns());
+                            }
                         }
                         updatePage(page);
                     }

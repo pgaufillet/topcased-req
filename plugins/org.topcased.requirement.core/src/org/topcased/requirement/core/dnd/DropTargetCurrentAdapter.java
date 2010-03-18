@@ -40,7 +40,6 @@ import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Display;
-import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.Attribute;
 import org.topcased.requirement.AttributeAllocate;
 import org.topcased.requirement.AttributeLink;
@@ -52,12 +51,16 @@ import org.topcased.requirement.RequirementPackage;
 import org.topcased.requirement.SpecialChapter;
 import org.topcased.requirement.UntracedChapter;
 import org.topcased.requirement.core.Messages;
-import org.topcased.requirement.core.preferences.ComputeRequirementIdentifier;
+import org.topcased.requirement.core.RequirementCorePlugin;
+import org.topcased.requirement.core.extensions.IRequirementIdentifierDefinition;
+import org.topcased.requirement.core.extensions.RequirementIdentifierDefinitionManager;
+import org.topcased.requirement.core.utils.DefaultRequirementIdentifierDefinition;
 import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.AddRequirementMarker;
 import org.topcased.requirement.core.views.current.CurrentPage;
 import org.topcased.requirement.core.views.current.CurrentRequirementView;
+
 import ttm.Document;
 import ttm.Requirement;
 import ttm.Section;
@@ -388,16 +391,24 @@ public class DropTargetCurrentAdapter extends EditingDomainViewerDropAdapter
      */
     private void addUpstreamToHierarchicalElementCommand(Requirement upstreamReq, HierarchicalElement hierarchicalElt)
     {
+        // handle the computing of the next index stored at the hierarchical level
+        long index = 0;
+        IRequirementIdentifierDefinition definition = RequirementIdentifierDefinitionManager.getInstance().getIdentifierDefinition(domain);
+        
+        if (definition!=null)
+        {
+            index = definition.increaseIndexWhenCreateRequirement(hierarchicalElt, definition.getCurrentIndex(hierarchicalElt));
+        }
+        else
+        {
+            index = DefaultRequirementIdentifierDefinition.getInstance().increaseIndexWhenCreateRequirement(null,DefaultRequirementIdentifierDefinition.getInstance().getCurrentIndex(null));  
+        }
+        
         Integer pos = AddRequirementMarker.eINSTANCE.computeIndex(hierarchicalElt);
-        CurrentRequirement current = RequirementHelper.INSTANCE.create(hierarchicalElt, upstreamReq, hierarchicalElt.getNextReqIndex());
+        CurrentRequirement current = RequirementHelper.INSTANCE.create(hierarchicalElt, upstreamReq, index);
         Command addCmd = AddCommand.create(domain, hierarchicalElt, RequirementPackage.eINSTANCE.getHierarchicalElement_Requirement(), current, pos);
         getCommand().appendAndExecute(addCmd);
         toSelect.add(current);
-
-        // handle the computing of the next index stored at the hierarchical level
-        long index = hierarchicalElt.getNextReqIndex() + ComputeRequirementIdentifier.STEP_IDENT;
-        Command indexCmd = RequirementHelper.INSTANCE.increaseIndex(hierarchicalElt, index);
-        getCommand().appendAndExecute(indexCmd);
     }
 
     /**
@@ -454,16 +465,24 @@ public class DropTargetCurrentAdapter extends EditingDomainViewerDropAdapter
     {
         if (source instanceof CurrentRequirement)
         {
+            long nextIndex = 0;
             CurrentRequirement currentReq = (CurrentRequirement) source;
+            IRequirementIdentifierDefinition definition = RequirementIdentifierDefinitionManager.getInstance().getIdentifierDefinition(domain);
+            
+            if (definition!=null)
+            {
+                nextIndex = definition.resetIndexWhenCreateNewContainer(target, definition.getCurrentIndex(target));
+                nextIndex = definition.increaseIndexWhenCreateRequirement(target, nextIndex);
+            }
+            else
+            {
+                nextIndex = DefaultRequirementIdentifierDefinition.getInstance().increaseIndexWhenCreateRequirement(null,DefaultRequirementIdentifierDefinition.getInstance().getCurrentIndex(null));
+            }
 
+            
             // handle the requirement renaming before drop
-            Command renameCmd = RequirementHelper.INSTANCE.renameRequirement(target, currentReq, target.getNextReqIndex());
+            Command renameCmd = RequirementHelper.INSTANCE.renameRequirement(target, currentReq, nextIndex);
             getCommand().appendAndExecute(renameCmd);
-
-            // handle the computing of the next index stored at the hierarchical level
-            long nextIndex = target.getNextReqIndex() + ComputeRequirementIdentifier.STEP_IDENT;
-            Command indexCmd = RequirementHelper.INSTANCE.increaseIndex(target, nextIndex);
-            getCommand().appendAndExecute(indexCmd);
         }
 
         Command dndCmd = DragAndDropCommand.create(domain, target, getLocation(event), event.operations, originalOperation, Collections.singleton(source));

@@ -76,7 +76,7 @@ public class DefaultAttachmentPolicy implements IModelAttachmentPolicy
     public void linkRequirementModel(Resource targetModel, Resource requirementModel)
     {
         // get the diagram file from the target model resource
-        IPath diagramFile = RequirementUtils.getFile(targetModel);
+        IPath diagramFile = RequirementUtils.getPath(targetModel);
         if (!diagramFile.getFileExtension().endsWith("di"))
         {
             diagramFile = diagramFile.removeFileExtension().addFileExtension(diagramFile.getFileExtension() + "di");

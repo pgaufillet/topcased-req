@@ -46,6 +46,5 @@ public class RequirementPreferenceInitializer extends AbstractPreferenceInitiali
 
         preferenceStore.setDefault(NamingRequirementPreferenceHelper.NAMING_FORMAT_REQUIREMENT_STORE, NamingRequirementPreferenceHelper.getDefaultFormat());
 
-        preferenceStore.setDefault(NamingRequirementPreferenceHelper.NUMBER_REQUIREMENT_STORE, NamingRequirementPreferenceHelper.getDefaultNumber());
     }
 }

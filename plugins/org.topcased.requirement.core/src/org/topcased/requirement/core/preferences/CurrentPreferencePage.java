@@ -87,7 +87,7 @@ public class CurrentPreferencePage extends PreferencePage implements IWorkbenchP
     protected Control createContents(Composite parent)
     {
         final Composite mainComposite = new Composite(parent, SWT.NONE);
-        final GridLayout layout = new GridLayout(1, false);
+        final GridLayout layout = new GridLayout();
         layout.marginHeight = 0;
         layout.marginWidth = 0;
         mainComposite.setLayout(layout);
@@ -106,7 +106,6 @@ public class CurrentPreferencePage extends PreferencePage implements IWorkbenchP
         final Group attributeGroup = new Group(parent, SWT.NONE);
         attributeGroup.setText(Messages.getString("CurrentPreferencePage.2")); //$NON-NLS-1$
         GridData attributeGroupGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-        attributeGroupGridData.horizontalSpan = 1;
         attributeGroup.setLayoutData(attributeGroupGridData);
         attributeGroup.setLayout(new GridLayout(2, false));
 

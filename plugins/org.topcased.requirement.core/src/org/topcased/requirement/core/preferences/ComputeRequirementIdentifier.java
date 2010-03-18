@@ -12,23 +12,14 @@
  ******************************************************************************/
 package org.topcased.requirement.core.preferences;
 
-import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.emf.common.util.TreeIterator;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
@@ -36,9 +27,10 @@ import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
 import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.HierarchicalElement;
-import org.topcased.requirement.Requirement;
-import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.core.RequirementCorePlugin;
+import org.topcased.requirement.core.extensions.IRequirementIdentifierDefinition;
+import org.topcased.requirement.core.extensions.RequirementIdentifierDefinitionManager;
+import org.topcased.requirement.core.utils.DefaultRequirementIdentifierDefinition;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
@@ -48,25 +40,28 @@ import org.topcased.requirement.core.utils.RequirementUtils;
  * Update : 12th may 2009.<br>
  * 
  * @author <a href="mailto:christophe.mertz@c-s.fr">Christophe Mertz</a>
+ * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  * 
  */
 public class ComputeRequirementIdentifier
 {
     public static final ComputeRequirementIdentifier INSTANCE = new ComputeRequirementIdentifier();
 
-    public static final long STEP_IDENT = 10;
-
-    private static final String DEFAULT_HIERARCHICAL_ELEMENT_NAME = "xxx";
-
     private IPreferenceStore preferenceStore;
 
     private String initialFormat;
 
     private String currentFormat;
-
-    private Boolean numberAllDocument;
-
-    private int nRequirement;
+    
+    // Parameters used to compute the full identifier:
+    
+    private EditingDomain editingDomain;
+    
+    private HierarchicalElement hierarchicalElement;
+    
+    private String upstreamIdentifier;
+    
+    private long requirementIndex;
 
     /**
      * Computes the identifier of the new requirement
@@ -80,14 +75,13 @@ public class ComputeRequirementIdentifier
     public String computeIdent(EditingDomain domain, HierarchicalElement hierarchicalElt, String source, long nextIndex)
     {
         currentFormat = initialFormat;
-
-        // Number's formatter
-        NumberFormat nf = NumberFormat.getInstance();
-        nf.setMinimumIntegerDigits(5);
-        nf.setGroupingUsed(false);
-
+        editingDomain = domain;
+        hierarchicalElement = hierarchicalElt;
+        upstreamIdentifier = source;
+        requirementIndex = nextIndex;
+      
         // Determine the number in the system
-        return computeFullIdentifier(domain, hierarchicalElt, source, nf.format(nextIndex));
+        return computeFullIdentifier();
     }
 
     /**
@@ -97,19 +91,19 @@ public class ComputeRequirementIdentifier
      * 
      * @return the new identifier
      */
-    private String convert(Map<Integer, String> map)
+    private String convert(Map<String, String> map)
     {
-        for (int i = 0; i < NamingRequirementPreferenceHelper.KEY_WORDS.length; i++)
+        for (String keyWord : NamingRequirementPreferenceHelper.KEY_WORDS)
         {
-            if (map.get(i) != null)
+            if (map.get(keyWord) != null)
             {
-                if (map.get(i).length() > 0)
+                if (map.get(keyWord).length() > 0)
                 {
-                    currentFormat = currentFormat.replace(NamingRequirementPreferenceHelper.KEY_WORDS[i], map.get(i));
+                    currentFormat = currentFormat.replace(keyWord, map.get(keyWord));
                 }
                 else
                 {
-                    currentFormat = currentFormat.replace(NamingRequirementPreferenceHelper.KEY_WORDS[i], "");
+                    currentFormat = currentFormat.replace(keyWord, "");
                 }
             }
         }
@@ -125,47 +119,24 @@ public class ComputeRequirementIdentifier
      * 
      * @return the current requirement identifier
      */
-    private String computeFullIdentifier(EditingDomain domain, HierarchicalElement element, String source, String number)
+    private String computeFullIdentifier()
     {
-        Resource requirement = RequirementUtils.getRequirementModel(domain);
-        Map<Integer, String> map = new HashMap<Integer, String>();
-        map.put(NamingRequirementPreferenceHelper.PROJECT, ((RequirementProject) requirement.getContents().get(0)).getIdentifier());
-        map.put(NamingRequirementPreferenceHelper.HIERARCHICAL_ELEMENT, getHierarchicalElementIdentifier(element));
-        map.put(NamingRequirementPreferenceHelper.UPSTREAM_IDENT, source);
-        map.put(NamingRequirementPreferenceHelper.NUMBER, number);
+        Map<String, String> map = new HashMap<String, String>();
+        
+        //Default key words map
+        map = DefaultRequirementIdentifierDefinition.getInstance().addValuesToPatterns(editingDomain, map);
+        
+        //key words added by extension point
+        IRequirementIdentifierDefinition definition = RequirementIdentifierDefinitionManager.getInstance().getIdentifierDefinition(editingDomain);
+        if (definition != null)
+        {
+            map = definition.addValuesToPatterns(editingDomain, map);            
+        }
+        
         return convert(map);
     }
 
-    /**
-     * Get the identifier of the target element
-     * 
-     * @param hierarchicalElt : the target hierarchical element
-     * 
-     * @return the identifier of the target element
-     */
-    private String getHierarchicalElementIdentifier(HierarchicalElement hierarchicalElt)
-    {
-        String result = "";
 
-        if (hierarchicalElt.getElement() != null)
-        {
-            EObject obj = hierarchicalElt.getElement();
-            for (EAttribute attribute : obj.eClass().getEAllAttributes())
-            {
-                if (attribute.getName().equals(EcorePackage.eINSTANCE.getENamedElement_Name().getName()))
-                {
-                    result = (String) obj.eGet(attribute);
-                    break;
-                }
-            }
-        }
-        else
-        {
-            result += DEFAULT_HIERARCHICAL_ELEMENT_NAME;
-        }
-
-        return result;
-    }
 
     /**
      * Gets the PreferenceStore of the project's property
@@ -181,7 +152,7 @@ public class ComputeRequirementIdentifier
             return;
         }
 
-        IFile file = getFile(requirementModel);
+        IFile file = RequirementUtils.getFile(requirementModel);
         if (file == null)
         {
             return;
@@ -208,80 +179,54 @@ public class ComputeRequirementIdentifier
         }
 
         this.initialFormat = this.preferenceStore.getString(NamingRequirementPreferenceHelper.NAMING_FORMAT_REQUIREMENT_STORE);
-        this.numberAllDocument = this.preferenceStore.getBoolean(NamingRequirementPreferenceHelper.NUMBER_REQUIREMENT_STORE);
-
-        if (this.numberAllDocument)
-        {
-            this.setnRequirement(countRequirement(requirementModel));
-        }
     }
-
-    /**
-     * Gets the IFile of a resource
-     * 
-     * @param resource
-     * 
-     * @return the IFile of a resource
-     */
-    private static IFile getFile(Resource resource)
+    
+    public HierarchicalElement getIdentifierHierarchicalElement()
     {
-        URI uri = resource.getURI();
-        uri = resource.getResourceSet().getURIConverter().normalize(uri);
-        String scheme = uri.scheme();
-        if ("platform".equals(scheme) && uri.segmentCount() > 1 && "resource".equals(uri.segment(0)))
-        {
-            StringBuffer platformResourcePath = new StringBuffer();
-            for (int j = 1; j < uri.segmentCount(); ++j)
-            {
-                platformResourcePath.append('/');
-                platformResourcePath.append(uri.segment(j));
-            }
-            return ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(platformResourcePath.toString()));
-        }
-        else if ("file".equals(scheme))
-        {
-            StringBuffer platformResourcePath = new StringBuffer();
-            for (int j = 0; j < uri.segmentCount(); ++j)
-            {
-                platformResourcePath.append('/');
-                platformResourcePath.append(uri.segment(j));
-            }
-            return ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(platformResourcePath.toString()));
-
-        }
-        return null;
+        return hierarchicalElement;
     }
-
-    /**
-     * Counts the Requirements in the Resource
-     * 
-     * @param resource
-     * 
-     * @return the number of Requirements in the Resource
-     */
-    private int countRequirement(Resource resource)
+    
+    public String getIdentifierUpstreamIdent()
     {
-        int n = 0;
-        TreeIterator<EObject> treeIt = EcoreUtil.<EObject> getAllContents(resource, true);
-        while (treeIt.hasNext())
-        {
-            EObject current = treeIt.next();
-            if (current instanceof Requirement)
-            {
-                n++;
-            }
-        }
-        return n;
+        return upstreamIdentifier;
     }
-
-    public void setnRequirement(int nRequirement)
+    
+    public long getIdentifierRequirementIndex()
     {
-        this.nRequirement = nRequirement;
+        return requirementIndex;
     }
-
-    public int getnRequirement()
-    {
-        return nRequirement;
-    }
+    
+//
+//    /**
+//     * Counts the Requirements in the Resource
+//     * 
+//     * @param resource
+//     * 
+//     * @return the number of Requirements in the Resource
+//     */
+//    private int countRequirement(Resource resource)
+//    {
+//        int n = 0;
+//        TreeIterator<EObject> treeIt = EcoreUtil.<EObject> getAllContents(resource, true);
+//        while (treeIt.hasNext())
+//        {
+//            EObject current = treeIt.next();
+//            if (current instanceof Requirement)
+//            {
+//                n++;
+//            }
+//        }
+//        return n;
+//    }
+//
+//    public void setnRequirement(int nRequirement)
+//    {
+//        this.nRequirement = nRequirement;
+//    }
+//
+//    public int getnRequirement()
+//    {
+//        return nRequirement;
+//    }
 
 }

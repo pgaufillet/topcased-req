@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
-   <extension-point id="dropRestriction" name="Drop Restriction" schema="schema/dropRestriction.exsd"/>
+   <extension-point id="dropRestriction" name="Requirement Drop Restriction in target Models" schema="schema/dropRestriction.exsd"/>
    <extension-point id="specificDropAction" name="Define creation of specific actions on requirement drop" schema="schema/specificDropAction.exsd"/>
    <extension-point id="modelAttachmentPolicy" name="enable to attach a topcased model to a requirement model" schema="schema/modelAttachmentPolicy.exsd"/>
+   <extension-point id="requirementIdentifierDefinition" name="Provide ways to construct requirement identifiers" schema="schema/requirementIdentifierDefinition.exsd"/>
 
    <extension
          point="org.eclipse.ui.views">

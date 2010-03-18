@@ -26,7 +26,9 @@ import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.SpecialChapter;
 import org.topcased.requirement.core.Messages;
-import org.topcased.requirement.core.preferences.ComputeRequirementIdentifier;
+import org.topcased.requirement.core.extensions.IRequirementIdentifierDefinition;
+import org.topcased.requirement.core.extensions.RequirementIdentifierDefinitionManager;
+import org.topcased.requirement.core.utils.DefaultRequirementIdentifierDefinition;
 import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.views.current.CurrentPage;
 
@@ -37,19 +39,22 @@ import org.topcased.requirement.core.views.current.CurrentPage;
  */
 public class CurrentRequirementPasteAction extends RequirementAbstractEMFAction
 {
+    private EditingDomain editingDomain;
+
     /**
      * Constructor
      * 
      * @param selection The current selection done
      * @param editingDomain The editing domain to use.
      */
-    public CurrentRequirementPasteAction(IStructuredSelection selection, EditingDomain editingDomain)
+    public CurrentRequirementPasteAction(IStructuredSelection selection, EditingDomain editDomain)
     {
-        super(Messages.getString("CurrentRequirementPasteAction.0"), selection, editingDomain); //$NON-NLS-1$
+        super(Messages.getString("CurrentRequirementPasteAction.0"), selection, editDomain); //$NON-NLS-1$
         ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
         setImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
         setActionDefinitionId("org.topcased.requirement.core.pasteModelObject"); //$NON-NLS-1$
         setToolTipText(Messages.getString("CurrentRequirementPasteAction.1")); //$NON-NLS-1$
+        editingDomain = editDomain;
     }
 
     /**
@@ -76,24 +81,41 @@ public class CurrentRequirementPasteAction extends RequirementAbstractEMFAction
         if (doPaste())
         {
             Collection< ? > source = getEditingDomain().getClipboard();
+            IRequirementIdentifierDefinition definition = RequirementIdentifierDefinitionManager.getInstance().getIdentifierDefinition(editingDomain);
             HierarchicalElement hierarchicalElt = (HierarchicalElement) target;
-            long nextIndex = hierarchicalElt.getNextReqIndex();
+            long nextIndex = 0;
+            
+            if (definition != null)
+            {
+                nextIndex = definition.getCurrentIndex(hierarchicalElt);
+            }
+            else
+            {
+                nextIndex = DefaultRequirementIdentifierDefinition.getInstance().getCurrentIndex(null);
+            }
+
             CompoundCommand compound = new CompoundCommand("Renaming moving requirements");
 
             for (Object currSource : source)
             {
                 if (currSource instanceof CurrentRequirement)
                 {
+                    if (definition != null)
+                    {
+                        nextIndex = definition.increaseIndexWhenCreateRequirement(hierarchicalElt, nextIndex);
+                    }
+                    else
+                    {
+                        // increase the next index
+                        nextIndex = DefaultRequirementIdentifierDefinition.getInstance().increaseIndexWhenCreateRequirement(hierarchicalElt, nextIndex);
+                    }
+
                     // rename the current requirement
                     CurrentRequirement requirement = (CurrentRequirement) currSource;
                     compound.appendIfCanExecute(RequirementHelper.INSTANCE.renameRequirement(hierarchicalElt, requirement, nextIndex));
-
-                    // increase the next index
-                    nextIndex += ComputeRequirementIdentifier.STEP_IDENT;
-                    compound.appendIfCanExecute(RequirementHelper.INSTANCE.increaseIndex(hierarchicalElt, nextIndex));
                 }
             }
-            
+
             cmd.appendAndExecute(compound);
         }
     }
