@@ -40,24 +40,23 @@ import ttm.TtmPackage;
  * 
  * @author <a href="mailto:christophe.le-camus@c-s.fr">Christophe LE CAMUS</a>
  */
-public class TtmToReqImportService implements IService
+public class TTM2RequirementService implements IService
 {
     // Constante defining namespace
     private static final String XMLNS_EXTENSION = "xmlns";
+
+    public static final String ID = "org.topcased.requirement.service.import";
 
     /**
      * @see org.topcased.bus.core.IService#serviceRun(java.util.Map)
      */
     public Object serviceRun(Map<String, Object> parameters)
     {
-        Object result = null;
-
         // first checks the parameters
         if (checkServiceParameters(parameters))
         {
-
             String beginTime = new SimpleDateFormat("yyyy-MM-dd hh'h'mm").format(new Date());
-            RequirementImportPlugin.log("Entering Tramway to Requirements import service at ".concat(beginTime), IStatus.INFO);
+            RequirementImportPlugin.log("Entering TRAMway to Requirements import service at ".concat(beginTime), IStatus.INFO);
 
             String inpath = (String) parameters.get("IN");
             IPath outpath = new Path((String) parameters.get("OUT"));
@@ -69,7 +68,7 @@ public class TtmToReqImportService implements IService
             models.put("OUT", outpath.toOSString());
 
             HashMap<String, Object> serviceParameters = new HashMap<String, Object>();
-            serviceParameters.put("Id", "org.topcased.modelImport.requirements.transformation");
+            serviceParameters.put("Id", ID);
             serviceParameters.put("Models", models);
             serviceParameters.put("ProjectPath", path);
             serviceParameters.put("IsXml", new Boolean(false));
@@ -80,19 +79,14 @@ public class TtmToReqImportService implements IService
             IService transformation = ServicesManager.getInstance().getService(IServiceCst.TRANSFORMATION);
             transformation.serviceRun(serviceParameters);
 
-            IService readService = ServicesManager.getInstance().getService(IServiceCst.READ_XMI_EMF);
-            serviceParameters = new HashMap<String, Object>();
-            serviceParameters.put("XMIFile", path.append(outpath.lastSegment()).toString());
-            result = readService.serviceRun(serviceParameters);
-
             File tempFile = new File((String) newInputFilePath);
             tempFile.delete();
 
             String endTime = new SimpleDateFormat("yyyy-MM-dd hh'h'mm").format(new Date());
-            RequirementImportPlugin.log("Leaving Tramway to Requirements import service at ".concat(endTime), IStatus.INFO);
+            RequirementImportPlugin.log("Leaving TRAMway to Requirements import service at ".concat(endTime), IStatus.INFO);
         }
 
-        return result;
+        return null;
     }
 
     /**
@@ -137,7 +131,7 @@ public class TtmToReqImportService implements IService
         {
             RequirementImportPlugin.log(e);
         }
-        catch (SAXException e) 
+        catch (SAXException e)
         {
             RequirementImportPlugin.log(e);
         }

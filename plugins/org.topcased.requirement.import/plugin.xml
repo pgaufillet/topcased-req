@@ -4,8 +4,8 @@
    <extension
          point="org.topcased.bus.core.transformation">
       <transformation
-            id="org.topcased.modelImport.requirements.transformation"
-            name="Tramway to Requirements Transformation">
+            id="org.topcased.requirement.transformation.import"
+            name="TRAMway to Requirement Transformation">
          <ruleFile
                filename="transformation/ttm2req.asm">
          </ruleFile>
@@ -28,13 +28,13 @@
    <extension
          point="org.topcased.bus.core.service">
       <service
-            class="org.topcased.requirement.service.TtmToReqImportService"
-            id="org.topcased.modelImport.requirements.service1"
-            name="Traway to Requirement Import Service">
+            class="org.topcased.requirement.service.TTM2RequirementService"
+            id="org.topcased.requirement.service.import"
+            name="TRAMway to Requirement Import Service">
          <serviceType
                category="Model Import/Export"
                id="org.topcased.modelImport.requirements.type"
-               name="Tramway to Requirements Transformation"
+               name="TRAMway to Requirement Transformation"
                parentId="org.topcased.service.import"/>
          <outputParam>
             <parameter

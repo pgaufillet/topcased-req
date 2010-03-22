@@ -15,24 +15,33 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.topcased.bus.core.IService;
+import org.topcased.bus.core.ServicesManager;
+import org.topcased.requirement.RequirementImportPlugin;
 import org.topcased.requirement.core.extensions.IRequirementTransformation;
 
 /**
  * Processes the ATL transformation to create the requirement model from a TTM source model.
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
- *
+ * 
  */
 public class TTM2RequirementTransformation implements IRequirementTransformation
 {
 
     /**
-     * @see org.topcased.requirement.core.extensions.IRequirementTransformation#transformation(org.eclipse.core.resources.IFile, org.eclipse.core.resources.IFile)
+     * @see org.topcased.requirement.core.extensions.IRequirementTransformation#transformation(org.eclipse.core.resources.IFile,
+     *      org.eclipse.core.resources.IFile)
      */
     public void transformation(IFile source, IFile dest)
     {
-        TtmToReqImportService service;
 
         Map<String, Object> parameters = new HashMap<String, Object>();
 
@@ -45,12 +54,26 @@ public class TTM2RequirementTransformation implements IRequirementTransformation
         // The workspace destination
         IPath path = dest.getParent().getFullPath();
 
-        parameters.put("IN", inPath);
-        parameters.put("OUT", outPath);
-        parameters.put("Path", path);
+        parameters.put("IN", inPath); //$NON-NLS-1$
+        parameters.put("OUT", outPath); //$NON-NLS-1$
+        parameters.put("Path", path); //$NON-NLS-1$
 
-        service = new TtmToReqImportService();
+        IService service = ServicesManager.getInstance().getService(TTM2RequirementService.ID);
         service.serviceRun(parameters);
+
+        IWorkspaceRoot wsRoot = ResourcesPlugin.getWorkspace().getRoot();
+        IFolder folder = wsRoot.getFolder(path);
+        if (folder != null && folder.exists())
+        {
+            try
+            {
+                folder.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
+            }
+            catch (CoreException e)
+            {
+                RequirementImportPlugin.log(e);
+            }
+        }
     }
 
 }
