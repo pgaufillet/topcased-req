@@ -5,6 +5,7 @@
    <extension-point id="specificDropAction" name="Define creation of specific actions on requirement drop" schema="schema/specificDropAction.exsd"/>
    <extension-point id="modelAttachmentPolicy" name="enable to attach a topcased model to a requirement model" schema="schema/modelAttachmentPolicy.exsd"/>
    <extension-point id="requirementIdentifierDefinition" name="Provide ways to construct requirement identifiers" schema="schema/requirementIdentifierDefinition.exsd"/>
+   <extension-point id="requirementTransformation" name="Extension point to implement transformation from file to requirement" schema="schema/requirementTransformation.exsd"/>
 
    <extension
          point="org.eclipse.ui.views">

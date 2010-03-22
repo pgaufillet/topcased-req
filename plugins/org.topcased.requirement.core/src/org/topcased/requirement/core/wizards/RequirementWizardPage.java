@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ResourceSelectionDialog;
 import org.topcased.requirement.core.Messages;
 import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
+import org.topcased.requirement.core.extensions.RequirementTransformationManager;
 
 /**
  * The "New" wizard page allows setting the container for the new file as well as the file name. The page will only
@@ -63,11 +64,11 @@ public class RequirementWizardPage extends WizardPage
     private Button targetModelBt;
 
     /*
-     * Model Ttm
+     * imported source Model
      */
-    private Text importTtmFd;
+    private Text importModelFd;
 
-    private Button importTtmBt;
+    private Button importModelBt;
 
     /*
      * requirement model name
@@ -165,12 +166,12 @@ public class RequirementWizardPage extends WizardPage
         Label importLbl = new Label(mainGroup, SWT.NONE);
         importLbl.setText(Messages.getString("RequirementWizardPage.7")); //$NON-NLS-1$
 
-        importTtmFd = new Text(mainGroup, SWT.BORDER);
-        importTtmFd.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        importTtmFd.setEditable(false);
+        importModelFd = new Text(mainGroup, SWT.BORDER);
+        importModelFd.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        importModelFd.setEditable(false);
 
-        importTtmBt = new Button(mainGroup, SWT.PUSH);
-        importTtmBt.setText(BROWSE_TEXT);
+        importModelBt = new Button(mainGroup, SWT.PUSH);
+        importModelBt.setText(BROWSE_TEXT);
 
         /*
          * Model requirement name
@@ -215,7 +216,7 @@ public class RequirementWizardPage extends WizardPage
     private void hookListeners()
     {
         targetModelFd.addModifyListener(validationListener);
-        importTtmFd.addModifyListener(validationListener);
+        importModelFd.addModifyListener(validationListener);
         requirementNameFd.addModifyListener(validationListener);
         projectFd.addModifyListener(validationListener);
         emptySource.addSelectionListener(selectionListener);
@@ -229,11 +230,12 @@ public class RequirementWizardPage extends WizardPage
             }
         });
 
-        importTtmBt.addSelectionListener(new SelectionAdapter()
+        importModelBt.addSelectionListener(new SelectionAdapter()
         {
             public void widgetSelected(SelectionEvent e)
             {
-                handleTtmModelChoose();
+                handleImportModelChoose();
+                dialogChanged();
             }
         });
 
@@ -272,9 +274,9 @@ public class RequirementWizardPage extends WizardPage
     }
 
     /**
-     * Handles the ttm model choice
+     * Handles the imported model choice
      */
-    protected void handleTtmModelChoose()
+    protected void handleImportModelChoose()
     {
         ResourceSelectionDialog dialog = new ResourceSelectionDialog(getShell(), ResourcesPlugin.getWorkspace().getRoot(), Messages.getString("RequirementWizardPage.12")); //$NON-NLS-1$
         if (dialog.open() == Window.OK)
@@ -283,7 +285,7 @@ public class RequirementWizardPage extends WizardPage
 
             if (results.length == 1 && results[0] instanceof IFile)
             {
-                importTtmFd.setText(((IFile) results[0]).getFullPath().toString());
+                importModelFd.setText(((IFile) results[0]).getFullPath().toString());
 
             }
         }
@@ -325,7 +327,7 @@ public class RequirementWizardPage extends WizardPage
         String newModel = getRequirementNameFd();
         String message = null;
         
-        if (getTargetModelFile() != null) //$NON-NLS-1$
+        if (getTargetModelFile() != null)
         {
             if(!ModelAttachmentPolicyManager.getInstance().isEnableFor(getTargetModelFile().getFileExtension()))
             {
@@ -338,6 +340,17 @@ public class RequirementWizardPage extends WizardPage
         else if (newModel.length() == 0)
         {
             message = Messages.getString("RequirementWizardPage.13"); //$NON-NLS-1$
+        }
+        
+        if (getSourceModelFile() != null)
+        {
+            if(!RequirementTransformationManager.getInstance().isEnableFor(getSourceModelFile().getFileExtension()))
+            {
+                if (!getSourceModelFile().getFileExtension().equals("requirement"))
+                {
+                    message = Messages.getString("RequirementWizardPage.19"); //$NON-NLS-1$
+                }
+            }
         }
 
         if (message == null)
@@ -371,13 +384,13 @@ public class RequirementWizardPage extends WizardPage
         }
         else
         {
-            if ((getTargetModelFd() == null) || ((getImportTtmFd() == null) && (!emptySource.getSelection())) || (getRequirementNameFd() == null))
+            if ((getTargetModelFd() == null) || ((getImportModelFd() == null) && (!emptySource.getSelection())) || (getRequirementNameFd() == null))
             {
                 result = false;
             }
             else
             {
-                if (getTargetModelFd().length() > 0 && ((emptySource.getSelection()) || ((getImportTtmFd().length() > 0) && (!emptySource.getSelection()))) && getRequirementNameFd().length() > 0)
+                if (getTargetModelFd().length() > 0 && ((emptySource.getSelection()) || ((getImportModelFd().length() > 0) && (!emptySource.getSelection()))) && getRequirementNameFd().length() > 0)
                 {
                     result = true;
                 }
@@ -398,7 +411,12 @@ public class RequirementWizardPage extends WizardPage
      */
     public IFile getSourceModelFile()
     {
-        return ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(getImportTtmFd()));
+        Path path = new Path(getImportModelFd());        
+        if (path.getFileExtension() != null)
+        {
+            return ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+        }
+        return null;
     }
 
     /**
@@ -489,13 +507,13 @@ public class RequirementWizardPage extends WizardPage
     }
 
     /**
-     * The getter of the name of the Ttm model selected
+     * The getter of the name of the imported model selected
      * 
-     * @return the name of the Ttm model selected
+     * @return the name of the imported model selected
      */
-    protected String getImportTtmFd()
+    protected String getImportModelFd()
     {
-        return importTtmFd.getText();
+        return importModelFd.getText();
     }
 
     /**

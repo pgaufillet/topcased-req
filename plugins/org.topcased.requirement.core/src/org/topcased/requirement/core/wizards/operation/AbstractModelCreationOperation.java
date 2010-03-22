@@ -11,6 +11,7 @@
 package org.topcased.requirement.core.wizards.operation;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -18,10 +19,12 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.topcased.requirement.AttributeConfiguration;
 import org.topcased.requirement.RequirementProject;
+import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
 import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
 import org.topcased.requirement.core.preferences.CurrentPreferenceHelper;
 import org.topcased.requirement.core.utils.DefaultAttachmentPolicy;
+import org.topcased.requirement.core.utils.MergeRequirement;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
@@ -96,6 +99,43 @@ public abstract class AbstractModelCreationOperation extends WorkspaceModifyOper
             DefaultAttachmentPolicy.getInstance().linkRequirementModel(targetModelResource, requirementResource);
         }
         
+        monitor.worked(1);
+    }
+    
+    /**
+    *
+    * Process the merge operation
+    */
+    protected void mergeOperation(Resource requirementResourceMerged, IProgressMonitor monitor)
+    {
+        monitor.subTask("merging requirement model");
+        try
+        {
+            // Close the corresponding diagram if open
+            IPath diagramFile = targetModelFile.getFullPath();
+            if (!diagramFile.getFileExtension().endsWith("di"))
+            {
+                diagramFile = diagramFile.removeFileExtension().addFileExtension(diagramFile.getFileExtension() + "di");
+            }
+            boolean closed = RequirementUtils.closeDiagramEditor(diagramFile);
+
+            // Call the EMF comparison service in order to merge/update the current requirement model
+            MergeRequirement.INSTANCE.merge(requirementResource, requirementResourceMerged, monitor);
+            monitor.worked(1);
+
+            // Save the contents of the resource to the file system
+            RequirementUtils.saveResource(requirementResource);
+
+            // The diagram is re-opened if needed.
+            if (closed)
+            {
+                RequirementUtils.openDiagramEditor(diagramFile);
+            }
+        }
+        catch (InterruptedException e)
+        {
+            RequirementCorePlugin.log(e);
+        }
         monitor.worked(1);
     }
 

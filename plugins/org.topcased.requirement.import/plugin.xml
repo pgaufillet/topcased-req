@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.topcased.bus.core.transformation">
+      <transformation
+            id="org.topcased.modelImport.requirements.transformation"
+            name="Tramway to Requirements Transformation">
+         <ruleFile
+               filename="transformation/ttm2req.asm">
+         </ruleFile>
+         <inParam
+               name="IN">
+            <transformationMetamodel
+                  id="http://org.topcased.traceability.model"
+                  name="INMETAMODEL">
+            </transformationMetamodel>
+         </inParam>
+         <outParam
+               name="OUT">
+            <transformationMetamodel
+                  id="http://org.topcased.requirement/1.0"
+                  name="OUTMETAMODEL">
+            </transformationMetamodel>
+         </outParam>
+      </transformation>
+   </extension>
+   <extension
+         point="org.topcased.bus.core.service">
+      <service
+            class="org.topcased.requirement.service.TtmToReqImportService"
+            id="org.topcased.modelImport.requirements.service1"
+            name="Traway to Requirement Import Service">
+         <serviceType
+               category="Model Import/Export"
+               id="org.topcased.modelImport.requirements.type"
+               name="Tramway to Requirements Transformation"
+               parentId="org.topcased.service.import"/>
+         <outputParam>
+            <parameter
+                  description="Output of the transformation."
+                  id="org.topcased.modelImport.requirements.parameter1"
+                  kind="EObject"
+                  name="Model">
+            </parameter>
+         </outputParam>
+         <listInputParam>
+         <parameter
+                  description="Absolute path of the input model."
+                  id="org.topcased.import.ttm.inParameter"
+                  kind="String"
+                  name="IN"/>
+            <parameter
+                  description="Name of the output model file to create."
+                  id="org.topcased.import.requirement.outParameter"
+                  kind="String"
+                  name="OUT"/>
+            <parameter
+                  description="Project path where the output model must be created."
+                  id="org.topcased.import.req.pathParameter"
+                  kind="IPath"
+                  name="Path"/>
+         </listInputParam>
+      </service>
+   </extension>
+   <extension
+         point="org.topcased.requirement.core.requirementTransformation">
+      <transformation
+            class="org.topcased.requirement.service.TTM2RequirementTransformation"
+            extension="ttm">
+      </transformation>
+   </extension>
+
+</plugin>

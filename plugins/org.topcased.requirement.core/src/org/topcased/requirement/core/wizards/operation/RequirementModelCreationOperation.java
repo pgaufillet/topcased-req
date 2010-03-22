@@ -6,23 +6,21 @@
  * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors: Sebastien GABEL (CS) - initial API and implementation
- * 
+ *               Maxime AUDRAIN (CS) - API Changes
  **********************************************************************************************************************/
 package org.topcased.requirement.core.wizards.operation;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.core.RequirementCorePlugin;
-import org.topcased.requirement.core.utils.MergeRequirement;
+import org.topcased.requirement.core.extensions.IRequirementTransformation;
+import org.topcased.requirement.core.extensions.RequirementTransformationManager;
 import org.topcased.requirement.core.utils.RequirementUtils;
-import org.topcased.sam.requirement.service.TtmToReqImportService;
 
 /**
  * 
@@ -30,6 +28,7 @@ import org.topcased.sam.requirement.service.TtmToReqImportService;
  * 
  * @author <a href="mailto:christophe.mertz@c-s.fr">Christophe Mertz</a>
  * @author <a href="mailto:sebastien.gabel@c-s.fr">Sebastien GABEL</a>
+ * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  * 
  * @since 2.1.0
  * 
@@ -60,46 +59,84 @@ public class RequirementModelCreationOperation extends AbstractModelCreationOper
     {
         IFile fileDest = ResourcesPlugin.getWorkspace().getRoot().getFile(requirementModelFile.getFullPath().addFileExtension(MODEL_EXTENSION));
         boolean requirementMerge = fileDest.exists();
-        if (requirementMerge)
+
+        if (sourceModelFile.getFileExtension().equals("requirement"))
         {
-            // Merge the existing requirement model
-            mergeRequirementModel(monitor);
+            if (requirementMerge)
+            {
+                monitor.subTask("Copy requirement file ");
+                // rename the file from the name given in the dialog and temporally copy it next to the target model
+                IPath mergePath = requirementModelFile.getFullPath().addFileExtension(MODEL_TMP);
+                try
+                {
+                    sourceModelFile.copy(mergePath.addFileExtension(MODEL_EXTENSION), true, monitor);
+                }
+                catch (CoreException e)
+                {
+                    RequirementCorePlugin.log(e);
+                }
+                monitor.worked(1);
+
+                // Merge the existing requirement model
+                mergeRequirementModel(mergePath, monitor);
+
+            }
+            else
+            {
+                monitor.subTask("Copy requirement file ");
+                // rename the file from the name given in the dialog and copy it next to the target model
+                try
+                {
+                    sourceModelFile.copy(requirementModelFile.getFullPath().addFileExtension(MODEL_EXTENSION), true, monitor);
+                }
+                catch (CoreException e)
+                {
+                    RequirementCorePlugin.log(e);
+                }
+                monitor.worked(1);
+
+                // Create the requirement model
+                newRequirementModel(monitor);
+            }
         }
         else
         {
-            // Create the requirement model
-            newRequirementModel(monitor);
+            if (requirementMerge)
+            {
+                monitor.subTask("Importing requirement model");
+
+                IPath mergePath = requirementModelFile.getFullPath().addFileExtension(MODEL_TMP);
+                IFile mergeFile = ResourcesPlugin.getWorkspace().getRoot().getFile(mergePath);
+
+                // Get the transformation from the requirementTransformation extension point
+                IRequirementTransformation reqTransfo = RequirementTransformationManager.getInstance().getRequirementTransformation(sourceModelFile.getFileExtension());
+                if (reqTransfo != null)
+                {
+                    // Process the transformation to create the temporally requirement model
+                    reqTransfo.transformation(sourceModelFile, mergeFile);
+                }
+                monitor.worked(1);
+
+                // Merge the existing requirement model
+                mergeRequirementModel(mergePath, monitor);
+            }
+            else
+            {
+                monitor.subTask("Importing requirement model");
+
+                // Get the transformation from the requirementTransformation extension point
+                IRequirementTransformation reqTransfo = RequirementTransformationManager.getInstance().getRequirementTransformation(sourceModelFile.getFileExtension());
+                if (reqTransfo != null)
+                {
+                    // Process the transformation to create the requirement model
+                    reqTransfo.transformation(sourceModelFile, requirementModelFile);
+                }
+                monitor.worked(1);
+
+                // Create the requirement model
+                newRequirementModel(monitor);
+            }
         }
-    }
-
-    /**
-     * Creates a new Requirement model Process an ATL transformation to import the the model of upstream requirements
-     * 
-     * @param monitor The progress monitor to use
-     */
-    protected void newRequirementModel(IProgressMonitor monitor)
-    {
-        monitor.beginTask("Creation : ", 5);
-        // Process the ATL transformation to create the requirement model
-        monitor.subTask("importing requirement model");
-        monitor.worked(1);
-        transformation(sourceModelFile, requirementModelFile);
-        monitor.worked(1);
-
-        // Get a resource of the destination file
-        requirementResource = RequirementUtils.getResource(requirementModelFile.getFullPath().addFileExtension(MODEL_EXTENSION));
-
-        // Add the initial model object to the contents
-        createInitialModel(requirementResource);
-        monitor.worked(1);
-        
-        // Save the contents of the resource to the file system
-        RequirementUtils.saveResource(requirementResource);
-        monitor.worked(1);
-
-        // Update the target model
-        updateRequirementReference(monitor);
-        monitor.worked(1);
     }
 
     /**
@@ -115,22 +152,38 @@ public class RequirementModelCreationOperation extends AbstractModelCreationOper
     }
 
     /**
+     * Creates a new Requirement model
+     * 
+     * @param monitor The progress monitor to use
+     */
+    protected void newRequirementModel(IProgressMonitor monitor)
+    {
+        monitor.beginTask("Creation : ", 4);
+
+        // Get a resource of the destination file
+        requirementResource = RequirementUtils.getResource(requirementModelFile.getFullPath().addFileExtension(MODEL_EXTENSION));
+
+        // Add the initial model object to the contents
+        createInitialModel(requirementResource);
+        monitor.worked(1);
+
+        // Save the contents of the resource to the file system
+        RequirementUtils.saveResource(requirementResource);
+        monitor.worked(1);
+
+        // Update the target model
+        updateRequirementReference(monitor);
+        monitor.worked(1);
+    }
+
+    /**
      * Merges two models of requirements
      * 
-     * @param source : the model of upstream requirements
-     * @param dest : the requirement model to create
+     * @param monitor The progress monitor to use
      */
-    protected void mergeRequirementModel(IProgressMonitor monitor)
+    protected void mergeRequirementModel(IPath mergePath, IProgressMonitor monitor)
     {
-        monitor.beginTask("Update : ", 5);
-        // 1) import operation of temporary model
-        monitor.subTask("importing requirement model");
-        monitor.worked(1);
-        IPath mergePath = requirementModelFile.getFullPath().addFileExtension(MODEL_TMP);
-        IFile mergeFile = ResourcesPlugin.getWorkspace().getRoot().getFile(mergePath);
-
-        // Process the ATL transformation to create the requirement model
-        transformation(sourceModelFile, mergeFile);
+        monitor.beginTask("Update : ", 3);
 
         // Get a resource of the destination file
         requirementResource = RequirementUtils.getResource(requirementModelFile.getFullPath().addFileExtension(MODEL_EXTENSION));
@@ -142,71 +195,14 @@ public class RequirementModelCreationOperation extends AbstractModelCreationOper
         createInitialModel(requirementResourceMerged);
         monitor.worked(1);
 
-        // 2) merge operation
-        monitor.subTask("merging requirement model");
-        try
-        {
-            // Close the corresponding diagram if open
-            IPath diagramFile = targetModelFile.getFullPath();
-            if (!diagramFile.getFileExtension().endsWith("di"))
-            {
-                diagramFile = diagramFile.removeFileExtension().addFileExtension(diagramFile.getFileExtension() + "di");
-            }
-            boolean closed = RequirementUtils.closeDiagramEditor(diagramFile);
+        // merge operation
+        mergeOperation(requirementResourceMerged, monitor);
 
-            // Call the EMF comparison service in order to merge/update the current requirement model
-            MergeRequirement.INSTANCE.merge(requirementResource, requirementResourceMerged, monitor);
-            monitor.worked(1);
-
-            // Save the contents of the resource to the file system
-            RequirementUtils.saveResource(requirementResource);
-
-            // The diagram is re-opened if needed.
-            if (closed)
-            {
-                RequirementUtils.openDiagramEditor(diagramFile);
-            }
-        }
-        catch (InterruptedException e)
-        {
-            RequirementCorePlugin.log(e);
-        }
-        monitor.worked(1);
-
-        // 3) Delete the temporary model
+        // Delete the temporary model
         monitor.subTask("deleting temporary file");
         Resource toDelete = RequirementUtils.getResource(mergePath.addFileExtension(MODEL_EXTENSION));
         RequirementUtils.deleteResource(toDelete);
         monitor.worked(1);
     }
 
-    /**
-     * 
-     * Processes the ATL transformation to create the requirement model.
-     * 
-     * @param source : IFile to the ttm source model
-     * @param dest : IFile to the requirement destination model
-     */
-    private void transformation(IFile source, IFile dest)
-    {
-        TtmToReqImportService service;
-
-        Map<String, Object> parameters = new HashMap<String, Object>();
-
-        // The absolute path to the ttm model
-        String inPath = source.getLocation().toOSString();
-
-        // The requirement destination model
-        String outPath = dest.getName();
-
-        // The workspace destination
-        IPath path = dest.getParent().getFullPath(); // destination dans le workspace
-
-        parameters.put("IN", inPath);
-        parameters.put("OUT", outPath);
-        parameters.put("Path", path);
-
-        service = new TtmToReqImportService();
-        service.serviceRun(parameters);
-    }
 }
