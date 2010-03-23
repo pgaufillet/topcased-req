@@ -7,7 +7,12 @@ Bundle-Activator: org.topcased.requirement.sam.RequirementSamPlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.topcased.requirement.core,
- org.topcased.modeler.sam
+ org.topcased.modeler.sam,
+ fr.obeo.acceleo.ecore,
+ fr.obeo.acceleo.gen,
+ fr.obeo.acceleo.tools.ui,
+ fr.obeo.acceleo.gen.ui,
+ org.eclipse.ui.editors
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: %providerName

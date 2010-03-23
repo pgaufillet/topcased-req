@@ -38,7 +38,7 @@ public class RequirementTransformationManager extends AbstractExtensionManager
     static final String ATT_CLASS = "class"; //$NON-NLS-1$
 
     /** Value of the extension point attribute corresponding to the value given to the file extension. */
-    static final String ATT_FILE_EXTENSION = "extension"; //$NON-NLS-1$
+    static final String ATT_FILE_EXTENSIONS = "extensions"; //$NON-NLS-1$
 
     /** the shared instance */
     private static RequirementTransformationManager manager;
@@ -81,9 +81,13 @@ public class RequirementTransformationManager extends AbstractExtensionManager
         {
             try
             {
-                String fileExtension = confElt.getAttribute(ATT_FILE_EXTENSION);
+                String fileExtensions = confElt.getAttribute(ATT_FILE_EXTENSIONS);
                 IRequirementTransformation transformation = (IRequirementTransformation) confElt.createExecutableExtension(ATT_CLASS);
-                mapClass.put(fileExtension, transformation);
+                String[] ext = fileExtensions.split("[\\s]*,[\\s]*");
+                for(String str : ext)
+                {
+                   mapClass.put(str, transformation);
+                }
             }
             catch (CoreException e)
             {
@@ -103,8 +107,12 @@ public class RequirementTransformationManager extends AbstractExtensionManager
         IConfigurationElement[] elements = extension.getConfigurationElements();
         for (IConfigurationElement confElt : elements)
         {
-            String elt = confElt.getAttribute(ATT_FILE_EXTENSION);
-            mapClass.remove(elt);
+            String elts = confElt.getAttribute(ATT_FILE_EXTENSIONS);
+            String[] ext = elts.split("[\\s]*,[\\s]*");
+            for(String str : ext)
+            {
+                mapClass.remove(str);
+            }
         }
 
     }

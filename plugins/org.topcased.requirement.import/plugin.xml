@@ -67,7 +67,8 @@
          point="org.topcased.requirement.core.requirementTransformation">
       <transformation
             class="org.topcased.requirement.service.TTM2RequirementTransformation"
-            extension="ttm">
+            extensions="ttm, xml"
+            id="TTM2RequirementTransformation">
       </transformation>
    </extension>
 

@@ -49,10 +49,17 @@
 
    <element name="transformation">
       <complexType>
-         <attribute name="extension" type="string" use="required">
+         <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
-                  The source file extension on wich the transformation is enabled
+                  Unique identifier for this transformation
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="extensions" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Source file extensions on wich the transformation is enabled  (delimited by comma)
                </documentation>
             </annotation>
          </attribute>

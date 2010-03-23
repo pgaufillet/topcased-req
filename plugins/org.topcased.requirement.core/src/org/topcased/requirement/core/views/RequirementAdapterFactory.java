@@ -48,6 +48,7 @@ public class RequirementAdapterFactory implements IAdapterFactory
                 Resource targetModel = policy.getLinkedTargetModel(modeler.getEditingDomain().getResourceSet());
                 if (targetModel != null)
                 {
+                    RequirementUtils.loadRequirementModel(targetModel.getURI(), modeler.getEditingDomain());
                     return new UpstreamPage();
                 }
             }
@@ -79,6 +80,7 @@ public class RequirementAdapterFactory implements IAdapterFactory
                 Resource targetModel = policy.getLinkedTargetModel(modeler.getEditingDomain().getResourceSet());
                 if (targetModel != null)
                 {                    
+                    RequirementUtils.loadRequirementModel(targetModel.getURI(), modeler.getEditingDomain());
                     return new CurrentPage();
                 }
             }

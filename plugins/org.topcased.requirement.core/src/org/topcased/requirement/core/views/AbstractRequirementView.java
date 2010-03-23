@@ -33,7 +33,6 @@ import org.topcased.requirement.core.extensions.RequirementIdentifierDefinitionM
 import org.topcased.requirement.core.preferences.NamingRequirementPreferenceHelper;
 import org.topcased.requirement.core.utils.DefaultAttachmentPolicy;
 import org.topcased.requirement.core.utils.DefaultRequirementIdentifierDefinition;
-import org.topcased.requirement.core.utils.RequirementUtils;
 
 
 /**
@@ -206,7 +205,6 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
                     Resource targetModel = policy.getLinkedTargetModel(modeler.getEditingDomain().getResourceSet());
                     if (targetModel != null)
                     {
-                        RequirementUtils.loadRequirementModel(targetModel.getURI(), modeler.getEditingDomain());
                         if (RequirementCorePlugin.getCreateDropListener() == true)
                         {
                             RequirementCorePlugin.setCreateDropListener(false);

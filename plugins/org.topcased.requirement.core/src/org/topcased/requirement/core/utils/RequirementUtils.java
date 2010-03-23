@@ -49,6 +49,7 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.topcased.facilities.util.EditorUtil;
+import org.topcased.modeler.diagrams.model.Diagrams;
 import org.topcased.modeler.editor.Modeler;
 import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.AttributeAllocate;
@@ -61,7 +62,6 @@ import org.topcased.requirement.SpecialChapter;
 import org.topcased.requirement.TrashChapter;
 import org.topcased.requirement.UpstreamModel;
 import org.topcased.requirement.core.RequirementCorePlugin;
-import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
 
 import ttm.Requirement;
 
@@ -336,10 +336,10 @@ public final class RequirementUtils
      * @param file The model path
      * @return the resource
      */
-    public static Resource getResource(IPath file)
+    public static Resource getResource(IPath path)
     {
         ResourceSet resourceSet = new ResourceSetImpl();
-        URI fileURI = URI.createPlatformResourceURI(file.toString(), true);
+        URI fileURI = URI.createPlatformResourceURI(path.toString(), true);
         return resourceSet.getResource(fileURI, true);
     }
 
@@ -494,31 +494,32 @@ public final class RequirementUtils
     }
 
     /**
-     * FIXME : find a better way to get the model from the di
+     * Gets a set of models loaded in the Topcased editing domain.
      * 
-     * Gets a set of target models loaded in the Topcased editing domain.
-     * 
-     * @return all target models loaded as a set of Resources.
+     * @return all models loaded as a set of Resources.
      */
     public static Set<Resource> getTargetModels()
     {
         Set<Resource> toReturn = new HashSet<Resource>();
         Modeler modeler = Utils.getCurrentModeler();
         EditingDomain editingDomain = modeler.getEditingDomain();
-        String fileExtension = ModelAttachmentPolicyManager.getInstance().getFileExtension(editingDomain);
         for (Resource resource : editingDomain.getResourceSet().getResources())
         {
-            if (fileExtension != null)
+            if (resource.getURI().fileExtension().endsWith("di"))
             {
-                if (fileExtension.equals(resource.getURI().fileExtension())) //$NON-NLS-1$
+                String uri = null;
+                EObject root = resource.getContents().get(0);
+                if (root instanceof Diagrams)
                 {
-                    toReturn.add(resource);
+                    Diagrams di = (Diagrams) root;
+                    uri = EcoreUtil.getURI(di.getModel()).trimFragment().toString();
                 }
-            }
-            else if (resource.getURI().fileExtension().endsWith("di"))
-            {
-                toReturn.add(editingDomain.getResourceSet().getResource(
-                        URI.createURI(resource.getURI().toString().replaceFirst("[a-zA-Z_0-9]+di", resource.getURI().fileExtension().replace("di", "")), true), false));
+                ResourceSet resourceSet = new ResourceSetImpl();
+                Resource targetModel = resourceSet.getResource(URI.createURI(uri), true);
+                if (targetModel != null)
+                {
+                    toReturn.add(targetModel);
+                }
             }
         }
         return toReturn;
@@ -669,7 +670,7 @@ public final class RequirementUtils
             {
                 if(stillExistInModel(setting.getEObject()))
                 {
-                return (HierarchicalElement) setting.getEObject();
+                    return (HierarchicalElement) setting.getEObject();
                 }
             }
         }

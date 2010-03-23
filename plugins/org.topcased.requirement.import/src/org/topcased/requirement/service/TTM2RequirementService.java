@@ -43,9 +43,11 @@ import ttm.TtmPackage;
 public class TTM2RequirementService implements IService
 {
     // Constante defining namespace
+    public static final String ID = "org.topcased.requirement.service.import";
+
     private static final String XMLNS_EXTENSION = "xmlns";
 
-    public static final String ID = "org.topcased.requirement.service.import";
+    private static final String TRANSFO_ID = "org.topcased.requirement.transformation.import";
 
     /**
      * @see org.topcased.bus.core.IService#serviceRun(java.util.Map)
@@ -68,7 +70,7 @@ public class TTM2RequirementService implements IService
             models.put("OUT", outpath.toOSString());
 
             HashMap<String, Object> serviceParameters = new HashMap<String, Object>();
-            serviceParameters.put("Id", ID);
+            serviceParameters.put("Id", TRANSFO_ID);
             serviceParameters.put("Models", models);
             serviceParameters.put("ProjectPath", path);
             serviceParameters.put("IsXml", new Boolean(false));

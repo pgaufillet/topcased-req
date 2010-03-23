@@ -18,7 +18,7 @@
       </annotation>
       <complexType>
          <sequence minOccurs="1" maxOccurs="unbounded">
-            <element ref="metamodel"/>
+            <element ref="definition"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -47,8 +47,15 @@
       </complexType>
    </element>
 
-   <element name="metamodel">
+   <element name="definition">
       <complexType>
+         <attribute name="id" type="string" use="required">
+            <annotation>
+               <documentation>
+                  Unique identifier for this definition
+               </documentation>
+            </annotation>
+         </attribute>
          <attribute name="uri" type="string" use="required">
             <annotation>
                <documentation>

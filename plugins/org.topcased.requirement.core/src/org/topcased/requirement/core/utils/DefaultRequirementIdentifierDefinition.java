@@ -128,6 +128,7 @@ public class DefaultRequirementIdentifierDefinition implements IRequirementIdent
         
         //Default key word map
         alreadyCreatedMap.put("{project}", ((RequirementProject) requirement.getContents().get(0)).getIdentifier());
+        alreadyCreatedMap.put("{resource name}", requirement.getURI().lastSegment().replace(".requirement", ""));
         alreadyCreatedMap.put("{hierarchical element}", getHierarchicalElementIdentifier(ComputeRequirementIdentifier.INSTANCE.getIdentifierHierarchicalElement()));
         alreadyCreatedMap.put("{upstream requirement ident}", ComputeRequirementIdentifier.INSTANCE.getIdentifierUpstreamIdent());
         alreadyCreatedMap.put("{number}", nf.format(ComputeRequirementIdentifier.INSTANCE.getIdentifierRequirementIndex()));
@@ -139,6 +140,7 @@ public class DefaultRequirementIdentifierDefinition implements IRequirementIdent
     {
         List<String> keyWords = new ArrayList<String>();
         keyWords.add("{project}");
+        keyWords.add("{resource name}");
         keyWords.add("{hierarchical element}");
         keyWords.add("{upstream requirement ident}");
         keyWords.add("{number}");

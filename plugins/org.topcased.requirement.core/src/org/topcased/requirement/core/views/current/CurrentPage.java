@@ -128,30 +128,30 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
          */
         public void selectionChanged(SelectionChangedEvent event)
         {
-            if (handleAutomaticReselection(event))
-            {
-                // Attributes will be reseted in new selection change.
-                return;
-            }
-            // Reset attributes and handle new selection.
-            previouslySelectedRequirement = null;
-            hierarchicalElementToFocusAfterRequirementDeletion = null;
-            if (!event.getSelection().isEmpty() && event.getSelection() instanceof IStructuredSelection)
-            {
+//            if (handleAutomaticReselection(event))
+//            {
+//                // Attributes will be reseted in new selection change.
+//                return;
+//            }
+//            // Reset attributes and handle new selection.
+//            previouslySelectedRequirement = null;
+//            hierarchicalElementToFocusAfterRequirementDeletion = null;
+//            if (!event.getSelection().isEmpty() && event.getSelection() instanceof IStructuredSelection)
+//            {
                 selection = (IStructuredSelection) event.getSelection();
                 upAction.setSelection(selection);
                 downAction.setSelection(selection);
-                if (selection.getFirstElement() instanceof Requirement)
-                {
-                    // If we select a requirement we save its container to be able to focus it if the requirement is
-                    // deleted
-                    previouslySelectedRequirement = (Requirement) selection.getFirstElement();
-                    if (previouslySelectedRequirement.eContainer() != null && previouslySelectedRequirement.eContainer() instanceof HierarchicalElement)
-                    {
-                        hierarchicalElementToFocusAfterRequirementDeletion = (HierarchicalElement) previouslySelectedRequirement.eContainer();
-                    }
-                }
-            }
+//                if (selection.getFirstElement() instanceof Requirement)
+//                {
+//                    // If we select a requirement we save its container to be able to focus it if the requirement is
+//                    // deleted
+//                    previouslySelectedRequirement = (Requirement) selection.getFirstElement();
+//                    if (previouslySelectedRequirement.eContainer() != null && previouslySelectedRequirement.eContainer() instanceof HierarchicalElement)
+//                    {
+//                        hierarchicalElementToFocusAfterRequirementDeletion = (HierarchicalElement) previouslySelectedRequirement.eContainer();
+//                    }
+//                }
+//            }
         }
 
         /**
@@ -169,10 +169,10 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
             {
                 if (!(hierarchicalElementToFocusAfterRequirementDeletion.getRequirement().isEmpty()))
                 {
-                // When a requirement is deleted from this page, we set focus on its container.
-                CurrentPage.this.getViewer().setSelection(new StructuredSelection(hierarchicalElementToFocusAfterRequirementDeletion));
-                // New selection will not produce another re-selection since it is not empty (Infinite loop avoided).
-                return true;
+                    // When a requirement is deleted from this page, we set focus on its container.
+                    CurrentPage.this.getViewer().setSelection(new StructuredSelection(hierarchicalElementToFocusAfterRequirementDeletion));
+                    // New selection will not produce another re-selection since it is not empty (Infinite loop avoided).
+                    return true;
                 }
             }
             return false;
@@ -341,6 +341,18 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
 
     }
 
+    /**
+     * @see org.topcased.sam.requirement.core.views.AbstractRequirementPage#dispose()
+     */
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        
+        // Fix [#3087] remove the listener set on the Problem view
+        getSite().getPage().removeSelectionListener(IPageLayout.ID_PROBLEM_VIEW, this);
+    }
+    
     /**
      * Creates the tool bar for the requirement view
      */
