@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright (c) 2009 TOPCASED consortium.
+ * Copyright (c) 2009,2010 TOPCASED consortium.
  * 
  * All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse
  * Public License v1.0 which accompanies this distribution, and is available at
@@ -12,8 +12,8 @@
 package org.topcased.requirement.sam.dialogs;
 
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -23,27 +23,28 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.topcased.facilities.resources.SharedImageHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.sam.Flow;
 import org.topcased.sam.FlowGroup;
 
 /**
- * This dialog allows to choose the target where requirement(s) should be attached. It can be either on a {@link Flow} or
- * on a {@link FlowGroup}.<br>
+ * This dialog allows to choose the target where requirement(s) should be attached. It can be either on a {@link Flow}
+ * or on a {@link FlowGroup}.<br>
  * 
  * Creation : 21 January 2009<br>
+ * Updated : 25 March 2010<br>
  * 
  * @author <a href="mailto:sebastien.gabel@c-s.fr">Sebastien GABEL</a>
  * @since Topcased 2.4.0
  */
-public class ChooseTargetDialog extends Dialog
+public class ChooseTargetDialog extends TitleAreaDialog
 {
     /** eObject selected */
     private Flow flow;
 
-    /** This adaper factory */
+    /** This adapter factory */
     private AdapterFactoryLabelProvider adapter;
 
     /** The result to return 0 = Flow, 1 = FlowGroup */
@@ -73,6 +74,28 @@ public class ChooseTargetDialog extends Dialog
     }
 
     /**
+     * @see org.eclipse.jface.window.Window#getShellStyle()
+     */
+    @Override
+    protected int getShellStyle()
+    {
+        return super.getShellStyle() | SWT.RESIZE | SWT.MIN | SWT.MAX;
+    }
+
+    /**
+     * @see org.eclipse.jface.dialogs.TitleAreaDialog#createContents(org.eclipse.swt.widgets.Composite)
+     */
+    @Override
+    protected Control createContents(Composite parent)
+    {
+        Control control = super.createContents(parent);
+        setTitle("Attachment Operation");
+        setTitleImage(SharedImageHelper.getTopcasedDialogImage());
+        setMessage("Several potential target container have been detected, choose one of them for this drop operation."); 
+        return control;
+    }
+
+    /**
      * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
      */
     @Override
@@ -82,13 +105,10 @@ public class ChooseTargetDialog extends Dialog
         composite.setLayout(new GridLayout());
         composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-        final Label label = new Label(composite, SWT.NONE);
-        label.setText("Select a target for the drop operation.");
-
-        final Group group = new Group(composite, SWT.BORDER);
+        final Group group = new Group(composite, SWT.SHADOW_ETCHED_OUT);
         group.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         group.setLayout(new GridLayout());
-        group.setText("Attach on : ");
+        group.setText("Attach to container : ");
 
         final Button flowOption = new Button(group, SWT.RADIO);
         flowOption.setText(getFlowLabel());
@@ -148,15 +168,14 @@ public class ChooseTargetDialog extends Dialog
         FlowGroup flowGroup = flow.getGroup();
         return adapter != null ? adapter.getText(flowGroup) : "FlowGroup";
     }
-    
-    
+
     /**
      * @see org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
      */
     @Override
-    protected void createButtonsForButtonBar(Composite parent) {
+    protected void createButtonsForButtonBar(Composite parent)
+    {
         // just create an OK button
-        createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL,
-                true);
+        createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
     }
 }
