@@ -17,13 +17,16 @@ import org.topcased.requirement.sam.views.preview.IPreviewPage;
 import org.topcased.requirement.sam.views.preview.PreviewPage;
 
 /**
- * A factory for creating Adapter objects.
+ * A factory for creating adapter related to Preview view.
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  */
 public class PreviewViewAdapterFactory implements IAdapterFactory
 {
 
+    /**
+     * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
+     */
     @SuppressWarnings("unchecked")
     public Object getAdapter(Object adaptableObject, Class adapterType)
     {
@@ -35,6 +38,9 @@ public class PreviewViewAdapterFactory implements IAdapterFactory
     }
 
     
+    /**
+     * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
+     */
     @SuppressWarnings("unchecked")
     public Class[] getAdapterList()
     {
