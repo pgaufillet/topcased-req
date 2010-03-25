@@ -60,15 +60,15 @@ public class DeletePortCommandResolver extends AdditionalCommand<DeletePortComma
         Collection<EObject> selected = new ArrayList<EObject>();
         for (DeletePortCommand deleteCommand : deleteCommands)
         {
-            if (deleteCommand.getRemovedFlow() != null)
+            if (deleteCommand.getDeletedFlow() != null)
             {
-                selected.add(deleteCommand.getRemovedFlow());
-                EList<Flow> flows = deleteCommand.getRemovedFlow().getGroup().getFlows();
+                selected.add(deleteCommand.getDeletedFlow());
+                EList<Flow> flows = deleteCommand.getDeletedFlow().getGroup().getFlows();
                 if (flows.size() < 2)
                 {
-                    selected.add(deleteCommand.getRemovedFlowGroup());
+                    selected.add(deleteCommand.getDeletedFlowGroup());
                 }
-                EMFtoGEFCommandWrapper deleteCmd = new EMFtoGEFCommandWrapper(new RemoveHierarchicalElementCommand( TopcasedAdapterFactoryEditingDomain.getEditingDomainFor(deleteCommand.getRemovedFlow()), selected));
+                EMFtoGEFCommandWrapper deleteCmd = new EMFtoGEFCommandWrapper(new RemoveHierarchicalElementCommand( TopcasedAdapterFactoryEditingDomain.getEditingDomainFor(deleteCommand.getDeletedFlow()), selected));
                 deleteCmd.execute();
                 commands.put(deleteCommand, deleteCmd);
             }

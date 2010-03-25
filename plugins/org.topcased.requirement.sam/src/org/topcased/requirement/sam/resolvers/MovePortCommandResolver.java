@@ -60,9 +60,9 @@ public class MovePortCommandResolver extends AdditionalCommand<MovePortCommand>
         Collection<EObject> selected = new ArrayList<EObject>();
         for (MovePortCommand moveCommand : moveCommands)
         {
-            if (moveCommand.getdeletedFlow() != null)
+            if (moveCommand.getDeletedFlow() != null)
             {
-                selected.add(moveCommand.getdeletedFlow());
+                selected.add(moveCommand.getDeletedFlow());
                 
                 //The flow has already been deleted so we can't retreive his editing domain, that s why we call the modeler.
                 EditingDomain ed = (EditingDomain) super.getModeler().getEditingDomain();
