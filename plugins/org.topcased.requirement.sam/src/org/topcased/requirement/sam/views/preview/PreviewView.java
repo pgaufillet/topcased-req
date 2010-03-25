@@ -48,6 +48,7 @@ public class PreviewView extends AbstractRequirementView implements ISelectionCh
     /**
      * @see org.eclipse.ui.part.PageBookView#getAdapter(java.lang.Class)
      */
+    @SuppressWarnings("unchecked")
     @Override
     public Object getAdapter(Class key)
     {

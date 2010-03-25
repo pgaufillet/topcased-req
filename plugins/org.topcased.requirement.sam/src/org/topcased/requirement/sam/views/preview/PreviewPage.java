@@ -245,10 +245,11 @@ public class PreviewPage extends Page implements IPreviewPage
                     do
                     {
                         HierarchicalElement hierarchicalElementFor = RequirementUtils.getHierarchicalElementFor(currentSystem);
-                        if(hierarchicalElementFor != null){  
+                        if (hierarchicalElementFor != null)
+                        {
                             mapReqTexT.remove(hierarchicalElementFor);
                         }
-                        //RequirementUtils.getHierarchicalElementFor(currentEObject)
+                        // RequirementUtils.getHierarchicalElementFor(currentEObject)
                         currentSystem = currentSystem.eContainer();
                     }
                     while (currentSystem instanceof System && currentSystem != EcoreUtil.getRootContainer(currentSystem));
@@ -262,7 +263,7 @@ public class PreviewPage extends Page implements IPreviewPage
                     {
                         previousSelectionObject = null;
                         evalEObject = null;
-                    }                    
+                    }
                 }
             }
             else if (notification.getEventType() == Notification.REMOVE || (notification.getEventType() == Notification.SET && notification.getNewValue() == null))
@@ -285,7 +286,8 @@ public class PreviewPage extends Page implements IPreviewPage
                             hierarchicalElementToForceRefresh.add(hierarchicalElementToFocusAfter);
                         }
                         hierarchicalTemp = hierarchicalTemp.eContainer();
-                    }while(!(hierarchicalTemp instanceof RequirementProject));
+                    }
+                    while (!(hierarchicalTemp instanceof RequirementProject));
                 }
                 else
                 {
@@ -309,7 +311,8 @@ public class PreviewPage extends Page implements IPreviewPage
                     Object element = currentRequirementViewSelection.getFirstElement();
                     if ((notification.getEventType() == Notification.ADD || notification.getEventType() == Notification.MOVE) && notification.getNewValue() instanceof Requirement)
                     {
-                        // Refresh when you add a new requirement to a system by drag and drop from the Upstream Requirement view
+                        // Refresh when you add a new requirement to a system by drag and drop from the Upstream
+                        // Requirement view
                         EObject hierarchicalTemp = ((Requirement) notification.getNewValue()).eContainer();
                         do
                         {
@@ -322,12 +325,14 @@ public class PreviewPage extends Page implements IPreviewPage
                             else
                             {
                                 hierarchicalElementToForceRefresh.add((HierarchicalElement) ((Requirement) notification.getNewValue()).eContainer());
-                                if(hierarchicalElementToFocusAfter != null && !((HierarchicalElement) ((Requirement) notification.getNewValue()).eContainer()).equals(hierarchicalElementToFocusAfter)){ 
+                                if (hierarchicalElementToFocusAfter != null && !((HierarchicalElement) ((Requirement) notification.getNewValue()).eContainer()).equals(hierarchicalElementToFocusAfter))
+                                {
                                     hierarchicalElementToForceRefresh.add(hierarchicalElementToFocusAfter);
                                 }
                             }
-                        hierarchicalTemp = hierarchicalTemp.eContainer();
-                        }while(!(hierarchicalTemp instanceof RequirementProject));
+                            hierarchicalTemp = hierarchicalTemp.eContainer();
+                        }
+                        while (!(hierarchicalTemp instanceof RequirementProject));
                     }
                     else if (element instanceof EObject)
                     {
@@ -391,9 +396,9 @@ public class PreviewPage extends Page implements IPreviewPage
                     TreeSelection treeSelection = (TreeSelection) PreviewPage.this.getCurrentRequirementPage().getViewer().getSelection();
                     setCurrentRequirementViewSelection((TreeSelection) PreviewPage.this.getCurrentRequirementPage().getViewer().getSelection());
                     Object firstElement = treeSelection.getFirstElement();
-                    if(firstElement instanceof Requirement)
+                    if (firstElement instanceof Requirement)
                     {
-                        firstElement = ((Requirement)firstElement).eContainer();
+                        firstElement = ((Requirement) firstElement).eContainer();
                     }
                     if (hierarchicalElementToForceRefresh.contains(firstElement))
                     {
@@ -606,7 +611,7 @@ public class PreviewPage extends Page implements IPreviewPage
         Int2 result = currentPos;
 
         if (documentSourceViewer.getSelection() != null)
-        {        
+        {
             TextSelection selection = (TextSelection) documentSourceViewer.getSelection();
             for (int i = 0; i < positions.length && result == null; i++)
             {
@@ -654,7 +659,7 @@ public class PreviewPage extends Page implements IPreviewPage
         StyledText widget = viewer.getTextWidget();
         widget.setRedraw(false);
         documentSourceViewer.setSelectedRange(pos.b(), pos.e() - pos.b());
-        
+
         selectAndReveal(pos.b(), pos.e() - pos.b());
         widget.setRedraw(true);
     }
@@ -734,14 +739,14 @@ public class PreviewPage extends Page implements IPreviewPage
     private ENode evaluate(EObject inputObject, LaunchManager mode) throws FactoryException, ENodeException
     {
         ENode evaluation = mapReqTexT.get(inputObject);
-//        if (inputObject instanceof HierarchicalElement)
-//        {
-//            HierarchicalElement elt = (HierarchicalElement) inputObject;
-//            for (Requirement req : elt.getRequirement())
-//            {
-//                
-//            }
-//        }
+        // if (inputObject instanceof HierarchicalElement)
+        // {
+        // HierarchicalElement elt = (HierarchicalElement) inputObject;
+        // for (Requirement req : elt.getRequirement())
+        // {
+        //                
+        // }
+        // }
         if (evaluation == null)
         {
             Template template = settings.getScript().getRootTemplate(inputObject, true);
@@ -805,7 +810,7 @@ public class PreviewPage extends Page implements IPreviewPage
         {
             hierarchicalElementToFocusAfter = (HierarchicalElement) ((Requirement) selectionObject).eContainer();
         }
-        if (selectionObject instanceof HierarchicalElement && ((HierarchicalElement) selectionObject).eContainer() instanceof RequirementProject )
+        if (selectionObject instanceof HierarchicalElement && ((HierarchicalElement) selectionObject).eContainer() instanceof RequirementProject)
         {
             hierarchicalElementToFocusAfter = (HierarchicalElement) selectionObject;
         }
@@ -1146,7 +1151,7 @@ public class PreviewPage extends Page implements IPreviewPage
 
             int previousDistance = Integer.MAX_VALUE;
 
-            Iterator e = model.getAnnotationIterator();
+            Iterator< ? > e = model.getAnnotationIterator();
             while (e.hasNext())
             {
                 Object next = e.next();
