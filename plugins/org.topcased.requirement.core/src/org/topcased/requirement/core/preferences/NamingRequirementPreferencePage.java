@@ -14,7 +14,6 @@
 package org.topcased.requirement.core.preferences;
 
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
@@ -141,10 +140,12 @@ public class NamingRequirementPreferencePage extends AbstractTopcasedPreferenceP
         // Algorithm Composite
         final Composite algorithmComposite = new Composite(mainGroup, SWT.NONE);
         final GridLayout algorithmCompoLayout = new GridLayout(2, false);
+        final GridData gd = new GridData(SWT.FILL, SWT.NONE, true, false);
+        gd.horizontalSpan = 2;
         algorithmCompoLayout.marginHeight = 0;
         algorithmCompoLayout.marginWidth = 0;
         algorithmComposite.setLayout(algorithmCompoLayout);
-        algorithmComposite.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+        algorithmComposite.setLayoutData(gd);
 
         // Algorithm label
         Label algoritmLabel = new Label(algorithmComposite, SWT.NONE);
@@ -152,12 +153,11 @@ public class NamingRequirementPreferencePage extends AbstractTopcasedPreferenceP
 
         // Algorithm combo
         algorithmCombo = new Combo(algorithmComposite, SWT.NULL);
-        Set<String> allAlgorithms = RequirementCountingAlgorithmManager.getInstance().getAllAlgorithm();
-        for (int i=0; i<allAlgorithms.size(); i++)
+        algorithmCombo.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+        for (String key  : RequirementCountingAlgorithmManager.getInstance().getAllAlgorithm())
         {
-            algorithmCombo.add((String)allAlgorithms.toArray()[i]);
+            algorithmCombo.add(key);
         }
-//        algorithmCombo.addSelectionListener(new ComboSelectionListener());
 
         loadPreferences();
 
@@ -284,35 +284,4 @@ public class NamingRequirementPreferencePage extends AbstractTopcasedPreferenceP
             }
         }
     }
-
-//    /**
-//     * Listener for the Algorithm Combo
-//     * 
-//     */
-//    private class ComboSelectionListener implements SelectionListener
-//    {
-//
-//        public void widgetSelected(SelectionEvent e)
-//        {
-//            System.out.println("Selected index: " + algorithmCombo.getSelectionIndex() + ", selected item: " + algorithmCombo.getItem(algorithmCombo.getSelectionIndex())
-//                    + ", text content in the text field: " + algorithmCombo.getText());
-//        }
-//
-//        public void widgetDefaultSelected(SelectionEvent e)
-//        {
-//            System.out.println("Default selected index: " + algorithmCombo.getSelectionIndex() + ", selected item: "
-//                    + (algorithmCombo.getSelectionIndex() == -1 ? "<null>" : algorithmCombo.getItem(algorithmCombo.getSelectionIndex())) + ", text content in the text field: "
-//                    + algorithmCombo.getText());
-//            String text = algorithmCombo.getText();
-//            if (algorithmCombo.indexOf(text) < 0)
-//            { // Not in the list yet.
-//                algorithmCombo.add(text);
-//                // Re-sort
-//                String[] items = algorithmCombo.getItems();
-//                Arrays.sort(items);
-//                algorithmCombo.setItems(items);
-//            }
-//        }
-//
-//    }
 }
