@@ -14,9 +14,11 @@ package org.topcased.requirement.core.providers;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
-import org.eclipse.jface.resource.StringConverter;
 import org.eclipse.jface.viewers.IFontProvider;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.widgets.Display;
 import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
@@ -47,10 +49,32 @@ public class UpstreamRequirementLabelProvider extends AdapterFactoryLabelProvide
     public UpstreamRequirementLabelProvider(AdapterFactory adapterFactory)
     {
         super(adapterFactory);
-        initialFont = Utils.getFont(StringConverter.asFontData("Sans-regular-10")); //$NON-NLS-1$
-        boldItalicFont = Utils.getFont(StringConverter.asFontData("Sans-bold italic-10")); //$NON-NLS-1$
+        
+        FontData[] initialFontData = getStyledFont(Display.getCurrent().getSystemFont(), SWT.NONE);
+        FontData[] boldItalicFontData = getStyledFont(Display.getCurrent().getSystemFont(), SWT.BOLD | SWT.ITALIC);
+        
+        initialFont = Utils.getFont(initialFontData[0]); //$NON-NLS-1$
+        boldItalicFont = Utils.getFont(boldItalicFontData[0]); //$NON-NLS-1$
     }
 
+    /**
+     * Get a styled font
+     * 
+     * @param originalFont
+     * @param style
+     * 
+     * @return the font
+     */
+    private FontData[] getStyledFont(Font originalFont, int style)
+    {
+        FontData[] fontData = originalFont.getFontData();
+        for (int i = 0; i < fontData.length; i++)
+        {
+            fontData[i].setStyle(fontData[i].getStyle() | style);
+        }
+        return fontData;
+    }
+    
     /**
      * @see org.eclipse.jface.viewers.IFontProvider#getFont(java.lang.Object)
      */
