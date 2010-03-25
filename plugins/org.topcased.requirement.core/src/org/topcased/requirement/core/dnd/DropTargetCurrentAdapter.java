@@ -52,12 +52,11 @@ import org.topcased.requirement.SpecialChapter;
 import org.topcased.requirement.UntracedChapter;
 import org.topcased.requirement.core.Messages;
 import org.topcased.requirement.core.RequirementCorePlugin;
-import org.topcased.requirement.core.extensions.IRequirementIdentifierDefinition;
-import org.topcased.requirement.core.extensions.RequirementIdentifierDefinitionManager;
-import org.topcased.requirement.core.utils.DefaultRequirementIdentifierDefinition;
+import org.topcased.requirement.core.extensions.IRequirementCountingAlgorithm;
+import org.topcased.requirement.core.extensions.RequirementCountingAlgorithmManager;
+import org.topcased.requirement.core.preferences.NamingRequirementPreferenceHelper;
 import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
-import org.topcased.requirement.core.views.AddRequirementMarker;
 import org.topcased.requirement.core.views.current.CurrentPage;
 import org.topcased.requirement.core.views.current.CurrentRequirementView;
 
@@ -391,23 +390,8 @@ public class DropTargetCurrentAdapter extends EditingDomainViewerDropAdapter
      */
     private void addUpstreamToHierarchicalElementCommand(Requirement upstreamReq, HierarchicalElement hierarchicalElt)
     {
-        // handle the computing of the next index stored at the hierarchical level
-        long index = 0;
-        IRequirementIdentifierDefinition definition = RequirementIdentifierDefinitionManager.getInstance().getIdentifierDefinition(domain);
-        
-        if (definition!=null)
-        {
-            index = definition.increaseIndexWhenCreateRequirement(hierarchicalElt, definition.getCurrentIndex(hierarchicalElt));
-        }
-        else
-        {
-            index = DefaultRequirementIdentifierDefinition.getInstance().increaseIndexWhenCreateRequirement(null,DefaultRequirementIdentifierDefinition.getInstance().getCurrentIndex(null));  
-        }
-        
-        Integer pos = AddRequirementMarker.eINSTANCE.computeIndex(hierarchicalElt);
-        CurrentRequirement current = RequirementHelper.INSTANCE.create(hierarchicalElt, upstreamReq, index);
-        Command addCmd = AddCommand.create(domain, hierarchicalElt, RequirementPackage.eINSTANCE.getHierarchicalElement_Requirement(), current, pos);
-        getCommand().appendAndExecute(addCmd);
+        //Create the requirement
+        CurrentRequirement current = RequirementHelper.INSTANCE.create(hierarchicalElt, upstreamReq, getCommand());
         toSelect.add(current);
     }
 
@@ -465,24 +449,17 @@ public class DropTargetCurrentAdapter extends EditingDomainViewerDropAdapter
     {
         if (source instanceof CurrentRequirement)
         {
-            long nextIndex = 0;
             CurrentRequirement currentReq = (CurrentRequirement) source;
-            IRequirementIdentifierDefinition definition = RequirementIdentifierDefinitionManager.getInstance().getIdentifierDefinition(domain);
-            
-            if (definition!=null)
-            {
-                nextIndex = definition.resetIndexWhenCreateNewContainer(target, definition.getCurrentIndex(target));
-                nextIndex = definition.increaseIndexWhenCreateRequirement(target, nextIndex);
-            }
-            else
-            {
-                nextIndex = DefaultRequirementIdentifierDefinition.getInstance().increaseIndexWhenCreateRequirement(null,DefaultRequirementIdentifierDefinition.getInstance().getCurrentIndex(null));
-            }
-
-            
+            IRequirementCountingAlgorithm algorithm = RequirementCountingAlgorithmManager.getInstance().getCountingAlgorithm(NamingRequirementPreferenceHelper.getCurrentAlgorithm());            
+                     
             // handle the requirement renaming before drop
-            Command renameCmd = RequirementHelper.INSTANCE.renameRequirement(target, currentReq, nextIndex);
+            Command renameCmd = RequirementHelper.INSTANCE.renameRequirement(target, currentReq);
             getCommand().appendAndExecute(renameCmd);
+            
+            if (algorithm!=null)
+            {
+                algorithm.increaseIndexWhenCreateRequirement(currentReq, algorithm.getCurrentIndex(currentReq));
+            }
         }
 
         Command dndCmd = DragAndDropCommand.create(domain, target, getLocation(event), event.operations, originalOperation, Collections.singleton(source));

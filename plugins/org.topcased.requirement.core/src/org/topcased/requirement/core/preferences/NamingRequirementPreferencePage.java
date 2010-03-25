@@ -14,6 +14,7 @@
 package org.topcased.requirement.core.preferences;
 
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
@@ -24,6 +25,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
@@ -36,6 +38,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.topcased.facilities.preferences.AbstractTopcasedPreferencePage;
 import org.topcased.requirement.core.Messages;
 import org.topcased.requirement.core.RequirementCorePlugin;
+import org.topcased.requirement.core.extensions.RequirementCountingAlgorithmManager;
 
 /**
  * Manages the preference store for the Requirements naming's format
@@ -54,7 +57,7 @@ public class NamingRequirementPreferencePage extends AbstractTopcasedPreferenceP
 
     private StringFieldEditor formatRequirement;
 
-//    private Combo algorithmCombo;
+    private Combo algorithmCombo;
 
     /**
      * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
@@ -134,25 +137,26 @@ public class NamingRequirementPreferencePage extends AbstractTopcasedPreferenceP
         layoutData.widthHint = 25;
         stepText.addModifyListener(new StepTextModifyListener());
         stepText.setLayoutData(layoutData);
-//
-//        // Algorithm Composite
-//        final Composite algorithmComposite = new Composite(mainGroup, SWT.NONE);
-//        final GridLayout algorithmCompoLayout = new GridLayout(2, false);
-//        algorithmCompoLayout.marginHeight = 0;
-//        algorithmCompoLayout.marginWidth = 0;
-//        algorithmComposite.setLayout(algorithmCompoLayout);
-//        algorithmComposite.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
-//
-//        // Algorithm label
-//        Label algoritmLabel = new Label(algorithmComposite, SWT.NONE);
-//        algoritmLabel.setText(Messages.getString("NamingRequirementPreferencePage.5")); //$NON-NLS-1$
-//
-//        // Algorithm combo
-//        algorithmCombo = new Combo(algorithmComposite, SWT.NULL);
-//        for (int i = 0; i < NamingRequirementPreferenceHelper.COUNT_ALGORITHMS.length; i++)
-//        {
-//            algorithmCombo.add(NamingRequirementPreferenceHelper.COUNT_ALGORITHMS[i]);
-//        }
+
+        // Algorithm Composite
+        final Composite algorithmComposite = new Composite(mainGroup, SWT.NONE);
+        final GridLayout algorithmCompoLayout = new GridLayout(2, false);
+        algorithmCompoLayout.marginHeight = 0;
+        algorithmCompoLayout.marginWidth = 0;
+        algorithmComposite.setLayout(algorithmCompoLayout);
+        algorithmComposite.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+
+        // Algorithm label
+        Label algoritmLabel = new Label(algorithmComposite, SWT.NONE);
+        algoritmLabel.setText(Messages.getString("NamingRequirementPreferencePage.5")); //$NON-NLS-1$
+
+        // Algorithm combo
+        algorithmCombo = new Combo(algorithmComposite, SWT.NULL);
+        Set<String> allAlgorithms = RequirementCountingAlgorithmManager.getInstance().getAllAlgorithm();
+        for (int i=0; i<allAlgorithms.size(); i++)
+        {
+            algorithmCombo.add((String)allAlgorithms.toArray()[i]);
+        }
 //        algorithmCombo.addSelectionListener(new ComboSelectionListener());
 
         loadPreferences();
@@ -167,6 +171,7 @@ public class NamingRequirementPreferencePage extends AbstractTopcasedPreferenceP
     {
         formatRequirement.load();
         stepText.setText(String.valueOf(NamingRequirementPreferenceHelper.getRequirementStep()));
+        algorithmCombo.select(0);
     }
 
     /**
@@ -193,6 +198,7 @@ public class NamingRequirementPreferencePage extends AbstractTopcasedPreferenceP
     {
         storePreferences();
         NamingRequirementPreferenceHelper.setRequirementStep(stepText.getText());
+        NamingRequirementPreferenceHelper.setCurrentAlgorithm(algorithmCombo.getItem(algorithmCombo.getSelectionIndex()));
         return super.performOk();
     }
 

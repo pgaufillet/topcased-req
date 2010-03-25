@@ -25,7 +25,6 @@ import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.core.extensions.IRequirementIdentifierDefinition;
 import org.topcased.requirement.core.preferences.ComputeRequirementIdentifier;
-import org.topcased.requirement.core.preferences.NamingRequirementPreferenceHelper;
 
 /**
  * Default behavior for the requirement counting algorithm
@@ -42,9 +41,6 @@ public class DefaultRequirementIdentifierDefinition implements IRequirementIdent
 
     /** the shared instance */
     private static DefaultRequirementIdentifierDefinition definition;
-
-    /** The first increment when the root is empty */
-    private static long firstIncrement;
 
     /**
      * Private constructor
@@ -68,53 +64,6 @@ public class DefaultRequirementIdentifierDefinition implements IRequirementIdent
         return definition;
     }
 
-    /**
-     * @see org.topcased.requirement.core.extensions.IRequirementIdentifierDefinition#increaseIndexWhenCreateRequirement(org.topcased.requirement.HierarchicalElement, long)
-     */
-    public long increaseIndexWhenCreateRequirement(HierarchicalElement hierarchicalElementContainer, long index)
-    {
-        HierarchicalElement root = RequirementHelper.INSTANCE.getHierarchicalElementRoot();
-        index += NamingRequirementPreferenceHelper.getRequirementStep();
-        if (root != null)
-        {
-            if (firstIncrement == -1)
-            {
-                root.setNextReqIndex(index);
-            }
-            else
-            {
-                index = index + firstIncrement;
-                root.setNextReqIndex(index);
-                firstIncrement = -1;
-            }
-        }
-        else
-        {
-            firstIncrement = index;
-        }
-        return index;
-    }
-
-    /**
-     * @see org.topcased.requirement.core.extensions.IRequirementIdentifierDefinition#resetIndexWhenCreateNewContainer(org.topcased.requirement.HierarchicalElement, long)
-     */
-    public long resetIndexWhenCreateNewContainer(HierarchicalElement hierarchicalElementContainer, long index)
-    {
-        return index;
-    }
-
-    /**
-     * @see org.topcased.requirement.core.extensions.IRequirementIdentifierDefinition#getCurrentIndex(org.topcased.requirement.HierarchicalElement)
-     */
-    public long getCurrentIndex(HierarchicalElement hierarchicalElementContainer)
-    {
-        HierarchicalElement root = RequirementHelper.INSTANCE.getHierarchicalElementRoot();
-        if (root != null)
-        {
-            return root.getNextReqIndex();
-        }
-        return 0;
-    }
 
     public Map<String, String> addValuesToPatterns(EditingDomain editingDomain, Map<String, String> alreadyCreatedMap)
     {

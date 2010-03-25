@@ -26,9 +26,9 @@ import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.SpecialChapter;
 import org.topcased.requirement.core.Messages;
-import org.topcased.requirement.core.extensions.IRequirementIdentifierDefinition;
-import org.topcased.requirement.core.extensions.RequirementIdentifierDefinitionManager;
-import org.topcased.requirement.core.utils.DefaultRequirementIdentifierDefinition;
+import org.topcased.requirement.core.extensions.IRequirementCountingAlgorithm;
+import org.topcased.requirement.core.extensions.RequirementCountingAlgorithmManager;
+import org.topcased.requirement.core.preferences.NamingRequirementPreferenceHelper;
 import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.views.current.CurrentPage;
 
@@ -39,8 +39,6 @@ import org.topcased.requirement.core.views.current.CurrentPage;
  */
 public class CurrentRequirementPasteAction extends RequirementAbstractEMFAction
 {
-    private EditingDomain editingDomain;
-
     /**
      * Constructor
      * 
@@ -54,7 +52,6 @@ public class CurrentRequirementPasteAction extends RequirementAbstractEMFAction
         setImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
         setActionDefinitionId("org.topcased.requirement.core.pasteModelObject"); //$NON-NLS-1$
         setToolTipText(Messages.getString("CurrentRequirementPasteAction.1")); //$NON-NLS-1$
-        editingDomain = editDomain;
     }
 
     /**
@@ -81,38 +78,19 @@ public class CurrentRequirementPasteAction extends RequirementAbstractEMFAction
         if (doPaste())
         {
             Collection< ? > source = getEditingDomain().getClipboard();
-            IRequirementIdentifierDefinition definition = RequirementIdentifierDefinitionManager.getInstance().getIdentifierDefinition(editingDomain);
+            IRequirementCountingAlgorithm algorithm = RequirementCountingAlgorithmManager.getInstance().getCountingAlgorithm(NamingRequirementPreferenceHelper.getCurrentAlgorithm());
             HierarchicalElement hierarchicalElt = (HierarchicalElement) target;
-            long nextIndex = 0;
             
-            if (definition != null)
-            {
-                nextIndex = definition.getCurrentIndex(hierarchicalElt);
-            }
-            else
-            {
-                nextIndex = DefaultRequirementIdentifierDefinition.getInstance().getCurrentIndex(null);
-            }
-
             CompoundCommand compound = new CompoundCommand("Renaming moving requirements");
 
             for (Object currSource : source)
             {
-                if (currSource instanceof CurrentRequirement)
+                if (currSource instanceof CurrentRequirement && algorithm != null)
                 {
-                    if (definition != null)
-                    {
-                        nextIndex = definition.increaseIndexWhenCreateRequirement(hierarchicalElt, nextIndex);
-                    }
-                    else
-                    {
-                        // increase the next index
-                        nextIndex = DefaultRequirementIdentifierDefinition.getInstance().increaseIndexWhenCreateRequirement(hierarchicalElt, nextIndex);
-                    }
-
                     // rename the current requirement
                     CurrentRequirement requirement = (CurrentRequirement) currSource;
-                    compound.appendIfCanExecute(RequirementHelper.INSTANCE.renameRequirement(hierarchicalElt, requirement, nextIndex));
+                    compound.appendIfCanExecute(RequirementHelper.INSTANCE.renameRequirement(hierarchicalElt, requirement));
+                    algorithm.increaseIndexWhenCreateRequirement(requirement, algorithm.getCurrentIndex(requirement));
                 }
             }
 

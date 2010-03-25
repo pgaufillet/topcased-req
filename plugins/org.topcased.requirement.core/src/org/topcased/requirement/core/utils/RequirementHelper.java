@@ -42,12 +42,12 @@ import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.SpecialChapter;
 import org.topcased.requirement.TextAttribute;
 import org.topcased.requirement.core.Messages;
-import org.topcased.requirement.core.extensions.IRequirementIdentifierDefinition;
-import org.topcased.requirement.core.extensions.RequirementIdentifierDefinitionManager;
+import org.topcased.requirement.core.extensions.IRequirementCountingAlgorithm;
+import org.topcased.requirement.core.extensions.RequirementCountingAlgorithmManager;
 import org.topcased.requirement.core.preferences.ComputeRequirementIdentifier;
+import org.topcased.requirement.core.preferences.NamingRequirementPreferenceHelper;
 import org.topcased.requirement.core.views.AddRequirementMarker;
 import org.topcased.requirement.core.views.current.CurrentPage;
-import org.topcased.requirement.core.views.current.CurrentRequirementView;
 import org.topcased.requirement.core.views.upstream.UpstreamPage;
 
 import ttm.Requirement;
@@ -69,7 +69,7 @@ public final class RequirementHelper
 
     /** Constant used to indicate that an anonymous requirement creation is expected */
     private static final boolean CREATE_ANONYMOUS = false;
-    
+
     /** Most of operations offer by this factory are based on the editing domain */
     private EditingDomain editingDomain;
 
@@ -88,8 +88,8 @@ public final class RequirementHelper
     }
 
     /**
-     * Called from the modeler. Allows to create current requirements (by drag'n'drop or directly from the
-     * contextual menu).
+     * Called from the modeler. Allows to create current requirements (by drag'n'drop or directly from the contextual
+     * menu).
      * 
      * @param droppedObjects The list of dropped object.
      * @param targetObject The target object
@@ -130,12 +130,13 @@ public final class RequirementHelper
     private Command executeRequirementCreation(Collection< ? > droppedObjects, EObject targetObject, boolean kind)
     {
         CompoundCommand globalCmd = new CompoundCommand();
+
         if (targetObject != null)
         {
             currentPage.getModel();
             List<org.topcased.requirement.Requirement> createdRequirements = new ArrayList<org.topcased.requirement.Requirement>();
-            HierarchicalElement hierarchicalElement = getHierarchicalElement(targetObject, globalCmd);       
-            
+            HierarchicalElement hierarchicalElement = getHierarchicalElement(targetObject, globalCmd);
+
             if (kind == CREATE_CURRENT)
             {
                 createdRequirements = addCommandRequirement(droppedObjects, hierarchicalElement, globalCmd);
@@ -154,12 +155,9 @@ public final class RequirementHelper
             }
 
             // then the selection is done on the new inserted element(s).
-
             currentPage.refreshViewer(true);
             currentPage.getViewer().setSelection(new StructuredSelection(createdRequirements), true);
 
-            CurrentRequirementView.getInstance().setFocus();
-            
             return globalCmd.unwrap();
         }
         return UnexecutableCommand.INSTANCE;
@@ -178,14 +176,14 @@ public final class RequirementHelper
     {
         // Find the hierarchical element corresponding to the targetObject in the model
         HierarchicalElement hierarchicalElement = RequirementUtils.getHierarchicalElementFor(targetObject);
-                
+
         if (hierarchicalElement == null)
         {
             hierarchicalElement = createHierarchicalElement(targetObject);
             attach(targetObject.eContainer(), hierarchicalElement, globalCmd);
         }
         return hierarchicalElement;
-    }    
+    }
 
     /**
      * Adds a child to a {@link HierarchicalElement}.<br>
@@ -203,7 +201,7 @@ public final class RequirementHelper
         if (parent.eContainer() == null)
         {
             // Add child to the model as a hierarchical element
-            EObject project = RequirementUtils.getRequirementProject(editingDomain);           
+            EObject project = RequirementUtils.getRequirementProject(editingDomain);
             cmd.appendIfCanExecute(AddCommand.create(editingDomain, project, RequirementPackage.eINSTANCE.getRequirementProject_HierarchicalElement(), child));
             return null;
         }
@@ -240,36 +238,13 @@ public final class RequirementHelper
     {
         List<org.topcased.requirement.Requirement> toSelect = new ArrayList<org.topcased.requirement.Requirement>();
 
-        IRequirementIdentifierDefinition definition = RequirementIdentifierDefinitionManager.getInstance().getIdentifierDefinition(editingDomain);
-        
         if (target != null)
         {
             HierarchicalElement hierarchicalElt = (HierarchicalElement) target;
-            long nextIndex = 0;
-            if (definition != null)
-            {
-                nextIndex = definition.getCurrentIndex(hierarchicalElt);
-            }
-            else
-            {
-                nextIndex = DefaultRequirementIdentifierDefinition.getInstance().getCurrentIndex(null);
-            }
-            
             if (droppedObjects.isEmpty())
             {
-                if (definition!=null)
-                {
-                    nextIndex = definition.increaseIndexWhenCreateRequirement(hierarchicalElt, nextIndex);
-                }
-                else
-                {
-                    nextIndex = DefaultRequirementIdentifierDefinition.getInstance().increaseIndexWhenCreateRequirement(null, nextIndex);
-                }
-                
-                Integer pos = AddRequirementMarker.eINSTANCE.computeIndex(target);
-                CurrentRequirement toCreate = createCurrentRequirement(hierarchicalElt, nextIndex);
+                CurrentRequirement toCreate = create(hierarchicalElt, null, compoundCmd);
                 toSelect.add(toCreate);
-                compoundCmd.appendIfCanExecute(AddCommand.create(editingDomain, target, RequirementPackage.eINSTANCE.getHierarchicalElement_Requirement(), toCreate, pos));
             }
             else
             {
@@ -279,19 +254,9 @@ public final class RequirementHelper
                     org.topcased.requirement.Requirement toCreate = null;
                     if (object instanceof Requirement)
                     {
-                        if (definition!=null)
-                        {
-                            nextIndex = definition.increaseIndexWhenCreateRequirement(hierarchicalElt, nextIndex);
-                        }
-                        else
-                        {
-                            nextIndex = DefaultRequirementIdentifierDefinition.getInstance().increaseIndexWhenCreateRequirement(null, nextIndex);
-                        }
-                        
                         // from the upstream view...
-                        toCreate = create(hierarchicalElt, (Requirement) object, nextIndex);
+                        toCreate = create(hierarchicalElt, (Requirement) object, compoundCmd);
                         toSelect.add(toCreate);
-                        compoundCmd.appendIfCanExecute(AddCommand.create(editingDomain, target, RequirementPackage.eINSTANCE.getHierarchicalElement_Requirement(), toCreate, pos));
                     }
                     else if (object instanceof org.topcased.requirement.Requirement)
                     {
@@ -299,8 +264,8 @@ public final class RequirementHelper
                         // need to delete the dropped object (the source of the drag) only if the parent is not the same
                         if (!target.equals(requirement.eContainer()))
                         {
-                            compoundCmd.appendIfCanExecute(DeleteCommand.create(editingDomain,requirement));
-            
+                            compoundCmd.appendIfCanExecute(DeleteCommand.create(editingDomain, requirement));
+
                             // add to the new container
                             compoundCmd.appendIfCanExecute(AddCommand.create(editingDomain, target, RequirementPackage.eINSTANCE.getHierarchicalElement_Requirement(), requirement, pos));
 
@@ -308,16 +273,8 @@ public final class RequirementHelper
                             // renamed.
                             if (requirement instanceof CurrentRequirement)
                             {
-                                if (definition!=null)
-                                {
-                                    nextIndex = definition.increaseIndexWhenCreateRequirement(hierarchicalElt, nextIndex);
-                                }
-                                else
-                                {
-                                    nextIndex = DefaultRequirementIdentifierDefinition.getInstance().increaseIndexWhenCreateRequirement(null, nextIndex);
-                                }
                                 CurrentRequirement currentreq = (CurrentRequirement) requirement;
-                                compoundCmd.appendIfCanExecute(renameRequirement(hierarchicalElt, currentreq, nextIndex));
+                                compoundCmd.appendIfCanExecute(renameRequirement(hierarchicalElt, currentreq));
                             }
                         }
                         toSelect.add(requirement);
@@ -346,27 +303,33 @@ public final class RequirementHelper
      * Creates a <b>{@link CurrentRequirement}</b> object.
      * 
      * @param target The target is a {@link HierarchicalElement}
-     * @param upstream The upstream requirement
+     * @param upstream The upstream requirement or null
      * @param nextIndex The next index to use to set the identifier feature of the {@link CurrentRequirement}.
      * @return the created current requirement
      */
-    public CurrentRequirement create(HierarchicalElement target, Requirement upstream, long nextIndex)
+    public CurrentRequirement create(HierarchicalElement target, Requirement upstream, CompoundCommand compoundCmd)
     {
+        long index = 0;
+        String source = "";
+        IRequirementCountingAlgorithm algorithm = RequirementCountingAlgorithmManager.getInstance().getCountingAlgorithm(NamingRequirementPreferenceHelper.getCurrentAlgorithm());
+        
+        //Handle the create from upstream case
+        if (upstream != null)
+        {
+            source = upstream.getIdent();
+        }
+        //Create the requirement and attach it
+        Integer pos = AddRequirementMarker.eINSTANCE.computeIndex(target);
         CurrentRequirement newCurrentReq = createCurrentRequirementFromUpstream(upstream);
-        newCurrentReq.setIdentifier(ComputeRequirementIdentifier.INSTANCE.computeIdent(editingDomain, target, upstream.getIdent(), nextIndex));
-        return newCurrentReq;
-    }
+        compoundCmd.appendAndExecute(AddCommand.create(editingDomain, target, RequirementPackage.eINSTANCE.getHierarchicalElement_Requirement(), newCurrentReq, pos));
 
-    /**
-     * Creates a <b>{@link CurrentRequirement}</b> model object.
-     * 
-     * @param target The target is a {@link HierarchicalElement}
-     * @return the created current requirement
-     */
-    private CurrentRequirement createCurrentRequirement(HierarchicalElement target, long nextIndex)
-    {
-        CurrentRequirement newCurrentReq = createCurrentRequirementFromUpstream(null);
-        newCurrentReq.setIdentifier(ComputeRequirementIdentifier.INSTANCE.computeIdent(editingDomain, target, "", nextIndex)); //$NON-NLS-1$
+        //Compute the identifier of the newly created requirement
+        index = algorithm.getCurrentIndex(newCurrentReq);
+        newCurrentReq.setIdentifier(ComputeRequirementIdentifier.INSTANCE.computeIdent(editingDomain, target, source, index));
+        
+        //Increase index after requirement creation
+        algorithm.increaseIndexWhenCreateRequirement(newCurrentReq, index);
+        
         return newCurrentReq;
     }
 
@@ -578,29 +541,31 @@ public final class RequirementHelper
      * @param nextIndex The next index
      * @return the EMF command which is of kind {@link SetCommand}
      */
-    public Command renameRequirement(HierarchicalElement parent, CurrentRequirement requirement, long nextIndex)
+    public Command renameRequirement(HierarchicalElement parent, CurrentRequirement requirement)
     {
-        if (requirement != null)
+        long index = 0;
+        IRequirementCountingAlgorithm algorithm = RequirementCountingAlgorithmManager.getInstance().getCountingAlgorithm(NamingRequirementPreferenceHelper.getCurrentAlgorithm());
+        if (requirement != null && algorithm != null)
         {
             String ident = requirement.getIdentifier();
-            String newIdent = ComputeRequirementIdentifier.INSTANCE.computeIdent(editingDomain, parent, ident, nextIndex);
+            index = algorithm.getCurrentIndex(requirement);
+            String newIdent = ComputeRequirementIdentifier.INSTANCE.computeIdent(editingDomain, parent, ident, index);
             return SetCommand.create(editingDomain, requirement, RequirementPackage.eINSTANCE.getIdentifiedElement_Identifier(), newIdent);
         }
         return UnexecutableCommand.INSTANCE;
     }
- 
-    
+
     public HierarchicalElement getHierarchicalElementRoot()
     {
-          if (currentPage.getModel() instanceof RequirementProject)
-          {
-              RequirementProject reqRoot = (RequirementProject) currentPage.getModel();
-              if (!reqRoot.getHierarchicalElement().isEmpty())
-              {
-                  return reqRoot.getHierarchicalElement().get(0);
-              }
-          }
-          return null;        
+        if (currentPage.getModel() instanceof RequirementProject)
+        {
+            RequirementProject reqRoot = (RequirementProject) currentPage.getModel();
+            if (!reqRoot.getHierarchicalElement().isEmpty())
+            {
+                return reqRoot.getHierarchicalElement().get(0);
+            }
+        }
+        return null;
     }
 
     /**
@@ -651,24 +616,24 @@ public final class RequirementHelper
     {
         return SetCommand.create(editingDomain, requirement, RequirementPackage.eINSTANCE.getCurrentRequirement_Impacted(), false);
     }
-    
-//    /**
-//     * Check if a hierarchical element has requirements
-//     * 
-//     * @param eObjectToCheck the object
-//     * @return true if object is present in the model
-//     */
-//    public boolean hasRequirements(HierarchicalElement elt)
-//    {
-//        for (org.topcased.requirement.Requirement req : elt.getRequirement())
-//        {
-//            if (req != null) 
-//            {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
+
+    // /**
+    // * Check if a hierarchical element has requirements
+    // *
+    // * @param eObjectToCheck the object
+    // * @return true if object is present in the model
+    // */
+    // public boolean hasRequirements(HierarchicalElement elt)
+    // {
+    // for (org.topcased.requirement.Requirement req : elt.getRequirement())
+    // {
+    // if (req != null)
+    // {
+    // return true;
+    // }
+    // }
+    // return false;
+    // }
 
     /**
      * Sets the Upstream Page

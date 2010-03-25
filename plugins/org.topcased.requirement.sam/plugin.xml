@@ -81,5 +81,12 @@
          </object>
       </model>
    </extension>
+   <extension
+         point="org.topcased.requirement.core.requirementCountingAlgorithm">
+      <algorithm
+            class="org.topcased.requirement.sam.policies.SAMRequirementCountingAlgorithm"
+            name="SAM Counting Algorithm">
+      </algorithm>
+   </extension>
 
 </plugin>

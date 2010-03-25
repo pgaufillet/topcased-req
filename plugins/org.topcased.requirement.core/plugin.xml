@@ -6,6 +6,7 @@
    <extension-point id="modelAttachmentPolicy" name="enable to attach a topcased model to a requirement model" schema="schema/modelAttachmentPolicy.exsd"/>
    <extension-point id="requirementIdentifierDefinition" name="Provide ways to construct requirement identifiers" schema="schema/requirementIdentifierDefinition.exsd"/>
    <extension-point id="requirementTransformation" name="Extension point to implement transformation from file to requirement" schema="schema/requirementTransformation.exsd"/>
+   <extension-point id="requirementCountingAlgorithm" name="Extension point to implement the counting algorithm of requirements" schema="schema/requirementCountingAlgorithm.exsd"/>
 
    <extension
          point="org.eclipse.ui.views">
@@ -476,6 +477,17 @@
       <command
             commandStackListener="org.topcased.requirement.core.resolvers.SetNameCommandResolver">
       </command>
+   </extension>
+   <extension
+         point="org.topcased.requirement.core.requirementCountingAlgorithm">
+      <algorithm
+            class="org.topcased.requirement.core.utils.DefaultRequirementCountingAlgorithm"
+            name="Default algorithm">
+      </algorithm>
+      <algorithm
+            class="org.topcased.requirement.core.utils.RegexRequirementCountingAlgorithm"
+            name="Regex Algorithm">
+      </algorithm>
    </extension>
 
 </plugin>

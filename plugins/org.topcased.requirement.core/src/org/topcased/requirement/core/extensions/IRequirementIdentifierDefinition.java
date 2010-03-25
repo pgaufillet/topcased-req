@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.edit.domain.EditingDomain;
-import org.topcased.requirement.HierarchicalElement;
 
 /**
  * This interface defines the behavior to implement for the "requirementIdentifierDefinition" extension point The
@@ -26,41 +25,6 @@ import org.topcased.requirement.HierarchicalElement;
  */
 public interface IRequirementIdentifierDefinition
 {
-
-    /**
-     * Get the current index of your counting algorithm For the Default counting algorithm, there is no need for a
-     * hierarchical element parameter as the index is stored somewhere else
-     * 
-     * @param requirementContainer if you choose to store the index in the hierarchical element
-     * @return current index of your counting algorithm
-     */
-    public long getCurrentIndex(HierarchicalElement requirementContainer);
-
-    /**
-     * Implement here the increasing of your index on current requirement creation
-     * 
-     * @param requirementContainer if you choose to store the index in the hierarchical element
-     * @param index the current index
-     * @return the increased/next index
-     */
-    public long increaseIndexWhenCreateRequirement(HierarchicalElement requirementContainer, long index);
-
-    /**
-     * Implement here the decreasing of your index on current requirement deletion
-     * 
-     * @param theDeletedRequirement deleted requirement
-     * @param index the current index
-     */
-    // public void decreaseIndexWhenDeleteRequirement(Requirement theDeletedRequirement);
-
-    /**
-     * If you choose to reset index when a new hierarchical element is created
-     * 
-     * @param newHierarchicalElement if you choose to store the index in the hierarchical element
-     * @param index the current index
-     * @return the new index
-     */
-    public long resetIndexWhenCreateNewContainer(HierarchicalElement newHierarchicalElement, long index);
 
     /**
      * This is here that you can map your added patterns to a pattern walue

@@ -60,15 +60,19 @@ public class MovePortCommandResolver extends AdditionalCommand<MovePortCommand>
         Collection<EObject> selected = new ArrayList<EObject>();
         for (MovePortCommand moveCommand : moveCommands)
         {
+            if (moveCommand.getdeletedFlow() != null)
+            {
+                selected.add(moveCommand.getdeletedFlow());
+                
                 //The flow has already been deleted so we can't retreive his editing domain, that s why we call the modeler.
                 EditingDomain ed = (EditingDomain) super.getModeler().getEditingDomain();
                 if (ed instanceof TopcasedAdapterFactoryEditingDomain)
-                {
-                    selected.add(moveCommand.getdeletedFlow());
+                {                    
                     EMFtoGEFCommandWrapper deleteCmd = new EMFtoGEFCommandWrapper(new RemoveHierarchicalElementCommand(ed, selected));
                     deleteCmd.execute();
                     commands.put(moveCommand, deleteCmd);
                 }
+            }
         }
         
     }

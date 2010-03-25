@@ -33,6 +33,8 @@ public final class NamingRequirementPreferenceHelper
     public static final String NAMING_FORMAT_REQUIREMENT_STORE = "namingFormatRequirement";
     
     public static final String REQUIREMENT_STEP_INDEX = "requirementStepIndex";
+    
+    public static final String REQUIREMENT_ALGORITHM = "requirementAlgorithm";
 
     public static final String DEFAULT_FORMAT = "E_{project}_{hierarchical element}_{number}";
     
@@ -98,5 +100,35 @@ public final class NamingRequirementPreferenceHelper
             RequirementCorePlugin.log(e);
         }
         return result;
+    }
+    
+    /**
+     * Set the requirement counting algorithm name to store in the PreferenceStore
+     * 
+     * @param the name if there is one or default algorithm name is there is none
+     */
+    public static void setCurrentAlgorithm(String name)
+    {
+        if (name.length() == 0)
+        {
+            name = "Default algorithm";
+        }
+        store.putValue(REQUIREMENT_ALGORITHM, name);
+    }
+    
+    /**
+     * Get the requirement counting algorithm name stored in the PreferenceStore
+     * 
+     * @return the name if there is one or default algorithm name is there is none
+     */
+    public static String getCurrentAlgorithm()
+    {
+        String name = "Default algorithm";
+        String nameStored = store.getString(REQUIREMENT_ALGORITHM);
+        if (nameStored.length() > 0)
+        {
+            name = nameStored;
+        }
+        return name;
     }
 }
