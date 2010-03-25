@@ -20,7 +20,6 @@ import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.common.command.UnexecutableCommand;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.DeleteCommand;
@@ -179,84 +178,14 @@ public final class RequirementHelper
     {
         // Find the hierarchical element corresponding to the targetObject in the model
         HierarchicalElement hierarchicalElement = RequirementUtils.getHierarchicalElementFor(targetObject);
-        
-        //Check if the hierarchical element has a container (has not already been deleted)
-        HierarchicalElement brokenElt = modelHasBrokenLinksAfterDeletion(hierarchicalElement);
                 
         if (hierarchicalElement == null)
         {
             hierarchicalElement = createHierarchicalElement(targetObject);
             attach(targetObject.eContainer(), hierarchicalElement, globalCmd);
         }
-        //If there is a broken element
-        if (brokenElt != null)
-        {
-            //if the broken element has a container, this is the element that we are looking for
-            if (brokenElt.eContainer() != null)
-            {
-                return brokenElt;
-            }            
-            //if equals, we rebuild the hierarchical element because crossReference methods return the deleted hierarchical elt and ALL his deleted requirements!!
-            if (targetObject.equals(brokenElt.getElement()))
-            {
-                hierarchicalElement = createHierarchicalElement(targetObject);
-                attach(targetObject.eContainer(), hierarchicalElement, globalCmd);
-            }
-        }
         return hierarchicalElement;
-    }
-    
-
-    /**
-     * Return the broken links in the tree of hierarchical element. 
-     * A broken link appear when we delete a hierarchical element from the current page (the hierarchical element has no container).
-     * 
-     * @param eObjectToCheck the object
-     * @return the hierarchical element with broken link or null if there is no hierarchical element with broken link
-     */
-    private HierarchicalElement modelHasBrokenLinksAfterDeletion(EObject eObjectToCheck)
-    {
-        TreeIterator<EObject> allContents = currentPage.getModel().eAllContents();
-        
-        //When first hierarchical element creation, there is no cross references
-        if (eObjectToCheck != null)
-        {
-            //End of the recursive algorithm: we are at the root and there is no broken links.
-            if (((RequirementProject)currentPage.getModel()).equals(eObjectToCheck))
-            {
-                return null;
-            }
-//            if (((HierarchicalElement)eObjectToCheck).eContainer() != null)
-//            {
-//                return RequirementUtils.getHierarchicalElementFor(((HierarchicalElement)eObjectToCheck).getElement().eContainer());
-//            }
-            
-            while (allContents.hasNext())
-            {
-                EObject object = (EObject) allContents.next();
-                if (object instanceof HierarchicalElement)
-                {    
-                    //We check if the eObjectToCheck has been deleted from the model of the currentPage
-                    if (((HierarchicalElement) object).getElement().equals(((HierarchicalElement)eObjectToCheck).getElement()))
-                    {
-                        if (((HierarchicalElement)eObjectToCheck).eContainer() != null)
-                        {
-                            //If the object has a container we check if his parent has a broken link.
-                            return modelHasBrokenLinksAfterDeletion(((HierarchicalElement) object).eContainer());
-                        }
-                        else
-                        {
-                            //We return the object with no container (the broken link object)
-                            return (HierarchicalElement) object;
-                        }
-                    }
-                }
-            }
-        }
-        //The object returned here is null or has never been found in the model of the currentPage
-        return (HierarchicalElement) eObjectToCheck;
-    }
-    
+    }    
 
     /**
      * Adds a child to a {@link HierarchicalElement}.<br>

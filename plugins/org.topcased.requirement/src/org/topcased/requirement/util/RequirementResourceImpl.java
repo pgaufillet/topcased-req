@@ -6,6 +6,7 @@
  */
 package org.topcased.requirement.util;
 
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.xmi.XMLHelper;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
@@ -32,6 +33,58 @@ public class RequirementResourceImpl extends XMIResourceImpl
     public RequirementResourceImpl(URI uri)
     {
         super(uri);
+    }
+    
+    /**
+     * According to the resource statement, the cache adapter is respectively set or unset.
+     * 
+     * @see org.eclipse.emf.ecore.resource.impl.ResourceImpl#setLoaded(boolean)
+     * @generated NOT
+     */
+    @Override
+    protected Notification setLoaded(boolean isLoaded)
+    {
+        Notification notification = super.setLoaded(isLoaded);
+        if (isLoaded)
+        {
+            setCacheAdapter();
+        }
+        else
+        {
+            unsetCacheAdpater();
+        }
+        return notification;
+    }
+
+    /**
+     * Sets the Requirement cache adapter on the Requirement resource when considered as 'loaded'.
+     * 
+     * @generated NOT
+     * @custom
+     */
+    private void setCacheAdapter()
+    {
+        RequirementCacheAdapter cacheAdapter = RequirementCacheAdapter.getExistingRequirementCacheAdapter(getResourceSet());
+        if (cacheAdapter == null)
+        {
+            getResourceSet().eAdapters().add(new RequirementCacheAdapter());
+        }
+    }
+
+    /**
+     * Unsets the Requirement cache adapter once the Requirement resource is marked as 'unloaded'.
+     * 
+     * @generated NOT
+     * @custom
+     */
+    private void unsetCacheAdpater()
+    {
+        RequirementCacheAdapter cacheAdapter = RequirementCacheAdapter.getExistingRequirementCacheAdapter(getResourceSet());
+        if (cacheAdapter != null)
+        {
+            getResourceSet().eAdapters().remove(cacheAdapter);
+            cacheAdapter.dispose();
+        }
     }
 
     /**

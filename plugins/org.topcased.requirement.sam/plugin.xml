@@ -20,21 +20,6 @@
       </command>
    </extension>
    <extension
-         point="org.topcased.requirement.core.dropRestriction">
-      <metamodel
-            uri="http://www.topcased.org/SAM/1.3">
-         <object
-               value="org.topcased.sam.Port">
-         </object>
-         <object
-               value="org.topcased.sam.MultiPort">
-         </object>
-         <object
-               value="org.topcased.sam.AbstractState">
-         </object>
-      </metamodel>
-   </extension>
-   <extension
          point="org.topcased.requirement.core.specificDropAction">
       <metamodel
             uri="http://www.topcased.org/SAM/1.3">
@@ -49,9 +34,8 @@
          point="org.topcased.requirement.core.modelAttachmentPolicy">
       <policy
             class="org.topcased.requirement.sam.policies.SAMAttachmentPolicy"
-            enableFor="samdi"
-            id="SAMAttachmentPolicy"
-            uri="http://www.topcased.org/SAM/1.3">
+            extension="samdi"
+            id="SAMAttachmentPolicy">
       </policy>
    </extension>
    <extension
@@ -81,6 +65,21 @@
             id="SAMRequirementIdentifierDefinition"
             uri="http://www.topcased.org/SAM/1.3">
       </definition>
+   </extension>
+   <extension
+         point="org.topcased.requirement.core.dropRestriction">
+      <model
+            extension="samdi">
+         <object
+               value="org.topcased.sam.Port">
+         </object>
+         <object
+               value="org.topcased.sam.MultiPort">
+         </object>
+         <object
+               value="org.topcased.sam.AbstractState">
+         </object>
+      </model>
    </extension>
 
 </plugin>

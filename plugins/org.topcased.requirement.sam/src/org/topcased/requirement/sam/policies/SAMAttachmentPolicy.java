@@ -21,10 +21,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edit.domain.EditingDomain;
-import org.eclipse.emf.edit.domain.IEditingDomainProvider;
 import org.topcased.modeler.diagrams.model.Diagrams;
 import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
@@ -57,8 +54,7 @@ public class SAMAttachmentPolicy implements IModelAttachmentPolicy
             Diagrams di = (Diagrams) root;
             uri = EcoreUtil.getURI(di.getModel()).trimFragment().toString();
         }
-        ResourceSet resourceSet = new ResourceSetImpl();
-        Resource samModel = resourceSet.getResource(URI.createURI(uri), true);
+        Resource samModel = targetModel.getResourceSet().getResource(URI.createURI(uri), true);
         
         // Try to close the SAM diagram
         IPath samDiagramPath = RequirementUtils.getPath(targetModel);
@@ -86,33 +82,28 @@ public class SAMAttachmentPolicy implements IModelAttachmentPolicy
      */
     public void unlinkRequirementModel(Resource targetModel, Resource requirementModel)
     {
-
-        if (requirementModel.getResourceSet() instanceof IEditingDomainProvider)
+        //Gather the SAM Model from the SAM diagram
+        String uri = null;
+        EObject root = targetModel.getContents().get(0);
+        if (root instanceof Diagrams)
         {
-            //Gather the SAM Model from the SAM diagram
-            String uri = null;
-            EditingDomain editingDomain = ((IEditingDomainProvider) requirementModel.getResourceSet()).getEditingDomain();
-            EObject root = targetModel.getContents().get(0);
-            if (root instanceof Diagrams)
-            {
-                Diagrams di = (Diagrams) root;
-                uri = EcoreUtil.getURI(di.getModel()).trimFragment().toString();
-            }
-            Resource samModel = editingDomain.getResourceSet().getResource(URI.createURI(uri), true);
-            
-            // set the link between the SAM model and the requirement model to null
-            Model rootModel = (Model) samModel.getContents().get(0);
-            rootModel.setRequirementModel(null);
-    
-            // save the graphical SAM model
-            RequirementUtils.saveResource(samModel);
-            RequirementUtils.saveResource(targetModel);
-    
-            // unload and delete the requirement model from file system.
-            if (editingDomain.getResourceSet().getResources().remove(requirementModel))
-            {
-                RequirementUtils.deleteResource(requirementModel);
-            }
+            Diagrams di = (Diagrams) root;
+            uri = EcoreUtil.getURI(di.getModel()).trimFragment().toString();
+        }
+        Resource samModel = targetModel.getResourceSet().getResource(URI.createURI(uri), true);
+        
+        // set the link between the SAM model and the requirement model to null
+        Model rootModel = (Model) samModel.getContents().get(0);
+        rootModel.setRequirementModel(null);
+
+        // save the graphical SAM model
+        RequirementUtils.saveResource(samModel);
+        RequirementUtils.saveResource(targetModel);
+
+        // unload and delete the requirement model from file system.
+        if (targetModel.getResourceSet().getResources().remove(requirementModel))
+        {
+            RequirementUtils.deleteResource(requirementModel);
         }
     }
 

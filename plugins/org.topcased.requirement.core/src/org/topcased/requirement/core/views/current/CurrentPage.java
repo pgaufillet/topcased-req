@@ -85,6 +85,7 @@ import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.ObjectAttribute;
 import org.topcased.requirement.Requirement;
+import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.core.Messages;
 
 /**
@@ -92,6 +93,7 @@ import org.topcased.requirement.core.Messages;
  * 
  * @author <a href="mailto:christophe.mertz@c-s.fr">Christophe Mertz</a>
  * @author <a href="mailto:sebastien.gabel@c-s.fr">Sebastien GABEL</a>
+ * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  */
 public class CurrentPage extends AbstractRequirementPage implements ICurrentRequirementPage
 {
@@ -110,6 +112,8 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
     private IAction linkTo;
 
     /**
+     * FIXME : find a better way to adapt the focus when an element is deleted
+     * 
      * This class manages the change selection in the current requirement view
      * 
      * @author <a href="mailto:christophe.mertz@c-s.fr">Christophe Mertz</a>
@@ -118,8 +122,12 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
     private class CurrentSelectionChangeListener implements ISelectionChangedListener
     {
         private HierarchicalElement hierarchicalElementToFocusAfterRequirementDeletion = null;
+        
+        private HierarchicalElement hierarchicalElementToFocusAfterHierarchicalElementDeletion = null;
 
         private Requirement previouslySelectedRequirement = null;
+        
+        private HierarchicalElement previouslySelectedHierarchicalElement = null;
 
         /**
          * Re-direct selection if necessary and update selection actions.
@@ -128,30 +136,41 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
          */
         public void selectionChanged(SelectionChangedEvent event)
         {
-//            if (handleAutomaticReselection(event))
-//            {
-//                // Attributes will be reseted in new selection change.
-//                return;
-//            }
-//            // Reset attributes and handle new selection.
-//            previouslySelectedRequirement = null;
-//            hierarchicalElementToFocusAfterRequirementDeletion = null;
-//            if (!event.getSelection().isEmpty() && event.getSelection() instanceof IStructuredSelection)
-//            {
+            if (handleAutomaticReselection(event))
+            {
+                // Attributes will be reseted in new selection change.
+                return;
+            }
+            // Reset attributes and handle new selection.
+            previouslySelectedRequirement = null;
+            previouslySelectedHierarchicalElement = null;
+            hierarchicalElementToFocusAfterRequirementDeletion = null;
+            hierarchicalElementToFocusAfterHierarchicalElementDeletion = null;
+            
+            if (!event.getSelection().isEmpty() && event.getSelection() instanceof IStructuredSelection)
+            {
                 selection = (IStructuredSelection) event.getSelection();
                 upAction.setSelection(selection);
                 downAction.setSelection(selection);
-//                if (selection.getFirstElement() instanceof Requirement)
-//                {
-//                    // If we select a requirement we save its container to be able to focus it if the requirement is
-//                    // deleted
-//                    previouslySelectedRequirement = (Requirement) selection.getFirstElement();
-//                    if (previouslySelectedRequirement.eContainer() != null && previouslySelectedRequirement.eContainer() instanceof HierarchicalElement)
-//                    {
-//                        hierarchicalElementToFocusAfterRequirementDeletion = (HierarchicalElement) previouslySelectedRequirement.eContainer();
-//                    }
-//                }
-//            }
+                if (selection.getFirstElement() instanceof Requirement)
+                {
+                    // If we select a requirement we save its container to be able to focus it if the requirement is deleted
+                    previouslySelectedRequirement = (Requirement) selection.getFirstElement();
+                    if (previouslySelectedRequirement.eContainer() != null && previouslySelectedRequirement.eContainer() instanceof HierarchicalElement)
+                    {
+                        hierarchicalElementToFocusAfterRequirementDeletion = (HierarchicalElement) previouslySelectedRequirement.eContainer();
+                    }
+                }
+                else if (selection.getFirstElement() instanceof HierarchicalElement)
+                {
+                    // If we select a hierarchical element we save its container to be able to focus it if this hierarchical element is deleted
+                    previouslySelectedHierarchicalElement = (HierarchicalElement) selection.getFirstElement();
+                    if (previouslySelectedHierarchicalElement.eContainer() != null && !(previouslySelectedHierarchicalElement.eContainer() instanceof RequirementProject))
+                    {
+                        hierarchicalElementToFocusAfterHierarchicalElementDeletion = (HierarchicalElement) previouslySelectedHierarchicalElement.eContainer();
+                    }                    
+                }
+            }
         }
 
         /**
@@ -164,14 +183,28 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
         {
             // Handle case when selected requirement has been deleted
             boolean previousRequirementDeleted = previouslySelectedRequirement != null && !stillExistInModel(previouslySelectedRequirement);
-            boolean parentToFocusAvailable = hierarchicalElementToFocusAfterRequirementDeletion != null && stillExistInModel(hierarchicalElementToFocusAfterRequirementDeletion);
-            if (event.getSelection().isEmpty() && previousRequirementDeleted && parentToFocusAvailable)
+            // Handle case when selected hierarchical element has been deleted
+            boolean previousHierarchicalElementDeleted = previouslySelectedHierarchicalElement != null && !stillExistInModel(previouslySelectedHierarchicalElement);
+            
+            //Is the parent hierarchical element available?
+            boolean parentToFocusAvailableAfterRequirementDeletion = hierarchicalElementToFocusAfterRequirementDeletion != null && stillExistInModel(hierarchicalElementToFocusAfterRequirementDeletion);
+            boolean parentToFocusAvailableAfterHierarchicalElementDeletion = hierarchicalElementToFocusAfterHierarchicalElementDeletion != null && stillExistInModel(hierarchicalElementToFocusAfterHierarchicalElementDeletion);
+
+            if (event.getSelection().isEmpty())
             {
-                if (!(hierarchicalElementToFocusAfterRequirementDeletion.getRequirement().isEmpty()))
+                if (previousRequirementDeleted && parentToFocusAvailableAfterRequirementDeletion)
                 {
-                    // When a requirement is deleted from this page, we set focus on its container.
-                    CurrentPage.this.getViewer().setSelection(new StructuredSelection(hierarchicalElementToFocusAfterRequirementDeletion));
-                    // New selection will not produce another re-selection since it is not empty (Infinite loop avoided).
+                    if (!(hierarchicalElementToFocusAfterRequirementDeletion.getRequirement().isEmpty()))
+                    {
+                        // When a requirement is deleted from this page, we set focus on its container.
+                        CurrentPage.this.getViewer().setSelection(new StructuredSelection(hierarchicalElementToFocusAfterRequirementDeletion));
+                        // New selection will not produce another re-selection since it is not empty (Infinite loop avoided).
+                        return true;
+                    }
+                }
+                else if (previousHierarchicalElementDeleted && parentToFocusAvailableAfterHierarchicalElementDeletion)
+                {
+                    CurrentPage.this.getViewer().setSelection(new StructuredSelection(hierarchicalElementToFocusAfterHierarchicalElementDeletion));
                     return true;
                 }
             }

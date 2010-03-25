@@ -29,8 +29,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
-import org.topcased.modeler.edit.EMFGraphEdgeEditPart;
-import org.topcased.modeler.edit.EMFGraphNodeEditPart;
+import org.topcased.modeler.edit.IModelElementEditPart;
 import org.topcased.modeler.editor.Modeler;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.core.Messages;
@@ -190,15 +189,10 @@ public class LinkWithEditorAction extends Action implements ISelectionListener, 
             for (Object objInSelection : selectionDone.toArray())
             {
                 EObject selectedElt = null;
-                if (objInSelection instanceof EMFGraphNodeEditPart)
+                if (objInSelection instanceof IModelElementEditPart)
                 {
-                    selectedElt = ((EMFGraphNodeEditPart) objInSelection).getEObject();
+                    selectedElt = ((IModelElementEditPart) objInSelection).getEObject();
                 }
-                if (objInSelection instanceof EMFGraphEdgeEditPart)
-                {
-                    selectedElt = ((EMFGraphEdgeEditPart) objInSelection).getEObject();
-                }
-
                 if (selectedElt != null && RequirementUtils.getHierarchicalElementFor(selectedElt) != null)
                 {
                     toSelect.add(RequirementUtils.getHierarchicalElementFor(selectedElt));

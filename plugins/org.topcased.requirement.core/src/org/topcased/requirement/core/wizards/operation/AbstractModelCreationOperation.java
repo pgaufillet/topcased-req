@@ -13,11 +13,8 @@ package org.topcased.requirement.core.wizards.operation;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
-import org.topcased.modeler.diagrams.model.Diagrams;
 import org.topcased.requirement.AttributeConfiguration;
 import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.core.RequirementCorePlugin;
@@ -87,19 +84,10 @@ public abstract class AbstractModelCreationOperation extends WorkspaceModifyOper
         IModelAttachmentPolicy policy = null;
         Resource targetModelResource = RequirementUtils.getResource(targetModelFile.getFullPath());
         
-        //Get the uri of the metamodel through the Model pointed by the diagram
-        EObject root = targetModelResource.getContents().get(0);
-        if (root instanceof Diagrams)
-        {
-            Diagrams di = (Diagrams) root;
-            String uri = EcoreUtil.getURI(di.getModel().eClass().getEPackage()).trimFragment().toString();
-            policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(uri);
-        }
-        else
-        {
-            String uri = EcoreUtil.getURI(root.eClass().getEPackage()).trimFragment().toString();
-            policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(uri);
-        }
+        //Get the policy from the file extension of the target resource
+        String fileExtension = targetModelResource.getURI().fileExtension();
+        policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(fileExtension);
+        
         //Link the model to the requirement model
         if (policy != null)
         {            

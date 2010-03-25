@@ -38,8 +38,8 @@ public class DropRestrictionManager extends AbstractExtensionManager
     /** constant representing the name of the extension point */
     private static final String DROP_RESTRICTION_EXTENSION_POINT = "dropRestriction"; //$NON-NLS-1$
 
-    /** Value of the extension point attribute corresponding to the value given to the metamodel. */
-    static final String ATT_URI = "uri"; //$NON-NLS-1$
+    /** Value of the extension point attribute corresponding to the value given to the file extension. */
+    static final String ATT_FILE_EXTENSION = "extension"; //$NON-NLS-1$
 
     /** Value of the extension point attribute corresponding to the value given to the model element. */
     static final String ATT_VALUE = "value"; //$NON-NLS-1$
@@ -47,7 +47,7 @@ public class DropRestrictionManager extends AbstractExtensionManager
     /** the shared instance */
     private static DropRestrictionManager manager;
 
-    /**Map of an uri of the metamodel and the metamodel object to restrict */
+    /**Map of a file extension and the metamodel object to restrict */
     public Map<String, Collection<Class< ? >>> map;
 
     /**
@@ -83,7 +83,7 @@ public class DropRestrictionManager extends AbstractExtensionManager
         IConfigurationElement[] elements = extension.getConfigurationElements();
         for (IConfigurationElement confElt : elements)
         {
-            String model = confElt.getAttribute(ATT_URI);
+            String model = confElt.getAttribute(ATT_FILE_EXTENSION);
             IConfigurationElement[] childElements = confElt.getChildren();
             for (IConfigurationElement childElt : childElements)
             {
@@ -122,7 +122,7 @@ public class DropRestrictionManager extends AbstractExtensionManager
         IConfigurationElement[] elements = extension.getConfigurationElements();
         for (IConfigurationElement confElt : elements)
         {
-            String elt = confElt.getAttribute(ATT_URI);
+            String elt = confElt.getAttribute(ATT_FILE_EXTENSION);
             map.remove(elt);
         }
 
@@ -134,11 +134,11 @@ public class DropRestrictionManager extends AbstractExtensionManager
      * @param EObject eobject
      * @return boolean allowed
      */
-    public boolean isDropAllowed(String uri, EObject eobject)
+    public boolean isDropAllowed(String fileExtension, EObject eobject)
     {
-        if (map.containsKey(uri))
+        if (map.containsKey(fileExtension))
         {
-            for (Class< ? > clazz : map.get(uri))
+            for (Class< ? > clazz : map.get(fileExtension))
             {
                 if (clazz.isInstance(eobject))
                 {

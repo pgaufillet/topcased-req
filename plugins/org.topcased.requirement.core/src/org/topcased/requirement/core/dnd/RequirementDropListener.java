@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.emf.common.command.Command;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.EditPart;
@@ -30,6 +31,7 @@ import org.eclipse.swt.dnd.DropTargetEvent;
 import org.topcased.modeler.commands.EMFtoGEFCommandWrapper;
 import org.topcased.modeler.edit.DiagramEditPart;
 import org.topcased.modeler.edit.IModelElementEditPart;
+import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.core.Messages;
 import org.topcased.requirement.core.commands.CreateCurrentReqCommand;
 import org.topcased.requirement.core.commands.CreateRequirementCommand;
@@ -158,10 +160,11 @@ public class RequirementDropListener extends AbstractTransferDropTargetListener
         if (currentPart instanceof IModelElementEditPart)
         {
             EObject eobject = getEObject();
-            String uri = EcoreUtil.getURI(eobject.eClass().getEPackage()).trimFragment().toString();
+            URI graphicalModelName = URI.createURI(Utils.getCurrentModeler().getPartName());
+            String fileExtension = graphicalModelName.fileExtension();
             
             //if the target is restricted by the extension dropRestriction
-            if (!(DropRestrictionManager.getInstance().isDropAllowed(uri, eobject)))
+            if (!(DropRestrictionManager.getInstance().isDropAllowed(fileExtension, eobject)))
             {
                 event.operations = DND.DROP_NONE;
                 event.detail = DND.DROP_NONE;

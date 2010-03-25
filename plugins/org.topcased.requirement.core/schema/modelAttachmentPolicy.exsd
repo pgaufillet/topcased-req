@@ -56,10 +56,10 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="uri" type="string" use="required">
+         <attribute name="extension" type="string" use="required">
             <annotation>
                <documentation>
-                  The URI of the metamodel you want to attach
+                  The file extension of the graphical model that you want to work on with requirements
                </documentation>
             </annotation>
          </attribute>
@@ -71,13 +71,6 @@
                <appInfo>
                   <meta.attribute kind="java" basedOn=":org.topcased.requirement.core.extensions.IModelAttachmentPolicy"/>
                </appInfo>
-            </annotation>
-         </attribute>
-         <attribute name="enableFor" type="string" use="required">
-            <annotation>
-               <documentation>
-                  Enter here your file extension that you want to work on with requirements
-               </documentation>
             </annotation>
          </attribute>
       </complexType>

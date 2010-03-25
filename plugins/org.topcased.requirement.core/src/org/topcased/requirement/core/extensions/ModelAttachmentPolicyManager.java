@@ -18,10 +18,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.topcased.facilities.extensions.AbstractExtensionManager;
 import org.topcased.requirement.core.RequirementCorePlugin;
@@ -39,23 +36,17 @@ public class ModelAttachmentPolicyManager extends AbstractExtensionManager
     /** constant representing the name of the extension point */
     private static final String MODEL_ATTACHMENT_POLICY_EXTENSION_POINT = "modelAttachmentPolicy"; //$NON-NLS-1$
 
-    /** Value of the extension point attribute corresponding to the value given to the uri. */
-    static final String ATT_URI = "uri"; //$NON-NLS-1$
+    /** Value of the extension point attribute corresponding to the value given to the file extension. */
+    static final String ATT_EXTENSION = "extension"; //$NON-NLS-1$
 
     /** Value of the extension point attribute corresponding to the class. */
     static final String ATT_CLASS = "class"; //$NON-NLS-1$
 
-    /** Value of the extension point attribute corresponding to the value given to the file extension. */
-    static final String ATT_ENABLE_FOR = "enableFor"; //$NON-NLS-1$
-
     /** the shared instance */
     private static ModelAttachmentPolicyManager manager;
 
-    /** Map of an uri of the metamodel and the attachement policy for it */
+    /** Map of the graphical model file extension and the attachement policy for it */
     public Map<String, IModelAttachmentPolicy> mapClass;
-
-    /** Map of an uri of the metamodel and the file extension for it */
-    public Map<String, String> mapExtension;
 
     /**
      * Private constructor
@@ -64,7 +55,6 @@ public class ModelAttachmentPolicyManager extends AbstractExtensionManager
     {
         super(RequirementCorePlugin.getId() + "." + MODEL_ATTACHMENT_POLICY_EXTENSION_POINT);
         mapClass = new HashMap<String, IModelAttachmentPolicy>();
-        mapExtension = new HashMap<String, String>();
         readRegistry();
     }
 
@@ -91,13 +81,12 @@ public class ModelAttachmentPolicyManager extends AbstractExtensionManager
         IConfigurationElement[] elements = extension.getConfigurationElements();
         for (IConfigurationElement confElt : elements)
         {
-            String model = confElt.getAttribute(ATT_URI);
+            String model = confElt.getAttribute(ATT_EXTENSION);
             IModelAttachmentPolicy policy;
             try
             {
                 policy = (IModelAttachmentPolicy) confElt.createExecutableExtension(ATT_CLASS);
                 mapClass.put(model, policy);
-                mapExtension.put(model, confElt.getAttribute(ATT_ENABLE_FOR));
             }
             catch (CoreException e)
             {
@@ -117,30 +106,29 @@ public class ModelAttachmentPolicyManager extends AbstractExtensionManager
         IConfigurationElement[] elements = extension.getConfigurationElements();
         for (IConfigurationElement confElt : elements)
         {
-            String elt = confElt.getAttribute(ATT_URI);
+            String elt = confElt.getAttribute(ATT_EXTENSION);
             mapClass.remove(elt);
-            mapExtension.remove(elt);
         }
 
     }
 
     /**
-     * This method return the model attachement policy for a given metamodel uri
+     * This method return the model attachment policy for a given file extension
      * 
-     * @param uri the metamodel uri
+     * @param fileExtension the graphical model file extension
      * @return the model policy
      */
-    public IModelAttachmentPolicy getModelPolicy(String uri)
+    public IModelAttachmentPolicy getModelPolicy(String fileExtension)
     {
-        if (mapClass.containsKey(uri))
+        if (mapClass.containsKey(fileExtension))
         {
-            return mapClass.get(uri);
+            return mapClass.get(fileExtension);
         }
         return null;
     }
 
     /**
-     * This method return the model attachement policy for a given editingDomain
+     * This method return the model attachment policy for a given editing domain
      * 
      * @param the editing domain
      * @return the model policy
@@ -148,61 +136,16 @@ public class ModelAttachmentPolicyManager extends AbstractExtensionManager
     public IModelAttachmentPolicy getModelPolicy(EditingDomain editingDomain)
     {
         IModelAttachmentPolicy policy = null;
-        EList<Resource> resources = editingDomain.getResourceSet().getResources();
-        for (Resource resource : resources)
+        for (Resource resource : editingDomain.getResourceSet().getResources())
         {
-            EList<EObject> roots = resource.getContents();
-            for (EObject root : roots)
+            String fileExtension = resource.getURI().fileExtension();
+            IModelAttachmentPolicy tempPolicy = getModelPolicy(fileExtension);
+            if (tempPolicy != null)
             {
-                String uri = EcoreUtil.getURI(root.eClass().getEPackage()).trimFragment().toString();
-                IModelAttachmentPolicy tempPolicy = getModelPolicy(uri);
-                if (tempPolicy != null)
-                {
-                    policy = tempPolicy;
-                }
+                policy = tempPolicy;
             }
         }
         return policy;
-    }
-
-    /**
-     * This method return the file extension for a given uri
-     * 
-     * @param uri the metamodel uri
-     * @return the file extension
-     */
-    public String getFileExtension(String uri)
-    {
-        if (mapExtension.containsKey(uri))
-        {
-            return mapExtension.get(uri);
-        }
-        return null;
-
-    }
-
-    /**
-     * This method return the file extension for a given editing domain
-     * 
-     * @param the editing domain
-     * @return the file extension
-     */
-    public String getFileExtension(EditingDomain editingDomain)
-    {
-        String fileExtension = null;
-        for (Resource resource : editingDomain.getResourceSet().getResources())
-        {
-            for (EObject root : resource.getContents())
-            {
-                String uri = EcoreUtil.getURI(root.eClass().getEPackage()).trimFragment().toString();
-                String tempFileExtension = getFileExtension(uri);
-                if (tempFileExtension != null)
-                {
-                    fileExtension = tempFileExtension;
-                }
-            }
-        }
-        return fileExtension;
     }
 
     /**
@@ -213,7 +156,7 @@ public class ModelAttachmentPolicyManager extends AbstractExtensionManager
      */
     public boolean isEnableFor(String fileExtension)
     {
-        if (mapExtension.containsValue(fileExtension))
+        if (mapClass.containsKey(fileExtension))
         {
             return true;
         }

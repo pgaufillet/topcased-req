@@ -30,7 +30,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -62,6 +61,7 @@ import org.topcased.requirement.SpecialChapter;
 import org.topcased.requirement.TrashChapter;
 import org.topcased.requirement.UpstreamModel;
 import org.topcased.requirement.core.RequirementCorePlugin;
+import org.topcased.requirement.util.RequirementCacheAdapter;
 
 import ttm.Requirement;
 
@@ -241,18 +241,12 @@ public final class RequirementUtils
      */
     public static Boolean isLinked(Requirement req)
     {
-        EObject reqRoot = EcoreUtil.getRootContainer(req);
-        // FIXME : the cache adapter is unadapted and contain weird values
+        // EObject reqRoot = EcoreUtil.getRootContainer(req);
         for (Setting setting : getCrossReferences(req))
         {
             if (setting.getEObject() instanceof AttributeLink)
             {
-                EObject attLinkroot = EcoreUtil.getRootContainer(setting.getEObject());
-                // container must be the same
-                if (reqRoot == attLinkroot)
-                {
-                    return true;
-                }
+                return true;
             }
         }
         return false;
@@ -281,25 +275,24 @@ public final class RequirementUtils
     }
 
     /**
-     * FIXME : Requirement component must provide its own cache adapter. This one is not sufficient and contain too much
-     * values already deleted from the model.
+     * Get the cross references of the source object from the requirement cache adapter
      * 
      * @param source
-     * @return
+     * @return collection of settings
      */
     public static Collection<Setting> getCrossReferences(EObject source)
     {
-        Collection<Setting> collection = null;
-        ECrossReferenceAdapter crossReferenceAdapter = ECrossReferenceAdapter.getCrossReferenceAdapter(source);
-        if (crossReferenceAdapter != null)
+        Collection<Setting> collection = Collections.<Setting> emptyList();
+        ECrossReferenceAdapter adapter = RequirementCacheAdapter.getExistingRequirementCacheAdapter(source);
+        if (adapter == null)
         {
-            collection = crossReferenceAdapter.getNonNavigableInverseReferences(source);
+            adapter = ECrossReferenceAdapter.getCrossReferenceAdapter(source);
         }
-        else
+        if (adapter != null)
         {
-            collection = EcoreUtil.UsageCrossReferencer.find(source, source.eResource().getResourceSet());
+            collection = adapter.getNonNavigableInverseReferences(source);
         }
-        return !collection.isEmpty() ? collection : Collections.<Setting> emptyList();
+        return collection;
     }
 
     /**
@@ -547,7 +540,7 @@ public final class RequirementUtils
     {
         return (RequirementProject) getRoot(requirement, RequirementProject.class);
     }
-    
+
     /**
      * Gets the {@link AttributeConfiguration} model object contained in a {@link RequirementProject}.
      * 
@@ -668,36 +661,12 @@ public final class RequirementUtils
         {
             if (setting.getEObject() instanceof HierarchicalElement)
             {
-                if(stillExistInModel(setting.getEObject()))
-                {
-                    return (HierarchicalElement) setting.getEObject();
-                }
+                return (HierarchicalElement) setting.getEObject();
             }
         }
         return null;
     }
     
-    /**
-     * Check if object exists in the model
-     * 
-     * @param eObjectToCheck the object
-     * @return true if object is present in the model
-     */
-    private static boolean stillExistInModel(EObject eObjectToCheck)
-    {
-        RequirementProject project = getRequirementProject(Utils.getCurrentModeler().getEditingDomain());
-        TreeIterator<EObject> allContents = project.eAllContents();
-        while (allContents.hasNext())
-        {
-            EObject object = (EObject) allContents.next();
-            if (object.equals(eObjectToCheck))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
     /**
      * Opens the given diagram resource given in parameter.
      * 

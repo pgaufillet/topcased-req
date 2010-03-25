@@ -18,7 +18,7 @@
       </annotation>
       <complexType>
          <sequence minOccurs="1" maxOccurs="unbounded">
-            <element ref="metamodel"/>
+            <element ref="model"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -52,7 +52,7 @@
          <attribute name="value" type="string" use="required">
             <annotation>
                <documentation>
-                  the model element who will have drop disabled
+                  the model element of your graphical model who will have drop disabled
                </documentation>
                <appInfo>
                   <meta.attribute kind="java" basedOn=":org.eclipse.emf.ecore.EObject"/>
@@ -62,15 +62,15 @@
       </complexType>
    </element>
 
-   <element name="metamodel">
+   <element name="model">
       <complexType>
          <sequence minOccurs="1" maxOccurs="unbounded">
             <element ref="object"/>
          </sequence>
-         <attribute name="uri" type="string" use="required">
+         <attribute name="extension" type="string" use="required">
             <annotation>
                <documentation>
-                  The metamodel URI of the restricted elements
+                  The file extension of your graphical model
                </documentation>
             </annotation>
          </attribute>
