@@ -90,7 +90,7 @@ public class NamingRequirementPreferencePage extends AbstractTopcasedPreferenceP
         // Text format
         formatRequirement = new StringFieldEditor(NamingRequirementPreferenceHelper.NAMING_FORMAT_REQUIREMENT_STORE, "", textComposite); //$NON-NLS-1$
         formatRequirement.setPreferenceStore(getPreferenceStore());
-        formatRequirement.setLabelText("Pattern : ");
+        formatRequirement.setLabelText(Messages.getString("NamingRequirementPreferencePage.6")); //$NON-NLS-1$
         formatText = formatRequirement.getTextControl(textComposite);
         formatText.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
 
@@ -154,7 +154,7 @@ public class NamingRequirementPreferencePage extends AbstractTopcasedPreferenceP
         // Algorithm combo
         algorithmCombo = new Combo(algorithmComposite, SWT.NULL);
         algorithmCombo.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
-        for (String key  : RequirementCountingAlgorithmManager.getInstance().getAllAlgorithm())
+        for (String key : RequirementCountingAlgorithmManager.getInstance().getAllAlgorithm())
         {
             algorithmCombo.add(key);
         }
@@ -273,7 +273,7 @@ public class NamingRequirementPreferencePage extends AbstractTopcasedPreferenceP
         {
             try
             {
-                Integer.parseInt("".equals(stepText.getText()) ? "0" : stepText.getText());
+                Integer.parseInt("".equals(stepText.getText()) ? "0" : stepText.getText()); //$NON-NLS-1$ //$NON-NLS-2$
                 setErrorMessage(null);
                 setValid(true);
             }
