@@ -36,8 +36,8 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.topcased.requirement.core.RequirementCorePlugin;
-import org.topcased.requirement.core.Messages;
+import org.topcased.requirement.core.internal.Messages;
+import org.topcased.requirement.core.internal.RequirementCorePlugin;
 
 /**
  * Manages the preference store for the current requirement

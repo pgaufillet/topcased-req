@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.topcased.requirement.sam;singleton:=true
 Bundle-Version: 3.4.0.qualifier
-Bundle-Activator: org.topcased.requirement.sam.RequirementSamPlugin
+Bundle-Activator: org.topcased.requirement.sam.internal.RequirementSAMPlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.topcased.requirement.core,

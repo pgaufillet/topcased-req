@@ -60,7 +60,7 @@ import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.SpecialChapter;
 import org.topcased.requirement.TrashChapter;
 import org.topcased.requirement.UpstreamModel;
-import org.topcased.requirement.core.RequirementCorePlugin;
+import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.util.RequirementCacheAdapter;
 
 import ttm.Requirement;

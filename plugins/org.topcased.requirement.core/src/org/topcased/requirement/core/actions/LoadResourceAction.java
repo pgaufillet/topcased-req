@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
-import org.topcased.requirement.core.Messages;
+import org.topcased.requirement.core.internal.Messages;
 
 /**
  * An action to load a resource into an editing domain's resource set.

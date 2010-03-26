@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.Page;
-import org.topcased.requirement.core.Messages;
+import org.topcased.requirement.core.internal.Messages;
 
 /**
  * Empty current requirement page

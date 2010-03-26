@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.topcased.requirement.core.Messages;
+import org.topcased.requirement.core.internal.Messages;
 
 /**
  * The requirement preferences page.

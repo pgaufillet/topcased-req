@@ -16,8 +16,8 @@ import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.topcased.requirement.HierarchicalElement;
-import org.topcased.requirement.core.Messages;
-import org.topcased.requirement.core.RequirementCorePlugin;
+import org.topcased.requirement.core.internal.Messages;
+import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.utils.RequirementHelper;
 
 /**

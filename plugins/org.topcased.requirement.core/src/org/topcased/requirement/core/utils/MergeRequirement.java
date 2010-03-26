@@ -49,7 +49,7 @@ import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.ObjectAttribute;
 import org.topcased.requirement.Requirement;
 import org.topcased.requirement.UpstreamModel;
-import org.topcased.requirement.core.RequirementCorePlugin;
+import org.topcased.requirement.core.internal.RequirementCorePlugin;
 
 import ttm.Document;
 import ttm.HierarchicalElement;

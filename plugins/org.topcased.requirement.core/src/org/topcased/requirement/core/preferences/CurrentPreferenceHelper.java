@@ -23,7 +23,6 @@ import java.util.Vector;
 import java.util.Map.Entry;
 
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.Attribute;
 import org.topcased.requirement.AttributeConfiguration;
 import org.topcased.requirement.AttributeValue;
@@ -33,6 +32,7 @@ import org.topcased.requirement.DefaultAttributeValue;
 import org.topcased.requirement.Requirement;
 import org.topcased.requirement.RequirementFactory;
 import org.topcased.requirement.TextAttribute;
+import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**

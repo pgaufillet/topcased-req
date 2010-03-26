@@ -22,8 +22,8 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.topcased.facilities.util.EMFMarkerUtil;
 import org.topcased.requirement.Attribute;
 import org.topcased.requirement.CurrentRequirement;
-import org.topcased.requirement.core.Messages;
-import org.topcased.requirement.core.RequirementCorePlugin;
+import org.topcased.requirement.core.internal.Messages;
+import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.utils.RequirementHelper;
 
 /**

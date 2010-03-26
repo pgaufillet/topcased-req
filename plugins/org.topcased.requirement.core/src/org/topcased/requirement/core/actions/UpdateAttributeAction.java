@@ -28,9 +28,9 @@ import org.topcased.requirement.ObjectAttribute;
 import org.topcased.requirement.Requirement;
 import org.topcased.requirement.RequirementPackage;
 import org.topcased.requirement.TextAttribute;
-import org.topcased.requirement.core.Messages;
-import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.dialogs.UpdateAttributeDialog;
+import org.topcased.requirement.core.internal.Messages;
+import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.current.CurrentPage;
 

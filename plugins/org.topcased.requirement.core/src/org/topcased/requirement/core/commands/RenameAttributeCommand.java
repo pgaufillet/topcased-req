@@ -17,7 +17,7 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 import org.topcased.requirement.Attribute;
 import org.topcased.requirement.Requirement;
 import org.topcased.requirement.RequirementPackage;
-import org.topcased.requirement.core.Messages;
+import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**

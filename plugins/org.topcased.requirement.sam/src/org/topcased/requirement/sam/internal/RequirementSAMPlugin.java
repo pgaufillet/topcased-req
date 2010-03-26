@@ -9,8 +9,7 @@
  * Contributors : Maxime AUDRAIN (CS) - initial API and implementation
  * 
  *****************************************************************************/
-
-package org.topcased.requirement.sam;
+package org.topcased.requirement.sam.internal;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -25,29 +24,35 @@ import org.osgi.framework.BundleContext;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class RequirementSamPlugin extends AbstractUIPlugin
+public class RequirementSAMPlugin extends AbstractUIPlugin
 {
 
     // The plug-in ID
     public static final String PLUGIN_ID = "org.topcased.requirement.sam";
 
     // The shared instance
-    private static RequirementSamPlugin plugin;
+    private static RequirementSAMPlugin plugin;
 
     /**
      * The constructor
      */
-    public RequirementSamPlugin()
+    public RequirementSAMPlugin()
     {
         super();
         plugin = this;
     }
 
+    /**
+     * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
+     */
     public void start(BundleContext context) throws Exception
     {
         super.start(context);
     }
 
+    /**
+     * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
+     */
     public void stop(BundleContext context) throws Exception
     {
         super.stop(context);
@@ -59,7 +64,7 @@ public class RequirementSamPlugin extends AbstractUIPlugin
      * 
      * @return the shared instance
      */
-    public static RequirementSamPlugin getDefault()
+    public static RequirementSAMPlugin getDefault()
     {
         return plugin;
     }

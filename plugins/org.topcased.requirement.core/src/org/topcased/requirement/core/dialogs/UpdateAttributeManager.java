@@ -37,12 +37,12 @@ import org.topcased.requirement.AttributeValue;
 import org.topcased.requirement.ConfiguratedAttribute;
 import org.topcased.requirement.DefaultAttributeValue;
 import org.topcased.requirement.RequirementPackage;
-import org.topcased.requirement.core.Messages;
-import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.commands.AddAttributeCommand;
 import org.topcased.requirement.core.commands.MoveAttributeCommand;
 import org.topcased.requirement.core.commands.RemoveAttributeCommand;
 import org.topcased.requirement.core.commands.RenameAttributeCommand;
+import org.topcased.requirement.core.internal.Messages;
+import org.topcased.requirement.core.internal.RequirementCorePlugin;
 
 /**
  * Manager for handling update of the attribute configuration.

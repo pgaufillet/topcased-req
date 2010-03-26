@@ -29,7 +29,7 @@ import org.topcased.requirement.ObjectAttribute;
 import org.topcased.requirement.Requirement;
 import org.topcased.requirement.SpecialChapter;
 import org.topcased.requirement.TextAttribute;
-import org.topcased.requirement.core.Messages;
+import org.topcased.requirement.core.internal.Messages;
 
 /**
  * This class defines the EMF <b>delete</b> command for the Current Requirements.

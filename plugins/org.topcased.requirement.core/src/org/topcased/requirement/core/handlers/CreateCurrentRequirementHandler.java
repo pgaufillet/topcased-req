@@ -11,9 +11,9 @@
  *****************************************************************************/
 package org.topcased.requirement.core.handlers;
 
-import org.topcased.requirement.core.Messages;
 import org.topcased.requirement.core.commands.CreateCurrentReqCommand;
 import org.topcased.requirement.core.commands.CreateRequirementCommand;
+import org.topcased.requirement.core.internal.Messages;
 
 /**
  * Implements FR#2066

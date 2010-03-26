@@ -17,7 +17,7 @@ import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.swt.SWT;
 import org.topcased.requirement.ConfiguratedAttribute;
 import org.topcased.requirement.RequirementPackage;
-import org.topcased.requirement.core.Messages;
+import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.tabbedproperties.sections.AbstractListPropertySection;
 import org.topcased.tabbedproperties.sections.widgets.TableViewerComposite;

@@ -18,10 +18,10 @@ import org.eclipse.emf.common.command.UnexecutableCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.widgets.Display;
-import org.topcased.requirement.core.Messages;
 import org.topcased.requirement.core.commands.CreateCurrentReqCommand;
 import org.topcased.requirement.core.commands.CreateRequirementCommand;
 import org.topcased.requirement.core.extensions.ISpecificDropAction;
+import org.topcased.requirement.sam.internal.Messages;
 import org.topcased.requirement.sam.dialogs.ChooseTargetDialog;
 import org.topcased.sam.Flow;
 

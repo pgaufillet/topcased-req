@@ -19,7 +19,7 @@ import org.topcased.requirement.ConfiguratedAttribute;
 import org.topcased.requirement.Requirement;
 import org.topcased.requirement.RequirementPackage;
 import org.topcased.requirement.TextAttribute;
-import org.topcased.requirement.core.Messages;
+import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**

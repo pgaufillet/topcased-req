@@ -24,7 +24,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.topcased.facilities.extensions.AbstractExtensionManager;
-import org.topcased.requirement.core.RequirementCorePlugin;
+import org.topcased.requirement.core.internal.RequirementCorePlugin;
 
 /**
  * Define the manager of the extension point "requirementIdentifierDefinition" who provide

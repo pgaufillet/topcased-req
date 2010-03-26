@@ -13,7 +13,7 @@ package org.topcased.requirement.core.properties.sections;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.swt.SWT;
 import org.topcased.requirement.RequirementPackage;
-import org.topcased.requirement.core.Messages;
+import org.topcased.requirement.core.internal.Messages;
 import org.topcased.tabbedproperties.sections.AbstractStringPropertySection;
 
 /**

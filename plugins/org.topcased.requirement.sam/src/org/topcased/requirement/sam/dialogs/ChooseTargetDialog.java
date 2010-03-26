@@ -70,7 +70,7 @@ public class ChooseTargetDialog extends TitleAreaDialog
     {
         super.configureShell(shell);
         shell.setText("Target selection");
-        shell.setSize(400, 250);
+        shell.setSize(500, 250);
     }
 
     /**

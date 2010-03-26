@@ -36,7 +36,7 @@ import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.RequirementPackage;
 import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.UpstreamModel;
-import org.topcased.requirement.core.Messages;
+import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.views.upstream.UpstreamPage;
 
 import ttm.Document;

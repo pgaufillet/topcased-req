@@ -34,9 +34,9 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.ResourceSelectionDialog;
-import org.topcased.requirement.core.Messages;
 import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
 import org.topcased.requirement.core.extensions.RequirementTransformationManager;
+import org.topcased.requirement.core.internal.Messages;
 
 /**
  * The "New" wizard page allows setting the container for the new file as well as the file name. The page will only

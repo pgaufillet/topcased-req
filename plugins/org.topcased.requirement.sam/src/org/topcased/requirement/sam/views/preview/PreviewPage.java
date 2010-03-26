@@ -78,10 +78,10 @@ import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.Requirement;
 import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.SpecialChapter;
-import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.current.CurrentPage;
 import org.topcased.requirement.core.views.current.CurrentRequirementView;
+import org.topcased.requirement.sam.internal.RequirementSAMPlugin;
 import org.topcased.sam.System;
 
 import fr.obeo.acceleo.ecore.factories.FactoryException;
@@ -353,7 +353,7 @@ public class PreviewPage extends Page implements IPreviewPage
         public AutomaticRefreshAction()
         {
             super("Automatic Refresh", Action.AS_CHECK_BOX);
-            this.setImageDescriptor(RequirementCorePlugin.getImageDescriptor("icons/link_obj.gif"));
+            this.setImageDescriptor(RequirementSAMPlugin.getImageDescriptor("icons/link_obj.gif"));
         }
 
         @Override
@@ -378,7 +378,7 @@ public class PreviewPage extends Page implements IPreviewPage
         public ManualRefreshAction()
         {
             super("Refresh", Action.AS_PUSH_BUTTON);
-            this.setImageDescriptor(RequirementCorePlugin.getImageDescriptor("icons/update.gif"));
+            this.setImageDescriptor(RequirementSAMPlugin.getImageDescriptor("icons/update.gif"));
         }
 
         /**
@@ -502,11 +502,11 @@ public class PreviewPage extends Page implements IPreviewPage
         }
         catch (IOException e)
         {
-            RequirementCorePlugin.log(e);
+            RequirementSAMPlugin.log(e);
         }
         catch (TemplateSyntaxExceptions e)
         {
-            RequirementCorePlugin.log(e);
+            RequirementSAMPlugin.log(e);
         }
     }
 
@@ -1220,7 +1220,7 @@ public class PreviewPage extends Page implements IPreviewPage
             }
             catch (BadLocationException x)
             {
-                RequirementCorePlugin.log(x);
+                RequirementSAMPlugin.log(x);
             }
         }
         return -1;

@@ -14,7 +14,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.swt.widgets.Text;
 import org.topcased.requirement.ConfiguratedAttribute;
 import org.topcased.requirement.RequirementPackage;
-import org.topcased.requirement.core.Messages;
+import org.topcased.requirement.core.internal.Messages;
 import org.topcased.tabbedproperties.sections.AbstractStringPropertySection;
 
 /**

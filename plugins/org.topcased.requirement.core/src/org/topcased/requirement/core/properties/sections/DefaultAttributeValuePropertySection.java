@@ -16,7 +16,7 @@ import org.topcased.requirement.AttributeValue;
 import org.topcased.requirement.ConfiguratedAttribute;
 import org.topcased.requirement.DefaultAttributeValue;
 import org.topcased.requirement.RequirementPackage;
-import org.topcased.requirement.core.Messages;
+import org.topcased.requirement.core.internal.Messages;
 import org.topcased.tabbedproperties.sections.AbstractBooleanPropertySection;
 
 /**

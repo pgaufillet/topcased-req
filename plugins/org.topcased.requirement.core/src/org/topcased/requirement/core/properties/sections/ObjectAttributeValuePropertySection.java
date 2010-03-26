@@ -16,7 +16,7 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.topcased.requirement.ObjectAttribute;
 import org.topcased.requirement.RequirementPackage;
-import org.topcased.requirement.core.Messages;
+import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.providers.AdvancedRequirementLabelProvider;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.tabbedproperties.sections.AbstractChooserPropertySection;

@@ -50,7 +50,6 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.markers.MarkerItem;
-import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.actions.AddAttributeAction;
 import org.topcased.requirement.core.actions.CreateAnonymousRequirementAction;
 import org.topcased.requirement.core.actions.CreateCurrentRequirementAction;
@@ -72,6 +71,8 @@ import org.topcased.requirement.core.dnd.DragSourceCurrentAdapter;
 import org.topcased.requirement.core.dnd.DropTargetCurrentAdapter;
 import org.topcased.requirement.core.dnd.RequirementTransfer;
 import org.topcased.requirement.core.filters.CurrentRequirementFilter;
+import org.topcased.requirement.core.internal.Messages;
+import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.listeners.RequirementDoubleClickListener;
 import org.topcased.requirement.core.providers.CurrentRequirementContentProvider;
 import org.topcased.requirement.core.providers.CurrentRequirementLabelProvider;
@@ -86,7 +87,6 @@ import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.ObjectAttribute;
 import org.topcased.requirement.Requirement;
 import org.topcased.requirement.RequirementProject;
-import org.topcased.requirement.core.Messages;
 
 /**
  * This class creates the page to edit a requirement model in the upstream requirement view

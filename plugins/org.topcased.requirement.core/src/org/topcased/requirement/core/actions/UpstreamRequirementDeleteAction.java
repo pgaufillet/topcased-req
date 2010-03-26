@@ -18,7 +18,7 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
-import org.topcased.requirement.core.Messages;
+import org.topcased.requirement.core.internal.Messages;
 
 /**
  * This class defines the EMF <b>delete</b> command for the Upstream Requirements.

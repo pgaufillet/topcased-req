@@ -44,7 +44,6 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
-import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.actions.RequirementAbstractEMFAction;
 import org.topcased.requirement.core.actions.UnlinkRequirementModelAction;
 import org.topcased.requirement.core.actions.UpdateRequirementModelAction;
@@ -52,6 +51,8 @@ import org.topcased.requirement.core.actions.UpstreamRequirementDeleteAction;
 import org.topcased.requirement.core.dnd.DragSourceUpstreamAdapter;
 import org.topcased.requirement.core.dnd.RequirementTransfer;
 import org.topcased.requirement.core.filters.UpstreamRequirementFilter;
+import org.topcased.requirement.core.internal.Messages;
+import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.listeners.RequirementDoubleClickListener;
 import org.topcased.requirement.core.providers.UpstreamRequirementContentProvider;
 import org.topcased.requirement.core.providers.UpstreamRequirementLabelProvider;
@@ -59,7 +60,6 @@ import org.topcased.requirement.core.utils.RequirementCoverageComputer;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.AbstractRequirementPage;
 import org.topcased.requirement.core.views.SearchComposite;
-import org.topcased.requirement.core.Messages;
 import ttm.Document;
 
 /**
