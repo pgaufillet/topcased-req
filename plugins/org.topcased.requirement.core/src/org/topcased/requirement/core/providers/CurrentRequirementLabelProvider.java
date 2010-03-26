@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2008 TOPCASED consortium.
+ * Copyright (c) 2008,2010 Communication & Systems.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -15,10 +15,18 @@ package org.topcased.requirement.core.providers;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
+import org.eclipse.jface.viewers.IColorProvider;
+import org.eclipse.jface.viewers.IFontProvider;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
+import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.AttributeLink;
 import org.topcased.requirement.AttributeValue;
 import org.topcased.requirement.ConfiguratedAttribute;
+import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.ObjectAttribute;
 import org.topcased.requirement.core.preferences.CurrentPreferenceHelper;
@@ -31,17 +39,28 @@ import org.topcased.requirement.core.utils.RequirementUtils;
  * @author <a href="mailto:sebastien.gabel@c-s.fr">Sebastien GABEL</a>
  * 
  */
-public class CurrentRequirementLabelProvider extends AdapterFactoryLabelProvider
+public class CurrentRequirementLabelProvider extends AdapterFactoryLabelProvider implements IFontProvider, IColorProvider
 {
+    /** Font for impacted current requirements */
+    private Font italicFont;
+
+    /** Default Font for current requirements */
+    private Font defaultFont;
+
+    /** Red color for italic font */
+    private Color italicColor;
+
+    /** Default color */
+    private Color defaultColor;
 
     /**
      * Constructor
      */
     public CurrentRequirementLabelProvider()
     {
-        super(RequirementUtils.getAdapterFactory());
+        this(RequirementUtils.getAdapterFactory());
     }
-    
+
     /**
      * Constructor
      * 
@@ -50,6 +69,12 @@ public class CurrentRequirementLabelProvider extends AdapterFactoryLabelProvider
     public CurrentRequirementLabelProvider(AdapterFactory adapterFactory)
     {
         super(adapterFactory);
+
+        defaultFont = Utils.getFont(Display.getCurrent().getSystemFont().getFontData()[0], SWT.NONE);
+        italicFont = Utils.getFont(Display.getCurrent().getSystemFont().getFontData()[0], SWT.ITALIC);
+
+        defaultColor = Utils.getColor("0,0,0"); //$NON-NLS-1$
+        italicColor = Utils.getColor("255,0,0"); //$NON-NLS-1$
     }
 
     /**
@@ -86,7 +111,7 @@ public class CurrentRequirementLabelProvider extends AdapterFactoryLabelProvider
             String label = super.getText(element).concat(" ").concat(super.getText(((AttributeLink) element).getValue())); //$NON-NLS-1$
             if (((AttributeLink) element).getPartial())
             {
-                label = label.concat("#Partial");  //$NON-NLS-1$
+                label = label.concat("#Partial"); //$NON-NLS-1$
             }
             return label;
         }
@@ -99,7 +124,7 @@ public class CurrentRequirementLabelProvider extends AdapterFactoryLabelProvider
             ConfiguratedAttribute confAttr = (ConfiguratedAttribute) ((AttributeValue) element).eContainer();
             if (confAttr.getDefaultValue() != null && confAttr.getDefaultValue().getValue() != null && confAttr.getDefaultValue().getValue().equals((AttributeValue) element))
             {
-                return ((AttributeValue) element).getValue().concat(" ").concat(CurrentPreferenceHelper.STRING_DEFAULT_VALUE);
+                return ((AttributeValue) element).getValue().concat(" ").concat(CurrentPreferenceHelper.STRING_DEFAULT_VALUE); //$NON-NLS-1$
             }
             else
             {
@@ -107,6 +132,44 @@ public class CurrentRequirementLabelProvider extends AdapterFactoryLabelProvider
             }
         }
         return super.getText(element);
+    }
+
+    /**
+     * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider#getFont(java.lang.Object)
+     */
+    @Override
+    public Font getFont(Object object)
+    {
+        if (object instanceof AttributeLink)
+        {
+            AttributeLink link = (AttributeLink) object;
+            return getFont(link.eContainer());
+        }
+        if (object instanceof CurrentRequirement)
+        {
+            CurrentRequirement req = (CurrentRequirement) object;
+            return req.isImpacted() ? italicFont : defaultFont;
+        }
+        return super.getFont(object);
+    }
+
+    /**
+     * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider#getForeground(java.lang.Object)
+     */
+    @Override
+    public Color getForeground(Object object)
+    {
+        if (object instanceof AttributeLink)
+        {
+            AttributeLink link = (AttributeLink) object;
+            return getForeground(link.eContainer());
+        }
+        if (object instanceof CurrentRequirement)
+        {
+            CurrentRequirement req = (CurrentRequirement) object;
+            return req.isImpacted() ? italicColor : defaultColor;
+        }
+        return super.getForeground(object);
     }
 
 }

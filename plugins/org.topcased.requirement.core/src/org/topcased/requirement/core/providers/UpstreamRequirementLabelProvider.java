@@ -17,7 +17,6 @@ import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Display;
 import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.core.utils.RequirementUtils;
@@ -39,7 +38,7 @@ public class UpstreamRequirementLabelProvider extends AdapterFactoryLabelProvide
     private Font boldItalicFont;
 
     /** Font for not covered upstream requirements */
-    private Font initialFont;
+    private Font defautlFont;
 
     /**
      * Constructor
@@ -49,34 +48,13 @@ public class UpstreamRequirementLabelProvider extends AdapterFactoryLabelProvide
     public UpstreamRequirementLabelProvider(AdapterFactory adapterFactory)
     {
         super(adapterFactory);
-        
-        FontData[] initialFontData = getStyledFont(Display.getCurrent().getSystemFont(), SWT.NONE);
-        FontData[] boldItalicFontData = getStyledFont(Display.getCurrent().getSystemFont(), SWT.BOLD | SWT.ITALIC);
-        
-        initialFont = Utils.getFont(initialFontData[0]); //$NON-NLS-1$
-        boldItalicFont = Utils.getFont(boldItalicFontData[0]); //$NON-NLS-1$
+
+        defautlFont = Utils.getFont(Display.getCurrent().getSystemFont().getFontData()[0], SWT.NONE);
+        boldItalicFont = Utils.getFont(Display.getCurrent().getSystemFont().getFontData()[0], SWT.BOLD | SWT.ITALIC);
     }
 
     /**
-     * Get a styled font
-     * 
-     * @param originalFont
-     * @param style
-     * 
-     * @return the font
-     */
-    private FontData[] getStyledFont(Font originalFont, int style)
-    {
-        FontData[] fontData = originalFont.getFontData();
-        for (int i = 0; i < fontData.length; i++)
-        {
-            fontData[i].setStyle(fontData[i].getStyle() | style);
-        }
-        return fontData;
-    }
-    
-    /**
-     * @see org.eclipse.jface.viewers.IFontProvider#getFont(java.lang.Object)
+     * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider#getFont(java.lang.Object)
      */
     public Font getFont(Object element)
     {
@@ -87,6 +65,6 @@ public class UpstreamRequirementLabelProvider extends AdapterFactoryLabelProvide
                 return boldItalicFont;
             }
         }
-        return initialFont;
+        return defautlFont;
     }
 }
