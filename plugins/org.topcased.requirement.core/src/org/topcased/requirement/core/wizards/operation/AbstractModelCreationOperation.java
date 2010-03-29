@@ -17,11 +17,11 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.topcased.requirement.AttributeConfiguration;
 import org.topcased.requirement.RequirementProject;
+import org.topcased.requirement.core.internal.RequirementCorePlugin;
+import org.topcased.requirement.core.extensions.DefaultAttachmentPolicy;
 import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
 import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
-import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.preferences.CurrentPreferenceHelper;
-import org.topcased.requirement.core.utils.DefaultAttachmentPolicy;
 import org.topcased.requirement.core.utils.MergeRequirement;
 import org.topcased.requirement.core.utils.RequirementUtils;
 

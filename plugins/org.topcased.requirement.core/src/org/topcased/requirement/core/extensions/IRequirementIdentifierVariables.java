@@ -17,28 +17,28 @@ import java.util.Map;
 import org.eclipse.emf.edit.domain.EditingDomain;
 
 /**
- * This interface defines the behavior to implement for the "requirementIdentifierDefinition" extension point The
- * methods getIndex, increaseIndex and resetIndex must be implemented instead of pattern methods .
+ * This interface defines the behavior to implement for the "requirementIdentifierVariables" extension point.
+ * The added variables can be seen in the table of the requirement naming preference page.
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  * 
  */
-public interface IRequirementIdentifierDefinition
+public interface IRequirementIdentifierVariables
 {
 
     /**
-     * This is here that you can map your added patterns to a pattern walue
+     * This is here that you can map your added variables to a variable value
      * 
-     * @param the map of patterns already constructed
+     * @param the map of variables already constructed
      * @param editingDomain the editing domain
-     * @return the map with added elements
+     * @return the map plus the new variables and there values
      */
-    public Map<String, String> addValuesToPatterns(EditingDomain editingDomain, Map<String, String> alreadyCreatedMap);
+    public Map<String, String> setValuesToVariables(EditingDomain editingDomain, Map<String, String> alreadyCreatedMap);
 
     /**
-     * The default patterns are : project name, number, upstream identifier and hierarchical element parent
+     * You can see the default variables in the {@link DefaultRequirementIdentifierVariables} method
      * 
-     * @return the Pattern list you want to add
+     * @return the Variable list you want to add
      */
-    public List<String> addPatterns();
+    public List<String> addVariables();
 }

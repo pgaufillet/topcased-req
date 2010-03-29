@@ -12,6 +12,7 @@
  ******************************************************************************/
 package org.topcased.requirement.core.preferences;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,10 +28,9 @@ import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
 import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.HierarchicalElement;
-import org.topcased.requirement.core.extensions.IRequirementIdentifierDefinition;
-import org.topcased.requirement.core.extensions.RequirementIdentifierDefinitionManager;
+import org.topcased.requirement.core.extensions.IRequirementIdentifierVariables;
+import org.topcased.requirement.core.extensions.RequirementIdentifierVariablesManager;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
-import org.topcased.requirement.core.utils.DefaultRequirementIdentifierDefinition;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
@@ -122,15 +122,15 @@ public class ComputeRequirementIdentifier
     private String computeFullIdentifier()
     {
         Map<String, String> map = new HashMap<String, String>();
-        
-        //Default key words map
-        map = DefaultRequirementIdentifierDefinition.getInstance().addValuesToPatterns(editingDomain, map);
-        
-        //key words added by extension point
-        IRequirementIdentifierDefinition definition = RequirementIdentifierDefinitionManager.getInstance().getIdentifierDefinition(editingDomain);
-        if (definition != null)
+
+        //Variables added by extension point
+        Collection<IRequirementIdentifierVariables> variables = RequirementIdentifierVariablesManager.getInstance().getIdentifierVariables();
+        if (variables != null)
         {
-            map = definition.addValuesToPatterns(editingDomain, map);            
+            for (IRequirementIdentifierVariables vars : variables)
+            {
+                map = vars.setValuesToVariables(editingDomain, map);       
+            }     
         }
         
         return convert(map);

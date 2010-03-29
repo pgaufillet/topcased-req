@@ -9,7 +9,7 @@
  * Contributors : Maxime AUDRAIN (CS) - initial API and implementation
  * 
  *****************************************************************************/
-package org.topcased.requirement.core.utils;
+package org.topcased.requirement.core.extensions;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -23,49 +23,24 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.RequirementProject;
-import org.topcased.requirement.core.extensions.IRequirementIdentifierDefinition;
 import org.topcased.requirement.core.preferences.ComputeRequirementIdentifier;
+import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
- * Default behavior for the requirement counting algorithm
- * This algorithm put the index step on the root of the hierarchical element tree.
- * This provide a global increment for all the requirements
+ * Default added variables for the requirement naming pattern in the preference page
  * 
  * @author maudrain
  *
  */
-public class DefaultRequirementIdentifierDefinition implements IRequirementIdentifierDefinition
+public class DefaultRequirementIdentifierVariables implements IRequirementIdentifierVariables
 {
 
     private static final String DEFAULT_HIERARCHICAL_ELEMENT_NAME = "xxx";
 
-    /** the shared instance */
-    private static DefaultRequirementIdentifierDefinition definition;
-
     /**
-     * Private constructor
+     * @see org.topcased.requirement.core.extensions.IRequirementIdentifierVariables#setValuesToVariables(org.eclipse.emf.edit.domain.EditingDomain, java.util.Map)
      */
-    private DefaultRequirementIdentifierDefinition()
-    {
-        // avoid instantiation
-    }
-
-    /**
-     * Gets the shared instance.
-     * 
-     * @return the default requirement identifier definition
-     */
-    public static DefaultRequirementIdentifierDefinition getInstance()
-    {
-        if (definition == null)
-        {
-            definition = new DefaultRequirementIdentifierDefinition();
-        }
-        return definition;
-    }
-
-
-    public Map<String, String> addValuesToPatterns(EditingDomain editingDomain, Map<String, String> alreadyCreatedMap)
+    public Map<String, String> setValuesToVariables(EditingDomain editingDomain, Map<String, String> alreadyCreatedMap)
     {
         
         // Number's formatter
@@ -77,7 +52,7 @@ public class DefaultRequirementIdentifierDefinition implements IRequirementIdent
         
         //Default key word map
         alreadyCreatedMap.put("{project}", ((RequirementProject) requirement.getContents().get(0)).getIdentifier());
-        alreadyCreatedMap.put("{resource name}", requirement.getURI().lastSegment().replace(".requirement", ""));
+        alreadyCreatedMap.put("{resource name}", requirement.getURI().trimFileExtension().lastSegment());
         alreadyCreatedMap.put("{hierarchical element}", getHierarchicalElementIdentifier(ComputeRequirementIdentifier.INSTANCE.getIdentifierHierarchicalElement()));
         alreadyCreatedMap.put("{upstream requirement ident}", ComputeRequirementIdentifier.INSTANCE.getIdentifierUpstreamIdent());
         alreadyCreatedMap.put("{number}", nf.format(ComputeRequirementIdentifier.INSTANCE.getIdentifierRequirementIndex()));
@@ -85,7 +60,10 @@ public class DefaultRequirementIdentifierDefinition implements IRequirementIdent
         return alreadyCreatedMap;
     }
 
-    public List<String> addPatterns()
+    /**
+     * @see org.topcased.requirement.core.extensions.IRequirementIdentifierVariables#addVariables()
+     */
+    public List<String> addVariables()
     {
         List<String> keyWords = new ArrayList<String>();
         keyWords.add("{project}");
@@ -126,6 +104,5 @@ public class DefaultRequirementIdentifierDefinition implements IRequirementIdent
 
         return result;
     }
-
     
 }

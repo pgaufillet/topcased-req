@@ -9,47 +9,26 @@
  * Contributors : Maxime AUDRAIN (CS) - initial API and implementation
  * 
  *****************************************************************************/
-package org.topcased.requirement.core.utils;
+package org.topcased.requirement.core.extensions;
 
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.Requirement;
-import org.topcased.requirement.core.extensions.IRequirementCountingAlgorithm;
 import org.topcased.requirement.core.preferences.NamingRequirementPreferenceHelper;
+import org.topcased.requirement.core.utils.RequirementHelper;
 
 /**
  * @author maudrain
  *
  */
 public class DefaultRequirementCountingAlgorithm implements IRequirementCountingAlgorithm
-{
-    /** The first increment when the root has not already been created */
-    private static long firstIncrement = 0;
-    
+{    
     /**
      * @see org.topcased.requirement.core.extensions.IRequirementCountingAlgorithm#getCurrentIndex(org.topcased.requirement.Requirement)
      */
     public long getCurrentIndex(Requirement currentRequirement)
     {
         HierarchicalElement root = RequirementHelper.INSTANCE.getHierarchicalElementRoot();
-        if (root != null)
-        {
-            if (firstIncrement == -1)
-            {
-                return root.getNextReqIndex();
-            }
-            else
-            {
-                root.setNextReqIndex(firstIncrement);
-                firstIncrement = -1;
-                return root.getNextReqIndex();
-            }
-        }
-        else
-        {
-            firstIncrement = NamingRequirementPreferenceHelper.getRequirementStep(); 
-            return firstIncrement;
-        }
-
+        return root.getNextReqIndex();
     }
 
     /**
@@ -59,22 +38,16 @@ public class DefaultRequirementCountingAlgorithm implements IRequirementCounting
     {
         HierarchicalElement root = RequirementHelper.INSTANCE.getHierarchicalElementRoot();
         index += NamingRequirementPreferenceHelper.getRequirementStep();
-        if (root != null)
+        root.setNextReqIndex(index);
+    }
+
+    public void setFirstIndex(Requirement firstCreatedRequirement)
+    {
+        HierarchicalElement root = RequirementHelper.INSTANCE.getHierarchicalElementRoot();
+        if (root.getNextReqIndex() == 0)
         {
-            if (firstIncrement == -1)
-            {
-                root.setNextReqIndex(index);
-            }
-            else
-            {
-                index = index + firstIncrement;
-                root.setNextReqIndex(index);
-                firstIncrement = -1;
-            }
-        }
-        else
-        {
-            firstIncrement = index;
+          //First time when the default step value hasn't been put
+            root.setNextReqIndex(NamingRequirementPreferenceHelper.getRequirementStep());
         }
     }
 

@@ -165,7 +165,7 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
                 {
                     // If we select a hierarchical element we save its container to be able to focus it if this hierarchical element is deleted
                     previouslySelectedHierarchicalElement = (HierarchicalElement) selection.getFirstElement();
-                    if (previouslySelectedHierarchicalElement.eContainer() != null && !(previouslySelectedHierarchicalElement.eContainer() instanceof RequirementProject))
+                    if (previouslySelectedHierarchicalElement.eContainer() != null && !(previouslySelectedHierarchicalElement.eContainer() instanceof RequirementProject) && (previouslySelectedHierarchicalElement.eContainer() instanceof HierarchicalElement))
                     {
                         hierarchicalElementToFocusAfterHierarchicalElementDeletion = (HierarchicalElement) previouslySelectedHierarchicalElement.eContainer();
                     }                    

@@ -19,16 +19,12 @@ import org.eclipse.emf.edit.command.CommandParameter;
 import org.eclipse.emf.edit.command.PasteFromClipboardCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.SpecialChapter;
-import org.topcased.requirement.core.extensions.IRequirementCountingAlgorithm;
-import org.topcased.requirement.core.extensions.RequirementCountingAlgorithmManager;
 import org.topcased.requirement.core.internal.Messages;
-import org.topcased.requirement.core.preferences.NamingRequirementPreferenceHelper;
 import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.views.current.CurrentPage;
 
@@ -39,6 +35,7 @@ import org.topcased.requirement.core.views.current.CurrentPage;
  */
 public class CurrentRequirementPasteAction extends RequirementAbstractEMFAction
 {
+    private EditingDomain editingDomain;
     /**
      * Constructor
      * 
@@ -52,6 +49,7 @@ public class CurrentRequirementPasteAction extends RequirementAbstractEMFAction
         setImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_PASTE));
         setActionDefinitionId("org.topcased.requirement.core.pasteModelObject"); //$NON-NLS-1$
         setToolTipText(Messages.getString("CurrentRequirementPasteAction.1")); //$NON-NLS-1$
+        editingDomain = editDomain;
     }
 
     /**
@@ -68,47 +66,41 @@ public class CurrentRequirementPasteAction extends RequirementAbstractEMFAction
     }
 
     /**
-     * @see org.topcased.requirement.core.actions.RequirementAbstractEMFAction#preAction(org.eclipse.emf.common.command.CompoundCommand)
-     */
-    @Override
-    public void preAction(CompoundCommand cmd)
-    {
-        Object target = getSelection().getFirstElement();
-
-        if (doPaste())
-        {
-            Collection< ? > source = getEditingDomain().getClipboard();
-            IRequirementCountingAlgorithm algorithm = RequirementCountingAlgorithmManager.getInstance().getCountingAlgorithm(NamingRequirementPreferenceHelper.getCurrentAlgorithm());
-            HierarchicalElement hierarchicalElt = (HierarchicalElement) target;
-            
-            CompoundCommand compound = new CompoundCommand("Renaming moving requirements");
-
-            for (Object currSource : source)
-            {
-                if (currSource instanceof CurrentRequirement && algorithm != null)
-                {
-                    // rename the current requirement
-                    CurrentRequirement requirement = (CurrentRequirement) currSource;
-                    compound.appendIfCanExecute(RequirementHelper.INSTANCE.renameRequirement(hierarchicalElt, requirement));
-                    algorithm.increaseIndexWhenCreateRequirement(requirement, algorithm.getCurrentIndex(requirement));
-                }
-            }
-
-            cmd.appendAndExecute(compound);
-        }
-    }
-
-    /**
+     * FIXME : selection bug!!!
+     * 
      * @see org.topcased.requirement.core.actions.RequirementAbstractEMFAction#endAction(org.eclipse.emf.common.command.CompoundCommand)
      */
     @Override
     public void endAction(CompoundCommand cmd)
     {
         CurrentPage currentPage = RequirementHelper.INSTANCE.getCurrentPage();
-        if (currentPage != null)
+        Collection< ? > source = cmd.getAffectedObjects();
+        CompoundCommand compound = new CompoundCommand("Renaming moving requirements");
+        
+        //Process the renaming of the newly pasted requirements 
+        if (doPaste())
+        { 
+            for (Object currSource : source)
+            {
+                if (currSource instanceof CurrentRequirement)
+                {
+                    // rename the current requirement
+                    CurrentRequirement requirement = (CurrentRequirement) currSource;
+                    compound.appendIfCanExecute(RequirementHelper.INSTANCE.renameRequirement(requirement));                    
+                }
+            }
+        }
+        
+        if (!compound.isEmpty() && compound.canExecute())
+        {
+            // Execute the renaming commands
+            editingDomain.getCommandStack().execute(compound);
+        }
+        
+        if (currentPage != null && compound.getAffectedObjects() != null)
         {
             currentPage.refreshViewer(true);
-            currentPage.getViewer().setSelection(new StructuredSelection(cmd.getAffectedObjects()), true);
+            //currentPage.getViewer().setSelection(new StructuredSelection((List<?>) compound.getAffectedObjects()), true);
         }
     }
 

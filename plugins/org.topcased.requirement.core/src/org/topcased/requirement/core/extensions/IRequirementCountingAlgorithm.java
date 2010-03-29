@@ -47,4 +47,10 @@ public interface IRequirementCountingAlgorithm
      */
     // public void decreaseIndexWhenDeleteRequirement(Requirement theDeletedRequirement);
 
+    /**
+     * Set the first index here before the first current requirement is created
+     * 
+     * @param firstCreatedRequirement the first requirement of the model
+     */
+    public void setFirstIndex(Requirement firstCreatedRequirement);
 }

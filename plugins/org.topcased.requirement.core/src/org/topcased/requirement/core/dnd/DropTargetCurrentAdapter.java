@@ -50,11 +50,8 @@ import org.topcased.requirement.ProblemChapter;
 import org.topcased.requirement.RequirementPackage;
 import org.topcased.requirement.SpecialChapter;
 import org.topcased.requirement.UntracedChapter;
-import org.topcased.requirement.core.extensions.IRequirementCountingAlgorithm;
-import org.topcased.requirement.core.extensions.RequirementCountingAlgorithmManager;
 import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
-import org.topcased.requirement.core.preferences.NamingRequirementPreferenceHelper;
 import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.current.CurrentPage;
@@ -447,21 +444,6 @@ public class DropTargetCurrentAdapter extends EditingDomainViewerDropAdapter
      */
     private void addDragAndDropCommand(org.topcased.requirement.Requirement source, HierarchicalElement target, DropTargetEvent event)
     {
-        if (source instanceof CurrentRequirement)
-        {
-            CurrentRequirement currentReq = (CurrentRequirement) source;
-            IRequirementCountingAlgorithm algorithm = RequirementCountingAlgorithmManager.getInstance().getCountingAlgorithm(NamingRequirementPreferenceHelper.getCurrentAlgorithm());            
-                     
-            // handle the requirement renaming before drop
-            Command renameCmd = RequirementHelper.INSTANCE.renameRequirement(target, currentReq);
-            getCommand().appendAndExecute(renameCmd);
-            
-            if (algorithm!=null)
-            {
-                algorithm.increaseIndexWhenCreateRequirement(currentReq, algorithm.getCurrentIndex(currentReq));
-            }
-        }
-
         Command dndCmd = DragAndDropCommand.create(domain, target, getLocation(event), event.operations, originalOperation, Collections.singleton(source));
         getCommand().appendIfCanExecute(dndCmd);
         toSelect.add(source);

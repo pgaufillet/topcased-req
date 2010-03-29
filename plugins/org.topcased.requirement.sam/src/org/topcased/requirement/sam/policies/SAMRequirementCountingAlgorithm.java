@@ -34,14 +34,13 @@ public class SAMRequirementCountingAlgorithm implements IRequirementCountingAlgo
             HierarchicalElement parent = (HierarchicalElement)currentRequirement.eContainer();
             if (parent.getNextReqIndex() == 0)
             {
-                //First time when the default step value hasn't been put
-                parent.setNextReqIndex(NamingRequirementPreferenceHelper.getRequirementStep());
+                setFirstIndex(currentRequirement);
                 return parent.getNextReqIndex();
             }
             else
             {
-                return parent.getNextReqIndex();                
-            }          
+                return parent.getNextReqIndex();    
+            }
         }
         return 0;
     }
@@ -52,11 +51,25 @@ public class SAMRequirementCountingAlgorithm implements IRequirementCountingAlgo
     public void increaseIndexWhenCreateRequirement(Requirement createdRequirement, long index)
     {
         index += NamingRequirementPreferenceHelper.getRequirementStep();
-        if (createdRequirement.eContainer() != null && createdRequirement.eContainer() instanceof HierarchicalElement)
+        if (createdRequirement.eContainer() instanceof HierarchicalElement)
         {
             HierarchicalElement hierarchicalElementContainer = (HierarchicalElement)createdRequirement.eContainer();
             hierarchicalElementContainer.setNextReqIndex(index);
         }
+    }
+
+    /**
+     * @see org.topcased.requirement.core.extensions.IRequirementCountingAlgorithm#setFirstIndex(org.topcased.requirement.Requirement)
+     */
+    public void setFirstIndex(Requirement firstCreatedRequirement)
+    {
+        if (firstCreatedRequirement.eContainer() instanceof HierarchicalElement)
+        {
+            HierarchicalElement parent = (HierarchicalElement)firstCreatedRequirement.eContainer();
+            
+            //First time when the default step value hasn't been put
+            parent.setNextReqIndex(NamingRequirementPreferenceHelper.getRequirementStep());
+        }        
     }
 
 }

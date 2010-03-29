@@ -18,7 +18,7 @@
       </annotation>
       <complexType>
          <sequence minOccurs="1" maxOccurs="unbounded">
-            <element ref="definition"/>
+            <element ref="variables"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -47,7 +47,7 @@
       </complexType>
    </element>
 
-   <element name="definition">
+   <element name="variables">
       <complexType>
          <attribute name="id" type="string" use="required">
             <annotation>
@@ -56,20 +56,13 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="uri" type="string" use="required">
-            <annotation>
-               <documentation>
-                  The URI of the metamodel you want to work on current requirement identifier
-               </documentation>
-            </annotation>
-         </attribute>
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  You need to implements IRequirementIdentifierDefinition to define new behaviour for your current requirement identifiers
+                  You need to implements IRequirementIdentifierVariables to add variables to the requirement naming pattern
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn=":org.topcased.requirement.core.extensions.IRequirementIdentifierDefinition"/>
+                  <meta.attribute kind="java" basedOn=":org.topcased.requirement.core.extensions.IRequirementIdentifierVariables"/>
                </appInfo>
             </annotation>
          </attribute>

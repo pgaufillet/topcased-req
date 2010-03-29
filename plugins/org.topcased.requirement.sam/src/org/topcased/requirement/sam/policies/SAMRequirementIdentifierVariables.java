@@ -19,20 +19,20 @@ import java.util.Map;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.topcased.requirement.RequirementProject;
-import org.topcased.requirement.core.extensions.IRequirementIdentifierDefinition;
+import org.topcased.requirement.core.extensions.IRequirementIdentifierVariables;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
  * @author maudrain
  *
  */
-public class SAMRequirementIdentifierDefinition implements IRequirementIdentifierDefinition
+public class SAMRequirementIdentifierVariables implements IRequirementIdentifierVariables
 {
 
     /**
-     * @see org.topcased.requirement.core.extensions.IRequirementIdentifierDefinition#addValuesToPatterns(org.eclipse.emf.edit.domain.EditingDomain, java.util.Map)
+     * @see org.topcased.requirement.core.extensions.IRequirementIdentifierVariables#addValuesToPatterns(org.eclipse.emf.edit.domain.EditingDomain, java.util.Map)
      */
-    public Map<String, String> addValuesToPatterns(EditingDomain editingDomain, Map<String, String> alreadyCreatedMap)
+    public Map<String, String> setValuesToVariables(EditingDomain editingDomain, Map<String, String> alreadyCreatedMap)
     {
         Resource requirement = RequirementUtils.getRequirementModel(editingDomain);
         
@@ -41,9 +41,9 @@ public class SAMRequirementIdentifierDefinition implements IRequirementIdentifie
     }
 
     /**
-     * @see org.topcased.requirement.core.extensions.IRequirementIdentifierDefinition#addPatterns()
+     * @see org.topcased.requirement.core.extensions.IRequirementIdentifierVariables#addPatterns()
      */
-    public List<String> addPatterns()
+    public List<String> addVariables()
     {   
         List<String> keyWords = new ArrayList<String>();
         keyWords.add("{Upstream Model Ident}");

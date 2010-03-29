@@ -10,7 +10,7 @@
  * 
  *****************************************************************************/
 
-package org.topcased.requirement.core.utils;
+package org.topcased.requirement.core.extensions;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.command.Command;
@@ -30,7 +30,7 @@ import org.topcased.modeler.diagrams.model.Diagrams;
 import org.topcased.modeler.diagrams.model.util.DiagramsResourceImpl;
 import org.topcased.modeler.editor.Modeler;
 import org.topcased.modeler.utils.Utils;
-import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
+import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
  * Define the static default policy of requirement attachment for di models

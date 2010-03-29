@@ -10,7 +10,8 @@
  **********************************************************************************************************************/
 package org.topcased.requirement.core.views;
 
-import org.eclipse.emf.ecore.resource.Resource;
+import java.util.Collection;
+
 import org.eclipse.emf.edit.domain.IEditingDomainProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -25,14 +26,13 @@ import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.part.PageBookView;
 import org.topcased.modeler.editor.Modeler;
 import org.topcased.requirement.core.dnd.RequirementDropListener;
+import org.topcased.requirement.core.extensions.DefaultAttachmentPolicy;
 import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
-import org.topcased.requirement.core.extensions.IRequirementIdentifierDefinition;
+import org.topcased.requirement.core.extensions.IRequirementIdentifierVariables;
 import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
-import org.topcased.requirement.core.extensions.RequirementIdentifierDefinitionManager;
+import org.topcased.requirement.core.extensions.RequirementIdentifierVariablesManager;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.preferences.NamingRequirementPreferenceHelper;
-import org.topcased.requirement.core.utils.DefaultAttachmentPolicy;
-import org.topcased.requirement.core.utils.DefaultRequirementIdentifierDefinition;
 
 
 /**
@@ -200,42 +200,13 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
             if (modeler.getActiveDiagram() != null)
             {               
                 IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(modeler.getEditingDomain());
-                if (policy != null)
+                if (policy != null && policy.getLinkedTargetModel(modeler.getEditingDomain().getResourceSet()) != null)
                 {
-                    Resource targetModel = policy.getLinkedTargetModel(modeler.getEditingDomain().getResourceSet());
-                    if (targetModel != null)
-                    {
-                        if (RequirementCorePlugin.getCreateDropListener() == true)
-                        {
-                            RequirementCorePlugin.setCreateDropListener(false);
-                            modeler.getGraphicalViewer().addDropTargetListener(new RequirementDropListener(modeler.getGraphicalViewer()));
-                            IRequirementIdentifierDefinition definition = RequirementIdentifierDefinitionManager.getInstance().getIdentifierDefinition(modeler.getEditingDomain());
-                            NamingRequirementPreferenceHelper.addKeyWord(DefaultRequirementIdentifierDefinition.getInstance().addPatterns());
-                            if (definition != null)
-                            {
-                                NamingRequirementPreferenceHelper.addKeyWord(definition.addPatterns());
-                            }
-                        }
-                        updatePage(page);
-                    }
+                    initializePage(modeler, page);
                 }
-                else
+                else if (DefaultAttachmentPolicy.getInstance().getLinkedTargetModel(modeler.getEditingDomain().getResourceSet()) != null)
                 {
-                    if ( DefaultAttachmentPolicy.getInstance().getLinkedTargetModel(modeler.getEditingDomain().getResourceSet()) != null)
-                    {
-                        if (RequirementCorePlugin.getCreateDropListener() == true)
-                        {
-                            RequirementCorePlugin.setCreateDropListener(false);
-                            modeler.getGraphicalViewer().addDropTargetListener(new RequirementDropListener(modeler.getGraphicalViewer()));
-                            IRequirementIdentifierDefinition definition = RequirementIdentifierDefinitionManager.getInstance().getIdentifierDefinition(modeler.getEditingDomain());
-                            NamingRequirementPreferenceHelper.addKeyWord(DefaultRequirementIdentifierDefinition.getInstance().addPatterns());
-                            if (definition != null)
-                            {
-                                NamingRequirementPreferenceHelper.addKeyWord(definition.addPatterns());
-                            }
-                        }
-                        updatePage(page);
-                    }
+                    initializePage(modeler, page);
                 }
             }
         }
@@ -271,5 +242,23 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
     public void setSelection(ISelection selection)
     {
         getSelectionProvider().setSelection(selection);
+    }
+    
+    public void initializePage(Modeler modeler, IPage page)
+    {
+        if (RequirementCorePlugin.getCreateDropListener() == true)
+        {
+            RequirementCorePlugin.setCreateDropListener(false);
+            modeler.getGraphicalViewer().addDropTargetListener(new RequirementDropListener(modeler.getGraphicalViewer()));
+            Collection<IRequirementIdentifierVariables> variables = RequirementIdentifierVariablesManager.getInstance().getIdentifierVariables();
+            if (variables != null)
+            {
+                for (IRequirementIdentifierVariables vars : variables)
+                {
+                    NamingRequirementPreferenceHelper.addKeyWord(vars.addVariables());
+                }
+            }
+        }
+        updatePage(page);        
     }
 }

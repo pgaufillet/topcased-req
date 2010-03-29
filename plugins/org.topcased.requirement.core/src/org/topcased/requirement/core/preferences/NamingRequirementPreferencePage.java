@@ -171,7 +171,7 @@ public class NamingRequirementPreferencePage extends AbstractTopcasedPreferenceP
     {
         formatRequirement.load();
         stepText.setText(String.valueOf(NamingRequirementPreferenceHelper.getRequirementStep()));
-        algorithmCombo.select(0);
+        algorithmCombo.select(algorithmCombo.indexOf(NamingRequirementPreferenceHelper.getCurrentAlgorithm()));
     }
 
     /**

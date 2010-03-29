@@ -22,11 +22,12 @@ import org.eclipse.emf.common.command.UnexecutableCommand;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.AddCommand;
-import org.eclipse.emf.edit.command.DeleteCommand;
+import org.eclipse.emf.edit.command.DragAndDropCommand;
 import org.eclipse.emf.edit.command.MoveCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.dnd.DND;
 import org.topcased.requirement.AnonymousRequirement;
 import org.topcased.requirement.AttributeAllocate;
 import org.topcased.requirement.AttributeConfiguration;
@@ -133,7 +134,6 @@ public final class RequirementHelper
 
         if (targetObject != null)
         {
-            currentPage.getModel();
             List<org.topcased.requirement.Requirement> createdRequirements = new ArrayList<org.topcased.requirement.Requirement>();
             HierarchicalElement hierarchicalElement = getHierarchicalElement(targetObject, globalCmd);
 
@@ -264,18 +264,20 @@ public final class RequirementHelper
                         // need to delete the dropped object (the source of the drag) only if the parent is not the same
                         if (!target.equals(requirement.eContainer()))
                         {
-                            compoundCmd.appendIfCanExecute(DeleteCommand.create(editingDomain, requirement));
-
-                            // add to the new container
-                            compoundCmd.appendIfCanExecute(AddCommand.create(editingDomain, target, RequirementPackage.eINSTANCE.getHierarchicalElement_Requirement(), requirement, pos));
+                            Command dndCmd = DragAndDropCommand.create(editingDomain, target, pos,  DND.DROP_MOVE , DND.DROP_MOVE, Collections.singleton(requirement));
+                            compoundCmd.appendIfCanExecute(dndCmd);
+//                            compoundCmd.appendAndExecute(DeleteCommand.create(editingDomain, requirement));
+//
+//                            // add to the new container
+//                            compoundCmd.appendAndExecute(AddCommand.create(editingDomain, target, RequirementPackage.eINSTANCE.getHierarchicalElement_Requirement(), requirement, pos));
 
                             // only if the Requirement is kind of CurrentRequirement, the identifier needs to be
                             // renamed.
-                            if (requirement instanceof CurrentRequirement)
-                            {
-                                CurrentRequirement currentreq = (CurrentRequirement) requirement;
-                                compoundCmd.appendIfCanExecute(renameRequirement(hierarchicalElt, currentreq));
-                            }
+//                            if (requirement instanceof CurrentRequirement)
+//                            {
+//                                CurrentRequirement currentreq = (CurrentRequirement) requirement;
+//                                compoundCmd.appendAndExecute(renameRequirement(currentreq));
+//                            }
                         }
                         toSelect.add(requirement);
                     }
@@ -310,6 +312,7 @@ public final class RequirementHelper
     public CurrentRequirement create(HierarchicalElement target, Requirement upstream, CompoundCommand compoundCmd)
     {
         long index = 0;
+        HierarchicalElement root = RequirementHelper.INSTANCE.getHierarchicalElementRoot();
         String source = "";
         IRequirementCountingAlgorithm algorithm = RequirementCountingAlgorithmManager.getInstance().getCountingAlgorithm(NamingRequirementPreferenceHelper.getCurrentAlgorithm());
         
@@ -318,11 +321,20 @@ public final class RequirementHelper
         {
             source = upstream.getIdent();
         }
-        //Create the requirement and attach it
+  
+        //Create the requirement
         Integer pos = AddRequirementMarker.eINSTANCE.computeIndex(target);
-        CurrentRequirement newCurrentReq = createCurrentRequirementFromUpstream(upstream);
+        CurrentRequirement newCurrentReq = createCurrentRequirementFromUpstream(upstream);  
+        
+        //Attach the requirement to the model
         compoundCmd.appendAndExecute(AddCommand.create(editingDomain, target, RequirementPackage.eINSTANCE.getHierarchicalElement_Requirement(), newCurrentReq, pos));
 
+        //Handle the case when this created requirement is the first requirement in the model
+        if (root == null)
+        {
+            algorithm.setFirstIndex(newCurrentReq);
+        } 
+        
         //Compute the identifier of the newly created requirement
         index = algorithm.getCurrentIndex(newCurrentReq);
         newCurrentReq.setIdentifier(ComputeRequirementIdentifier.INSTANCE.computeIdent(editingDomain, target, source, index));
@@ -541,20 +553,27 @@ public final class RequirementHelper
      * @param nextIndex The next index
      * @return the EMF command which is of kind {@link SetCommand}
      */
-    public Command renameRequirement(HierarchicalElement parent, CurrentRequirement requirement)
+    public Command renameRequirement(CurrentRequirement requirement)
     {
         long index = 0;
         IRequirementCountingAlgorithm algorithm = RequirementCountingAlgorithmManager.getInstance().getCountingAlgorithm(NamingRequirementPreferenceHelper.getCurrentAlgorithm());
         if (requirement != null && algorithm != null)
         {
             String ident = requirement.getIdentifier();
+            HierarchicalElement parent = (HierarchicalElement) requirement.eContainer();
             index = algorithm.getCurrentIndex(requirement);
             String newIdent = ComputeRequirementIdentifier.INSTANCE.computeIdent(editingDomain, parent, ident, index);
+            algorithm.increaseIndexWhenCreateRequirement(requirement, index);
             return SetCommand.create(editingDomain, requirement, RequirementPackage.eINSTANCE.getIdentifiedElement_Identifier(), newIdent);
         }
         return UnexecutableCommand.INSTANCE;
     }
 
+    /**
+     * Used by the default counting algorithm because the requirement index is stored on the hierarchical element root
+     * 
+     * @return the hierarchical element root of the current page model
+     */
     public HierarchicalElement getHierarchicalElementRoot()
     {
         if (currentPage.getModel() instanceof RequirementProject)
@@ -616,24 +635,6 @@ public final class RequirementHelper
     {
         return SetCommand.create(editingDomain, requirement, RequirementPackage.eINSTANCE.getCurrentRequirement_Impacted(), false);
     }
-
-    // /**
-    // * Check if a hierarchical element has requirements
-    // *
-    // * @param eObjectToCheck the object
-    // * @return true if object is present in the model
-    // */
-    // public boolean hasRequirements(HierarchicalElement elt)
-    // {
-    // for (org.topcased.requirement.Requirement req : elt.getRequirement())
-    // {
-    // if (req != null)
-    // {
-    // return true;
-    // }
-    // }
-    // return false;
-    // }
 
     /**
      * Sets the Upstream Page
