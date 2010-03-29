@@ -27,3 +27,4 @@ Export-Package: org.topcased.requirement.core.actions,
  org.topcased.requirement.core.wizards,
  org.topcased.requirement.core.wizards.operation
 Bundle-Vendor: %providerName
+Import-Package: org.eclipse.core.expressions

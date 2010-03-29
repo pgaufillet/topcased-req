@@ -121,4 +121,13 @@ public abstract class CreateRequirementCommand extends AbstractCommand
         return target;
     }
 
+    /**
+     * @return the global command
+     */
+    public Command getGlobalCmd()
+    {
+        return globalCmd;
+        
+    }
+
 }

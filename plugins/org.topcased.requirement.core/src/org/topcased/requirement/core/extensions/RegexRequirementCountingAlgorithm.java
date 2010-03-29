@@ -12,6 +12,7 @@
  *****************************************************************************/
 package org.topcased.requirement.core.extensions;
 
+import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,10 +37,15 @@ public class RegexRequirementCountingAlgorithm implements IRequirementCountingAl
     public long getCurrentIndex(Requirement currentRequirement)
     {
         long currentStep = NamingRequirementPreferenceHelper.getRequirementStep();
+        long max = getMax();
         if (currentStep != step)
         {
             nextIndex = nextIndex - step + currentStep; 
             step = currentStep;
+        } 
+        else if (max != 0)
+        {
+            nextIndex = max + NamingRequirementPreferenceHelper.getRequirementStep();
         }
         return nextIndex;
     }
@@ -49,7 +55,6 @@ public class RegexRequirementCountingAlgorithm implements IRequirementCountingAl
      */
     public void increaseIndexWhenCreateRequirement(Requirement createdRequirement, long index)
     {
-        nextIndex = getMaxPlusOne();
     }
     
     /**
@@ -60,13 +65,14 @@ public class RegexRequirementCountingAlgorithm implements IRequirementCountingAl
      * 
      * @return the max
      */
-    private static long getMaxPlusOne()
+    private static long getMax()
     {
         long max = 0;
         long result = 0;
         HierarchicalElement root = RequirementHelper.INSTANCE.getHierarchicalElementRoot();
+        Collection<Requirement> requirements = RequirementUtils.getAllCurrents(root.eResource());
 
-        for (Requirement req : RequirementUtils.getAllCurrents(root.eResource()))
+        for (Requirement req : requirements)
         {
             int value = getNumberOfCurrent(req);
             if (value > max)
@@ -74,7 +80,7 @@ public class RegexRequirementCountingAlgorithm implements IRequirementCountingAl
                 max = value;
             }
         }
-        result = max + NamingRequirementPreferenceHelper.getRequirementStep();
+        result = max;
         return result;
     }
     
@@ -89,7 +95,7 @@ public class RegexRequirementCountingAlgorithm implements IRequirementCountingAl
         {
             String format =RequirementCorePlugin.getDefault().getPreferenceStore().getString(NamingRequirementPreferenceHelper.NAMING_FORMAT_REQUIREMENT_STORE);
             String regex = format.replace("{number}", "(\\d*)");
-            regex = regex.replaceAll("\\{[^\\{]*\\}", "\\\\w*");
+            regex = regex.replaceAll("\\{[^\\{]*\\}", "[\\\\w ]*");
             Pattern pat = Pattern.compile(regex);
             Matcher m = pat.matcher(current.getIdentifier());
             if (m.matches())

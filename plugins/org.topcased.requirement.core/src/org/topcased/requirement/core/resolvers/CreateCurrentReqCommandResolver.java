@@ -20,6 +20,7 @@ import java.util.ListIterator;
 import java.util.Map;
 
 import org.eclipse.emf.common.command.CompoundCommand;
+import org.eclipse.emf.common.command.UnexecutableCommand;
 import org.eclipse.gef.commands.Command;
 import org.topcased.modeler.commands.CommandStack;
 import org.topcased.requirement.CurrentRequirement;
@@ -59,18 +60,21 @@ public class CreateCurrentReqCommandResolver extends AdditionalCommand<CreateCur
         
         for (CreateCurrentReqCommand createCommand : dndCommands)
         {      
-              createCommand.getRequirements();
-              for (Object req : createCommand.getRequirements())
+              if (!(createCommand.getGlobalCmd() instanceof UnexecutableCommand))
               {
-                  if (req instanceof CurrentRequirement)
+                  createCommand.getRequirements();
+                  for (Object req : createCommand.getRequirements())
                   {
-                    //Handle case of current view requirements drag'n'drop
-                    org.topcased.requirement.CurrentRequirement requirement = (org.topcased.requirement.CurrentRequirement) req;
-                    compound.appendIfCanExecute(RequirementHelper.INSTANCE.renameRequirement(requirement));
+                      if (req instanceof CurrentRequirement)
+                      {
+                        //Handle case of current view requirements drag'n'drop
+                        org.topcased.requirement.CurrentRequirement requirement = (org.topcased.requirement.CurrentRequirement) req;
+                        compound.appendIfCanExecute(RequirementHelper.INSTANCE.renameRequirement(requirement));
+                      }
                   }
+                  compound.execute();
+                  mapCommand.put(createCommand, compound);
               }
-              compound.execute();
-              mapCommand.put(createCommand, compound);
         }
 
     }

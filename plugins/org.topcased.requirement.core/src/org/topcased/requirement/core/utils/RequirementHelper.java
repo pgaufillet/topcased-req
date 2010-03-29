@@ -266,18 +266,6 @@ public final class RequirementHelper
                         {
                             Command dndCmd = DragAndDropCommand.create(editingDomain, target, pos,  DND.DROP_MOVE , DND.DROP_MOVE, Collections.singleton(requirement));
                             compoundCmd.appendIfCanExecute(dndCmd);
-//                            compoundCmd.appendAndExecute(DeleteCommand.create(editingDomain, requirement));
-//
-//                            // add to the new container
-//                            compoundCmd.appendAndExecute(AddCommand.create(editingDomain, target, RequirementPackage.eINSTANCE.getHierarchicalElement_Requirement(), requirement, pos));
-
-                            // only if the Requirement is kind of CurrentRequirement, the identifier needs to be
-                            // renamed.
-//                            if (requirement instanceof CurrentRequirement)
-//                            {
-//                                CurrentRequirement currentreq = (CurrentRequirement) requirement;
-//                                compoundCmd.appendAndExecute(renameRequirement(currentreq));
-//                            }
                         }
                         toSelect.add(requirement);
                     }

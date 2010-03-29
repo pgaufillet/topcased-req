@@ -13,6 +13,7 @@ package org.topcased.requirement.sam.views;
 
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.topcased.modeler.sam.editor.SAMEditor;
+import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.sam.views.preview.IPreviewPage;
 import org.topcased.requirement.sam.views.preview.PreviewPage;
 
@@ -32,7 +33,10 @@ public class PreviewViewAdapterFactory implements IAdapterFactory
     {
         if (adapterType == IPreviewPage.class && adaptableObject instanceof SAMEditor)
         {
-            return new PreviewPage();
+            if (RequirementUtils.getRequirementModel(((SAMEditor)adaptableObject).getEditingDomain()) != null)
+            {
+                return new PreviewPage();
+            }
         }
         return null;
     }
