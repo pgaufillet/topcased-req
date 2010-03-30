@@ -30,6 +30,7 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
 import org.topcased.modeler.editor.Modeler;
+import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.core.dnd.RequirementDropListener;
 import org.topcased.requirement.core.extensions.DefaultAttachmentPolicy;
 import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
@@ -263,22 +264,7 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
      */
     public static IPreferenceStore getPreferenceStore()
     {
-        IProject project = Modeler.getCurrentIFile().getProject();
-        if (project != null)
-        {
-            Preferences root = Platform.getPreferencesService().getRootNode();
-            try
-            {
-                if (root.node(ProjectScope.SCOPE).node(project.getName()).nodeExists(RequirementCorePlugin.getId()))
-                {
-                    return new ScopedPreferenceStore(new ProjectScope(project), RequirementCorePlugin.getId());
-                }
-            }
-            catch (BackingStoreException e)
-            {
-                RequirementCorePlugin.log(e);
-            }
-        }
-        return RequirementCorePlugin.getDefault().getPreferenceStore();
+        Modeler modeler = Utils.getCurrentModeler();
+        return modeler.getPreferenceStore();
     }
 }
