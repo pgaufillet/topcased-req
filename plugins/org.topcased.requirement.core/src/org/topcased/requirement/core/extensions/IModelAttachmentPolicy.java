@@ -15,36 +15,34 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 
 /**
- * This interface defines the behavior to implement for the "modelAttachmentPolicy" extension point
- * Provide the way to link and unlink your target model to a requirement model
+ * This interface defines the behavior to implement for the "modelAttachmentPolicy" extension point Provide the way to
+ * link and unlink your target model to a requirement model
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
- *
  */
 public interface IModelAttachmentPolicy
 {
     /**
-     * Set a link between a requirement model and a target model
+     * Sets a link between a requirement model and a target model
      * 
-     * @param resource the target model
-     * @param resource the requirement model
+     * @param targetModel the target model
+     * @param requirementModel the requirement model
      */
     void linkRequirementModel(Resource targetModel, Resource requirementModel);
-    
+
     /**
-     * Remove the link between a requirement model and a target model
+     * Removes the link between a requirement model and a target model
      * 
-     * @param resource the target model
-     * @param resource the requirement model
+     * @param targetModel the target model
+     * @param requirementModel the requirement model
      */
     void unlinkRequirementModel(Resource targetModel, Resource requirementModel);
 
-    
     /**
-     * Get the target model linked with the requirement model from the resource set of your editing domain 
+     * Gets the target model linked with the requirement model from the resource set of your editing domain
      * 
-     * @param resource set : the resource set of your editing domain
-     * @return resource : the linked target model
+     * @param resourceSet the resource set of your editing domain
+     * @return the linked target model or null if no requirement model is attached.
      */
     Resource getLinkedTargetModel(ResourceSet resourceSet);
 
