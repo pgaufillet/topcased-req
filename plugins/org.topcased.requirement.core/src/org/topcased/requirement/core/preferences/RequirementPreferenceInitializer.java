@@ -44,7 +44,8 @@ public class RequirementPreferenceInitializer extends AbstractPreferenceInitiali
             preferenceStore.setValue(UpstreamPreferenceHelper.UPSTREAM_ATTRIBUTES_STORE, UpstreamPreferenceHelper.serialize(UpstreamPreferenceHelper.getDefaultValues()));
         }
 
-        preferenceStore.setDefault(NamingRequirementPreferenceHelper.NAMING_FORMAT_REQUIREMENT_STORE, NamingRequirementPreferenceHelper.getDefaultFormat());
-
+        preferenceStore.setDefault(NamingRequirementPreferenceHelper.REQUIREMENT_NAMING_FORMAT, NamingRequirementPreferenceHelper.getDefaultNamingFormat());
+        preferenceStore.setDefault(NamingRequirementPreferenceHelper.REQUIREMENT_STEP_INDEX, NamingRequirementPreferenceHelper.getDefaultIndexStep());
+        preferenceStore.setDefault(NamingRequirementPreferenceHelper.REQUIREMENT_COUNTING_ALGORITHM, NamingRequirementPreferenceHelper.getDefaultCountingAlgorithm());
     }
 }

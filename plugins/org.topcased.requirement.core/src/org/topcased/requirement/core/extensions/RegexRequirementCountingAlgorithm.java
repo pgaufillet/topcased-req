@@ -93,7 +93,7 @@ public class RegexRequirementCountingAlgorithm implements IRequirementCountingAl
         int value = -1;
         if (current.getIdentifier() != null && current.getIdentifier().length() > 0)
         {
-            String format =RequirementCorePlugin.getDefault().getPreferenceStore().getString(NamingRequirementPreferenceHelper.NAMING_FORMAT_REQUIREMENT_STORE);
+            String format = RequirementCorePlugin.getDefault().getPreferenceStore().getString(NamingRequirementPreferenceHelper.REQUIREMENT_NAMING_FORMAT);
             String regex = format.replace("{number}", "(\\d*)");
             regex = regex.replaceAll("\\{[^\\{]*\\}", "[\\\\w ]*");
             Pattern pat = Pattern.compile(regex);

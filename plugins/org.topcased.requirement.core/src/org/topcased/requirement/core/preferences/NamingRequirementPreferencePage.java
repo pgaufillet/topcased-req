@@ -15,6 +15,8 @@ package org.topcased.requirement.core.preferences;
 
 import java.util.List;
 
+import org.eclipse.jface.preference.ComboFieldEditor;
+import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -24,7 +26,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
@@ -54,9 +55,11 @@ public class NamingRequirementPreferencePage extends AbstractTopcasedPreferenceP
 
     private Table tableViewer;
 
-    private StringFieldEditor formatRequirement;
+    private StringFieldEditor namingFormat;
 
-    private Combo algorithmCombo;
+    private IntegerFieldEditor indexStep;
+
+    private ComboFieldEditor algorithmUsed;
 
     /**
      * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
@@ -88,10 +91,9 @@ public class NamingRequirementPreferencePage extends AbstractTopcasedPreferenceP
         textComposite.setLayoutData(textLayoutData);
 
         // Text format
-        formatRequirement = new StringFieldEditor(NamingRequirementPreferenceHelper.NAMING_FORMAT_REQUIREMENT_STORE, "", textComposite); //$NON-NLS-1$
-        formatRequirement.setPreferenceStore(getPreferenceStore());
-        formatRequirement.setLabelText(Messages.getString("NamingRequirementPreferencePage.6")); //$NON-NLS-1$
-        formatText = formatRequirement.getTextControl(textComposite);
+        namingFormat = new StringFieldEditor(NamingRequirementPreferenceHelper.REQUIREMENT_NAMING_FORMAT, Messages.getString("NamingRequirementPreferencePage.6"), textComposite); //$NON-NLS-1$
+        namingFormat.setPreferenceStore(getPreferenceStore());
+        formatText = namingFormat.getTextControl(textComposite);
         formatText.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
 
         // Select Label
@@ -125,16 +127,16 @@ public class NamingRequirementPreferencePage extends AbstractTopcasedPreferenceP
         stepComposite.setLayout(stepCompoLayout);
         stepComposite.setLayoutData(stepLayoutData);
 
-        // Index Step label
-        Label stepLabel = new Label(stepComposite, SWT.NONE);
-        stepLabel.setText(Messages.getString("NamingRequirementPreferencePage.3")); //$NON-NLS-1$
-
         // Index Step Field
-        GridData layoutData = new GridData(SWT.NONE, SWT.NONE, true, false);
-        stepText = new Text(stepComposite, SWT.BORDER);
-        stepText.setTextLimit(4);
+        final GridData layoutData = new GridData(SWT.NONE, SWT.NONE, true, false);
         layoutData.widthHint = 25;
+
+        indexStep = new IntegerFieldEditor(NamingRequirementPreferenceHelper.REQUIREMENT_STEP_INDEX, Messages.getString("NamingRequirementPreferencePage.3"), stepComposite); //$NON-NLS-1$
+        indexStep.setPreferenceStore(getPreferenceStore());
+        stepText = indexStep.getTextControl(stepComposite);
+        stepText.setTextLimit(4);
         stepText.addModifyListener(new StepTextModifyListener());
+        formatText.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
         stepText.setLayoutData(layoutData);
 
         // Algorithm Composite
@@ -147,17 +149,17 @@ public class NamingRequirementPreferencePage extends AbstractTopcasedPreferenceP
         algorithmComposite.setLayout(algorithmCompoLayout);
         algorithmComposite.setLayoutData(gd);
 
-        // Algorithm label
-        Label algoritmLabel = new Label(algorithmComposite, SWT.NONE);
-        algoritmLabel.setText(Messages.getString("NamingRequirementPreferencePage.5")); //$NON-NLS-1$
-
         // Algorithm combo
-        algorithmCombo = new Combo(algorithmComposite, SWT.NULL);
-        algorithmCombo.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
-        for (String key : RequirementCountingAlgorithmManager.getInstance().getAllAlgorithm())
+        int nbAlgo = RequirementCountingAlgorithmManager.getInstance().getAllAlgorithm().size();
+        String[][] map = new String[nbAlgo][2];
+        for (int i = 0; i < nbAlgo; i++)
         {
-            algorithmCombo.add(key);
+            map[i][0] = RequirementCountingAlgorithmManager.getInstance().getAllAlgorithm().toArray(new String[0])[i];
+            map[i][1] = RequirementCountingAlgorithmManager.getInstance().getAllAlgorithm().toArray(new String[0])[i];
         }
+        algorithmUsed = new ComboFieldEditor(NamingRequirementPreferenceHelper.REQUIREMENT_COUNTING_ALGORITHM, Messages.getString("NamingRequirementPreferencePage.5"), map, algorithmComposite);//$NON-NLS-1$
+        algorithmUsed.setPreferenceStore(getPreferenceStore());
+        algorithmUsed.fillIntoGrid(algorithmComposite, 2);
 
         loadPreferences();
 
@@ -169,9 +171,9 @@ public class NamingRequirementPreferencePage extends AbstractTopcasedPreferenceP
      */
     private void loadPreferences()
     {
-        formatRequirement.load();
-        stepText.setText(String.valueOf(NamingRequirementPreferenceHelper.getRequirementStep()));
-        algorithmCombo.select(algorithmCombo.indexOf(NamingRequirementPreferenceHelper.getCurrentAlgorithm()));
+        namingFormat.load();
+        indexStep.load();
+        algorithmUsed.load();
     }
 
     /**
@@ -179,7 +181,9 @@ public class NamingRequirementPreferencePage extends AbstractTopcasedPreferenceP
      */
     private void storePreferences()
     {
-        formatRequirement.store();
+        namingFormat.store();
+        indexStep.store();
+        algorithmUsed.store();
     }
 
     /**
@@ -187,7 +191,9 @@ public class NamingRequirementPreferencePage extends AbstractTopcasedPreferenceP
      */
     private void loadDefaultPreferences()
     {
-        formatRequirement.loadDefault();
+        namingFormat.loadDefault();
+        indexStep.loadDefault();
+        algorithmUsed.loadDefault();
     }
 
     /**
@@ -197,8 +203,6 @@ public class NamingRequirementPreferencePage extends AbstractTopcasedPreferenceP
     public boolean performOk()
     {
         storePreferences();
-        NamingRequirementPreferenceHelper.setRequirementStep(stepText.getText());
-        NamingRequirementPreferenceHelper.setCurrentAlgorithm(algorithmCombo.getItem(algorithmCombo.getSelectionIndex()));
         return super.performOk();
     }
 

@@ -52,15 +52,14 @@ public class ComputeRequirementIdentifier
     private String initialFormat;
 
     private String currentFormat;
-    
+
     // Parameters used to compute the full identifier:
-    
     private EditingDomain editingDomain;
-    
+
     private HierarchicalElement hierarchicalElement;
-    
+
     private String upstreamIdentifier;
-    
+
     private long requirementIndex;
 
     /**
@@ -79,7 +78,7 @@ public class ComputeRequirementIdentifier
         hierarchicalElement = hierarchicalElt;
         upstreamIdentifier = source;
         requirementIndex = nextIndex;
-      
+
         // Determine the number in the system
         return computeFullIdentifier();
     }
@@ -123,20 +122,18 @@ public class ComputeRequirementIdentifier
     {
         Map<String, String> map = new HashMap<String, String>();
 
-        //Variables added by extension point
+        // Variables added by extension point
         Collection<IRequirementIdentifierVariables> variables = RequirementIdentifierVariablesManager.getInstance().getIdentifierVariables();
         if (variables != null)
         {
             for (IRequirementIdentifierVariables vars : variables)
             {
-                map = vars.setValuesToVariables(editingDomain, map);       
-            }     
+                map = vars.setValuesToVariables(editingDomain, map);
+            }
         }
-        
+
         return convert(map);
     }
-
-
 
     /**
      * Gets the PreferenceStore of the project's property
@@ -158,75 +155,40 @@ public class ComputeRequirementIdentifier
             return;
         }
 
-        IProject project = file.getProject();
+        preferenceStore = getPreferenceStore(file.getProject());
+        initialFormat = preferenceStore.getString(NamingRequirementPreferenceHelper.REQUIREMENT_NAMING_FORMAT);
+    }
+
+    private IPreferenceStore getPreferenceStore(IProject project)
+    {
         Preferences root = Platform.getPreferencesService().getRootNode();
         try
         {
             if (root.node(ProjectScope.SCOPE).node(project.getName()).nodeExists(RequirementCorePlugin.getId()))
             {
-                this.preferenceStore = new ScopedPreferenceStore(new ProjectScope(project), RequirementCorePlugin.getId());
-            }
-            else
-            {
-                this.preferenceStore = RequirementCorePlugin.getDefault().getPreferenceStore();
-
+                return new ScopedPreferenceStore(new ProjectScope(project), RequirementCorePlugin.getId());
             }
         }
         catch (BackingStoreException e)
         {
             RequirementCorePlugin.log(e);
-            return;
         }
-
-        this.initialFormat = this.preferenceStore.getString(NamingRequirementPreferenceHelper.NAMING_FORMAT_REQUIREMENT_STORE);
+        return RequirementCorePlugin.getDefault().getPreferenceStore();
     }
-    
+
     public HierarchicalElement getIdentifierHierarchicalElement()
     {
         return hierarchicalElement;
     }
-    
+
     public String getIdentifierUpstreamIdent()
     {
         return upstreamIdentifier;
     }
-    
+
     public long getIdentifierRequirementIndex()
     {
         return requirementIndex;
     }
-    
-//
-//    /**
-//     * Counts the Requirements in the Resource
-//     * 
-//     * @param resource
-//     * 
-//     * @return the number of Requirements in the Resource
-//     */
-//    private int countRequirement(Resource resource)
-//    {
-//        int n = 0;
-//        TreeIterator<EObject> treeIt = EcoreUtil.<EObject> getAllContents(resource, true);
-//        while (treeIt.hasNext())
-//        {
-//            EObject current = treeIt.next();
-//            if (current instanceof Requirement)
-//            {
-//                n++;
-//            }
-//        }
-//        return n;
-//    }
-//
-//    public void setnRequirement(int nRequirement)
-//    {
-//        this.nRequirement = nRequirement;
-//    }
-//
-//    public int getnRequirement()
-//    {
-//        return nRequirement;
-//    }
 
 }
