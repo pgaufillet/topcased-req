@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2008 TOPCASED consortium.
+ * Copyright (c) 2010 Communication & Systems.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -12,9 +12,6 @@
  *    
  ******************************************************************************/
 package org.topcased.requirement.core.preferences;
-
-import java.util.Collection;
-import java.util.List;
 
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.IntegerFieldEditor;
