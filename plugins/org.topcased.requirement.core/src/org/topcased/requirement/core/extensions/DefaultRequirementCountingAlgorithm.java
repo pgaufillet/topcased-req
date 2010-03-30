@@ -13,7 +13,7 @@ package org.topcased.requirement.core.extensions;
 
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.Requirement;
-import org.topcased.requirement.core.preferences.NamingRequirementPreferenceHelper;
+import org.topcased.requirement.core.preferences.ComputeRequirementIdentifier;
 import org.topcased.requirement.core.utils.RequirementHelper;
 
 /**
@@ -37,7 +37,7 @@ public class DefaultRequirementCountingAlgorithm implements IRequirementCounting
     public void increaseIndexWhenCreateRequirement(Requirement createdRequirement, long index)
     {
         HierarchicalElement root = RequirementHelper.INSTANCE.getHierarchicalElementRoot();
-        index += NamingRequirementPreferenceHelper.getRequirementStep();
+        index += ComputeRequirementIdentifier.getRequirementStep();
         root.setNextReqIndex(index);
     }
 
@@ -47,7 +47,7 @@ public class DefaultRequirementCountingAlgorithm implements IRequirementCounting
         if (root.getNextReqIndex() == 0)
         {
           //First time when the default step value hasn't been put
-            root.setNextReqIndex(NamingRequirementPreferenceHelper.getRequirementStep());
+            root.setNextReqIndex(ComputeRequirementIdentifier.getRequirementStep());
         }
     }
 

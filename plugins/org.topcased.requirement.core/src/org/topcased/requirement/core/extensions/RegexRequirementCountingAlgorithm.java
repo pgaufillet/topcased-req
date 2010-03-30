@@ -19,24 +19,25 @@ import java.util.regex.Pattern;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.Requirement;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
-import org.topcased.requirement.core.preferences.NamingRequirementPreferenceHelper;
+import org.topcased.requirement.core.preferences.ComputeRequirementIdentifier;
+import org.topcased.requirement.core.preferences.RequirementNamingConstants;
 import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
 public class RegexRequirementCountingAlgorithm implements IRequirementCountingAlgorithm
 {
     /** The next index initialize for the first current requirement creation when the step is at zero*/
-    private static long nextIndex = NamingRequirementPreferenceHelper.getRequirementStep();
+    private static long nextIndex = ComputeRequirementIdentifier.getRequirementStep();
     
     /** The Step saved every time it change for synchronizme with the preference page*/
-    private static long step = NamingRequirementPreferenceHelper.getRequirementStep();
+    private static long step = ComputeRequirementIdentifier.getRequirementStep();
     
     /**
      * @see org.topcased.requirement.core.extensions.IRequirementCountingAlgorithm#getCurrentIndex(org.topcased.requirement.Requirement)
      */
     public long getCurrentIndex(Requirement currentRequirement)
     {
-        long currentStep = NamingRequirementPreferenceHelper.getRequirementStep();
+        long currentStep = ComputeRequirementIdentifier.getRequirementStep();
         long max = getMax();
         if (currentStep != step)
         {
@@ -45,7 +46,7 @@ public class RegexRequirementCountingAlgorithm implements IRequirementCountingAl
         } 
         else if (max != 0)
         {
-            nextIndex = max + NamingRequirementPreferenceHelper.getRequirementStep();
+            nextIndex = max + ComputeRequirementIdentifier.getRequirementStep();
         }
         return nextIndex;
     }
@@ -93,7 +94,7 @@ public class RegexRequirementCountingAlgorithm implements IRequirementCountingAl
         int value = -1;
         if (current.getIdentifier() != null && current.getIdentifier().length() > 0)
         {
-            String format = RequirementCorePlugin.getDefault().getPreferenceStore().getString(NamingRequirementPreferenceHelper.REQUIREMENT_NAMING_FORMAT);
+            String format = RequirementCorePlugin.getDefault().getPreferenceStore().getString(RequirementNamingConstants.REQUIREMENT_NAMING_FORMAT);
             String regex = format.replace("{number}", "(\\d*)");
             regex = regex.replaceAll("\\{[^\\{]*\\}", "[\\\\w ]*");
             Pattern pat = Pattern.compile(regex);
@@ -115,7 +116,7 @@ public class RegexRequirementCountingAlgorithm implements IRequirementCountingAl
      */
     public void setFirstIndex(Requirement firstCreatedRequirement)
     {
-        nextIndex = NamingRequirementPreferenceHelper.getRequirementStep();        
+        nextIndex = ComputeRequirementIdentifier.getRequirementStep();        
     }
 
 }

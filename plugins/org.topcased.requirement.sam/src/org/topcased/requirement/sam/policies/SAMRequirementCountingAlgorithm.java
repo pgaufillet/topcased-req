@@ -15,7 +15,7 @@ package org.topcased.requirement.sam.policies;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.Requirement;
 import org.topcased.requirement.core.extensions.IRequirementCountingAlgorithm;
-import org.topcased.requirement.core.preferences.NamingRequirementPreferenceHelper;
+import org.topcased.requirement.core.preferences.ComputeRequirementIdentifier;
 
 /**
  * @author maudrain
@@ -50,7 +50,7 @@ public class SAMRequirementCountingAlgorithm implements IRequirementCountingAlgo
      */
     public void increaseIndexWhenCreateRequirement(Requirement createdRequirement, long index)
     {
-        index += NamingRequirementPreferenceHelper.getRequirementStep();
+        index += ComputeRequirementIdentifier.getRequirementStep();
         if (createdRequirement.eContainer() instanceof HierarchicalElement)
         {
             HierarchicalElement hierarchicalElementContainer = (HierarchicalElement)createdRequirement.eContainer();
@@ -68,7 +68,7 @@ public class SAMRequirementCountingAlgorithm implements IRequirementCountingAlgo
             HierarchicalElement parent = (HierarchicalElement)firstCreatedRequirement.eContainer();
             
             //First time when the default step value hasn't been put
-            parent.setNextReqIndex(NamingRequirementPreferenceHelper.getRequirementStep());
+            parent.setNextReqIndex(ComputeRequirementIdentifier.getRequirementStep());
         }        
     }
 

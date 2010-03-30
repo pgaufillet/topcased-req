@@ -14,6 +14,7 @@ package org.topcased.requirement.core.extensions;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
@@ -23,8 +24,8 @@ import org.topcased.facilities.extensions.AbstractExtensionManager;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
 
 /**
- * Define the manager of the extension point "requirementIdentifierDefinition" who provide
- * the way to change the count algorithm of current requirements and add key words to current requirements identifier
+ * Define the manager of the extension point "requirementIdentifierDefinition" who provide the way to change the count
+ * algorithm of current requirements and add key words to current requirements identifier
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  * 
@@ -110,7 +111,7 @@ public class RequirementIdentifierVariablesManager extends AbstractExtensionMana
         }
 
     }
-    
+
     /**
      * This method return all the requirement identifier variables
      * 
@@ -119,6 +120,21 @@ public class RequirementIdentifierVariablesManager extends AbstractExtensionMana
     public Collection<IRequirementIdentifierVariables> getIdentifierVariables()
     {
         return mapClass.values();
+    }
+
+    /**
+     * Gets all textual variables without taking into account their value
+     * 
+     * @return all variables declared by extension point.
+     */
+    public Collection<String> getVariables()
+    {
+        Collection<String> vars = new HashSet<String>();
+        for (IRequirementIdentifierVariables variable : getIdentifierVariables())
+        {
+            vars.addAll(variable.getVariables());
+        }
+        return vars;
     }
 
 }

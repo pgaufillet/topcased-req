@@ -47,9 +47,9 @@
       </page>
       <page
             category="org.topcased.requirement.preferences"
-            class="org.topcased.requirement.core.preferences.NamingRequirementPreferencePage"
+            class="org.topcased.requirement.core.preferences.RequirementNamingPreferencePage"
             id="org.topcased.requirement.preferences.naming"
-            name="Current Naming Format">
+            name="Requirement Naming Format">
       </page>
    </extension>
    <extension
@@ -166,9 +166,9 @@
          point="org.eclipse.ui.propertyPages">
       <page
             category="org.topcased.facilities.preferences.property.TopcasedPreferencePage"
-            class="org.topcased.requirement.core.preferences.NamingRequirementPreferencePage"
+            class="org.topcased.requirement.core.preferences.RequirementNamingPreferencePage"
             id="org.topcased.requirement.preferences.property.naming"
-            name="Requirements naming format">
+            name="Requirement Naming Format">
          <enabledWhen>
             <adapt
                   type="org.eclipse.core.resources.IProject">
@@ -485,7 +485,7 @@
          point="org.topcased.requirement.core.requirementCountingAlgorithm">
       <algorithm
             class="org.topcased.requirement.core.extensions.DefaultRequirementCountingAlgorithm"
-            name="Default algorithm">
+            name="Default Algorithm">
       </algorithm>
       <algorithm
             class="org.topcased.requirement.core.extensions.RegexRequirementCountingAlgorithm"

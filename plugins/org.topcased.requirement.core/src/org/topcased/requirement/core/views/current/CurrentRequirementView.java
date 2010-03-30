@@ -20,6 +20,7 @@ import org.eclipse.ui.part.IPageBookViewPage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
 import org.topcased.modeler.documentation.IDocPage;
+import org.topcased.modeler.editor.Modeler;
 import org.topcased.requirement.core.documentation.current.CurrentDescPage;
 import org.topcased.requirement.core.preferences.ComputeRequirementIdentifier;
 import org.topcased.requirement.core.properties.RequirementPropertySheetPage;

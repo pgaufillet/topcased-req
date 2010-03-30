@@ -13,6 +13,7 @@
  ******************************************************************************/
 package org.topcased.requirement.core.preferences;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.jface.preference.ComboFieldEditor;
@@ -36,7 +37,9 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.topcased.facilities.preferences.AbstractTopcasedPreferencePage;
+import org.topcased.requirement.core.extensions.IRequirementIdentifierVariables;
 import org.topcased.requirement.core.extensions.RequirementCountingAlgorithmManager;
+import org.topcased.requirement.core.extensions.RequirementIdentifierVariablesManager;
 import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
 
@@ -47,7 +50,7 @@ import org.topcased.requirement.core.internal.RequirementCorePlugin;
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  * 
  */
-public class NamingRequirementPreferencePage extends AbstractTopcasedPreferencePage implements IWorkbenchPreferencePage
+public class RequirementNamingPreferencePage extends AbstractTopcasedPreferencePage implements IWorkbenchPreferencePage
 {
     private Text formatText;
 
@@ -78,7 +81,7 @@ public class NamingRequirementPreferencePage extends AbstractTopcasedPreferenceP
         final Group mainGroup = new Group(mainComposite, SWT.NONE);
         mainGroup.setLayout(new GridLayout(2, false));
         mainGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-        mainGroup.setText(Messages.getString("NamingRequirementPreferencePage.0")); //$NON-NLS-1$
+        mainGroup.setText(Messages.getString("RequirementNamingPreferencePage.0")); //$NON-NLS-1$
 
         // Composite Text format
         final Composite textComposite = new Composite(mainGroup, SWT.NONE);
@@ -91,7 +94,7 @@ public class NamingRequirementPreferencePage extends AbstractTopcasedPreferenceP
         textComposite.setLayoutData(textLayoutData);
 
         // Text format
-        namingFormat = new StringFieldEditor(NamingRequirementPreferenceHelper.REQUIREMENT_NAMING_FORMAT, Messages.getString("NamingRequirementPreferencePage.6"), textComposite); //$NON-NLS-1$
+        namingFormat = new StringFieldEditor(RequirementNamingConstants.REQUIREMENT_NAMING_FORMAT, Messages.getString("RequirementNamingPreferencePage.6"), textComposite); //$NON-NLS-1$
         namingFormat.setPreferenceStore(getPreferenceStore());
         formatText = namingFormat.getTextControl(textComposite);
         formatText.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
@@ -100,20 +103,20 @@ public class NamingRequirementPreferencePage extends AbstractTopcasedPreferenceP
         GridData selectLayoutData = new GridData(SWT.FILL, SWT.NONE, true, false);
         selectLayoutData.horizontalSpan = 2;
         final Label selectLabel = new Label(mainGroup, SWT.NONE);
-        selectLabel.setText(Messages.getString("NamingRequirementPreferencePage.1")); //$NON-NLS-1$
+        selectLabel.setText(Messages.getString("RequirementNamingPreferencePage.1")); //$NON-NLS-1$
         selectLabel.setLayoutData(selectLayoutData);
 
         // Key words Table
         tableViewer = new Table(mainGroup, SWT.BORDER);
-        setTableData(NamingRequirementPreferenceHelper.KEY_WORDS, tableViewer);
         tableViewer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+        fillTableWithVariables();
 
         // Add Button
         final GridData addDataLayout = new GridData(SWT.FILL, SWT.NONE, false, false);
         addDataLayout.widthHint = 75;
 
         final Button addButton = new Button(mainGroup, SWT.PUSH);
-        addButton.setText(Messages.getString("NamingRequirementPreferencePage.2")); //$NON-NLS-1$
+        addButton.setText(Messages.getString("RequirementNamingPreferencePage.2")); //$NON-NLS-1$
         addButton.setLayoutData(addDataLayout);
         addButton.addSelectionListener(new AddButtonSelectionListener());
 
@@ -131,7 +134,7 @@ public class NamingRequirementPreferencePage extends AbstractTopcasedPreferenceP
         final GridData layoutData = new GridData(SWT.NONE, SWT.NONE, true, false);
         layoutData.widthHint = 25;
 
-        indexStep = new IntegerFieldEditor(NamingRequirementPreferenceHelper.REQUIREMENT_STEP_INDEX, Messages.getString("NamingRequirementPreferencePage.3"), stepComposite); //$NON-NLS-1$
+        indexStep = new IntegerFieldEditor(RequirementNamingConstants.REQUIREMENT_STEP_INDEX, Messages.getString("RequirementNamingPreferencePage.3"), stepComposite); //$NON-NLS-1$
         indexStep.setPreferenceStore(getPreferenceStore());
         stepText = indexStep.getTextControl(stepComposite);
         stepText.setTextLimit(4);
@@ -157,7 +160,7 @@ public class NamingRequirementPreferencePage extends AbstractTopcasedPreferenceP
             map[i][0] = RequirementCountingAlgorithmManager.getInstance().getAllAlgorithm().toArray(new String[0])[i];
             map[i][1] = RequirementCountingAlgorithmManager.getInstance().getAllAlgorithm().toArray(new String[0])[i];
         }
-        algorithmUsed = new ComboFieldEditor(NamingRequirementPreferenceHelper.REQUIREMENT_COUNTING_ALGORITHM, Messages.getString("NamingRequirementPreferencePage.5"), map, algorithmComposite);//$NON-NLS-1$
+        algorithmUsed = new ComboFieldEditor(RequirementNamingConstants.REQUIREMENT_COUNTING_ALGORITHM, Messages.getString("RequirementNamingPreferencePage.5"), map, algorithmComposite);//$NON-NLS-1$
         algorithmUsed.setPreferenceStore(getPreferenceStore());
         algorithmUsed.fillIntoGrid(algorithmComposite, 2);
 
@@ -238,12 +241,15 @@ public class NamingRequirementPreferencePage extends AbstractTopcasedPreferenceP
      * @param data list of strings
      * @param table the parent table
      */
-    private void setTableData(List<String> data, Table table)
+    private void fillTableWithVariables()
     {
-        for (String element : data)
+        for (IRequirementIdentifierVariables vars : RequirementIdentifierVariablesManager.getInstance().getIdentifierVariables())
         {
-            TableItem item = new TableItem(table, SWT.NONE);
-            item.setText(element);
+            for (String key : vars.getVariables())
+            {
+                TableItem item = new TableItem(tableViewer, SWT.NONE);
+                item.setText(key);
+            }
         }
     }
 
@@ -283,7 +289,7 @@ public class NamingRequirementPreferencePage extends AbstractTopcasedPreferenceP
             }
             catch (NumberFormatException e1)
             {
-                setErrorMessage(Messages.getString("NamingRequirementPreferencePage.4")); //$NON-NLS-1$
+                setErrorMessage(Messages.getString("RequirementNamingPreferencePage.4")); //$NON-NLS-1$
                 setValid(false);
             }
         }

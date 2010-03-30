@@ -40,5 +40,5 @@ public interface IRequirementIdentifierVariables
      * 
      * @return the Variable list you want to add
      */
-    public List<String> addVariables();
+    public List<String> getVariables();
 }

@@ -61,9 +61,9 @@ public class DefaultRequirementIdentifierVariables implements IRequirementIdenti
     }
 
     /**
-     * @see org.topcased.requirement.core.extensions.IRequirementIdentifierVariables#addVariables()
+     * @see org.topcased.requirement.core.extensions.IRequirementIdentifierVariables#getVariables()
      */
-    public List<String> addVariables()
+    public List<String> getVariables()
     {
         List<String> keyWords = new ArrayList<String>();
         keyWords.add("{project}");

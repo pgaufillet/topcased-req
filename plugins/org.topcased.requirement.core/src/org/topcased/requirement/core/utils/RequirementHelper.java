@@ -46,7 +46,6 @@ import org.topcased.requirement.core.extensions.IRequirementCountingAlgorithm;
 import org.topcased.requirement.core.extensions.RequirementCountingAlgorithmManager;
 import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.preferences.ComputeRequirementIdentifier;
-import org.topcased.requirement.core.preferences.NamingRequirementPreferenceHelper;
 import org.topcased.requirement.core.views.AddRequirementMarker;
 import org.topcased.requirement.core.views.current.CurrentPage;
 import org.topcased.requirement.core.views.upstream.UpstreamPage;
@@ -302,7 +301,7 @@ public final class RequirementHelper
         long index = 0;
         HierarchicalElement root = RequirementHelper.INSTANCE.getHierarchicalElementRoot();
         String source = "";
-        IRequirementCountingAlgorithm algorithm = RequirementCountingAlgorithmManager.getInstance().getCountingAlgorithm(NamingRequirementPreferenceHelper.getCurrentAlgorithm());
+        IRequirementCountingAlgorithm algorithm = RequirementCountingAlgorithmManager.getInstance().getCountingAlgorithm(ComputeRequirementIdentifier.getCurrentAlgorithm());
         
         //Handle the create from upstream case
         if (upstream != null)
@@ -544,7 +543,7 @@ public final class RequirementHelper
     public Command renameRequirement(CurrentRequirement requirement)
     {
         long index = 0;
-        IRequirementCountingAlgorithm algorithm = RequirementCountingAlgorithmManager.getInstance().getCountingAlgorithm(NamingRequirementPreferenceHelper.getCurrentAlgorithm());
+        IRequirementCountingAlgorithm algorithm = RequirementCountingAlgorithmManager.getInstance().getCountingAlgorithm(ComputeRequirementIdentifier.getCurrentAlgorithm());
         if (requirement != null && algorithm != null)
         {
             String ident = requirement.getIdentifier();

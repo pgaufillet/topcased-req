@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2008 TOPCASED consortium.
+ * Copyright (c) 2010 Communication & Systems.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -10,7 +10,6 @@
  *  	Christophe Mertz (CS) <christophe.mertz@c-s.fr>
  *    
  ******************************************************************************/
-
 package org.topcased.requirement.core.preferences;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
@@ -21,7 +20,7 @@ import org.topcased.requirement.core.internal.RequirementCorePlugin;
  * This class contributes to the <code>org.eclipse.core.runtime.preferences</code> extension point.
  * 
  * @author <a href="mailto:christophe.mertz@c-s.fr">Christophe Mertz</a>
- * 
+ * @author <a href="mailto:sebastien.gabel@c-s.fr">Sebastien GABEL</a>
  */
 public class RequirementPreferenceInitializer extends AbstractPreferenceInitializer
 {
@@ -32,20 +31,20 @@ public class RequirementPreferenceInitializer extends AbstractPreferenceInitiali
      */
     public void initializeDefaultPreferences()
     {
-        IPreferenceStore preferenceStore = RequirementCorePlugin.getDefault().getPreferenceStore();
+        IPreferenceStore store = RequirementCorePlugin.getDefault().getPreferenceStore();
 
-        if (preferenceStore.getString(CurrentPreferenceHelper.CURRENT_ATTRIBUTES_STORE).length() == 0)
+        if (store.getString(CurrentPreferenceHelper.CURRENT_ATTRIBUTES_STORE).length() == 0)
         {
-            preferenceStore.setValue(CurrentPreferenceHelper.CURRENT_ATTRIBUTES_STORE, CurrentPreferenceHelper.serialize(CurrentPreferenceHelper.getDefaultValues()));
+            store.setValue(CurrentPreferenceHelper.CURRENT_ATTRIBUTES_STORE, CurrentPreferenceHelper.serialize(CurrentPreferenceHelper.getDefaultValues()));
         }
 
-        if (preferenceStore.getString(UpstreamPreferenceHelper.UPSTREAM_ATTRIBUTES_STORE).length() == 0)
+        if (store.getString(UpstreamPreferenceHelper.UPSTREAM_ATTRIBUTES_STORE).length() == 0)
         {
-            preferenceStore.setValue(UpstreamPreferenceHelper.UPSTREAM_ATTRIBUTES_STORE, UpstreamPreferenceHelper.serialize(UpstreamPreferenceHelper.getDefaultValues()));
+            store.setValue(UpstreamPreferenceHelper.UPSTREAM_ATTRIBUTES_STORE, UpstreamPreferenceHelper.serialize(UpstreamPreferenceHelper.getDefaultValues()));
         }
 
-        preferenceStore.setDefault(NamingRequirementPreferenceHelper.REQUIREMENT_NAMING_FORMAT, NamingRequirementPreferenceHelper.getDefaultNamingFormat());
-        preferenceStore.setDefault(NamingRequirementPreferenceHelper.REQUIREMENT_STEP_INDEX, NamingRequirementPreferenceHelper.getDefaultIndexStep());
-        preferenceStore.setDefault(NamingRequirementPreferenceHelper.REQUIREMENT_COUNTING_ALGORITHM, NamingRequirementPreferenceHelper.getDefaultCountingAlgorithm());
+        store.setDefault(RequirementNamingConstants.REQUIREMENT_NAMING_FORMAT, RequirementNamingConstants.DEFAULT_NAMING_FORMAT);
+        store.setDefault(RequirementNamingConstants.REQUIREMENT_STEP_INDEX, RequirementNamingConstants.DEFAULT_INDEX_STEP);
+        store.setDefault(RequirementNamingConstants.REQUIREMENT_COUNTING_ALGORITHM, RequirementNamingConstants.DEFAULT_COUNTING_ALGORITHM);
     }
 }

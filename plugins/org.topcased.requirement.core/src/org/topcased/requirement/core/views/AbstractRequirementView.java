@@ -10,8 +10,6 @@
  **********************************************************************************************************************/
 package org.topcased.requirement.core.views;
 
-import java.util.Collection;
-
 import org.eclipse.emf.edit.domain.IEditingDomainProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -28,12 +26,8 @@ import org.topcased.modeler.editor.Modeler;
 import org.topcased.requirement.core.dnd.RequirementDropListener;
 import org.topcased.requirement.core.extensions.DefaultAttachmentPolicy;
 import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
-import org.topcased.requirement.core.extensions.IRequirementIdentifierVariables;
 import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
-import org.topcased.requirement.core.extensions.RequirementIdentifierVariablesManager;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
-import org.topcased.requirement.core.preferences.NamingRequirementPreferenceHelper;
-
 
 /**
  * Defines the abstract requirement view.<br>
@@ -73,7 +67,7 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
     {
         // provide an empty implementation
     }
-    
+
     /**
      * Installs the change listener when the view is created.
      */
@@ -81,7 +75,7 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
     {
         // provide an empty implementation
     }
-    
+
     /**
      * Removes the change listener when the view is disposed.
      */
@@ -103,7 +97,7 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
         }
         return null;
     }
-    
+
     /**
      * @see org.eclipse.ui.part.PageBookView#createDefaultPage(org.eclipse.ui.part.PageBook)
      */
@@ -161,10 +155,9 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
     protected void doDestroyPage(IWorkbenchPart part, PageRec pageRecord)
     {
         RequirementCorePlugin.setCreateDropListener(true);
-        NamingRequirementPreferenceHelper.KEY_WORDS.clear();
         pageRecord.page.dispose();
         pageRecord.dispose();
-       
+
     }
 
     /**
@@ -176,7 +169,7 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
         unhookListener();
         super.dispose();
     }
-    
+
     /**
      * @see org.eclipse.ui.part.PageBookView#isImportant(org.eclipse.ui.IWorkbenchPart)
      */
@@ -198,7 +191,7 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
             Modeler modeler = (Modeler) part;
             // Bug 1970 : in case where the model is exported and contain no diagram. See
             if (modeler.getActiveDiagram() != null)
-            {               
+            {
                 IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(modeler.getEditingDomain());
                 if (policy != null && policy.getLinkedTargetModel(modeler.getEditingDomain().getResourceSet()) != null)
                 {
@@ -243,22 +236,14 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
     {
         getSelectionProvider().setSelection(selection);
     }
-    
+
     public void initializePage(Modeler modeler, IPage page)
     {
         if (RequirementCorePlugin.getCreateDropListener() == true)
         {
             RequirementCorePlugin.setCreateDropListener(false);
             modeler.getGraphicalViewer().addDropTargetListener(new RequirementDropListener(modeler.getGraphicalViewer()));
-            Collection<IRequirementIdentifierVariables> variables = RequirementIdentifierVariablesManager.getInstance().getIdentifierVariables();
-            if (variables != null)
-            {
-                for (IRequirementIdentifierVariables vars : variables)
-                {
-                    NamingRequirementPreferenceHelper.addKeyWord(vars.addVariables());
-                }
-            }
         }
-        updatePage(page);        
+        updatePage(page);
     }
 }

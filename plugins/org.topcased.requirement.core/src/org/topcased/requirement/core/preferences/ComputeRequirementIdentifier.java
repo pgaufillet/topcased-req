@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2008,2009 Communication & Systems.
+ * Copyright (c) 2008,2010 Communication & Systems.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -12,7 +12,6 @@
  ******************************************************************************/
 package org.topcased.requirement.core.preferences;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,7 +46,7 @@ public class ComputeRequirementIdentifier
 {
     public static final ComputeRequirementIdentifier INSTANCE = new ComputeRequirementIdentifier();
 
-    private IPreferenceStore preferenceStore;
+    private static IPreferenceStore preferenceStore;
 
     private String initialFormat;
 
@@ -92,18 +91,11 @@ public class ComputeRequirementIdentifier
      */
     private String convert(Map<String, String> map)
     {
-        for (String keyWord : NamingRequirementPreferenceHelper.KEY_WORDS)
+        for (String keyWord : map.keySet())
         {
             if (map.get(keyWord) != null)
             {
-                if (map.get(keyWord).length() > 0)
-                {
-                    currentFormat = currentFormat.replace(keyWord, map.get(keyWord));
-                }
-                else
-                {
-                    currentFormat = currentFormat.replace(keyWord, "");
-                }
+                currentFormat = currentFormat.replace(keyWord, map.get(keyWord));
             }
         }
         return currentFormat;
@@ -123,13 +115,9 @@ public class ComputeRequirementIdentifier
         Map<String, String> map = new HashMap<String, String>();
 
         // Variables added by extension point
-        Collection<IRequirementIdentifierVariables> variables = RequirementIdentifierVariablesManager.getInstance().getIdentifierVariables();
-        if (variables != null)
+        for (IRequirementIdentifierVariables vars : RequirementIdentifierVariablesManager.getInstance().getIdentifierVariables())
         {
-            for (IRequirementIdentifierVariables vars : variables)
-            {
-                map = vars.setValuesToVariables(editingDomain, map);
-            }
+            map = vars.setValuesToVariables(editingDomain, map);
         }
 
         return convert(map);
@@ -156,10 +144,10 @@ public class ComputeRequirementIdentifier
         }
 
         preferenceStore = getPreferenceStore(file.getProject());
-        initialFormat = preferenceStore.getString(NamingRequirementPreferenceHelper.REQUIREMENT_NAMING_FORMAT);
+        initialFormat = preferenceStore.getString(RequirementNamingConstants.REQUIREMENT_NAMING_FORMAT);
     }
 
-    private IPreferenceStore getPreferenceStore(IProject project)
+    private static IPreferenceStore getPreferenceStore(IProject project)
     {
         Preferences root = Platform.getPreferencesService().getRootNode();
         try
@@ -189,6 +177,36 @@ public class ComputeRequirementIdentifier
     public long getIdentifierRequirementIndex()
     {
         return requirementIndex;
+    }
+
+    /**
+     * Get the requirement step stored in the PreferenceStore
+     * 
+     * @return the step if there is one or default step is there is none
+     */
+    public static int getRequirementStep()
+    {
+        try
+        {
+            int step = preferenceStore.getInt(RequirementNamingConstants.REQUIREMENT_STEP_INDEX);
+            return step > 0 ? step : RequirementNamingConstants.DEFAULT_INDEX_STEP;
+        }
+        catch (NumberFormatException e)
+        {
+            RequirementCorePlugin.log(e);
+        }
+        return RequirementNamingConstants.DEFAULT_INDEX_STEP;
+    }
+
+    /**
+     * Get the requirement counting algorithm name stored in the PreferenceStore
+     * 
+     * @return the name if there is one or default algorithm name is there is none
+     */
+    public static String getCurrentAlgorithm()
+    {
+        String nameStored = preferenceStore.getString(RequirementNamingConstants.REQUIREMENT_COUNTING_ALGORITHM);
+        return !"".equals(nameStored) ? nameStored : RequirementNamingConstants.DEFAULT_COUNTING_ALGORITHM;
     }
 
 }
