@@ -16,21 +16,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ProjectScope;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.ui.preferences.ScopedPreferenceStore;
-import org.osgi.service.prefs.BackingStoreException;
-import org.osgi.service.prefs.Preferences;
 import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.core.extensions.IRequirementIdentifierVariables;
 import org.topcased.requirement.core.extensions.RequirementIdentifierVariablesManager;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.utils.RequirementUtils;
+import org.topcased.requirement.core.views.AbstractRequirementView;
 
 /**
  * This class provides the feature to compute the requirement identifier with the Requirements naming's format of the
@@ -45,8 +40,6 @@ import org.topcased.requirement.core.utils.RequirementUtils;
 public class ComputeRequirementIdentifier
 {
     public static final ComputeRequirementIdentifier INSTANCE = new ComputeRequirementIdentifier();
-
-    private static IPreferenceStore preferenceStore;
 
     private String initialFormat;
 
@@ -143,25 +136,8 @@ public class ComputeRequirementIdentifier
             return;
         }
 
-        preferenceStore = getPreferenceStore(file.getProject());
-        initialFormat = preferenceStore.getString(RequirementNamingConstants.REQUIREMENT_NAMING_FORMAT);
-    }
-
-    private static IPreferenceStore getPreferenceStore(IProject project)
-    {
-        Preferences root = Platform.getPreferencesService().getRootNode();
-        try
-        {
-            if (root.node(ProjectScope.SCOPE).node(project.getName()).nodeExists(RequirementCorePlugin.getId()))
-            {
-                return new ScopedPreferenceStore(new ProjectScope(project), RequirementCorePlugin.getId());
-            }
-        }
-        catch (BackingStoreException e)
-        {
-            RequirementCorePlugin.log(e);
-        }
-        return RequirementCorePlugin.getDefault().getPreferenceStore();
+        IPreferenceStore store = AbstractRequirementView.getPreferenceStore();
+        initialFormat = store.getString(RequirementNamingConstants.REQUIREMENT_NAMING_FORMAT);
     }
 
     public HierarchicalElement getIdentifierHierarchicalElement()
@@ -188,7 +164,8 @@ public class ComputeRequirementIdentifier
     {
         try
         {
-            int step = preferenceStore.getInt(RequirementNamingConstants.REQUIREMENT_STEP_INDEX);
+            IPreferenceStore store = AbstractRequirementView.getPreferenceStore();
+            int step = store.getInt(RequirementNamingConstants.REQUIREMENT_STEP_INDEX);
             return step > 0 ? step : RequirementNamingConstants.DEFAULT_INDEX_STEP;
         }
         catch (NumberFormatException e)
@@ -205,7 +182,8 @@ public class ComputeRequirementIdentifier
      */
     public static String getCurrentAlgorithm()
     {
-        String nameStored = preferenceStore.getString(RequirementNamingConstants.REQUIREMENT_COUNTING_ALGORITHM);
+        IPreferenceStore store = AbstractRequirementView.getPreferenceStore();
+        String nameStored = store.getString(RequirementNamingConstants.REQUIREMENT_COUNTING_ALGORITHM);
         return !"".equals(nameStored) ? nameStored : RequirementNamingConstants.DEFAULT_COUNTING_ALGORITHM;
     }
 

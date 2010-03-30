@@ -9,16 +9,11 @@
  * Contributors : Maxime AUDRAIN (CS) - initial API and implementation
  * 
  *****************************************************************************/
-
 package org.topcased.requirement.core.internal;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -33,8 +28,6 @@ public class RequirementCorePlugin extends AbstractUIPlugin
 
     // The shared instance
     private static RequirementCorePlugin plugin;
-    
-    protected static boolean createDropListener = true;
 
     /**
      * The constructor
@@ -67,55 +60,6 @@ public class RequirementCorePlugin extends AbstractUIPlugin
     }
 
     /**
-     * Returns the active editor or <code>null</code> if none.
-     * 
-     * @return the active editor
-     */
-    public static IEditorPart getActiveEditor()
-    {
-        IWorkbenchPage page = getActivePage();
-        if (page != null)
-        {
-            return page.getActiveEditor();
-        }
-        return null;
-    }
-
-    /**
-     * Returns the active workbench page or <code>null</code> if none.
-     * 
-     * @return the active workbench page
-     */
-    public static IWorkbenchPage getActivePage()
-    {
-        IWorkbenchWindow window = getActiveWorkbenchWindow();
-        if (window != null)
-        {
-            return window.getActivePage();
-        }
-        return null;
-    }
-
-    /**
-     * Returns the active workbench window
-     * 
-     * @return the active workbench window
-     */
-    public static IWorkbenchWindow getActiveWorkbenchWindow()
-    {
-        if (getDefault() == null)
-        {
-            return null;
-        }
-        IWorkbench workBench = getDefault().getWorkbench();
-        if (workBench == null)
-        {
-            return null;
-        }
-        return workBench.getActiveWorkbenchWindow();
-    }
-
-    /**
      * Returns an image descriptor for the image file at the given plug-in relative path.
      * 
      * @param path the path
@@ -127,9 +71,9 @@ public class RequirementCorePlugin extends AbstractUIPlugin
     }
 
     /**
-     * Gets the Id of the Plugin
+     * Gets the Id of the plugin
      * 
-     * @return the Plugin Identifer
+     * @return the plugin identifier
      */
     public static String getId()
     {
@@ -157,15 +101,5 @@ public class RequirementCorePlugin extends AbstractUIPlugin
     {
         IStatus status = new Status(severity, getId(), severity, message, e);
         getDefault().getLog().log(status);
-    }
-    
-    public static boolean getCreateDropListener()
-    {
-        return createDropListener;
-    }
-    
-    public static void setCreateDropListener(boolean once1)
-    {
-        createDropListener = once1;
     }
 }

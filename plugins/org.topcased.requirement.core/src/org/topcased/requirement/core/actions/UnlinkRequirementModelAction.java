@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2008 TOPCASED consortium.
+ * Copyright (c) 2008,2010 Communication & Systems.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -25,6 +25,7 @@ import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
+import org.topcased.requirement.core.views.AbstractRequirementView;
 
 /**
  * This action sets to <code>null</code> the <b>Requirement</b> feature of a model.
@@ -57,21 +58,20 @@ public class UnlinkRequirementModelAction extends Action
     public void run()
     {
         boolean result = MessageDialog.openConfirm(Display.getCurrent().getActiveShell(), Messages.getString("UnlinkRequirementModelAction.0"), //$NON-NLS-1$
-        Messages.getString("UnlinkRequirementModelAction.1")); //$NON-NLS-1$
-        
+                Messages.getString("UnlinkRequirementModelAction.1")); //$NON-NLS-1$
+
         if (result)
         {
             IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(editingDomain);
-            
+
             if (policy != null)
             {
-                policy.unlinkRequirementModel(policy.getLinkedTargetModel(editingDomain.getResourceSet()), RequirementUtils.getRequirementModel(editingDomain));         
+                policy.unlinkRequirementModel(policy.getLinkedTargetModel(editingDomain.getResourceSet()), RequirementUtils.getRequirementModel(editingDomain));
             }
             else
             {
-                DefaultAttachmentPolicy.getInstance().unlinkRequirementModel(Utils.getCurrentModeler().getResourceSet().getResources().get(0),RequirementUtils.getRequirementModel(editingDomain));
+                DefaultAttachmentPolicy.getInstance().unlinkRequirementModel(Utils.getCurrentModeler().getResourceSet().getResources().get(0), RequirementUtils.getRequirementModel(editingDomain));
             }
-            
 
             // the content of each page (Upstream & Current) is updated
             if (RequirementHelper.INSTANCE.getCurrentPage() != null)
@@ -84,8 +84,8 @@ public class UnlinkRequirementModelAction extends Action
                 RequirementHelper.INSTANCE.getUpstreamPage().getViewer().setInput(null);
                 RequirementHelper.INSTANCE.getUpstreamPage().refreshViewer(true);
             }
-            
-            RequirementCorePlugin.setCreateDropListener(true);
+
+            AbstractRequirementView.dropListenerInstalled = false;
             setEnabled(isEnabled());
         }
     }

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright (c) 2008,2009 Communication & Systems.
+ * Copyright (c) 2008,2010 Communication & Systems.
  * 
  * All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse
  * Public License v1.0 which accompanies this distribution, and is available at
@@ -10,7 +10,11 @@
  **********************************************************************************************************************/
 package org.topcased.requirement.core.views;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.edit.domain.IEditingDomainProvider;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -22,6 +26,9 @@ import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.part.IPageBookViewPage;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.part.PageBookView;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
+import org.osgi.service.prefs.BackingStoreException;
+import org.osgi.service.prefs.Preferences;
 import org.topcased.modeler.editor.Modeler;
 import org.topcased.requirement.core.dnd.RequirementDropListener;
 import org.topcased.requirement.core.extensions.DefaultAttachmentPolicy;
@@ -43,6 +50,9 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
 {
     /** The initial selection when the view opens */
     protected ISelection bootstrapSelection;
+
+    /** flag indicating if the drop adpater is installed or not */
+    public static boolean dropListenerInstalled = false;
 
     /**
      * Gets the default empty page for this view.
@@ -154,10 +164,9 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
      */
     protected void doDestroyPage(IWorkbenchPart part, PageRec pageRecord)
     {
-        RequirementCorePlugin.setCreateDropListener(true);
         pageRecord.page.dispose();
         pageRecord.dispose();
-
+        dropListenerInstalled = false;
     }
 
     /**
@@ -205,6 +214,16 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
         }
     }
 
+    protected void initializePage(Modeler modeler, IPage page)
+    {
+        if (dropListenerInstalled == false)
+        {
+            dropListenerInstalled = true;
+            modeler.getGraphicalViewer().addDropTargetListener(new RequirementDropListener(modeler.getGraphicalViewer()));
+        }
+        updatePage(page);
+    }
+
     /**
      * @see org.eclipse.jface.viewers.ISelectionProvider#addSelectionChangedListener(org.eclipse.jface.viewers.ISelectionChangedListener)
      */
@@ -237,13 +256,29 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
         getSelectionProvider().setSelection(selection);
     }
 
-    public void initializePage(Modeler modeler, IPage page)
+    /**
+     * Gets the preference store according to the resource loaded into the modeler.
+     * 
+     * @return the local (scoped to the IProject) or global preference store.
+     */
+    public static IPreferenceStore getPreferenceStore()
     {
-        if (RequirementCorePlugin.getCreateDropListener() == true)
+        IProject project = Modeler.getCurrentIFile().getProject();
+        if (project != null)
         {
-            RequirementCorePlugin.setCreateDropListener(false);
-            modeler.getGraphicalViewer().addDropTargetListener(new RequirementDropListener(modeler.getGraphicalViewer()));
+            Preferences root = Platform.getPreferencesService().getRootNode();
+            try
+            {
+                if (root.node(ProjectScope.SCOPE).node(project.getName()).nodeExists(RequirementCorePlugin.getId()))
+                {
+                    return new ScopedPreferenceStore(new ProjectScope(project), RequirementCorePlugin.getId());
+                }
+            }
+            catch (BackingStoreException e)
+            {
+                RequirementCorePlugin.log(e);
+            }
         }
-        updatePage(page);
+        return RequirementCorePlugin.getDefault().getPreferenceStore();
     }
 }
