@@ -52,6 +52,7 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
     /**
      * @see org.eclipse.ui.part.PageBookView#getAdapter(java.lang.Class)
      */
+    @SuppressWarnings("unchecked")
     @Override
     public Object getAdapter(Class type)
     {
@@ -114,7 +115,6 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
             }
             else
             {
-                // reset the preference store
                 RequirementHelper.INSTANCE.setUpstreamPage(upstreamPage);
             }
         }

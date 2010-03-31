@@ -20,9 +20,7 @@ import org.eclipse.ui.part.IPageBookViewPage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
 import org.topcased.modeler.documentation.IDocPage;
-import org.topcased.modeler.editor.Modeler;
 import org.topcased.requirement.core.documentation.current.CurrentDescPage;
-import org.topcased.requirement.core.preferences.ComputeRequirementIdentifier;
 import org.topcased.requirement.core.properties.RequirementPropertySheetPage;
 import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
@@ -50,6 +48,7 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
     /**
      * @see org.eclipse.ui.part.PageBookView#getAdapter(java.lang.Class)
      */
+    @SuppressWarnings("unchecked")
     @Override
     public Object getAdapter(Class key)
     {
@@ -129,11 +128,9 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
                 loadPage(part, currentPage);
                 hookListener();
             }
-            else if (currentPage.getModel() != null)
+            else
             {
                 RequirementHelper.INSTANCE.setCurrentPage(currentPage);
-                Resource resource = RequirementUtils.getRequirementModel(currentPage.getEditingDomain());
-                ComputeRequirementIdentifier.INSTANCE.setPreferenceStore(resource);
             }
         }
     }
