@@ -35,7 +35,7 @@ import org.topcased.requirement.core.utils.RequirementUtils;
  * @since 2.1.0
  * 
  */
-public abstract class AbstractModelCreationOperation extends WorkspaceModifyOperation
+public abstract class AbstractRequirementModelOperation extends WorkspaceModifyOperation
 {
 
     public static final String MODEL_EXTENSION = "requirement"; //$NON-NLS-1$
@@ -56,7 +56,7 @@ public abstract class AbstractModelCreationOperation extends WorkspaceModifyOper
      * @param targetFile The target model
      * @param destFile The Requirement model to create
      */
-    public AbstractModelCreationOperation(IFile targetFile, IFile reqFile)
+    public AbstractRequirementModelOperation(IFile targetFile, IFile reqFile)
     {
         targetModelFile = targetFile;
         requirementModelFile = reqFile;

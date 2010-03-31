@@ -36,7 +36,7 @@ public interface IModelAttachmentPolicy
      * @param targetModel the target model
      * @param requirementModel the requirement model
      */
-    void unlinkRequirementModel(Resource targetModel, Resource requirementModel);
+    void unlinkRequirementModel(Resource targetModel, Resource requirementModel, boolean deleteRequirementModel);
 
     /**
      * Gets the target model linked with the requirement model from the resource set of your editing domain

@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2008 TOPCASED consortium.
+ * Copyright (c) 2008, 2010 TOPCASED consortium.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -8,7 +8,7 @@
  *
  * Contributors:
  *  	Christophe Mertz (CS) <christophe.mertz@c-s.fr>
- *    
+ *      Maxime AUDRAIN (CS) : API Changes
  ******************************************************************************/
 package org.topcased.requirement.core.wizards;
 
@@ -51,6 +51,8 @@ public class RequirementWizardPage extends WizardPage
     private static final String BROWSE_TEXT = "..."; //$NON-NLS-1$
 
     private static final String DEFAULT_MODEL_NAME = "My"; //$NON-NLS-1$
+    
+    private static String ALREADY_ATTACHED_REQUIREMENT;
 
     private IStructuredSelection selection;
 
@@ -105,12 +107,20 @@ public class RequirementWizardPage extends WizardPage
      * 
      * @param pageName
      */
-    public RequirementWizardPage(IStructuredSelection selection)
+    public RequirementWizardPage(IStructuredSelection selection, String alreadyAttachedRequirementPath)
     {
         super("wizardPage"); //$NON-NLS-1$
         setTitle(Messages.getString("RequirementWizardPage.4")); //$NON-NLS-1$
         setDescription(Messages.getString("RequirementWizardPage.5")); //$NON-NLS-1$
         this.selection = selection;
+        if (alreadyAttachedRequirementPath != null)
+        {
+            ALREADY_ATTACHED_REQUIREMENT = alreadyAttachedRequirementPath;
+        }
+        else
+        {
+            ALREADY_ATTACHED_REQUIREMENT="";
+        }
     }
 
     /**
@@ -312,8 +322,9 @@ public class RequirementWizardPage extends WizardPage
                 targetModelFd.setText(((IResource) obj).getFullPath().toString());
             }
         }
-        setPageComplete(false);
+        importModelFd.setText(ALREADY_ATTACHED_REQUIREMENT);
         requirementNameFd.setText(name);
+        setPageComplete(false);
     }
 
     /**
@@ -352,7 +363,15 @@ public class RequirementWizardPage extends WizardPage
                 }
             }
         }
-
+        if (importModelFd.getText().equals(ALREADY_ATTACHED_REQUIREMENT) && !ALREADY_ATTACHED_REQUIREMENT.equals(""))
+        {
+           setMessage(Messages.getString("RequirementWizardPage.20"), INFORMATION); //$NON-NLS-1$
+        }
+        else if (getMessageType() == INFORMATION)
+        {
+            setMessage(null);
+        }
+        
         if (message == null)
         {
             /*
@@ -379,6 +398,10 @@ public class RequirementWizardPage extends WizardPage
         Boolean result;
 
         if (getErrorMessage() != null)
+        {
+            result = false;
+        }
+        else if (importModelFd.getText().equals(ALREADY_ATTACHED_REQUIREMENT)&& !ALREADY_ATTACHED_REQUIREMENT.equals(""))
         {
             result = false;
         }

@@ -15,9 +15,9 @@ package org.topcased.requirement.core.actions;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.topcased.modeler.utils.Utils;
+import org.topcased.requirement.core.dialogs.UnlinkDialog;
 import org.topcased.requirement.core.extensions.DefaultAttachmentPolicy;
 import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
 import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
@@ -39,6 +39,8 @@ public class UnlinkRequirementModelAction extends Action
 {
 
     private EditingDomain editingDomain;
+    
+    private int dialogResult;
 
     /**
      * Default constructor
@@ -57,20 +59,27 @@ public class UnlinkRequirementModelAction extends Action
      */
     public void run()
     {
-        boolean result = MessageDialog.openConfirm(Display.getCurrent().getActiveShell(), Messages.getString("UnlinkRequirementModelAction.0"), //$NON-NLS-1$
-                Messages.getString("UnlinkRequirementModelAction.1")); //$NON-NLS-1$
-
-        if (result)
+        boolean deleteRequirementModel = false;
+        
+        UnlinkDialog dialog = new UnlinkDialog(Display.getCurrent().getActiveShell(), Messages.getString("UnlinkRequirementModelAction.0"), //$NON-NLS-1$
+                Messages.getString("UnlinkRequirementModelAction.1"));//$NON-NLS-1$
+        dialogResult = dialog.open();
+        
+        if (dialogResult == 2)
+        {
+            deleteRequirementModel = true;
+        }
+        if (dialogResult == 0 || dialogResult == 2)
         {
             IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(editingDomain);
 
             if (policy != null)
             {
-                policy.unlinkRequirementModel(policy.getLinkedTargetModel(editingDomain.getResourceSet()), RequirementUtils.getRequirementModel(editingDomain));
+                policy.unlinkRequirementModel(policy.getLinkedTargetModel(editingDomain.getResourceSet()), RequirementUtils.getRequirementModel(editingDomain), deleteRequirementModel);         
             }
             else
             {
-                DefaultAttachmentPolicy.getInstance().unlinkRequirementModel(Utils.getCurrentModeler().getResourceSet().getResources().get(0), RequirementUtils.getRequirementModel(editingDomain));
+                DefaultAttachmentPolicy.getInstance().unlinkRequirementModel(Utils.getCurrentModeler().getResourceSet().getResources().get(0),RequirementUtils.getRequirementModel(editingDomain), deleteRequirementModel);
             }
 
             // the content of each page (Upstream & Current) is updated
@@ -97,5 +106,13 @@ public class UnlinkRequirementModelAction extends Action
     public boolean isEnabled()
     {
         return RequirementUtils.getRequirementModel(editingDomain) != null;
+    }
+    
+    /**
+     * @return
+     */
+    public int getDialogResult()
+    {
+        return dialogResult;
     }
 }

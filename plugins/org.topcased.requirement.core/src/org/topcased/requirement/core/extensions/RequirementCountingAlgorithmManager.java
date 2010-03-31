@@ -40,12 +40,18 @@ public class RequirementCountingAlgorithmManager extends AbstractExtensionManage
 
     /** Value of the extension point attribute corresponding to the class. */
     static final String ATT_CLASS = "class"; //$NON-NLS-1$
+    
+    /** Value of the extension point attribute corresponding to the description. */
+    static final String ATT_DESCRIPTION = "description"; //$NON-NLS-1$
 
     /** the shared instance */
     private static RequirementCountingAlgorithmManager manager;
 
     /** Map of a name of the algorithm and the associated class*/
     public Map<String, IRequirementCountingAlgorithm> mapClass;
+    
+    /** Map of a name of the algorithm and the associated description*/
+    public Map<String, String> mapName;
 
     /**
      * Private constructor
@@ -54,6 +60,7 @@ public class RequirementCountingAlgorithmManager extends AbstractExtensionManage
     {
         super(RequirementCorePlugin.getId() + "." + REQUIREMENT_COUNTING_ALGORITHM_EXTENSION_POINT);
         mapClass = new HashMap<String, IRequirementCountingAlgorithm>();
+        mapName = new HashMap<String, String>();
         readRegistry();
     }
 
@@ -80,12 +87,14 @@ public class RequirementCountingAlgorithmManager extends AbstractExtensionManage
         IConfigurationElement[] elements = extension.getConfigurationElements();
         for (IConfigurationElement confElt : elements)
         {
-            String model = confElt.getAttribute(ATT_NAME);
+            String name = confElt.getAttribute(ATT_NAME);
+            String description = confElt.getAttribute(ATT_DESCRIPTION);
+            mapName.put(name, description);
             IRequirementCountingAlgorithm algorithm;
             try
             {
                 algorithm = (IRequirementCountingAlgorithm) confElt.createExecutableExtension(ATT_CLASS);
-                mapClass.put(model, algorithm);
+                mapClass.put(name, algorithm);
             }
             catch (CoreException e)
             {
@@ -107,6 +116,7 @@ public class RequirementCountingAlgorithmManager extends AbstractExtensionManage
         {
             String elt = confElt.getAttribute(ATT_NAME);
             mapClass.remove(elt);
+            mapName.remove(elt);
         }
 
     }
@@ -135,4 +145,19 @@ public class RequirementCountingAlgorithmManager extends AbstractExtensionManage
     {
         return mapClass.keySet();
     }
+    
+    /**
+     * This method return the requirement counting algorithm description for a given algorithm name
+     * 
+     * @return the counting algorithm description
+     */
+    public String getAlgorithmDescription(String name)
+    {
+        if (mapName.containsKey(name))
+        {
+            return mapName.get(name);
+        }
+        return null;
+    }
 }
+

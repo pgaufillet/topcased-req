@@ -16,11 +16,14 @@ package org.topcased.requirement.core.preferences;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -53,6 +56,8 @@ public class RequirementNamingPreferencePage extends AbstractTopcasedPreferenceP
 
     private Text stepText;
 
+    private Text descriptionText;
+    
     private Table tableViewer;
 
     private StringFieldEditor namingFormat;
@@ -160,6 +165,40 @@ public class RequirementNamingPreferencePage extends AbstractTopcasedPreferenceP
         algorithmUsed = new ComboFieldEditor(RequirementNamingConstants.REQUIREMENT_COUNTING_ALGORITHM, Messages.getString("RequirementNamingPreferencePage.5"), map, algorithmComposite);//$NON-NLS-1$
         algorithmUsed.setPreferenceStore(getPreferenceStore());
         algorithmUsed.fillIntoGrid(algorithmComposite, 2);
+        algorithmUsed.setPropertyChangeListener(new IPropertyChangeListener()
+        {
+            
+            public void propertyChange(PropertyChangeEvent event)
+            {
+                String description = RequirementCountingAlgorithmManager.getInstance().getAlgorithmDescription(event.getNewValue().toString());
+                if (description != null)
+                {
+                    descriptionText.setText(description);
+                }
+                else
+                {
+                    descriptionText.setText("");
+                }
+            }
+        });
+        
+        // description Group
+        final Group labelGroup = new Group(mainGroup, SWT.NONE);
+        labelGroup.setLayout(new GridLayout(2, false));
+        GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
+        data.horizontalSpan = 2;
+        labelGroup.setLayoutData(data);
+        labelGroup.setText(Messages.getString("RequirementNamingPreferencePage.7")); //$NON-NLS-1$
+
+        // description composite
+        final Composite descriptionComposite = new Composite(labelGroup, SWT.NONE);
+        final FillLayout descriptionCompoLayout = new FillLayout();
+        final GridData descriptiongd = new GridData(SWT.FILL, SWT.FILL, true, true);
+        descriptionComposite.setLayout(descriptionCompoLayout);
+        descriptionComposite.setLayoutData(descriptiongd);
+        
+        //description Text
+        descriptionText = new Text(descriptionComposite, SWT.READ_ONLY | SWT.WRAP);
 
         loadPreferences();
 

@@ -59,22 +59,6 @@
       </initializer>
    </extension>
    <extension
-         point="org.eclipse.ui.newWizards">
-      <wizard
-            category="org.topcased.facilities.newWizards"
-            class="org.topcased.requirement.core.wizards.NewRequirementModel"
-            icon="icons/current.gif"
-            id="org.topcased.requirement.upstream.view.wizard1"
-            name="Requirements">
-         <selection
-               class="org.eclipse.core.resources.IResource">
-         </selection>
-         <description>
-            Create a new requirements model
-         </description>
-      </wizard>
-   </extension>
-   <extension
          point="org.eclipse.ui.commands">
       <command
             categoryId="org.eclipse.ui.category.edit"
@@ -115,6 +99,11 @@
             description="Create Current Requirement"
             id="org.topcased.requirement.core.CreateCurrentRequirementCommand"
             name="Create Current Requirement">
+      </command>
+      <command
+            description="Link Requirement Model"
+            id="org.topcased.requirement.core.linkRequirementCommand"
+            name="Link Requirement Model">
       </command>
    </extension>
    <!-- TODO : see why there is a conflict with global binding -->
@@ -429,7 +418,38 @@
             </visibleWhen>
          </command>
       </menuContribution>
-   </extension>
+            <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar
+               id="org.topcased.requirement.core.requirementToolbar">
+         <command
+               commandId="org.topcased.requirement.core.linkRequirementCommand"
+               icon="icons/current.gif"
+               label="&amp;Define Requirements"
+               style="push">
+			<visibleWhen checkEnabled="false">
+	    		<with variable="activeContexts">
+			       <count value="+">
+       			   </count>
+       			   <iterate>
+                     <and>
+                        <with
+                              variable="activeWorkbenchWindow.activePerspective">
+                           <equals
+                                 value="org.topcased.requirement.core.perspective">
+                           </equals>
+                        </with>
+                        <reference
+                              definitionId="org.topcased.requirement.core.definition">
+                        </reference>
+                     </and>
+                  </iterate>
+                  </with>
+               </visibleWhen>
+            </command>
+         </toolbar>
+      </menuContribution>
+     </extension>
    <extension
          point="org.eclipse.ui.handlers">
       <handler
@@ -439,6 +459,10 @@
       <handler
             class="org.topcased.requirement.core.handlers.CreateAnonymousRequirementHandler"
             commandId="org.topcased.requirement.core.CreateAnonymousRequirementCommand">
+      </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.LinkRequirementModelHandler"
+            commandId="org.topcased.requirement.core.linkRequirementCommand">
       </handler>
    </extension>
    <extension
@@ -485,10 +509,12 @@
          point="org.topcased.requirement.core.requirementCountingAlgorithm">
       <algorithm
             class="org.topcased.requirement.core.extensions.DefaultRequirementCountingAlgorithm"
+            description="Provide a default algorithm for requirement counting : The index is stored on the root hierarchical element of the requirement model and is incremented when a current requirement is created"
             name="Default Algorithm">
       </algorithm>
       <algorithm
             class="org.topcased.requirement.core.extensions.RegexRequirementCountingAlgorithm"
+            description="This algorithm is based on regular expressions. The index for a new current requirement is the (maximum number + step) of all the already created current requirements "
             name="Regex Algorithm">
       </algorithm>
    </extension>
@@ -499,5 +525,27 @@
             id="Default Variables">
       </variables>
    </extension>
-
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="org.topcased.requirement.core.actionSet"
+            label="Requirement Action Set"
+            visible="false">
+      </actionSet>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.definitions">
+      <definition
+            id="org.topcased.requirement.core.definition">
+         <with
+               variable="activeContexts">
+            <iterate
+                  operator="or">
+               <equals
+                     value="org.topcased.requirement.core.actionSet">
+               </equals>
+            </iterate>
+         </with>
+      </definition>
+   </extension>
 </plugin>

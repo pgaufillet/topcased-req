@@ -76,7 +76,7 @@ public class SAMAttachmentPolicy implements IModelAttachmentPolicy
      * @see org.topcased.requirement.core.extensions.IModelAttachmentPolicy#unlinkRequirementModel(org.eclipse.emf.ecore.resource.Resource,
      *      org.eclipse.emf.ecore.resource.Resource)
      */
-    public void unlinkRequirementModel(Resource targetModel, Resource requirementModel)
+    public void unlinkRequirementModel(Resource targetModel, Resource requirementModel, boolean deleteRequirementModel)
     {
         // Gather the SAM Model from the SAM diagram
         String uri = null;
@@ -99,7 +99,10 @@ public class SAMAttachmentPolicy implements IModelAttachmentPolicy
         // unload and delete the requirement model from file system.
         if (targetModel.getResourceSet().getResources().remove(requirementModel))
         {
-            RequirementUtils.deleteResource(requirementModel);
+            if (deleteRequirementModel)
+            {
+                RequirementUtils.deleteResource(requirementModel);
+            }
         }
     }
 

@@ -66,6 +66,13 @@
                </appInfo>
             </annotation>
          </attribute>
+         <attribute name="description" type="string">
+            <annotation>
+               <documentation>
+                  The description of this counting algorithm
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 

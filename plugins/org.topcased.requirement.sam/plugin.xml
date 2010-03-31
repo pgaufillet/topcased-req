@@ -77,6 +77,7 @@
          point="org.topcased.requirement.core.requirementCountingAlgorithm">
       <algorithm
             class="org.topcased.requirement.sam.policies.SAMRequirementCountingAlgorithm"
+            description="In this algorithm, the index is stored on the leafs of the hierarchical element tree so that current requirements created on a new container implies the reset of the index"
             name="SAM Counting Algorithm">
       </algorithm>
    </extension>

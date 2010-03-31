@@ -32,7 +32,7 @@ import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
 import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.utils.RequirementUtils;
-import org.topcased.requirement.core.wizards.NewRequirementModel;
+import org.topcased.requirement.core.wizards.MergeRequirementModelWizard;
 
 /**
  * This action allows to add/remove/update documents and/or requirements for a model.
@@ -62,9 +62,6 @@ public class UpdateRequirementModelAction extends Action
     {
         Resource targetModel = null;
         
-        Resource requirement = RequirementUtils.getRequirementModel(editingDomain);
-        RequirementProject requirementProject = (RequirementProject) requirement.getContents().get(0);
-        NewRequirementModel wizard = new NewRequirementModel(requirementProject.getIdentifier(), requirementProject.getShortDescription());
         IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(editingDomain);
         if (policy != null)
         {
@@ -76,6 +73,10 @@ public class UpdateRequirementModelAction extends Action
         }
         if (targetModel != null)
         {
+            Resource requirement = RequirementUtils.getRequirementModel(editingDomain);
+            RequirementProject requirementProject = (RequirementProject) requirement.getContents().get(0);
+            MergeRequirementModelWizard wizard = new MergeRequirementModelWizard(requirementProject.getIdentifier(), requirementProject.getShortDescription());
+            
             IFile targetFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(targetModel.getURI().toPlatformString(true)));
             wizard.init(PlatformUI.getWorkbench(), new StructuredSelection(targetFile));
     
@@ -116,4 +117,6 @@ public class UpdateRequirementModelAction extends Action
         }
         return false;
     }
+    
+    
 }

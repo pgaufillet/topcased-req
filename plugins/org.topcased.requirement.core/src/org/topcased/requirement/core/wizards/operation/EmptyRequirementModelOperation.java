@@ -28,7 +28,7 @@ import org.topcased.requirement.core.utils.RequirementUtils;
  * 
  * @since 2.1.0
  */
-public class EmptyRequirementModelCreationOperation extends AbstractModelCreationOperation
+public class EmptyRequirementModelOperation extends AbstractRequirementModelOperation
 {
     /**
      * The constructor
@@ -36,7 +36,7 @@ public class EmptyRequirementModelCreationOperation extends AbstractModelCreatio
      * @param sourceFile
      * @param destFile
      */
-    public EmptyRequirementModelCreationOperation(IFile inFile, IFile destFile)
+    public EmptyRequirementModelOperation(IFile inFile, IFile destFile)
     {
         super(inFile, destFile);
     }
