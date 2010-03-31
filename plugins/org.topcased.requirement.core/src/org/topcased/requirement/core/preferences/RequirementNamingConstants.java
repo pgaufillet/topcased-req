@@ -12,6 +12,8 @@
  ******************************************************************************/
 package org.topcased.requirement.core.preferences;
 
+import org.topcased.requirement.core.extensions.DefaultRequirementIdentifierVariables;
+
 /**
  * An interface defining constants used in naming of requirement.
  * 
@@ -29,7 +31,8 @@ public interface RequirementNamingConstants
     String REQUIREMENT_COUNTING_ALGORITHM = "requirementAlgorithm";
 
     // default values
-    String DEFAULT_NAMING_FORMAT = "E_{project}_{hierarchical element}_{number}";
+    String DEFAULT_NAMING_FORMAT = "E_" + DefaultRequirementIdentifierVariables.PROJECT_VAR + "_" + DefaultRequirementIdentifierVariables.HIERARCHICAL_ELEMENT_VAR + "_"
+            + DefaultRequirementIdentifierVariables.INDEX_VAR;
 
     String DEFAULT_COUNTING_ALGORITHM = "Default Algorithm";
 

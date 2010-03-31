@@ -30,33 +30,44 @@ import org.topcased.requirement.core.utils.RequirementUtils;
  * Default added variables for the requirement naming pattern in the preference page
  * 
  * @author maudrain
- *
+ * 
  */
-public class DefaultRequirementIdentifierVariables implements IRequirementIdentifierVariables
+public final class DefaultRequirementIdentifierVariables implements IRequirementIdentifierVariables
 {
+
+    public static final String PROJECT_VAR = "{project name}";
+
+    public static final String RESOURCE_VAR = "{resource name}";
+
+    public static final String HIERARCHICAL_ELEMENT_VAR = "{hierarchical element}";
+
+    public static final String UPSTREAM_REQUIREMENT_VAR = "{upstream requirement}";
+
+    public static final String INDEX_VAR = "{index}";
 
     private static final String DEFAULT_HIERARCHICAL_ELEMENT_NAME = "xxx";
 
     /**
-     * @see org.topcased.requirement.core.extensions.IRequirementIdentifierVariables#setValuesToVariables(org.eclipse.emf.edit.domain.EditingDomain, java.util.Map)
+     * @see org.topcased.requirement.core.extensions.IRequirementIdentifierVariables#setValuesToVariables(org.eclipse.emf.edit.domain.EditingDomain,
+     *      java.util.Map)
      */
     public Map<String, String> setValuesToVariables(EditingDomain editingDomain, Map<String, String> alreadyCreatedMap)
     {
-        
+
         // Number's formatter
         NumberFormat nf = NumberFormat.getInstance();
         nf.setMinimumIntegerDigits(5);
         nf.setGroupingUsed(false);
 
         Resource requirement = RequirementUtils.getRequirementModel(editingDomain);
-        
-        //Default key word map
-        alreadyCreatedMap.put("{project}", ((RequirementProject) requirement.getContents().get(0)).getIdentifier());
-        alreadyCreatedMap.put("{resource name}", requirement.getURI().trimFileExtension().lastSegment());
-        alreadyCreatedMap.put("{hierarchical element}", getHierarchicalElementIdentifier(ComputeRequirementIdentifier.INSTANCE.getIdentifierHierarchicalElement()));
-        alreadyCreatedMap.put("{upstream requirement ident}", ComputeRequirementIdentifier.INSTANCE.getIdentifierUpstreamIdent());
-        alreadyCreatedMap.put("{number}", nf.format(ComputeRequirementIdentifier.INSTANCE.getIdentifierRequirementIndex()));
-        
+
+        // Default key word map
+        alreadyCreatedMap.put(PROJECT_VAR, ((RequirementProject) requirement.getContents().get(0)).getIdentifier());
+        alreadyCreatedMap.put(RESOURCE_VAR, requirement.getURI().trimFileExtension().lastSegment());
+        alreadyCreatedMap.put(HIERARCHICAL_ELEMENT_VAR, getHierarchicalElementIdentifier(ComputeRequirementIdentifier.INSTANCE.getIdentifierHierarchicalElement()));
+        alreadyCreatedMap.put(UPSTREAM_REQUIREMENT_VAR, ComputeRequirementIdentifier.INSTANCE.getIdentifierUpstreamIdent());
+        alreadyCreatedMap.put(INDEX_VAR, nf.format(ComputeRequirementIdentifier.INSTANCE.getIdentifierRequirementIndex()));
+
         return alreadyCreatedMap;
     }
 
@@ -66,19 +77,18 @@ public class DefaultRequirementIdentifierVariables implements IRequirementIdenti
     public List<String> getVariables()
     {
         List<String> keyWords = new ArrayList<String>();
-        keyWords.add("{project}");
-        keyWords.add("{resource name}");
-        keyWords.add("{hierarchical element}");
-        keyWords.add("{upstream requirement ident}");
-        keyWords.add("{number}");
+        keyWords.add(PROJECT_VAR);
+        keyWords.add(RESOURCE_VAR);
+        keyWords.add(HIERARCHICAL_ELEMENT_VAR);
+        keyWords.add(UPSTREAM_REQUIREMENT_VAR);
+        keyWords.add(INDEX_VAR);
         return keyWords;
     }
-    
+
     /**
-     * Get the identifier of the target element
+     * Gets the identifier of the target element.
      * 
      * @param hierarchicalElt : the target hierarchical element
-     * 
      * @return the identifier of the target element
      */
     private String getHierarchicalElementIdentifier(HierarchicalElement hierarchicalElt)
@@ -104,5 +114,5 @@ public class DefaultRequirementIdentifierVariables implements IRequirementIdenti
 
         return result;
     }
-    
+
 }

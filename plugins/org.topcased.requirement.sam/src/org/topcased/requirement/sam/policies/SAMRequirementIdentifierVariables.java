@@ -27,6 +27,8 @@ import org.topcased.requirement.core.utils.RequirementUtils;
 public class SAMRequirementIdentifierVariables implements IRequirementIdentifierVariables
 {
 
+    public static final String UPSTREAM_MODEL_VAR = "{upstream model}";
+
     /**
      * @see org.topcased.requirement.core.extensions.IRequirementIdentifierVariables#addValuesToPatterns(org.eclipse.emf.edit.domain.EditingDomain,
      *      java.util.Map)
@@ -34,7 +36,7 @@ public class SAMRequirementIdentifierVariables implements IRequirementIdentifier
     public Map<String, String> setValuesToVariables(EditingDomain editingDomain, Map<String, String> alreadyCreatedMap)
     {
         Resource requirement = RequirementUtils.getRequirementModel(editingDomain);
-        alreadyCreatedMap.put("{Upstream Model Identifier}", ((RequirementProject) requirement.getContents().get(0)).getUpstreamModel().getIdent());
+        alreadyCreatedMap.put(UPSTREAM_MODEL_VAR, ((RequirementProject) requirement.getContents().get(0)).getUpstreamModel().getIdent());
         return alreadyCreatedMap;
     }
 
@@ -44,7 +46,7 @@ public class SAMRequirementIdentifierVariables implements IRequirementIdentifier
     public List<String> getVariables()
     {
         List<String> keyWords = new ArrayList<String>();
-        keyWords.add("{Upstream Model Identifier}");
+        keyWords.add(UPSTREAM_MODEL_VAR);
         return keyWords;
     }
 
