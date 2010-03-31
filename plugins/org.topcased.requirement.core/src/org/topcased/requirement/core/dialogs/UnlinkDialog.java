@@ -9,7 +9,6 @@
  * Contributors : Maxime AUDRAIN (CS) - initial API and implementation
  * 
  *****************************************************************************/
-
 package org.topcased.requirement.core.dialogs;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -20,18 +19,17 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-
+import org.topcased.requirement.core.internal.Messages;
 
 /**
- * The unlink dialog with delete requirement model check box
+ * The unlink dialog including delete requirement model check box
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
- *
  */
 public class UnlinkDialog extends MessageDialog
 {
     private boolean delete = false;
-    
+
     protected Button deleteFromWorkspace;
 
     /**
@@ -49,22 +47,14 @@ public class UnlinkDialog extends MessageDialog
     /**
      * @see org.eclipse.jface.dialogs.MessageDialog#createDialogArea(org.eclipse.swt.widgets.Composite)
      */
+    @Override
     protected Control createDialogArea(Composite parent)
     {
-        Composite container = (Composite) getContainer(parent);
+        Composite container = (Composite) super.createDialogArea(parent);
 
         createDeleteButton(container);
 
         return container;
-    }
-
-    /**
-     * @param parent
-     * @return control
-     */
-    protected Control getContainer(Composite parent)
-    {
-        return super.createDialogArea(parent);
     }
 
     /**
@@ -75,12 +65,13 @@ public class UnlinkDialog extends MessageDialog
     protected void createDeleteButton(Composite parent)
     {
         deleteFromWorkspace = new Button(parent, SWT.CHECK);
-        deleteFromWorkspace.setText("Do you want to delete the requirement resource (cannot be undone) ?");
+        deleteFromWorkspace.setText(Messages.getString("UnlinkDialog.question")); //$NON-NLS-1$
     }
 
     /**
      * @see org.eclipse.jface.window.Window#open()
      */
+    @Override
     public int open()
     {
         int result = super.open();
@@ -104,6 +95,7 @@ public class UnlinkDialog extends MessageDialog
     /**
      * @see org.eclipse.jface.dialogs.Dialog#buttonPressed(int)
      */
+    @Override
     protected void buttonPressed(int buttonId)
     {
         // OK pressed
