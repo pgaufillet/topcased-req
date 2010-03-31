@@ -514,7 +514,7 @@
       </algorithm>
       <algorithm
             class="org.topcased.requirement.core.extensions.RegexRequirementCountingAlgorithm"
-            description="This algorithm is based on regular expressions. The index for a new current requirement is the (maximum number + step) of all the already created current requirements "
+            description="This algorithm is based on regular expressions. The index for a new current requirement is the (maximum number + step) of all the already created current requirements. With this algorithm, we recommend to use a naming pattern similar to E_{resource name}_{index}. "
             name="Regex Algorithm">
       </algorithm>
    </extension>

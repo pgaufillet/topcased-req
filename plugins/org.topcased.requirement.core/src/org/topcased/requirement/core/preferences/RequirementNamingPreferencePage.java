@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2010 Communication & Systems.
+ * Copyright (c) 2008,2010 Communication & Systems.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -48,7 +48,7 @@ import org.topcased.requirement.core.internal.RequirementCorePlugin;
  * 
  * @author <a href="mailto:christophe.mertz@c-s.fr">Christophe Mertz</a>
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
- * 
+ * @author <a href="mailto:sebastien.gabel@c-s.fr">Sebastien GABEL</a>
  */
 public class RequirementNamingPreferencePage extends AbstractTopcasedPreferencePage implements IWorkbenchPreferencePage
 {
@@ -57,7 +57,7 @@ public class RequirementNamingPreferencePage extends AbstractTopcasedPreferenceP
     private Text stepText;
 
     private Text descriptionText;
-    
+
     private Table tableViewer;
 
     private StringFieldEditor namingFormat;
@@ -79,11 +79,29 @@ public class RequirementNamingPreferencePage extends AbstractTopcasedPreferenceP
         layout.marginWidth = 0;
         mainComposite.setLayout(layout);
 
-        // Main Group
-        final Group mainGroup = new Group(mainComposite, SWT.NONE);
+        // create the top group
+        createNamingGroup(mainComposite);
+
+        // create the bottom group
+        createCountingGroup(mainComposite);
+
+        loadPreferences();
+
+        return mainComposite;
+    }
+
+    /**
+     * Creates the naming group (top part).
+     * 
+     * @param parent The composite parent
+     */
+    private void createNamingGroup(Composite parent)
+    {
+        // Naming Group
+        final Group mainGroup = new Group(parent, SWT.NONE);
         mainGroup.setLayout(new GridLayout(2, false));
-        mainGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-        mainGroup.setText(Messages.getString("RequirementNamingPreferencePage.0")); //$NON-NLS-1$
+        mainGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+        mainGroup.setText(Messages.getString("RequirementNamingPreferencePage.group.naming")); //$NON-NLS-1$
 
         // Composite Text format
         final Composite textComposite = new Composite(mainGroup, SWT.NONE);
@@ -110,7 +128,7 @@ public class RequirementNamingPreferencePage extends AbstractTopcasedPreferenceP
 
         // Key words Table
         tableViewer = new Table(mainGroup, SWT.BORDER);
-        tableViewer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+        tableViewer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         fillTableWithVariables();
 
         // Add Button
@@ -121,16 +139,28 @@ public class RequirementNamingPreferencePage extends AbstractTopcasedPreferenceP
         addButton.setText(Messages.getString("RequirementNamingPreferencePage.2")); //$NON-NLS-1$
         addButton.setLayoutData(addDataLayout);
         addButton.addSelectionListener(new AddButtonSelectionListener());
+    }
+
+    /**
+     * Creates the counting group (bottom part).
+     * 
+     * @param parent The composite parent
+     */
+    private void createCountingGroup(Composite parent)
+    {
+        // Naming Group
+        final Group countingGroup = new Group(parent, SWT.NONE);
+        countingGroup.setLayout(new GridLayout());
+        countingGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        countingGroup.setText(Messages.getString("RequirementNamingPreferencePage.group.naming")); //$NON-NLS-1$
 
         // Index Step Composite
-        final Composite stepComposite = new Composite(mainGroup, SWT.NONE);
+        final Composite stepComposite = new Composite(countingGroup, SWT.NONE);
         final GridLayout stepCompoLayout = new GridLayout(2, false);
-        final GridData stepLayoutData = new GridData(SWT.FILL, SWT.NONE, true, false);
-        stepLayoutData.horizontalSpan = 2;
         stepCompoLayout.marginHeight = 0;
         stepCompoLayout.marginWidth = 0;
         stepComposite.setLayout(stepCompoLayout);
-        stepComposite.setLayoutData(stepLayoutData);
+        stepComposite.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
 
         // Index Step Field
         final GridData layoutData = new GridData(SWT.NONE, SWT.NONE, true, false);
@@ -145,14 +175,12 @@ public class RequirementNamingPreferencePage extends AbstractTopcasedPreferenceP
         stepText.setLayoutData(layoutData);
 
         // Algorithm Composite
-        final Composite algorithmComposite = new Composite(mainGroup, SWT.NONE);
+        final Composite algorithmComposite = new Composite(countingGroup, SWT.NONE);
         final GridLayout algorithmCompoLayout = new GridLayout(2, false);
-        final GridData gd = new GridData(SWT.FILL, SWT.NONE, true, false);
-        gd.horizontalSpan = 2;
         algorithmCompoLayout.marginHeight = 0;
         algorithmCompoLayout.marginWidth = 0;
         algorithmComposite.setLayout(algorithmCompoLayout);
-        algorithmComposite.setLayoutData(gd);
+        algorithmComposite.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
 
         // Algorithm combo
         int nbAlgo = RequirementCountingAlgorithmManager.getInstance().getAllAlgorithm().size();
@@ -163,40 +191,19 @@ public class RequirementNamingPreferencePage extends AbstractTopcasedPreferenceP
             map[i][1] = RequirementCountingAlgorithmManager.getInstance().getAllAlgorithm().toArray(new String[0])[i];
         }
         algorithmUsed = new ComboFieldEditor(RequirementNamingConstants.REQUIREMENT_COUNTING_ALGORITHM, Messages.getString("RequirementNamingPreferencePage.5"), map, algorithmComposite);//$NON-NLS-1$
+        algorithmUsed.setPropertyChangeListener(new ComboPropertyChangeListener());
         algorithmUsed.setPreferenceStore(getPreferenceStore());
         algorithmUsed.fillIntoGrid(algorithmComposite, 2);
-        algorithmUsed.setPropertyChangeListener(new IPropertyChangeListener()
-        {
-            
-            public void propertyChange(PropertyChangeEvent event)
-            {
-                String description = RequirementCountingAlgorithmManager.getInstance().getAlgorithmDescription(event.getNewValue().toString());
-                if (description != null)
-                {
-                    descriptionText.setText(description);
-                }
-                else
-                {
-                    descriptionText.setText("");
-                }
-            }
-        });
-        
+
         // description Group
-        final Group descriptionGroup = new Group(mainGroup, SWT.NONE);
+        final Group descriptionGroup = new Group(countingGroup, SWT.NONE);
         descriptionGroup.setLayout(new FillLayout());
-        GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
-        data.horizontalSpan = 2;
-        descriptionGroup.setLayoutData(data);
+        descriptionGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         descriptionGroup.setText(Messages.getString("RequirementNamingPreferencePage.7")); //$NON-NLS-1$
 
-        //description Text
+        // description Text
         descriptionText = new Text(descriptionGroup, SWT.READ_ONLY | SWT.WRAP);
         descriptionText.setEnabled(false);
-
-        loadPreferences();
-
-        return mainComposite;
     }
 
     /**
@@ -252,6 +259,7 @@ public class RequirementNamingPreferencePage extends AbstractTopcasedPreferenceP
     /**
      * @see org.topcased.facilities.preferences.AbstractTopcasedPreferencePage#getBundleId()
      */
+    @Override
     protected String getBundleId()
     {
         return RequirementCorePlugin.getId();
@@ -284,11 +292,11 @@ public class RequirementNamingPreferencePage extends AbstractTopcasedPreferenceP
     }
 
     /**
-     * Listener for the Add Button
-     * 
+     * Internal listener for adding variable inside the Naming Format text field.
      */
     private class AddButtonSelectionListener extends SelectionAdapter
     {
+        @Override
         public void widgetSelected(SelectionEvent e)
         {
             String toAdd = ""; //$NON-NLS-1$
@@ -304,8 +312,7 @@ public class RequirementNamingPreferencePage extends AbstractTopcasedPreferenceP
     }
 
     /**
-     * Listener for the Step Text field
-     * 
+     * Internal listener to control value fill into the Step Index text field
      */
     private class StepTextModifyListener implements ModifyListener
     {
@@ -321,6 +328,29 @@ public class RequirementNamingPreferencePage extends AbstractTopcasedPreferenceP
             {
                 setErrorMessage(Messages.getString("RequirementNamingPreferencePage.4")); //$NON-NLS-1$
                 setValid(false);
+            }
+        }
+    }
+
+    /**
+     * Internal listener for updating description according to the algorithm chosen in the combo.
+     */
+    private class ComboPropertyChangeListener implements IPropertyChangeListener
+    {
+
+        /**
+         * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
+         */
+        public void propertyChange(PropertyChangeEvent event)
+        {
+            String description = RequirementCountingAlgorithmManager.getInstance().getAlgorithmDescription(event.getNewValue().toString());
+            if (description != null)
+            {
+                descriptionText.setText(description);
+            }
+            else
+            {
+                descriptionText.setText("");
             }
         }
     }
