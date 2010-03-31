@@ -77,7 +77,7 @@
          point="org.topcased.requirement.core.requirementCountingAlgorithm">
       <algorithm
             class="org.topcased.requirement.sam.policies.SAMRequirementCountingAlgorithm"
-            description="In this algorithm, the index is stored on the leafs of the hierarchical element tree so that current requirements created on a new container implies the reset of the index"
+            description="The next index is computed and stored on each hierarchical element so that current requirements created on a new container implies the reset of the index. By default, next index receives the value 10. With this algorithm, we recomment to use the following naming pattern : E_{project name}_{hierarchical element}_{index} since the index is strictly dependant of the hierachical element."
             name="SAM Counting Algorithm">
       </algorithm>
    </extension>
