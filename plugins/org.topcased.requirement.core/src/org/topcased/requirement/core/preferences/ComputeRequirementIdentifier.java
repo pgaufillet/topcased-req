@@ -15,8 +15,6 @@ package org.topcased.requirement.core.preferences;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.topcased.requirement.CurrentRequirement;
@@ -24,7 +22,6 @@ import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.core.extensions.IRequirementIdentifierVariables;
 import org.topcased.requirement.core.extensions.RequirementIdentifierVariablesManager;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
-import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.AbstractRequirementView;
 
 /**
@@ -40,10 +37,6 @@ import org.topcased.requirement.core.views.AbstractRequirementView;
 public class ComputeRequirementIdentifier
 {
     public static final ComputeRequirementIdentifier INSTANCE = new ComputeRequirementIdentifier();
-
-    private String initialFormat;
-
-    private String currentFormat;
 
     // Parameters used to compute the full identifier:
     private EditingDomain editingDomain;
@@ -63,9 +56,8 @@ public class ComputeRequirementIdentifier
      * @param nextIndex The next index to use to name the {@link CurrentRequirement}
      * @return the new composed identifier
      */
-    public String computeIdent(EditingDomain domain, HierarchicalElement hierarchicalElt, String source, long nextIndex)
+    public String computeIdentifier(EditingDomain domain, HierarchicalElement hierarchicalElt, String source, long nextIndex)
     {
-        currentFormat = initialFormat;
         editingDomain = domain;
         hierarchicalElement = hierarchicalElt;
         upstreamIdentifier = source;
@@ -73,25 +65,6 @@ public class ComputeRequirementIdentifier
 
         // Determine the number in the system
         return computeFullIdentifier();
-    }
-
-    /**
-     * Replace the key word in the format
-     * 
-     * @param map : the key words to replace in the format
-     * 
-     * @return the new identifier
-     */
-    private String convert(Map<String, String> map)
-    {
-        for (String keyWord : map.keySet())
-        {
-            if (map.get(keyWord) != null)
-            {
-                currentFormat = currentFormat.replace(keyWord, map.get(keyWord));
-            }
-        }
-        return currentFormat;
     }
 
     /**
@@ -107,37 +80,25 @@ public class ComputeRequirementIdentifier
     {
         Map<String, String> map = new HashMap<String, String>();
 
-        // Variables added by extension point
+        // Variables added by extension point, map are initialized for this purpose
         for (IRequirementIdentifierVariables vars : RequirementIdentifierVariablesManager.getInstance().getIdentifierVariables())
         {
             map = vars.setValuesToVariables(editingDomain, map);
         }
 
-        return convert(map);
-    }
-
-    /**
-     * Gets the PreferenceStore of the project's property
-     * 
-     * @param project
-     * 
-     * @return the PreferenceStore of the project's property
-     */
-    public void setPreferenceStore(Resource requirementModel)
-    {
-        if (requirementModel == null)
-        {
-            return;
-        }
-
-        IFile file = RequirementUtils.getFile(requirementModel);
-        if (file == null)
-        {
-            return;
-        }
-
+        // Gets the current naming format from the preference store (scoped or global)
         IPreferenceStore store = AbstractRequirementView.getPreferenceStore();
-        initialFormat = store.getString(RequirementNamingConstants.REQUIREMENT_NAMING_FORMAT);
+        String currentFormat = store.getString(RequirementNamingConstants.REQUIREMENT_NAMING_FORMAT);
+
+        // replace the variables by their values.
+        for (String keyWord : map.keySet())
+        {
+            if (map.get(keyWord) != null)
+            {
+                currentFormat = currentFormat.replace(keyWord, map.get(keyWord));
+            }
+        }
+        return currentFormat;
     }
 
     public HierarchicalElement getIdentifierHierarchicalElement()

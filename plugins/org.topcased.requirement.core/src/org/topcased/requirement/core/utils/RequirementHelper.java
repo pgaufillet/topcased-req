@@ -324,7 +324,7 @@ public final class RequirementHelper
         
         //Compute the identifier of the newly created requirement
         index = algorithm.getCurrentIndex(newCurrentReq);
-        newCurrentReq.setIdentifier(ComputeRequirementIdentifier.INSTANCE.computeIdent(editingDomain, target, source, index));
+        newCurrentReq.setIdentifier(ComputeRequirementIdentifier.INSTANCE.computeIdentifier(editingDomain, target, source, index));
         
         //Increase index after requirement creation
         algorithm.increaseIndexWhenCreateRequirement(newCurrentReq, index);
@@ -549,7 +549,7 @@ public final class RequirementHelper
             String ident = requirement.getIdentifier();
             HierarchicalElement parent = (HierarchicalElement) requirement.eContainer();
             index = algorithm.getCurrentIndex(requirement);
-            String newIdent = ComputeRequirementIdentifier.INSTANCE.computeIdent(editingDomain, parent, ident, index);
+            String newIdent = ComputeRequirementIdentifier.INSTANCE.computeIdentifier(editingDomain, parent, ident, index);
             algorithm.increaseIndexWhenCreateRequirement(requirement, index);
             return SetCommand.create(editingDomain, requirement, RequirementPackage.eINSTANCE.getIdentifiedElement_Identifier(), newIdent);
         }

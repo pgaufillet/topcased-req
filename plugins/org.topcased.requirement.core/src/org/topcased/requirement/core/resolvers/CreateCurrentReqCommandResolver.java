@@ -10,8 +10,7 @@
  *  Tristan FAURE (ATOS ORIGIN INTEGRATION) - Initial API and implementation
  *  Maxime AUDRAIN (CS) - API changes
  *
-  *****************************************************************************/
-
+ *****************************************************************************/
 package org.topcased.requirement.core.resolvers;
 
 import java.util.HashMap;
@@ -28,7 +27,6 @@ import org.topcased.requirement.core.commands.CreateCurrentReqCommand;
 import org.topcased.requirement.core.utils.RequirementHelper;
 
 /**
- *
  * This Class handle specific behaviour for requirements when a CreateCurrentReqCommand is executed.
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
@@ -55,26 +53,25 @@ public class CreateCurrentReqCommandResolver extends AdditionalCommand<CreateCur
      */
     @Override
     protected void post_execute(List<CreateCurrentReqCommand> dndCommands)
-    {        
+    {
         CompoundCommand compound = new CompoundCommand();
-        
+
         for (CreateCurrentReqCommand createCommand : dndCommands)
-        {      
-              if (!(createCommand.getGlobalCmd() instanceof UnexecutableCommand))
-              {
-                  createCommand.getRequirements();
-                  for (Object req : createCommand.getRequirements())
-                  {
-                      if (req instanceof CurrentRequirement)
-                      {
-                        //Handle case of current view requirements drag'n'drop
+        {
+            if (!(createCommand.getGlobalCmd() instanceof UnexecutableCommand))
+            {
+                for (Object req : createCommand.getRequirements())
+                {
+                    if (req instanceof CurrentRequirement)
+                    {
+                        // Handle case of current view requirements drag'n'drop
                         org.topcased.requirement.CurrentRequirement requirement = (org.topcased.requirement.CurrentRequirement) req;
                         compound.appendIfCanExecute(RequirementHelper.INSTANCE.renameRequirement(requirement));
-                      }
-                  }
-                  compound.execute();
-                  mapCommand.put(createCommand, compound);
-              }
+                    }
+                }
+                compound.execute();
+                mapCommand.put(createCommand, compound);
+            }
         }
 
     }
