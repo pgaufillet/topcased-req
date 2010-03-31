@@ -183,22 +183,16 @@ public class RequirementNamingPreferencePage extends AbstractTopcasedPreferenceP
         });
         
         // description Group
-        final Group labelGroup = new Group(mainGroup, SWT.NONE);
-        labelGroup.setLayout(new GridLayout(2, false));
+        final Group descriptionGroup = new Group(mainGroup, SWT.NONE);
+        descriptionGroup.setLayout(new FillLayout());
         GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
         data.horizontalSpan = 2;
-        labelGroup.setLayoutData(data);
-        labelGroup.setText(Messages.getString("RequirementNamingPreferencePage.7")); //$NON-NLS-1$
+        descriptionGroup.setLayoutData(data);
+        descriptionGroup.setText(Messages.getString("RequirementNamingPreferencePage.7")); //$NON-NLS-1$
 
-        // description composite
-        final Composite descriptionComposite = new Composite(labelGroup, SWT.NONE);
-        final FillLayout descriptionCompoLayout = new FillLayout();
-        final GridData descriptiongd = new GridData(SWT.FILL, SWT.FILL, true, true);
-        descriptionComposite.setLayout(descriptionCompoLayout);
-        descriptionComposite.setLayoutData(descriptiongd);
-        
         //description Text
-        descriptionText = new Text(descriptionComposite, SWT.READ_ONLY | SWT.WRAP);
+        descriptionText = new Text(descriptionGroup, SWT.READ_ONLY | SWT.WRAP);
+        descriptionText.setEnabled(false);
 
         loadPreferences();
 
