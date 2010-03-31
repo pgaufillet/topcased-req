@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.topcased.facilities.resources.SharedImageHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
+import org.topcased.requirement.sam.internal.Messages;
 import org.topcased.sam.Flow;
 import org.topcased.sam.FlowGroup;
 
@@ -69,7 +70,7 @@ public class ChooseTargetDialog extends TitleAreaDialog
     protected void configureShell(Shell shell)
     {
         super.configureShell(shell);
-        shell.setText("Target selection");
+        shell.setText(Messages.getString("ChooseTargetDialog_0")); //$NON-NLS-1$
         shell.setSize(500, 250);
     }
 
@@ -89,9 +90,9 @@ public class ChooseTargetDialog extends TitleAreaDialog
     protected Control createContents(Composite parent)
     {
         Control control = super.createContents(parent);
-        setTitle("Attachment Operation");
+        setTitle(Messages.getString("ChooseTargetDialog.title")); //$NON-NLS-1$
         setTitleImage(SharedImageHelper.getTopcasedDialogImage());
-        setMessage("Several potential target container have been detected, choose one of them for this drop operation."); 
+        setMessage(Messages.getString("ChooseTargetDialog.msg"));  //$NON-NLS-1$
         return control;
     }
 
@@ -108,7 +109,7 @@ public class ChooseTargetDialog extends TitleAreaDialog
         final Group group = new Group(composite, SWT.SHADOW_ETCHED_OUT);
         group.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         group.setLayout(new GridLayout());
-        group.setText("Attach to container : ");
+        group.setText(Messages.getString("ChooseTargetDialog.group.title")); //$NON-NLS-1$
 
         final Button flowOption = new Button(group, SWT.RADIO);
         flowOption.setText(getFlowLabel());
@@ -155,7 +156,7 @@ public class ChooseTargetDialog extends TitleAreaDialog
      */
     protected String getFlowLabel()
     {
-        return adapter != null ? adapter.getText(flow) : "Flow";
+        return adapter != null ? adapter.getText(flow) : Messages.getString("ChooseTargetDialog.flow"); //$NON-NLS-1$
     }
 
     /**
@@ -166,7 +167,7 @@ public class ChooseTargetDialog extends TitleAreaDialog
     protected String getFlowGroupLabel()
     {
         FlowGroup flowGroup = flow.getGroup();
-        return adapter != null ? adapter.getText(flowGroup) : "FlowGroup";
+        return adapter != null ? adapter.getText(flowGroup) : Messages.getString("ChooseTargetDialog.flowgroup"); //$NON-NLS-1$
     }
 
     /**
