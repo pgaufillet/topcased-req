@@ -9,7 +9,6 @@
  * Contributors : Maxime AUDRAIN (CS) - initial API and implementation
  * 
  *****************************************************************************/
-
 package org.topcased.requirement.sam.policies;
 
 import java.util.ArrayList;
@@ -23,8 +22,7 @@ import org.topcased.requirement.core.extensions.IRequirementIdentifierVariables;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
- * @author maudrain
- * 
+ * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  */
 public class SAMRequirementIdentifierVariables implements IRequirementIdentifierVariables
 {
@@ -36,7 +34,7 @@ public class SAMRequirementIdentifierVariables implements IRequirementIdentifier
     public Map<String, String> setValuesToVariables(EditingDomain editingDomain, Map<String, String> alreadyCreatedMap)
     {
         Resource requirement = RequirementUtils.getRequirementModel(editingDomain);
-        alreadyCreatedMap.put("{Upstream Model Ident}", ((RequirementProject) requirement.getContents().get(0)).getUpstreamModel().getIdent());
+        alreadyCreatedMap.put("{Upstream Model Identifier}", ((RequirementProject) requirement.getContents().get(0)).getUpstreamModel().getIdent());
         return alreadyCreatedMap;
     }
 
@@ -46,7 +44,7 @@ public class SAMRequirementIdentifierVariables implements IRequirementIdentifier
     public List<String> getVariables()
     {
         List<String> keyWords = new ArrayList<String>();
-        keyWords.add("{Upstream Model Ident}");
+        keyWords.add("{Upstream Model Identifier}");
         return keyWords;
     }
 

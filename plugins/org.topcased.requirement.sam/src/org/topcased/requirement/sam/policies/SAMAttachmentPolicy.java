@@ -9,7 +9,6 @@
  * Contributors : Maxime AUDRAIN (CS) - initial API and implementation
  * 
  *****************************************************************************/
-
 package org.topcased.requirement.sam.policies;
 
 import java.util.HashSet;
@@ -29,16 +28,13 @@ import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.sam.Model;
 
 /**
- * Define the specific policy of requirement attachment for SAM models
+ * Defines the specific policy for requirement attachment of SAM models
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
- * 
+ * @see IModelAttachmentPolicy
  */
 public class SAMAttachmentPolicy implements IModelAttachmentPolicy
 {
-
-    /** the requirement model extension */
-    public static final String MODEL_EXTENSION = "requirement"; //$NON-NLS-1$
 
     /**
      * @see org.topcased.requirement.core.extensions.IModelAttachmentPolicy#linkRequirementModel(org.eclipse.emf.ecore.resource.Resource,
@@ -46,7 +42,7 @@ public class SAMAttachmentPolicy implements IModelAttachmentPolicy
      */
     public void linkRequirementModel(Resource targetModel, Resource requirementModel)
     {
-        //Gather the SAM Model from the SAM diagram
+        // Gather the SAM Model from the SAM diagram
         String uri = null;
         EObject root = targetModel.getContents().get(0);
         if (root instanceof Diagrams)
@@ -55,7 +51,7 @@ public class SAMAttachmentPolicy implements IModelAttachmentPolicy
             uri = EcoreUtil.getURI(di.getModel()).trimFragment().toString();
         }
         Resource samModel = targetModel.getResourceSet().getResource(URI.createURI(uri), true);
-        
+
         // Try to close the SAM diagram
         IPath samDiagramPath = RequirementUtils.getPath(targetModel);
         boolean closed = RequirementUtils.closeDiagramEditor(samDiagramPath);
@@ -82,7 +78,7 @@ public class SAMAttachmentPolicy implements IModelAttachmentPolicy
      */
     public void unlinkRequirementModel(Resource targetModel, Resource requirementModel)
     {
-        //Gather the SAM Model from the SAM diagram
+        // Gather the SAM Model from the SAM diagram
         String uri = null;
         EObject root = targetModel.getContents().get(0);
         if (root instanceof Diagrams)
@@ -91,7 +87,7 @@ public class SAMAttachmentPolicy implements IModelAttachmentPolicy
             uri = EcoreUtil.getURI(di.getModel()).trimFragment().toString();
         }
         Resource samModel = targetModel.getResourceSet().getResource(URI.createURI(uri), true);
-        
+
         // set the link between the SAM model and the requirement model to null
         Model rootModel = (Model) samModel.getContents().get(0);
         rootModel.setRequirementModel(null);
@@ -118,7 +114,7 @@ public class SAMAttachmentPolicy implements IModelAttachmentPolicy
             if (model instanceof Model)
             {
                 if (((Model) model).getRequirementModel() != null)
-                {  
+                {
                     IPath path = new Path(resource.getURI().toString() + "di");
                     URI fileURI = URI.createURI(path.toString());
                     Resource samModel = resourceSet.getResource(fileURI, true);

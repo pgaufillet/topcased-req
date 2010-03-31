@@ -9,7 +9,6 @@
  * Contributors : Maxime AUDRAIN (CS) - initial API and implementation
  * 
  *****************************************************************************/
-
 package org.topcased.requirement.sam.policies;
 
 import org.topcased.requirement.HierarchicalElement;
@@ -18,12 +17,11 @@ import org.topcased.requirement.core.extensions.IRequirementCountingAlgorithm;
 import org.topcased.requirement.core.preferences.ComputeRequirementIdentifier;
 
 /**
- * @author maudrain
- *
+ * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  */
 public class SAMRequirementCountingAlgorithm implements IRequirementCountingAlgorithm
 {
-    
+
     /**
      * @see org.topcased.requirement.core.extensions.IRequirementCountingAlgorithm#getCurrentIndex(org.topcased.requirement.Requirement)
      */
@@ -31,7 +29,7 @@ public class SAMRequirementCountingAlgorithm implements IRequirementCountingAlgo
     {
         if (currentRequirement.eContainer() instanceof HierarchicalElement)
         {
-            HierarchicalElement parent = (HierarchicalElement)currentRequirement.eContainer();
+            HierarchicalElement parent = (HierarchicalElement) currentRequirement.eContainer();
             if (parent.getNextReqIndex() == 0)
             {
                 setFirstIndex(currentRequirement);
@@ -39,21 +37,22 @@ public class SAMRequirementCountingAlgorithm implements IRequirementCountingAlgo
             }
             else
             {
-                return parent.getNextReqIndex();    
+                return parent.getNextReqIndex();
             }
         }
         return 0;
     }
 
     /**
-     * @see org.topcased.requirement.core.extensions.IRequirementCountingAlgorithm#increaseIndexWhenCreateRequirement(org.topcased.requirement.Requirement, long)
+     * @see org.topcased.requirement.core.extensions.IRequirementCountingAlgorithm#increaseIndexWhenCreateRequirement(org.topcased.requirement.Requirement,
+     *      long)
      */
     public void increaseIndexWhenCreateRequirement(Requirement createdRequirement, long index)
     {
         index += ComputeRequirementIdentifier.getRequirementStep();
         if (createdRequirement.eContainer() instanceof HierarchicalElement)
         {
-            HierarchicalElement hierarchicalElementContainer = (HierarchicalElement)createdRequirement.eContainer();
+            HierarchicalElement hierarchicalElementContainer = (HierarchicalElement) createdRequirement.eContainer();
             hierarchicalElementContainer.setNextReqIndex(index);
         }
     }
@@ -65,11 +64,11 @@ public class SAMRequirementCountingAlgorithm implements IRequirementCountingAlgo
     {
         if (firstCreatedRequirement.eContainer() instanceof HierarchicalElement)
         {
-            HierarchicalElement parent = (HierarchicalElement)firstCreatedRequirement.eContainer();
-            
-            //First time when the default step value hasn't been put
+            HierarchicalElement parent = (HierarchicalElement) firstCreatedRequirement.eContainer();
+
+            // First time when the default step value hasn't been put
             parent.setNextReqIndex(ComputeRequirementIdentifier.getRequirementStep());
-        }        
+        }
     }
 
 }
