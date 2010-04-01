@@ -50,6 +50,13 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.markers.MarkerItem;
+import org.topcased.requirement.AttributeConfiguration;
+import org.topcased.requirement.AttributeLink;
+import org.topcased.requirement.CurrentRequirement;
+import org.topcased.requirement.HierarchicalElement;
+import org.topcased.requirement.ObjectAttribute;
+import org.topcased.requirement.Requirement;
+import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.core.actions.AddAttributeAction;
 import org.topcased.requirement.core.actions.CreateAnonymousRequirementAction;
 import org.topcased.requirement.core.actions.CreateCurrentRequirementAction;
@@ -57,9 +64,7 @@ import org.topcased.requirement.core.actions.CurrentRequirementCopyAction;
 import org.topcased.requirement.core.actions.CurrentRequirementCutAction;
 import org.topcased.requirement.core.actions.CurrentRequirementDeleteAction;
 import org.topcased.requirement.core.actions.CurrentRequirementPasteAction;
-import org.topcased.requirement.core.actions.LinkWithEditorAction;
 import org.topcased.requirement.core.actions.LoadResourceAction;
-import org.topcased.requirement.core.actions.MoveAction;
 import org.topcased.requirement.core.actions.RequirementAbstractEMFAction;
 import org.topcased.requirement.core.actions.SetAsValidAction;
 import org.topcased.requirement.core.actions.SetMarkerAction;
@@ -80,13 +85,6 @@ import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.AbstractRequirementPage;
 import org.topcased.requirement.core.views.AddRequirementMarker;
 import org.topcased.requirement.core.views.SearchComposite;
-import org.topcased.requirement.AttributeConfiguration;
-import org.topcased.requirement.AttributeLink;
-import org.topcased.requirement.CurrentRequirement;
-import org.topcased.requirement.HierarchicalElement;
-import org.topcased.requirement.ObjectAttribute;
-import org.topcased.requirement.Requirement;
-import org.topcased.requirement.RequirementProject;
 
 /**
  * This class creates the page to edit a requirement model in the upstream requirement view
@@ -104,12 +102,6 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
     private MenuManager submenuManager;
 
     private MenuManager createChildMenuManager;
-
-    private MoveAction upAction;
-
-    private MoveAction downAction;
-
-    private IAction linkTo;
 
     /**
      * FIXME : find a better way to adapt the focus when an element is deleted
@@ -150,8 +142,6 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
             if (!event.getSelection().isEmpty() && event.getSelection() instanceof IStructuredSelection)
             {
                 selection = (IStructuredSelection) event.getSelection();
-                upAction.setSelection(selection);
-                downAction.setSelection(selection);
                 if (selection.getFirstElement() instanceof Requirement)
                 {
                     // If we select a requirement we save its container to be able to focus it if the requirement is deleted
@@ -393,15 +383,6 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
     {
         IToolBarManager tbm = getSite().getActionBars().getToolBarManager();
         tbm.add(new Separator());
-
-        linkTo = new LinkWithEditorAction(this);
-        tbm.add(linkTo);
-
-        upAction = new MoveAction(this, true);
-        tbm.add(upAction);
-
-        downAction = new MoveAction(this, false);
-        tbm.add(downAction);
     }
 
     /**

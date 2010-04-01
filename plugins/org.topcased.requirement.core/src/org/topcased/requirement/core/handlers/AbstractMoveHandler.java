@@ -1,80 +1,39 @@
 /*****************************************************************************
- * Copyright (c) 2008 TOPCASED consortium.
- *
- * All rights reserved. This program and the accompanying materials
+ * Copyright (c) 2010 Communication & Systems
+ * 
+ * All rights reserved. This program and the accompanying materials 
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *  	Christophe Mertz (CS) <christophe.mertz@c-s.fr>
- *    
- ******************************************************************************/
-package org.topcased.requirement.core.actions;
+ * 
+ * Contributors : Maxime AUDRAIN (CS) - initial API and implementation
+ * 
+ *****************************************************************************/
+package org.topcased.requirement.core.handlers;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.emf.common.command.CompoundCommand;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.Requirement;
 import org.topcased.requirement.core.internal.Messages;
-import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.views.current.CurrentPage;
 
-/**
- * Action available from the Current View, allowing to move (up or down) a {@link Requirement} or a
- * {@link HierarchicalElement}.
- * 
- * @author <a href="mailto:christophe.mertz@c-s.fr">Christophe Mertz</a>
- * @author <a href="mailto:sebastien.gabel@c-s.fr">Sebastien GABEL</a>
- */
-public class MoveAction extends RequirementAction
+public class AbstractMoveHandler extends AbstractHandler
 {
-    /** give the orientation */
-    private Boolean up;
-
-    /**
-     * Constructor
-     * 
-     * @param page A reference to the page proposing this action.
-     * @param up Up or Down ?
-     */
-    public MoveAction(CurrentPage page, Boolean orientation)
-    {
-        super(page.getViewer(), page.getEditingDomain());
-        up = orientation;
-        if (up)
-        {
-            setImageDescriptor(RequirementCorePlugin.getImageDescriptor("icons/up.gif")); //$NON-NLS-1$
-            setText(Messages.getString("MoveAction.0")); //$NON-NLS-1$
-        }
-        else
-        {
-            setText(Messages.getString("MoveAction.1")); //$NON-NLS-1$
-            setImageDescriptor(RequirementCorePlugin.getImageDescriptor("icons/down.gif")); //$NON-NLS-1$
-        }
-    }
-
-    /**
-     * @see org.eclipse.jface.action.Action#run()
-     */
-    @Override
-    public void run()
-    {
-        if (checkSelection())
-        {
-            CompoundCommand compoundCmd = buildCommands();
-
-            if (!compoundCmd.isEmpty() && compoundCmd.canExecute())
-            {
-                editingDomain.getCommandStack().execute(compoundCmd);
-            }
-        }
-    }
-
+    private IStructuredSelection selection;
+    
+    private CurrentPage page;
+    
+    protected boolean up;
     /**
      * Builds commands in iterating over the elements contained in the copy of the selection.
      * 
@@ -86,13 +45,13 @@ public class MoveAction extends RequirementAction
     {
         CompoundCommand cmd = new CompoundCommand();
         List<Object> selected = new ArrayList<Object>(selection.toList());
-        
+
         if (!up)
         {
             // the selection must be inverted to be consistent with commands
             Collections.reverse(selected);
         }
-
+        
         for (Object currObject : selected)
         {
             if (currObject instanceof Requirement)
@@ -133,6 +92,31 @@ public class MoveAction extends RequirementAction
             return true;
         }
         return false;
+    }
+
+    
+    /**
+     * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+     */
+    public Object execute(ExecutionEvent event) throws ExecutionException
+    {
+        page = RequirementHelper.INSTANCE.getCurrentPage();
+        //Gather the current selection
+        if (page != null)
+        {
+            selection = (IStructuredSelection) page.getViewer().getSelection();
+        }
+        
+        if (checkSelection())
+        {
+            CompoundCommand compoundCmd = buildCommands();
+
+            if (!compoundCmd.isEmpty() && compoundCmd.canExecute())
+            {
+                Utils.getCurrentModeler().getEditingDomain().getCommandStack().execute(compoundCmd);
+            }
+        }
+        return null;
     }
 
 }

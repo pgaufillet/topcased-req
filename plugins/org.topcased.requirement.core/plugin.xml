@@ -105,6 +105,25 @@
             id="org.topcased.requirement.core.linkRequirementCommand"
             name="Link Requirement Model">
       </command>
+      <command
+            description="Link With Editor"
+            id="org.topcased.requirement.core.LinkWithEditorCommand"
+            name="Link With Editor">
+         <state
+               class="org.eclipse.ui.handlers.RegistryToggleState"
+               id="org.eclipse.ui.commands.toggleState">
+         </state>
+      </command>
+      <command
+            description="Move Up"
+            id="org.topcased.requirement.core.MoveUpCommand"
+            name="Move Up">
+      </command>
+      <command
+            description="Move Down"
+            id="org.topcased.requirement.core.MoveDownCommand"
+            name="Move Down">
+      </command>
    </extension>
    <!-- TODO : see why there is a conflict with global binding -->
    <!--extension
@@ -419,36 +438,43 @@
          </command>
       </menuContribution>
             <menuContribution
-            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
-         <toolbar
-               id="org.topcased.requirement.core.requirementToolbar">
-         <command
-               commandId="org.topcased.requirement.core.linkRequirementCommand"
-               icon="icons/current.gif"
-               label="&amp;Define Requirements"
-               style="push">
-			<visibleWhen checkEnabled="false">
-	    		<with variable="activeContexts">
-			       <count value="+">
-       			   </count>
-       			   <iterate>
-                     <and>
+                  locationURI="toolbar:org.topcased.requirement.core.currentView?after=additions">
+               <command
+                     commandId="org.topcased.requirement.core.LinkWithEditorCommand"
+                     label="&amp;Link With Editor"
+                     style="toggle">
+               </command>
+               <command
+                     commandId="org.topcased.requirement.core.MoveUpCommand"
+                     label="&amp;Move Up"
+                     style="push">
+               </command>
+               <command
+                     commandId="org.topcased.requirement.core.MoveDownCommand"
+                     label="&amp;Move Down"
+                     style="push">
+               </command>
+            </menuContribution>
+            <menuContribution
+                  locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+               <toolbar
+                     id="org.topcased.requirement.core.mainToolbar">
+                  <command
+                        commandId="org.topcased.requirement.core.linkRequirementCommand"
+                        label="&amp;Define Requirements"
+                        style="push">
+                     <visibleWhen
+                           checkEnabled="false">
                         <with
                               variable="activeWorkbenchWindow.activePerspective">
                            <equals
                                  value="org.topcased.requirement.core.perspective">
                            </equals>
                         </with>
-                        <reference
-                              definitionId="org.topcased.requirement.core.definition">
-                        </reference>
-                     </and>
-                  </iterate>
-                  </with>
-               </visibleWhen>
-            </command>
-         </toolbar>
-      </menuContribution>
+                     </visibleWhen>
+                  </command>
+               </toolbar>
+            </menuContribution>
      </extension>
    <extension
          point="org.eclipse.ui.handlers">
@@ -463,6 +489,53 @@
       <handler
             class="org.topcased.requirement.core.handlers.LinkRequirementModelHandler"
             commandId="org.topcased.requirement.core.linkRequirementCommand">
+      </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.LinkWithEditorHandler"
+            commandId="org.topcased.requirement.core.LinkWithEditorCommand">
+      </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.MoveUpHandler"
+            commandId="org.topcased.requirement.core.MoveUpCommand">
+         <activeWhen>
+            <with
+                  variable="selection">
+               <iterate>
+                  <or>
+                     <instanceof
+                           value="org.topcased.requirement.Requirement">
+                     </instanceof>
+                     <instanceof
+                           value="org.topcased.requirement.HierarchicalElement">
+                     </instanceof>
+                  </or></iterate>
+               <count
+                     value="+">
+               </count>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.MoveDownHandler"
+            commandId="org.topcased.requirement.core.MoveDownCommand">
+         <activeWhen>
+            <with
+                  variable="selection">
+               <iterate>
+                  <or>
+                     <instanceof
+                           value="org.topcased.requirement.Requirement">
+                     </instanceof>
+                     <instanceof
+                           value="org.topcased.requirement.HierarchicalElement">
+                     </instanceof>
+                  </or>
+               </iterate>
+               <count
+                     value="+">
+               </count>
+            </with>
+         </activeWhen>
       </handler>
    </extension>
    <extension
@@ -526,26 +599,22 @@
       </variables>
    </extension>
    <extension
-         point="org.eclipse.ui.actionSets">
-      <actionSet
-            id="org.topcased.requirement.core.actionSet"
-            label="Requirement Action Set"
-            visible="false">
-      </actionSet>
-   </extension>
-   <extension
-         point="org.eclipse.core.expressions.definitions">
-      <definition
-            id="org.topcased.requirement.core.definition">
-         <with
-               variable="activeContexts">
-            <iterate
-                  operator="or">
-               <equals
-                     value="org.topcased.requirement.core.actionSet">
-               </equals>
-            </iterate>
-         </with>
-      </definition>
+         point="org.eclipse.ui.commandImages">
+      <image
+            commandId="org.topcased.requirement.core.MoveUpCommand"
+            icon="icons/up.gif">
+      </image>
+      <image
+            commandId="org.topcased.requirement.core.MoveDownCommand"
+            icon="icons/down.gif">
+      </image>
+      <image
+            commandId="org.topcased.requirement.core.LinkWithEditorCommand"
+            icon="icons/synced.gif">
+      </image>
+      <image
+            commandId="org.topcased.requirement.core.linkRequirementCommand"
+            icon="icons/current.gif">
+      </image>
    </extension>
 </plugin>

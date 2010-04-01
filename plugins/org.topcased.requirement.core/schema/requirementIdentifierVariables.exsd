@@ -3,10 +3,10 @@
 <schema targetNamespace="org.topcased.requirement.core" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.topcased.requirement.core" id="requirementIdentifierDefinition" name="Extension point to define behavior of current requirement identifier"/>
+         <meta.schema plugin="org.topcased.requirement.core" id="requirementIdentifierDefinition" name="Extension point to add variables to the requirement naming pattern"/>
       </appInfo>
       <documentation>
-         Extension point to define behavior of current requirement identifier
+         Extension point to add variables to the requirement naming pattern
       </documentation>
    </annotation>
 
