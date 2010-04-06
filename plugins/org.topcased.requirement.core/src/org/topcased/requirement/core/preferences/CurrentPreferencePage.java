@@ -155,9 +155,7 @@ public class CurrentPreferencePage extends PreferencePage implements IWorkbenchP
          */
         Group radioGroup = new Group(buttonsComposite, SWT.NONE);
         radioGroup.setText(Messages.getString("CurrentPreferencePage.5")); //$NON-NLS-1$
-        GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
-        gridData.horizontalSpan = 2;
-        radioGroup.setLayoutData(gridData);
+        radioGroup.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 2, 1));
         radioGroup.setLayout(new GridLayout());
         txtBtn = createRadioButton(radioGroup, Messages.getString("CurrentPreferencePage.6")); //$NON-NLS-1$
         objBtn = createRadioButton(radioGroup, Messages.getString("CurrentPreferencePage.7")); //$NON-NLS-1$
@@ -245,10 +243,7 @@ public class CurrentPreferencePage extends PreferencePage implements IWorkbenchP
         final GridLayout valueLayout = new GridLayout(2, false);
         valueLayout.marginHeight = 0;
         valueLayout.marginWidth = 0;
-
-        final GridData valueLayoutData = new GridData(SWT.FILL, SWT.NONE, true, false);
-        valueLayoutData.horizontalSpan = 1;
-        valueComposite.setLayoutData(valueLayoutData);
+        valueComposite.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
         valueComposite.setLayout(valueLayout);
 
         final Label valueLabel = new Label(valueComposite, SWT.NONE);
@@ -310,10 +305,8 @@ public class CurrentPreferencePage extends PreferencePage implements IWorkbenchP
     private void createContentsValues(Composite parent)
     {
         valueGroup = new Group(parent, SWT.NONE);
-        GridData valueGroupGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         valueGroup.setText(Messages.getString("CurrentPreferencePage.11")); //$NON-NLS-1$
-        valueGroupGridData.horizontalSpan = 1;
-        valueGroup.setLayoutData(valueGroupGridData);
+        valueGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         valueGroup.setLayout(new GridLayout(2, false));
         valuesTable = new Table(valueGroup, SWT.BORDER);
         valuesTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -379,9 +372,7 @@ public class CurrentPreferencePage extends PreferencePage implements IWorkbenchP
         valueLayout.marginHeight = 0;
         valueLayout.marginWidth = 0;
 
-        final GridData valueLayoutData = new GridData(SWT.FILL, SWT.NONE, true, false);
-        valueLayoutData.horizontalSpan = 1;
-        valueComposite.setLayoutData(valueLayoutData);
+        valueComposite.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
         valueComposite.setLayout(valueLayout);
 
         final Label valueLabel = new Label(valueComposite, SWT.NONE);

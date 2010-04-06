@@ -51,7 +51,7 @@ public class RequirementWizardPage extends WizardPage
     private static final String BROWSE_TEXT = "..."; //$NON-NLS-1$
 
     private static final String DEFAULT_MODEL_NAME = "My"; //$NON-NLS-1$
-    
+
     private static String ALREADY_ATTACHED_REQUIREMENT;
 
     private IStructuredSelection selection;
@@ -119,7 +119,7 @@ public class RequirementWizardPage extends WizardPage
         }
         else
         {
-            ALREADY_ATTACHED_REQUIREMENT="";
+            ALREADY_ATTACHED_REQUIREMENT = "";
         }
     }
 
@@ -190,9 +190,7 @@ public class RequirementWizardPage extends WizardPage
         nameLbl.setText(Messages.getString("RequirementWizardPage.8")); //$NON-NLS-1$
 
         requirementNameFd = new Text(mainGroup, SWT.BORDER);
-        GridData layoutNameFd = new GridData(GridData.FILL_HORIZONTAL);
-        layoutNameFd.horizontalSpan = 2;
-        requirementNameFd.setLayoutData(layoutNameFd);
+        requirementNameFd.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 2, 1));
 
         /*
          * Project requirement name
@@ -201,9 +199,7 @@ public class RequirementWizardPage extends WizardPage
         projectLbl.setText(Messages.getString("RequirementWizardPage.9")); //$NON-NLS-1$
 
         projectFd = new Text(mainGroup, SWT.BORDER);
-        GridData layoutprojectFd = new GridData(GridData.FILL_HORIZONTAL);
-        layoutprojectFd.horizontalSpan = 2;
-        projectFd.setLayoutData(layoutprojectFd);
+        projectFd.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 2, 1));
 
         /*
          * Projects requirement description
@@ -212,9 +208,7 @@ public class RequirementWizardPage extends WizardPage
         projectDescrLbl.setText(Messages.getString("RequirementWizardPage.10")); //$NON-NLS-1$
 
         projectDescrFd = new Text(mainGroup, SWT.BORDER);
-        GridData layoutprojectDescrFd = new GridData(GridData.FILL_HORIZONTAL);
-        layoutprojectDescrFd.horizontalSpan = 2;
-        projectDescrFd.setLayoutData(layoutprojectDescrFd);
+        projectDescrFd.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 2, 1));
 
         emptySource = new Button(mainGroup, SWT.CHECK);
         emptySource.setText(Messages.getString("RequirementWizardPage.0")); //$NON-NLS-1$
@@ -337,10 +331,10 @@ public class RequirementWizardPage extends WizardPage
          */
         String newModel = getRequirementNameFd();
         String message = null;
-        
+
         if (getTargetModelFile() != null)
         {
-            if(!ModelAttachmentPolicyManager.getInstance().isEnableFor(getTargetModelFile().getFileExtension()))
+            if (!ModelAttachmentPolicyManager.getInstance().isEnableFor(getTargetModelFile().getFileExtension()))
             {
                 if (!getTargetModelFile().getFileExtension().endsWith("di"))
                 {
@@ -352,10 +346,10 @@ public class RequirementWizardPage extends WizardPage
         {
             message = Messages.getString("RequirementWizardPage.13"); //$NON-NLS-1$
         }
-        
+
         if (getSourceModelFile() != null)
         {
-            if(!RequirementTransformationManager.getInstance().isEnableFor(getSourceModelFile().getFileExtension()))
+            if (!RequirementTransformationManager.getInstance().isEnableFor(getSourceModelFile().getFileExtension()))
             {
                 if (!getSourceModelFile().getFileExtension().equals("requirement"))
                 {
@@ -365,13 +359,13 @@ public class RequirementWizardPage extends WizardPage
         }
         if (importModelFd.getText().equals(ALREADY_ATTACHED_REQUIREMENT) && !ALREADY_ATTACHED_REQUIREMENT.equals(""))
         {
-           setMessage(Messages.getString("RequirementWizardPage.20"), INFORMATION); //$NON-NLS-1$
+            setMessage(Messages.getString("RequirementWizardPage.20"), INFORMATION); //$NON-NLS-1$
         }
         else if (getMessageType() == INFORMATION)
         {
             setMessage(null);
         }
-        
+
         if (message == null)
         {
             /*
@@ -401,7 +395,7 @@ public class RequirementWizardPage extends WizardPage
         {
             result = false;
         }
-        else if (importModelFd.getText().equals(ALREADY_ATTACHED_REQUIREMENT)&& !ALREADY_ATTACHED_REQUIREMENT.equals(""))
+        else if (importModelFd.getText().equals(ALREADY_ATTACHED_REQUIREMENT) && !ALREADY_ATTACHED_REQUIREMENT.equals(""))
         {
             result = false;
         }
@@ -434,7 +428,7 @@ public class RequirementWizardPage extends WizardPage
      */
     public IFile getSourceModelFile()
     {
-        Path path = new Path(getImportModelFd());        
+        Path path = new Path(getImportModelFd());
         if (path.getFileExtension() != null)
         {
             return ResourcesPlugin.getWorkspace().getRoot().getFile(path);
@@ -548,7 +542,7 @@ public class RequirementWizardPage extends WizardPage
     {
         return emptySource.getSelection();
     }
-    
+
     /**
      * The getter of the checkbox.
      * 

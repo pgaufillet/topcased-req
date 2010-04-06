@@ -109,9 +109,7 @@ public class RequirementNamingPreferencePage extends AbstractTopcasedPreferenceP
         textCompoLayout.marginHeight = 0;
         textCompoLayout.marginWidth = 0;
         textComposite.setLayout(textCompoLayout);
-        final GridData textLayoutData = new GridData(SWT.FILL, SWT.NONE, true, false);
-        textLayoutData.horizontalSpan = 2;
-        textComposite.setLayoutData(textLayoutData);
+        textComposite.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 2, 1));
 
         // Text format
         namingFormat = new StringFieldEditor(RequirementNamingConstants.REQUIREMENT_NAMING_FORMAT, Messages.getString("RequirementNamingPreferencePage.6"), textComposite); //$NON-NLS-1$
@@ -120,11 +118,9 @@ public class RequirementNamingPreferencePage extends AbstractTopcasedPreferenceP
         formatText.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
 
         // Select Label
-        GridData selectLayoutData = new GridData(SWT.FILL, SWT.NONE, true, false);
-        selectLayoutData.horizontalSpan = 2;
         final Label selectLabel = new Label(mainGroup, SWT.NONE);
         selectLabel.setText(Messages.getString("RequirementNamingPreferencePage.1")); //$NON-NLS-1$
-        selectLabel.setLayoutData(selectLayoutData);
+        selectLabel.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 2, 1));
 
         // Key words Table
         tableViewer = new Table(mainGroup, SWT.BORDER);

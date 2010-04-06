@@ -76,9 +76,7 @@ public class UpstreamPreferencePage extends PreferencePage implements IWorkbench
         attributeGroup.setLayout(new GridLayout(2, false));
 
         final Label infoLabel = new Label(attributeGroup, SWT.NONE);
-        GridData layoutData = new GridData(SWT.FILL, SWT.NONE, true, false);
-        layoutData.horizontalSpan = 2;
-        infoLabel.setLayoutData(layoutData);
+        infoLabel.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 2, 1));
         infoLabel.setText(Messages.getString("UpstreamPreferencePage.0")); //$NON-NLS-1$
 
         table = new Table(attributeGroup, SWT.BORDER);
