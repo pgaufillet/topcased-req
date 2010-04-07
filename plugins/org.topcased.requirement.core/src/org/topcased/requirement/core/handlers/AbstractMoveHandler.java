@@ -19,21 +19,31 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.emf.common.command.CompoundCommand;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.PlatformUI;
 import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.Requirement;
 import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.utils.RequirementHelper;
-import org.topcased.requirement.core.views.current.CurrentPage;
+import org.topcased.requirement.core.views.current.CurrentRequirementView;
 
+/**
+ * Abstract class intended to be subclassed by clients. This handler is designed for move operations inside the
+ * {@link CurrentRequirementView}.
+ * 
+ * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
+ * @see {@link MoveDownHandler}
+ * @see {@link MoveUpHandler}
+ * 
+ */
 public class AbstractMoveHandler extends AbstractHandler
 {
-    private IStructuredSelection selection;
-    
-    private CurrentPage page;
-    
+    private IStructuredSelection structuredSelection;
+
     protected boolean up;
+
     /**
      * Builds commands in iterating over the elements contained in the copy of the selection.
      * 
@@ -44,14 +54,14 @@ public class AbstractMoveHandler extends AbstractHandler
     private CompoundCommand buildCommands()
     {
         CompoundCommand cmd = new CompoundCommand();
-        List<Object> selected = new ArrayList<Object>(selection.toList());
+        List<Object> selected = new ArrayList<Object>(structuredSelection.toList());
 
         if (!up)
         {
             // the selection must be inverted to be consistent with commands
             Collections.reverse(selected);
         }
-        
+
         for (Object currObject : selected)
         {
             if (currObject instanceof Requirement)
@@ -78,10 +88,13 @@ public class AbstractMoveHandler extends AbstractHandler
      */
     private boolean checkSelection()
     {
-        if (selection != null && !selection.isEmpty())
+
+        ISelection selection = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getSelection(CurrentRequirementView.VIEW_ID);
+        if (selection != null && selection instanceof IStructuredSelection)
         {
-            Object previousInSelection = selection.getFirstElement();
-            for (Object inSelection : selection.toList())
+            structuredSelection = (IStructuredSelection) selection;
+            Object previousInSelection = structuredSelection.getFirstElement();
+            for (Object inSelection : structuredSelection.toList())
             {
                 if (!previousInSelection.getClass().getSuperclass().equals(inSelection.getClass().getSuperclass()))
                 {
@@ -94,19 +107,11 @@ public class AbstractMoveHandler extends AbstractHandler
         return false;
     }
 
-    
     /**
      * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
      */
     public Object execute(ExecutionEvent event) throws ExecutionException
     {
-        page = RequirementHelper.INSTANCE.getCurrentPage();
-        //Gather the current selection
-        if (page != null)
-        {
-            selection = (IStructuredSelection) page.getViewer().getSelection();
-        }
-        
         if (checkSelection())
         {
             CompoundCommand compoundCmd = buildCommands();

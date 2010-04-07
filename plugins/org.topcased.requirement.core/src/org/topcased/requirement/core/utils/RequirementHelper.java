@@ -21,6 +21,7 @@ import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.common.command.UnexecutableCommand;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.DragAndDropCommand;
 import org.eclipse.emf.edit.command.MoveCommand;
@@ -263,7 +264,7 @@ public final class RequirementHelper
                         // need to delete the dropped object (the source of the drag) only if the parent is not the same
                         if (!target.equals(requirement.eContainer()))
                         {
-                            Command dndCmd = DragAndDropCommand.create(editingDomain, target, pos,  DND.DROP_MOVE , DND.DROP_MOVE, Collections.singleton(requirement));
+                            Command dndCmd = DragAndDropCommand.create(editingDomain, target, pos, DND.DROP_MOVE, DND.DROP_MOVE, Collections.singleton(requirement));
                             compoundCmd.appendIfCanExecute(dndCmd);
                         }
                         toSelect.add(requirement);
@@ -302,33 +303,33 @@ public final class RequirementHelper
         HierarchicalElement root = RequirementHelper.INSTANCE.getHierarchicalElementRoot();
         String source = "";
         IRequirementCountingAlgorithm algorithm = RequirementCountingAlgorithmManager.getInstance().getCountingAlgorithm(ComputeRequirementIdentifier.getCurrentAlgorithm());
-        
-        //Handle the create from upstream case
+
+        // Handle the create from upstream case
         if (upstream != null)
         {
             source = upstream.getIdent();
         }
-  
-        //Create the requirement
+
+        // Create the requirement
         Integer pos = AddRequirementMarker.eINSTANCE.computeIndex(target);
-        CurrentRequirement newCurrentReq = createCurrentRequirementFromUpstream(upstream);  
-        
-        //Attach the requirement to the model
+        CurrentRequirement newCurrentReq = createCurrentRequirementFromUpstream(upstream);
+
+        // Attach the requirement to the model
         compoundCmd.appendAndExecute(AddCommand.create(editingDomain, target, RequirementPackage.eINSTANCE.getHierarchicalElement_Requirement(), newCurrentReq, pos));
 
-        //Handle the case when this created requirement is the first requirement in the model
+        // Handle the case when this created requirement is the first requirement in the model
         if (root == null)
         {
             algorithm.setFirstIndex(newCurrentReq);
-        } 
-        
-        //Compute the identifier of the newly created requirement
+        }
+
+        // Compute the identifier of the newly created requirement
         index = algorithm.getCurrentIndex(newCurrentReq);
         newCurrentReq.setIdentifier(ComputeRequirementIdentifier.INSTANCE.computeIdentifier(editingDomain, target, source, index));
-        
-        //Increase index after requirement creation
+
+        // Increase index after requirement creation
         algorithm.increaseIndexWhenCreateRequirement(newCurrentReq, index);
-        
+
         return newCurrentReq;
     }
 
@@ -607,9 +608,22 @@ public final class RequirementHelper
      */
     public Command move(HierarchicalElement hierarchicalElt, Boolean up)
     {
-        EList<HierarchicalElement> list = ((HierarchicalElement) hierarchicalElt.eContainer()).getChildren();
-        return MoveCommand.create(editingDomain, hierarchicalElt.eContainer(), RequirementPackage.eINSTANCE.getHierarchicalElement_Children(), hierarchicalElt, list.lastIndexOf(hierarchicalElt)
-                + (up ? -1 : 1));
+        EList<HierarchicalElement> list = null;
+        EReference reference = null;
+        // high level
+        if (hierarchicalElt.eContainer() instanceof RequirementProject)
+        {
+            list = ((RequirementProject) hierarchicalElt.eContainer()).getHierarchicalElement();
+            reference = RequirementPackage.eINSTANCE.getRequirementProject_HierarchicalElement();
+        }
+        else
+        // default case
+        {
+            list = ((HierarchicalElement) hierarchicalElt.eContainer()).getChildren();
+            reference = RequirementPackage.eINSTANCE.getHierarchicalElement_Children();
+
+        }
+        return MoveCommand.create(editingDomain, hierarchicalElt.eContainer(), reference, hierarchicalElt, list.lastIndexOf(hierarchicalElt) + (up ? -1 : 1));
     }
 
     /**
