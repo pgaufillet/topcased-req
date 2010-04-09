@@ -10,21 +10,29 @@
  **********************************************************************************************************************/
 package org.topcased.requirement.core.actions;
 
+import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.services.ISourceProviderService;
 import org.topcased.facilities.util.EMFMarkerUtil;
+import org.topcased.modeler.editor.Modeler;
+import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.Attribute;
 import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
+import org.topcased.requirement.core.services.RequirementModelSourceProvider;
 import org.topcased.requirement.core.utils.RequirementHelper;
+import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
  * This action allows to set a Current Requirement as valid after an update operation.<br>
@@ -89,7 +97,8 @@ public class SetAsValidAction extends RequirementAction
         {
             editingDomain.getCommandStack().execute(compoundCmd);
         }
-
+        
+        fireValidationChanged();
     }
 
     /**
@@ -112,5 +121,37 @@ public class SetAsValidAction extends RequirementAction
             return enable;
         }
         return false;
+    }   
+    
+    /**
+     * 
+     * Notify commands that the isImpacted variable has changed.
+     * Handle the enablement of the update action when no current requirement are impacted
+     */
+    private void fireValidationChanged()
+    {
+        Boolean isImpacted = true;
+        Modeler modeler = Utils.getCurrentModeler();
+        ISourceProviderService spc = (ISourceProviderService)PlatformUI.getWorkbench().getService(ISourceProviderService.class);
+        RequirementModelSourceProvider myPro = (RequirementModelSourceProvider)spc.getSourceProvider(RequirementModelSourceProvider.IS_IMPACTED);
+        if (modeler != null && myPro != null)
+        {
+            Resource requirement = RequirementUtils.getRequirementModel(modeler.getEditingDomain());
+            if (requirement != null)
+            {
+                Collection<EObject> allRequirement = RequirementUtils.getAllObjects(requirement, CurrentRequirement.class);
+                // checks that all CurrentRequirement are marked as not impacted.
+                for (EObject aReq : allRequirement)
+                {
+                    if (aReq instanceof CurrentRequirement && ((CurrentRequirement) aReq).isImpacted())
+                    {
+                        // action must be disabled.
+                        isImpacted = false;
+                        break;
+                    }
+                }
+                myPro.setIsImpactedState(isImpacted);
+            }
+        }
     }
 }

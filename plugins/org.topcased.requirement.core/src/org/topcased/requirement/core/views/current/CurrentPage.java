@@ -7,6 +7,7 @@
  * 
  * Contributors: Christophe MERTZ (CS) - initial API and implementation,
  * Vincent Hemery [(Atos Origin)] [vincent.hemery@atosorigin.com] - updating of CurrentSelectionChangeListener
+ * Maxime AUDRAIN (CS) - API Changes
  * 
  **********************************************************************************************************************/
 package org.topcased.requirement.core.views.current;
@@ -24,7 +25,6 @@ import org.eclipse.emf.edit.ui.action.UndoAction;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
@@ -305,15 +305,7 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
                 redoAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_REDO));
                 redoAction.setActionDefinitionId("org.topcased.requirement.core.redoAction"); //$NON-NLS-1$
                 manager.add(redoAction);
-
-                // final IHandlerService service = (IHandlerService) getSite().getService(IHandlerService.class);
-                // service.activateHandler(copyAction.getActionDefinitionId(), new ActionHandler(copyAction));
-                // service.activateHandler(cutAction.getActionDefinitionId(), new ActionHandler(cutAction));
-                // service.activateHandler(pasteAction.getActionDefinitionId(), new ActionHandler(pasteAction));
-                // service.activateHandler(redoAction.getActionDefinitionId(), new ActionHandler(redoAction));
-                // service.activateHandler(undoAction.getActionDefinitionId(), new ActionHandler(undoAction));
             }
-
         }
     }
 
@@ -355,13 +347,10 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
         hookContextMenu();
         hookListeners();
 
-        createToolBarActions();
-
         getSite().setSelectionProvider(viewer);
 
         // Allow to receive only selection change coming From Property View
         getSite().getPage().addSelectionListener(IPageLayout.ID_PROBLEM_VIEW, this);
-
     }
 
     /**
@@ -374,15 +363,6 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
         
         // Fix [#3087] remove the listener set on the Problem view
         getSite().getPage().removeSelectionListener(IPageLayout.ID_PROBLEM_VIEW, this);
-    }
-    
-    /**
-     * Creates the tool bar for the requirement view
-     */
-    private void createToolBarActions()
-    {
-        IToolBarManager tbm = getSite().getActionBars().getToolBarManager();
-        tbm.add(new Separator());
     }
 
     /**

@@ -14,10 +14,12 @@ package org.topcased.requirement.core.handlers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.AbstractHandlerWithState;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.State;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -29,18 +31,22 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.ui.handlers.RegistryToggleState;
 import org.topcased.modeler.edit.IModelElementEditPart;
 import org.topcased.modeler.editor.Modeler;
+import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.current.CurrentPage;
 
 /**
+ * Handler for the link with editor command in the current requirement view
+ * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  *
  */
-public class LinkWithEditorHandler extends AbstractHandler implements ISelectionListener, ISelectionChangedListener
+public class LinkWithEditorHandler extends AbstractHandlerWithState implements ISelectionListener, ISelectionChangedListener
 {
     /** Reference to the current page **/
     private CurrentPage page;
@@ -48,6 +54,7 @@ public class LinkWithEditorHandler extends AbstractHandler implements ISelection
     /** Flag set during selection modification */
     private boolean isDispatching = false;    
 
+    
     /**
      * Adds a selection listener on the page when the action is checked
      */
@@ -189,19 +196,49 @@ public class LinkWithEditorHandler extends AbstractHandler implements ISelection
      */
     public Object execute(ExecutionEvent event) throws ExecutionException
     {
-        // by default, this action is enabled
-        page = RequirementHelper.INSTANCE.getCurrentPage();
-        Boolean newState = !HandlerUtil.toggleCommandState(event.getCommand());
-        if (newState == Boolean.TRUE)
-        {
-            addSelectionListener();
-            addSelectionChangedListener();
-        }
-        else
-        {
-            removeSelectionListener();
-            removeSelectionChangedListener();
-        }        
+        HandlerUtil.toggleCommandState(event.getCommand());
         return null; 
     }
+
+    /**
+     * @see org.eclipse.core.commands.AbstractHandlerWithState#handleStateChange(org.eclipse.core.commands.State, java.lang.Object)
+     */
+    public void handleStateChange(State state, Object oldValue)
+    {
+        page = RequirementHelper.INSTANCE.getCurrentPage(); 
+        if (page != null)
+        {
+            if (state.getId().equals(RegistryToggleState.STATE_ID))
+            {
+                if (state.getValue().equals(true))
+                {
+                    addSelectionListener();
+                    addSelectionChangedListener();
+                }
+                else
+                {
+                    removeSelectionListener();
+                    removeSelectionChangedListener();
+                } 
+            }
+        }
+    }
+      
+    /**
+     * @see org.eclipse.core.commands.AbstractHandler#isEnabled()
+     */
+    @Override
+    public boolean isEnabled()
+    {
+        Modeler modeler = Utils.getCurrentModeler();
+        if (modeler != null)
+        {
+            Resource requirement = RequirementUtils.getRequirementModel(modeler.getEditingDomain());
+            if (requirement != null)
+            {
+                return true;
+            }
+        }
+        return false;
+    }   
 }

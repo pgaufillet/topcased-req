@@ -10,6 +10,7 @@
  **********************************************************************************************************************/
 package org.topcased.requirement.core.wizards.operation;
 
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -20,12 +21,12 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 import org.topcased.modeler.editor.Modeler;
 import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.RequirementProject;
-import org.topcased.requirement.core.actions.UnlinkRequirementModelAction;
 import org.topcased.requirement.core.extensions.DefaultAttachmentPolicy;
 import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
 import org.topcased.requirement.core.extensions.IRequirementTransformation;
 import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
 import org.topcased.requirement.core.extensions.RequirementTransformationManager;
+import org.topcased.requirement.core.handlers.UnlinkRequirementModelHandler;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
@@ -177,9 +178,16 @@ public class NewRequirementModelOperation extends AbstractRequirementModelOperat
         Resource oldRequirementResource = RequirementUtils.getRequirementModel(domain);
         IFile oldRequirementFile = RequirementUtils.getFile(oldRequirementResource);
 
-        //Launch the unlink model action
-        UnlinkRequirementModelAction unlinkAction = new UnlinkRequirementModelAction(domain);
-        unlinkAction.run();
+        //Launch the unlink model action via the handler of this action
+        UnlinkRequirementModelHandler unlinkAction = new UnlinkRequirementModelHandler();
+        try
+        {
+            unlinkAction.execute(null);
+        }
+        catch (ExecutionException e)
+        {
+            RequirementCorePlugin.log(e);
+        }
 
         //Cancel has not been pressed
         if (unlinkAction.getDialogResult() != 1)

@@ -1,11 +1,12 @@
 /***********************************************************************************************************************
- * Copyright (c) 2008,2009 Communication & Systems.
+ * Copyright (c) 2008,2010 Communication & Systems.
  * 
  * All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse
  * Public License v1.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors: Christophe Mertz (CS) - initial API and implementation
+ *               Maxime AUDRAIN (CS) - API Changes
  * 
  **********************************************************************************************************************/
 package org.topcased.requirement.core.views.upstream;
@@ -14,17 +15,12 @@ import java.util.Iterator;
 
 import org.eclipse.emf.edit.ui.action.RedoAction;
 import org.eclipse.emf.edit.ui.action.UndoAction;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
-import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -33,7 +29,6 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
@@ -45,8 +40,6 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.topcased.requirement.core.actions.RequirementAbstractEMFAction;
-import org.topcased.requirement.core.actions.UnlinkRequirementModelAction;
-import org.topcased.requirement.core.actions.UpdateRequirementModelAction;
 import org.topcased.requirement.core.actions.UpstreamRequirementDeleteAction;
 import org.topcased.requirement.core.dnd.DragSourceUpstreamAdapter;
 import org.topcased.requirement.core.dnd.RequirementTransfer;
@@ -60,6 +53,7 @@ import org.topcased.requirement.core.utils.RequirementCoverageComputer;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.AbstractRequirementPage;
 import org.topcased.requirement.core.views.SearchComposite;
+
 import ttm.Document;
 
 /**
@@ -67,25 +61,14 @@ import ttm.Document;
  * 
  * @author <a href="mailto:christophe.mertz@c-s.fr">Christophe Mertz</a>
  * @author <a href="mailto:sebastien.gabel@c-s.fr">Sebastien GABEL</a>
+ * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  */
 public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRequirementPage
 {
     private IStructuredSelection currSelection;
 
-    private IAction flatHierarchy;
-
-    private IAction treeHierarchy;
-
     private UpstreamRequirementContentProvider ctPvd;
-
-    static
-    {
-        IPreferenceStore ps = RequirementCorePlugin.getDefault().getPreferenceStore();
-        ps.setDefault(SHOW_TREE_HIERARCHY_PREF, DEFAULT_SHOW_TREE_HIERARCHY);
-        ps.setDefault(SHOW_FLAT_HIERARCHY_PREF, DEFAULT_SHOW_FLAT_HIERARCHY);
-        ps.setDefault(SORT_UPSTREAM_ALPHABETICALLY_PREF, DEFAULT_SORT_UPSTREAM_ALPHABETICALLY);
-    }
-
+    
     /**
      * @see org.eclipse.ui.part.Page#createControl(org.eclipse.swt.widgets.Composite)
      */
@@ -130,8 +113,6 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
         hookKeyListeners();
         hookListeners();
 
-        createToolBarActions();
-
         getSite().setSelectionProvider(viewer);
         this.refreshViewer(true);
     }
@@ -169,109 +150,6 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
 
         Menu menu = createChildMenuManager.createContextMenu(viewer.getControl());
         viewer.getTree().setMenu(menu);
-    }
-
-    /**
-     * Create the tool bar for the requirement view
-     */
-    protected void createToolBarActions()
-    {
-        IToolBarManager tbm = getSite().getActionBars().getToolBarManager();
-        final IPreferenceStore ps = RequirementCorePlugin.getDefault().getPreferenceStore();
-
-        final IAction updateAction = new UpdateRequirementModelAction(editingDomain);
-        tbm.add(updateAction);
-
-        final IAction unlinkAction = new UnlinkRequirementModelAction(editingDomain);
-        unlinkAction.addPropertyChangeListener(new IPropertyChangeListener()
-        {
-            public void propertyChange(PropertyChangeEvent event)
-            {
-                if ("enabled".equals(event.getProperty())) //$NON-NLS-1$
-                {
-                    updateAction.setEnabled((Boolean) event.getNewValue());
-                }
-            }
-        });
-        tbm.add(unlinkAction);
-        
-        tbm.add(new Separator());
-        
-        // sorter action keeps status between two sessions
-        IAction sorter = new Action("Sort", IAction.AS_CHECK_BOX) //$NON-NLS-1$ 
-        {
-
-            @Override
-            public void run()
-            {
-                applySorter(isChecked());
-                ps.setValue(SORT_UPSTREAM_ALPHABETICALLY_PREF, isChecked());
-            }
-        };
-        sorter.setImageDescriptor(RequirementCorePlugin.getImageDescriptor("icons/alphabetic_sorter.gif")); //$NON-NLS-1$
-        sorter.setChecked(ps.getBoolean(SORT_UPSTREAM_ALPHABETICALLY_PREF));
-        tbm.add(sorter);
-
-        tbm.add(new Separator());
-
-        // flat hierarchy action keeps status between two sessions
-        flatHierarchy = new Action("Flat", IAction.AS_RADIO_BUTTON) //$NON-NLS-1$
-        {
-            @Override
-            public void run()
-            {
-                treeHierarchy.setChecked(!isChecked());
-                applyRepresentation(true);
-                ps.setValue(SHOW_FLAT_HIERARCHY_PREF, isChecked());
-                ps.setValue(SHOW_TREE_HIERARCHY_PREF, !isChecked());
-            }
-        };
-        flatHierarchy.setImageDescriptor(RequirementCorePlugin.getImageDescriptor("icons/flat-mode.gif")); //$NON-NLS-1$
-        flatHierarchy.setChecked(ps.getBoolean(SHOW_FLAT_HIERARCHY_PREF));
-        tbm.add(flatHierarchy);
-
-        // tree hierarchy action keeps status between two sessions
-        treeHierarchy = new Action("Hierarchical", IAction.AS_RADIO_BUTTON) //$NON-NLS-1$
-        {
-            @Override
-            public void run()
-            {
-                flatHierarchy.setChecked(!isChecked());
-                applyRepresentation(false);
-                ps.setValue(SHOW_TREE_HIERARCHY_PREF, isChecked());
-                ps.setValue(SHOW_FLAT_HIERARCHY_PREF, !isChecked());
-            }
-        };
-        treeHierarchy.setImageDescriptor(RequirementCorePlugin.getImageDescriptor("icons/tree-mode.gif")); //$NON-NLS-1$
-        treeHierarchy.setChecked(ps.getBoolean(SHOW_TREE_HIERARCHY_PREF));
-        tbm.add(treeHierarchy);
-
-        // initialize the sorter
-        applySorter(sorter.isChecked());
-
-        // initialize the kind of representation
-        applyRepresentation(ps.getBoolean(SHOW_FLAT_HIERARCHY_PREF));
-    }
-
-    /**
-     * Applies an eventual sorter on the tree viewer.
-     * 
-     * @param state The activation status of the sorter
-     */
-    private void applySorter(boolean state)
-    {
-        viewer.setSorter(state ? new ViewerSorter() : null);
-    }
-
-    /**
-     * Applies the right representation of the tree contents
-     * 
-     * @param isFlat should we use the flat representation or the tree one ?
-     */
-    private void applyRepresentation(boolean isFlat)
-    {
-        ctPvd.setIsFlat(isFlat);
-        viewer.refresh();
     }
 
     /**
@@ -332,5 +210,15 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
                 statusLineManager.setMessage(message.toString());
             }
         }
+    }
+    
+    /**
+     * The Flat and hierarchical sorters (FlatCommand and HierarchicalCommand) need to get the content provider to apply sorting changes
+     * 
+     * @return the UpstreamRequirementContentProvider
+     */
+    public UpstreamRequirementContentProvider getUpstreamRequirementContentProvider()
+    {
+        return ctPvd;
     }
 }

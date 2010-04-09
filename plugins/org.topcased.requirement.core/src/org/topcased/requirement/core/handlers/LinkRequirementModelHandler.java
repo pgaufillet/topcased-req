@@ -22,8 +22,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.ui.services.ISourceProviderService;
 import org.topcased.modeler.editor.Modeler;
 import org.topcased.requirement.RequirementProject;
+import org.topcased.requirement.core.services.RequirementModelSourceProvider;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.wizards.NewRequirementModelWizard;
 
@@ -76,6 +78,12 @@ public class LinkRequirementModelHandler extends AbstractHandler
             };            
             wizardDialog.open();
         } 
+        
+        //Notify commands that the hasRequirement variable has changed
+        ISourceProviderService service = (ISourceProviderService)PlatformUI.getWorkbench().getService(ISourceProviderService.class);
+        RequirementModelSourceProvider provider = (RequirementModelSourceProvider)service.getSourceProvider(RequirementModelSourceProvider.HAS_REQUIREMENT_MODEL);
+        provider.setHasRequirementState(true);
+        
         return null;
     }
 
