@@ -50,12 +50,12 @@ public class FlatOrHierarchicalHandler extends AbstractHandlerWithState
      */
     public Object execute(ExecutionEvent event) throws ExecutionException
     {         
-        if (event.getCommand().getId().equals(ICommandIds.FLAT_ID))
+        if (event.getCommand().getId().equals(ICommandConstants.FLAT_ID))
         {
             currentFlatState = (Boolean) event.getCommand().getState(RegistryToggleState.STATE_ID).getValue();
             currentHierarchicalState = !currentFlatState;
         }
-        else if (event.getCommand().getId().equals(ICommandIds.HIERARCHICAL_ID))
+        else if (event.getCommand().getId().equals(ICommandConstants.HIERARCHICAL_ID))
         {
             currentHierarchicalState = (Boolean) event.getCommand().getState(RegistryToggleState.STATE_ID).getValue();
             currentFlatState = !currentHierarchicalState;

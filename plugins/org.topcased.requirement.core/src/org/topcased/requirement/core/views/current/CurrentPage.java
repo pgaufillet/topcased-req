@@ -297,13 +297,13 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
                 manager.add(new Separator("separator_2")); //$NON-NLS-1$
 
                 UndoAction undoAction = new UndoAction(editingDomain);
-                undoAction.setActionDefinitionId("org.topcased.requirement.core.undoAction"); //$NON-NLS-1$
+                undoAction.setActionDefinitionId("org.topcased.requirement.core.undo"); //$NON-NLS-1$
                 undoAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_UNDO));
                 manager.add(undoAction);
 
                 RedoAction redoAction = new RedoAction(editingDomain);
                 redoAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_REDO));
-                redoAction.setActionDefinitionId("org.topcased.requirement.core.redoAction"); //$NON-NLS-1$
+                redoAction.setActionDefinitionId("org.topcased.requirement.core.redo"); //$NON-NLS-1$
                 manager.add(redoAction);
             }
         }

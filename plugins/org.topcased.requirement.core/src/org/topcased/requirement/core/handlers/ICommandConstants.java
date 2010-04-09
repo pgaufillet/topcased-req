@@ -17,15 +17,15 @@ package org.topcased.requirement.core.handlers;
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  *
  */
-public interface ICommandIds
+public interface ICommandConstants
 {
 
-    static final String LINK_WITH_EDITOR_ID = "org.topcased.requirement.core.LinkWithEditorCommand";
+    static final String LINK_WITH_EDITOR_ID = "org.topcased.requirement.core.linkWithEditor";
     
-    static final String SORT_ID = "org.topcased.requirement.core.SortCommand";
+    static final String SORT_ID = "org.topcased.requirement.core.sort";
     
-    static final String FLAT_ID = "org.topcased.requirement.core.FlatCommand";
+    static final String FLAT_ID = "org.topcased.requirement.core.flat";
     
-    static final String HIERARCHICAL_ID = "org.topcased.requirement.core.HierarchicalCommand";    
+    static final String HIERARCHICAL_ID = "org.topcased.requirement.core.hierarchical";    
     
 }
