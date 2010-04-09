@@ -68,15 +68,19 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
     private IStructuredSelection currSelection;
 
     private UpstreamRequirementContentProvider ctPvd;
-    
+
     /**
      * @see org.eclipse.ui.part.Page#createControl(org.eclipse.swt.widgets.Composite)
      */
     @Override
     public void createControl(Composite parent)
     {
+        final GridLayout mainLayout = new GridLayout();
+        mainLayout.marginHeight = 0;
+        mainLayout.marginWidth = 0;
+
         mainComposite = new Composite(parent, SWT.NONE);
-        mainComposite.setLayout(new GridLayout());
+        mainComposite.setLayout(mainLayout);
 
         viewer = new TreeViewer(mainComposite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
         viewer.getTree().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -114,7 +118,7 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
         hookListeners();
 
         getSite().setSelectionProvider(viewer);
-        this.refreshViewer(true);
+        refreshViewer(true);
     }
 
     /**
@@ -211,9 +215,10 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
             }
         }
     }
-    
+
     /**
-     * The Flat and hierarchical sorters (FlatCommand and HierarchicalCommand) need to get the content provider to apply sorting changes
+     * The Flat and hierarchical sorters (FlatCommand and HierarchicalCommand) need to get the content provider to apply
+     * sorting changes
      * 
      * @return the UpstreamRequirementContentProvider
      */

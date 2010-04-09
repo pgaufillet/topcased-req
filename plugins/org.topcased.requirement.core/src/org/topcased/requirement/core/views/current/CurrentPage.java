@@ -44,7 +44,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPart;
@@ -114,11 +113,11 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
     private class CurrentSelectionChangeListener implements ISelectionChangedListener
     {
         private HierarchicalElement hierarchicalElementToFocusAfterRequirementDeletion = null;
-        
+
         private HierarchicalElement hierarchicalElementToFocusAfterHierarchicalElementDeletion = null;
 
         private Requirement previouslySelectedRequirement = null;
-        
+
         private HierarchicalElement previouslySelectedHierarchicalElement = null;
 
         /**
@@ -138,13 +137,14 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
             previouslySelectedHierarchicalElement = null;
             hierarchicalElementToFocusAfterRequirementDeletion = null;
             hierarchicalElementToFocusAfterHierarchicalElementDeletion = null;
-            
+
             if (!event.getSelection().isEmpty() && event.getSelection() instanceof IStructuredSelection)
             {
                 selection = (IStructuredSelection) event.getSelection();
                 if (selection.getFirstElement() instanceof Requirement)
                 {
-                    // If we select a requirement we save its container to be able to focus it if the requirement is deleted
+                    // If we select a requirement we save its container to be able to focus it if the requirement is
+                    // deleted
                     previouslySelectedRequirement = (Requirement) selection.getFirstElement();
                     if (previouslySelectedRequirement.eContainer() != null && previouslySelectedRequirement.eContainer() instanceof HierarchicalElement)
                     {
@@ -153,12 +153,14 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
                 }
                 else if (selection.getFirstElement() instanceof HierarchicalElement)
                 {
-                    // If we select a hierarchical element we save its container to be able to focus it if this hierarchical element is deleted
+                    // If we select a hierarchical element we save its container to be able to focus it if this
+                    // hierarchical element is deleted
                     previouslySelectedHierarchicalElement = (HierarchicalElement) selection.getFirstElement();
-                    if (previouslySelectedHierarchicalElement.eContainer() != null && !(previouslySelectedHierarchicalElement.eContainer() instanceof RequirementProject) && (previouslySelectedHierarchicalElement.eContainer() instanceof HierarchicalElement))
+                    if (previouslySelectedHierarchicalElement.eContainer() != null && !(previouslySelectedHierarchicalElement.eContainer() instanceof RequirementProject)
+                            && (previouslySelectedHierarchicalElement.eContainer() instanceof HierarchicalElement))
                     {
                         hierarchicalElementToFocusAfterHierarchicalElementDeletion = (HierarchicalElement) previouslySelectedHierarchicalElement.eContainer();
-                    }                    
+                    }
                 }
             }
         }
@@ -175,10 +177,12 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
             boolean previousRequirementDeleted = previouslySelectedRequirement != null && !stillExistInModel(previouslySelectedRequirement);
             // Handle case when selected hierarchical element has been deleted
             boolean previousHierarchicalElementDeleted = previouslySelectedHierarchicalElement != null && !stillExistInModel(previouslySelectedHierarchicalElement);
-            
-            //Is the parent hierarchical element available?
-            boolean parentToFocusAvailableAfterRequirementDeletion = hierarchicalElementToFocusAfterRequirementDeletion != null && stillExistInModel(hierarchicalElementToFocusAfterRequirementDeletion);
-            boolean parentToFocusAvailableAfterHierarchicalElementDeletion = hierarchicalElementToFocusAfterHierarchicalElementDeletion != null && stillExistInModel(hierarchicalElementToFocusAfterHierarchicalElementDeletion);
+
+            // Is the parent hierarchical element available?
+            boolean parentToFocusAvailableAfterRequirementDeletion = hierarchicalElementToFocusAfterRequirementDeletion != null
+                    && stillExistInModel(hierarchicalElementToFocusAfterRequirementDeletion);
+            boolean parentToFocusAvailableAfterHierarchicalElementDeletion = hierarchicalElementToFocusAfterHierarchicalElementDeletion != null
+                    && stillExistInModel(hierarchicalElementToFocusAfterHierarchicalElementDeletion);
 
             if (event.getSelection().isEmpty())
             {
@@ -188,7 +192,8 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
                     {
                         // When a requirement is deleted from this page, we set focus on its container.
                         CurrentPage.this.getViewer().setSelection(new StructuredSelection(hierarchicalElementToFocusAfterRequirementDeletion));
-                        // New selection will not produce another re-selection since it is not empty (Infinite loop avoided).
+                        // New selection will not produce another re-selection since it is not empty (Infinite loop
+                        // avoided).
                         return true;
                     }
                 }
@@ -314,19 +319,20 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
      */
     public void createControl(Composite parent)
     {
-        mainComposite = new Composite(parent, SWT.NONE);
-        mainComposite.setLayout(new GridLayout());
+        final GridLayout mainLayout = new GridLayout();
+        mainLayout.marginHeight = 0;
+        mainLayout.marginWidth = 0;
 
-        int styleTree = SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI;
-        Tree tree = new Tree(mainComposite, styleTree);
-        tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-        viewer = new TreeViewer(tree);
+        mainComposite = new Composite(parent, SWT.NONE);
+        mainComposite.setLayout(mainLayout);
+
+        viewer = new TreeViewer(mainComposite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
+        viewer.getTree().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         viewer.setContentProvider(new CurrentRequirementContentProvider(RequirementUtils.getAdapterFactory()));
         CurrentRequirementLabelProvider labelProvider = new CurrentRequirementLabelProvider(RequirementUtils.getAdapterFactory());
         ILabelDecorator labelDecorator = RequirementCorePlugin.getDefault().getWorkbench().getDecoratorManager().getLabelDecorator();
         ILabelProvider fullLabelProvider = new DecoratingLabelProvider(labelProvider, labelDecorator);
         viewer.setLabelProvider(fullLabelProvider);
-
         viewer.addDoubleClickListener(new RequirementDoubleClickListener());
         viewer.addSelectionChangedListener(new CurrentSelectionChangeListener());
 
@@ -360,7 +366,7 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
     public void dispose()
     {
         super.dispose();
-        
+
         // Fix [#3087] remove the listener set on the Problem view
         getSite().getPage().removeSelectionListener(IPageLayout.ID_PROBLEM_VIEW, this);
     }
