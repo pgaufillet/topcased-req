@@ -7,23 +7,420 @@
    <extension-point id="requirementIdentifierVariables" name="Provide ways to add Variables to the requirement naming pattern" schema="schema/requirementIdentifierVariables.exsd"/>
    <extension-point id="requirementTransformation" name="Extension point to implement transformation from file to requirement" schema="schema/requirementTransformation.exsd"/>
    <extension-point id="requirementCountingAlgorithm" name="Extension point to implement the counting algorithm of requirements" schema="schema/requirementCountingAlgorithm.exsd"/>
-
    <extension
-         point="org.eclipse.ui.views">
-      <view
-            name="Upstream Requirement"
-            icon="icons/current.gif"
-            category="org.topcased.facilities.views"
-            class="org.topcased.requirement.core.views.upstream.UpstreamRequirementView"
-            id="org.topcased.requirement.core.upstreamView">
-      </view>
-      <view
-            category="org.topcased.facilities.views"
-            class="org.topcased.requirement.core.views.current.CurrentRequirementView"
-            icon="icons/current.gif"
-            id="org.topcased.requirement.core.currentView"
-            name="Current Requirement">
-      </view>
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.topcased.modeler.editor.Modeler"
+            class="org.topcased.requirement.core.views.RequirementAdapterFactory">
+         <adapter
+               type="org.topcased.requirement.core.views.upstream.IUpstreamRequirementPage">
+         </adapter>
+         <adapter
+               type="org.topcased.requirement.core.views.current.ICurrentRequirementPage">
+         </adapter>
+      </factory>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.topcased.requirement.core.preferences.RequirementPreferenceInitializer">
+      </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.topcased.requirement.core.handlers.CreateCurrentRequirementHandler"
+            commandId="org.topcased.requirement.core.createCurrentRequirement">
+      </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.CreateAnonymousRequirementHandler"
+            commandId="org.topcased.requirement.core.createAnonymousRequirement">
+      </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.LinkRequirementModelHandler"
+            commandId="org.topcased.requirement.core.linkRequirement">
+         <activeWhen>
+            <with
+                  variable="activeEditor">
+               <instanceof
+                     value="org.topcased.modeler.editor.Modeler">
+               </instanceof>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.LinkWithEditorHandler"
+            commandId="org.topcased.requirement.core.linkWithEditor">
+         <activeWhen>
+            <with
+                  variable="requirementActionsEnablement.hasRequirementModel">
+               <equals
+                     value="true">
+               </equals>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.MoveUpHandler"
+            commandId="org.topcased.requirement.core.moveUp">
+         <activeWhen>
+            <with
+                  variable="selection">
+               <iterate>
+                  <or>
+                     <instanceof
+                           value="org.topcased.requirement.Requirement">
+                     </instanceof>
+                     <instanceof
+                           value="org.topcased.requirement.HierarchicalElement">
+                     </instanceof>
+                  </or></iterate>
+               <count
+                     value="+">
+               </count>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.MoveDownHandler"
+            commandId="org.topcased.requirement.core.moveDown">
+         <activeWhen>
+            <with
+                  variable="selection">
+               <iterate>
+                  <or>
+                     <instanceof
+                           value="org.topcased.requirement.Requirement">
+                     </instanceof>
+                     <instanceof
+                           value="org.topcased.requirement.HierarchicalElement">
+                     </instanceof>
+                  </or>
+               </iterate>
+               <count
+                     value="+">
+               </count>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.UpdateRequirementModelHandler"
+            commandId="org.topcased.requirement.core.updateRequirementModel">
+         <activeWhen>
+            <and>
+               <with
+                     variable="requirementActionsEnablement.hasRequirementModel">
+                  <equals
+                        value="true">
+                  </equals>
+               </with>
+               <with
+                     variable="requirementActionsEnablement.isImpacted">
+                  <equals
+                        value="true">
+                  </equals>
+               </with>
+            </and>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.UnlinkRequirementModelHandler"
+            commandId="org.topcased.requirement.core.unlinkRequirementModel">
+         <activeWhen>
+            <with
+                  variable="requirementActionsEnablement.hasRequirementModel">
+               <equals
+                     value="true">
+               </equals>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.FlatOrHierarchicalHandler"
+            commandId="org.topcased.requirement.core.flat">
+         <activeWhen>
+            <with
+                  variable="requirementActionsEnablement.hasRequirementModel">
+               <equals
+                     value="true">
+               </equals>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.FlatOrHierarchicalHandler"
+            commandId="org.topcased.requirement.core.hierarchical">
+         <activeWhen>
+            <with
+                  variable="requirementActionsEnablement.hasRequirementModel">
+               <equals
+                     value="true">
+               </equals>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.SortHandler"
+            commandId="org.topcased.requirement.core.sort">
+         <activeWhen>
+            <with
+                  variable="requirementActionsEnablement.hasRequirementModel">
+               <equals
+                     value="true">
+               </equals>
+            </with>
+         </activeWhen>
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+         <command
+               commandId="org.topcased.requirement.core.createCurrentRequirement"
+               icon="icons/current.gif"
+               label="Create Current Requirement"
+               style="push">
+            <visibleWhen
+                  checkEnabled="true">
+               <with
+                     variable="activeMenuSelection">
+                  <iterate
+                        ifEmpty="false">
+                     <instanceof
+                           value="org.topcased.modeler.edit.IModelElementEditPart">
+                     </instanceof>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="org.topcased.requirement.core.createAnonymousRequirement"
+               icon="icons/anonymous.gif"
+               label="Create Free Text"
+               style="push">
+            <visibleWhen
+                  checkEnabled="true">
+               <with
+                     variable="activeMenuSelection">
+                  <iterate
+                        ifEmpty="false">
+                     <instanceof
+                           value="org.topcased.modeler.edit.IModelElementEditPart">
+                     </instanceof>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar
+               id="org.topcased.requirement.core.mainToolbar">
+            <command
+                  commandId="org.topcased.requirement.core.linkRequirement"
+                  label="&amp;Define Requirements"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <with
+                        variable="activeWorkbenchWindow.activePerspective">
+                     <equals
+                           value="org.topcased.requirement.core.perspective">
+                     </equals>
+                  </with>
+               </visibleWhen>
+            </command>
+         </toolbar>
+      </menuContribution>
+            <menuContribution
+                  locationURI="toolbar:org.topcased.requirement.core.currentView?after=additions">
+               <command
+                     commandId="org.topcased.requirement.core.linkWithEditor"
+                     label="&amp;Link With Editor"
+                     style="toggle">
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="activeEditor">
+                        <instanceof
+                              value="org.topcased.modeler.editor.Modeler">
+                        </instanceof>
+                     </with>
+                  </visibleWhen>
+               </command>
+               <command
+                     commandId="org.topcased.requirement.core.moveUp"
+                     label="&amp;Move Up"
+                     style="push">
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="activeEditor">
+                        <instanceof
+                              value="org.topcased.modeler.editor.Modeler">
+                        </instanceof>
+                     </with>
+                  </visibleWhen>
+               </command>
+               <command
+                     commandId="org.topcased.requirement.core.moveDown"
+                     label="&amp;Move Down"
+                     style="push">
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="activeEditor">
+                        <instanceof
+                              value="org.topcased.modeler.editor.Modeler">
+                        </instanceof>
+                     </with>
+                  </visibleWhen>
+               </command>
+            </menuContribution>
+            <menuContribution
+                  locationURI="toolbar:org.topcased.requirement.core.upstreamView">
+               <command
+                     commandId="org.topcased.requirement.core.updateRequirementModel"
+                     label="&amp;Update Requirement Model"
+                     style="push">
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="activeEditor">
+                        <instanceof
+                              value="org.topcased.modeler.editor.Modeler">
+                        </instanceof>
+                     </with>
+                  </visibleWhen>
+               </command>
+               <command
+                     commandId="org.topcased.requirement.core.unlinkRequirementModel"
+                     label="&amp;Unlink Requirement Model"
+                     style="push">
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="activeEditor">
+                        <instanceof
+                              value="org.topcased.modeler.editor.Modeler">
+                        </instanceof>
+                     </with>
+                  </visibleWhen>
+               </command>
+               <separator
+                     name="separatorLeft"
+                     visible="true">
+               </separator>
+               <command
+                     commandId="org.topcased.requirement.core.hierarchical"
+                     label="&amp;Hierarchical"
+                     style="radio">
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="activeEditor">
+                        <instanceof
+                              value="org.topcased.modeler.editor.Modeler">
+                        </instanceof>
+                     </with>
+                  </visibleWhen>
+               </command>
+               <command
+                     commandId="org.topcased.requirement.core.flat"
+                     label="&amp;Flat"
+                     style="radio">
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="activeEditor">
+                        <instanceof
+                              value="org.topcased.modeler.editor.Modeler">
+                        </instanceof>
+                     </with>
+                  </visibleWhen>
+               </command>
+               <separator
+                     name="separatorRight"
+                     visible="true">
+               </separator>
+               <command
+                     commandId="org.topcased.requirement.core.sort"
+                     label="&amp;Sort"
+                     style="toggle">
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="activeEditor">
+                        <instanceof
+                              value="org.topcased.modeler.editor.Modeler">
+                        </instanceof>
+                     </with>
+                  </visibleWhen>
+               </command>
+            </menuContribution>
+     </extension>
+   <extension
+         point="org.eclipse.ui.services">
+      <sourceProvider
+            provider="org.topcased.requirement.core.services.RequirementModelSourceProvider">
+         <variable
+               name="requirementActionsEnablement.hasRequirementModel"
+               priorityLevel="workbench">
+         </variable>
+         <variable
+               name="requirementActionsEnablement.isImpacted"
+               priorityLevel="workbench">
+         </variable>
+      </sourceProvider>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commandImages">
+      <image
+            commandId="org.topcased.requirement.core.moveUp"
+            icon="icons/up.gif">
+      </image>
+      <image
+            commandId="org.topcased.requirement.core.moveDown"
+            icon="icons/down.gif">
+      </image>
+      <image
+            commandId="org.topcased.requirement.core.linkWithEditor"
+            icon="icons/synced.gif">
+      </image>
+      <image
+            commandId="org.topcased.requirement.core.linkRequirement"
+            icon="icons/current.gif">
+      </image>
+      <image
+            commandId="org.topcased.requirement.core.updateRequirementModel"
+            icon="icons/import.gif">
+      </image>
+      <image
+            commandId="org.topcased.requirement.core.unlinkRequirementModel"
+            icon="icons/unlink.gif">
+      </image>
+      <image
+            commandId="org.topcased.requirement.core.flat"
+            icon="icons/flat-mode.gif">
+      </image>
+      <image
+            commandId="org.topcased.requirement.core.hierarchical"
+            icon="icons/tree-mode.gif">
+      </image>
+      <image
+            commandId="org.topcased.requirement.core.sort"
+            icon="icons/alphabetic_sorter.gif">
+      </image>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.topcased.requirement.core.internal.TopcasedRequirementPerspectiveFactory"
+            icon="icons/ModelingPerspective.gif"
+            id="org.topcased.requirement.core.perspective"
+            name="Topcased Requirement">
+      </perspective>
    </extension>
    <extension
          point="org.eclipse.ui.preferencePages">
@@ -53,12 +450,6 @@
       </page>
    </extension>
    <extension
-         point="org.eclipse.core.runtime.preferences">
-      <initializer
-            class="org.topcased.requirement.core.preferences.RequirementPreferenceInitializer">
-      </initializer>
-   </extension>
-   <extension
          point="org.eclipse.ui.commands">
       <command
             categoryId="org.eclipse.ui.category.edit"
@@ -80,34 +471,34 @@
       </command>
       <command
             categoryId="org.eclipse.ui.category.edit"
-            description="Undo"
-            id="org.topcased.requirement.core.undoAction"
+            description="Undo an operation executed from the stack"
+            id="org.topcased.requirement.core.undo"
             name="Undo">
       </command>
       <command
             categoryId="org.eclipse.ui.category.edit"
-            description="Redo"
-            id="org.topcased.requirement.core.redoAction"
+            description="Redo an operation executed from the stack"
+            id="org.topcased.requirement.core.redo"
             name="Redo">
       </command>
             <command
-            description="Create Anonymous Requirement"
-            id="org.topcased.requirement.core.CreateAnonymousRequirementCommand"
+            description="Create an anonymous requirement (free text)"
+            id="org.topcased.requirement.core.createAnonymousRequirement"
             name="Create Anonymous Requirement">
       </command>
       <command
-            description="Create Current Requirement"
-            id="org.topcased.requirement.core.CreateCurrentRequirementCommand"
+            description="Create a current requirement"
+            id="org.topcased.requirement.core.createCurrentRequirement"
             name="Create Current Requirement">
       </command>
       <command
-            description="Link Requirement Model"
-            id="org.topcased.requirement.core.linkRequirementCommand"
+            description="Link a requirement model to your DSL model"
+            id="org.topcased.requirement.core.linkRequirement"
             name="Link Requirement Model">
       </command>
       <command
-            description="Link With Editor"
-            id="org.topcased.requirement.core.LinkWithEditorCommand"
+            description="Link current page focus with editor selection"
+            id="org.topcased.requirement.core.linkWithEditor"
             name="Link With Editor">
          <state
                class="org.eclipse.ui.handlers.RegistryToggleState"
@@ -115,28 +506,28 @@
          </state>
       </command>
       <command
-            description="Move Up"
-            id="org.topcased.requirement.core.MoveUpCommand"
+            description="Move up one or several requirements or hierachical elements"
+            id="org.topcased.requirement.core.moveUp"
             name="Move Up">
       </command>
       <command
-            description="Move Down"
-            id="org.topcased.requirement.core.MoveDownCommand"
+            description="Move down one or several requirements or hierachical elements"
+            id="org.topcased.requirement.core.moveDown"
             name="Move Down">
       </command>
       <command
-            description="Update Requirement Model"
-            id="org.topcased.requirement.core.UpdateRequirementModelCommand"
+            description="Update your requirement model with an upper version"
+            id="org.topcased.requirement.core.updateRequirementModel"
             name="Update Requirement Model">
       </command>
       <command
-            description="Unlink Requirement Model"
-            id="org.topcased.requirement.core.UnlinkRequirementModelCommand"
+            description="Unlink (and delete) your requirement model"
+            id="org.topcased.requirement.core.unlinkRequirementModel"
             name="Unlink Requirement Model">
       </command>
       <command
-            description="Flat"
-            id="org.topcased.requirement.core.FlatCommand"
+            description="Flat representation of the upstream requirements"
+            id="org.topcased.requirement.core.flat"
             name="Flat">
          <state
                class="org.eclipse.ui.handlers.RegistryToggleState"
@@ -144,8 +535,8 @@
          </state>
       </command>
       <command
-            description="Hierarchical"
-            id="org.topcased.requirement.core.HierarchicalCommand"
+            description="Hierarchical representation of the upstream requirements"
+            id="org.topcased.requirement.core.hierarchical"
             name="Hierarchical">
          <state
                class="org.eclipse.ui.handlers.RegistryToggleState"
@@ -153,8 +544,8 @@
          </state>
       </command>
       <command
-            description="Sort"
-            id="org.topcased.requirement.core.SortCommand"
+            description="Sort alphabetically the different elements"
+            id="org.topcased.requirement.core.sort"
             name="Sort">
          <state
                class="org.eclipse.ui.handlers.RegistryToggleState"
@@ -162,35 +553,6 @@
          </state>
       </command>
    </extension>
-   <!-- TODO : see why there is a conflict with global binding -->
-   <!--extension
-         point="org.eclipse.ui.bindings">
-      <key
-            commandId="org.topcased.requirement.core.cutModelObject"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="M1+X">
-      </key>
-      <key
-            commandId="org.topcased.requirement.core.copyModelObject"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="M1+C">
-      </key>
-      <key
-            commandId="org.topcased.requirement.core.pasteModelObject"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="M1+V">
-      </key>
-      <key
-            commandId="org.topcased.requirement.core.undoAction"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="M1+Z">
-      </key>
-      <key
-            commandId="org.topcased.requirement.core.redoAction"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="M1+Y">
-      </key>
-   </extension-->
    <extension
          point="org.eclipse.ui.decorators">
       <decorator
@@ -221,13 +583,53 @@
          </enabledWhen>
       </page>
    </extension>
+
    <extension
-         point="org.topcased.modeler.duplicationAdapter">
-      <adapter
-            class="org.topcased.requirement.core.listeners.RequirementDuplicationAdapter"
-            metamodel="http://www.topcased.org/SAM/1.2">
-      </adapter>
+         point="org.eclipse.ui.views">
+      <view
+            name="Upstream Requirement"
+            icon="icons/current.gif"
+            category="org.topcased.facilities.views"
+            class="org.topcased.requirement.core.views.upstream.UpstreamRequirementView"
+            id="org.topcased.requirement.core.upstreamView">
+      </view>
+      <view
+            category="org.topcased.facilities.views"
+            class="org.topcased.requirement.core.views.current.CurrentRequirementView"
+            icon="icons/current.gif"
+            id="org.topcased.requirement.core.currentView"
+            name="Current Requirement">
+      </view>
    </extension>
+   <!-- TODO : see why there is a conflict with global binding -->
+   <!--extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="org.topcased.requirement.core.cutModelObject"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+X">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.copyModelObject"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+C">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.pasteModelObject"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+V">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.undo"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+Z">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.redo"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+Y">
+      </key>
+   </extension-->
    <extension
          point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
       <propertyContributor
@@ -378,16 +780,6 @@
                   type="org.topcased.requirement.ConfiguratedAttribute">
             </input>
          </propertySection>
-         <!--propertySection
-               afterSection="org.topcased.requirement.core.properties.sections.ConfiguratedAttributeTypePropertySection"
-               class="org.topcased.requirement.core.properties.sections.ConfiguratedAttributeAttributeValuePropertySection"
-               filter="org.topcased.requirement.core.properties.filters.ConfiguratedAttributeFilter"
-               id="org.topcased.requirement.core.properties.sections.ConfiguratedAttributeValuePropertySection"
-               tab="org.topcased.requirement.core.modelTab">
-            <input
-                  type="org.topcased.requirement.ConfiguratedAttribute">
-            </input>
-         </propertySection-->
          <propertySection
                class="org.topcased.requirement.core.properties.sections.AttributeValueNamePropertySection"
                id="org.topcased.requirement.core.properties.sections.AttributeValueNamePropertySection"
@@ -422,363 +814,14 @@
                   type="org.topcased.requirement.AttributeValue">
             </input>
          </propertySection>
-      </propertySections>
+      </propertySections>         
    </extension>
    <extension
-         point="org.eclipse.ui.perspectives">
-      <perspective
-            class="org.topcased.requirement.core.internal.TopcasedRequirementPerspectiveFactory"
-            icon="icons/ModelingPerspective.gif"
-            id="org.topcased.requirement.core.perspective"
-            name="Topcased Requirement">
-      </perspective>
-   </extension>
-   <extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
-         <command
-               commandId="org.topcased.requirement.core.CreateCurrentRequirementCommand"
-               icon="icons/current.gif"
-               label="Create Current Requirement"
-               style="push">
-            <visibleWhen
-                  checkEnabled="true">
-               <with
-                     variable="activeMenuSelection">
-                  <iterate
-                        ifEmpty="false">
-                     <instanceof
-                           value="org.topcased.modeler.edit.IModelElementEditPart">
-                     </instanceof>
-                  </iterate>
-               </with>
-            </visibleWhen>
-         </command>
-         <command
-               commandId="org.topcased.requirement.core.CreateAnonymousRequirementCommand"
-               icon="icons/anonymous.gif"
-               label="Create Free Text"
-               style="push">
-            <visibleWhen
-                  checkEnabled="true">
-               <with
-                     variable="activeMenuSelection">
-                  <iterate
-                        ifEmpty="false">
-                     <instanceof
-                           value="org.topcased.modeler.edit.IModelElementEditPart">
-                     </instanceof>
-                  </iterate>
-               </with>
-            </visibleWhen>
-         </command>
-      </menuContribution>
-      <menuContribution
-            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
-         <toolbar
-               id="org.topcased.requirement.core.mainToolbar">
-            <command
-                  commandId="org.topcased.requirement.core.linkRequirementCommand"
-                  label="&amp;Define Requirements"
-                  style="push">
-               <visibleWhen
-                     checkEnabled="false">
-                  <with
-                        variable="activeWorkbenchWindow.activePerspective">
-                     <equals
-                           value="org.topcased.requirement.core.perspective">
-                     </equals>
-                  </with>
-               </visibleWhen>
-            </command>
-         </toolbar>
-      </menuContribution>
-            <menuContribution
-                  locationURI="toolbar:org.topcased.requirement.core.currentView?after=additions">
-               <command
-                     commandId="org.topcased.requirement.core.LinkWithEditorCommand"
-                     label="&amp;Link With Editor"
-                     style="toggle">
-                  <visibleWhen
-                        checkEnabled="false">
-                     <with
-                           variable="activeEditor">
-                        <instanceof
-                              value="org.topcased.modeler.editor.Modeler">
-                        </instanceof>
-                     </with>
-                  </visibleWhen>
-               </command>
-               <command
-                     commandId="org.topcased.requirement.core.MoveUpCommand"
-                     label="&amp;Move Up"
-                     style="push">
-                  <visibleWhen
-                        checkEnabled="false">
-                     <with
-                           variable="activeEditor">
-                        <instanceof
-                              value="org.topcased.modeler.editor.Modeler">
-                        </instanceof>
-                     </with>
-                  </visibleWhen>
-               </command>
-               <command
-                     commandId="org.topcased.requirement.core.MoveDownCommand"
-                     label="&amp;Move Down"
-                     style="push">
-                  <visibleWhen
-                        checkEnabled="false">
-                     <with
-                           variable="activeEditor">
-                        <instanceof
-                              value="org.topcased.modeler.editor.Modeler">
-                        </instanceof>
-                     </with>
-                  </visibleWhen>
-               </command>
-            </menuContribution>
-            <menuContribution
-                  locationURI="toolbar:org.topcased.requirement.core.upstreamView">
-               <command
-                     commandId="org.topcased.requirement.core.UpdateRequirementModelCommand"
-                     label="&amp;Update Requirement Model"
-                     style="push">
-                  <visibleWhen
-                        checkEnabled="false">
-                     <with
-                           variable="activeEditor">
-                        <instanceof
-                              value="org.topcased.modeler.editor.Modeler">
-                        </instanceof>
-                     </with>
-                  </visibleWhen>
-               </command>
-               <command
-                     commandId="org.topcased.requirement.core.UnlinkRequirementModelCommand"
-                     label="&amp;Unlink Requirement Model"
-                     style="push">
-                  <visibleWhen
-                        checkEnabled="false">
-                     <with
-                           variable="activeEditor">
-                        <instanceof
-                              value="org.topcased.modeler.editor.Modeler">
-                        </instanceof>
-                     </with>
-                  </visibleWhen>
-               </command>
-               <separator
-                     name="separatorLeft"
-                     visible="true">
-               </separator>
-               <command
-                     commandId="org.topcased.requirement.core.HierarchicalCommand"
-                     label="&amp;Hierarchical"
-                     style="radio">
-                  <visibleWhen
-                        checkEnabled="false">
-                     <with
-                           variable="activeEditor">
-                        <instanceof
-                              value="org.topcased.modeler.editor.Modeler">
-                        </instanceof>
-                     </with>
-                  </visibleWhen>
-               </command>
-               <command
-                     commandId="org.topcased.requirement.core.FlatCommand"
-                     label="&amp;Flat"
-                     style="radio">
-                  <visibleWhen
-                        checkEnabled="false">
-                     <with
-                           variable="activeEditor">
-                        <instanceof
-                              value="org.topcased.modeler.editor.Modeler">
-                        </instanceof>
-                     </with>
-                  </visibleWhen>
-               </command>
-               <separator
-                     name="separatorRight"
-                     visible="true">
-               </separator>
-               <command
-                     commandId="org.topcased.requirement.core.SortCommand"
-                     label="&amp;Sort"
-                     style="toggle">
-                  <visibleWhen
-                        checkEnabled="false">
-                     <with
-                           variable="activeEditor">
-                        <instanceof
-                              value="org.topcased.modeler.editor.Modeler">
-                        </instanceof>
-                     </with>
-                  </visibleWhen>
-               </command>
-            </menuContribution>
-     </extension>
-   <extension
-         point="org.eclipse.ui.handlers">
-      <handler
-            class="org.topcased.requirement.core.handlers.CreateCurrentRequirementHandler"
-            commandId="org.topcased.requirement.core.CreateCurrentRequirementCommand">
-      </handler>
-      <handler
-            class="org.topcased.requirement.core.handlers.CreateAnonymousRequirementHandler"
-            commandId="org.topcased.requirement.core.CreateAnonymousRequirementCommand">
-      </handler>
-      <handler
-            class="org.topcased.requirement.core.handlers.LinkRequirementModelHandler"
-            commandId="org.topcased.requirement.core.linkRequirementCommand">
-         <activeWhen>
-            <with
-                  variable="activeEditor">
-               <instanceof
-                     value="org.topcased.modeler.editor.Modeler">
-               </instanceof>
-            </with>
-         </activeWhen>
-      </handler>
-      <handler
-            class="org.topcased.requirement.core.handlers.LinkWithEditorHandler"
-            commandId="org.topcased.requirement.core.LinkWithEditorCommand">
-         <activeWhen>
-            <with
-                  variable="requirementActionsEnablement.hasRequirementModel">
-               <equals
-                     value="true">
-               </equals>
-            </with>
-         </activeWhen>
-      </handler>
-      <handler
-            class="org.topcased.requirement.core.handlers.MoveUpHandler"
-            commandId="org.topcased.requirement.core.MoveUpCommand">
-         <activeWhen>
-            <with
-                  variable="selection">
-               <iterate>
-                  <or>
-                     <instanceof
-                           value="org.topcased.requirement.Requirement">
-                     </instanceof>
-                     <instanceof
-                           value="org.topcased.requirement.HierarchicalElement">
-                     </instanceof>
-                  </or></iterate>
-               <count
-                     value="+">
-               </count>
-            </with>
-         </activeWhen>
-      </handler>
-      <handler
-            class="org.topcased.requirement.core.handlers.MoveDownHandler"
-            commandId="org.topcased.requirement.core.MoveDownCommand">
-         <activeWhen>
-            <with
-                  variable="selection">
-               <iterate>
-                  <or>
-                     <instanceof
-                           value="org.topcased.requirement.Requirement">
-                     </instanceof>
-                     <instanceof
-                           value="org.topcased.requirement.HierarchicalElement">
-                     </instanceof>
-                  </or>
-               </iterate>
-               <count
-                     value="+">
-               </count>
-            </with>
-         </activeWhen>
-      </handler>
-      <handler
-            class="org.topcased.requirement.core.handlers.UpdateRequirementModelHandler"
-            commandId="org.topcased.requirement.core.UpdateRequirementModelCommand">
-         <activeWhen>
-            <and>
-               <with
-                     variable="requirementActionsEnablement.hasRequirementModel">
-                  <equals
-                        value="true">
-                  </equals>
-               </with>
-               <with
-                     variable="requirementActionsEnablement.isImpacted">
-                  <equals
-                        value="true">
-                  </equals>
-               </with>
-            </and>
-         </activeWhen>
-      </handler>
-      <handler
-            class="org.topcased.requirement.core.handlers.UnlinkRequirementModelHandler"
-            commandId="org.topcased.requirement.core.UnlinkRequirementModelCommand">
-         <activeWhen>
-            <with
-                  variable="requirementActionsEnablement.hasRequirementModel">
-               <equals
-                     value="true">
-               </equals>
-            </with>
-         </activeWhen>
-      </handler>
-      <handler
-            class="org.topcased.requirement.core.handlers.FlatOrHierarchicalHandler"
-            commandId="org.topcased.requirement.core.FlatCommand">
-         <activeWhen>
-            <with
-                  variable="requirementActionsEnablement.hasRequirementModel">
-               <equals
-                     value="true">
-               </equals>
-            </with>
-         </activeWhen>
-      </handler>
-      <handler
-            class="org.topcased.requirement.core.handlers.FlatOrHierarchicalHandler"
-            commandId="org.topcased.requirement.core.HierarchicalCommand">
-         <activeWhen>
-            <with
-                  variable="requirementActionsEnablement.hasRequirementModel">
-               <equals
-                     value="true">
-               </equals>
-            </with>
-         </activeWhen>
-      </handler>
-      <handler
-            class="org.topcased.requirement.core.handlers.SortHandler"
-            commandId="org.topcased.requirement.core.SortCommand">
-         <activeWhen>
-            <with
-                  variable="requirementActionsEnablement.hasRequirementModel">
-               <equals
-                     value="true">
-               </equals>
-            </with>
-         </activeWhen>
-      </handler>
-   </extension>
-   <extension
-         point="org.eclipse.core.runtime.adapters">
-      <factory
-            adaptableType="org.topcased.modeler.editor.Modeler"
-            class="org.topcased.requirement.core.views.RequirementAdapterFactory">
-         <adapter
-               type="org.topcased.requirement.core.views.upstream.IUpstreamRequirementPage">
-         </adapter>
-         <adapter
-               type="org.topcased.requirement.core.views.current.ICurrentRequirementPage">
-         </adapter>
-      </factory>
+         point="org.topcased.modeler.duplicationAdapter">
+      <adapter
+            class="org.topcased.requirement.core.listeners.RequirementDuplicationAdapter"
+            metamodel="http://www.topcased.org/SAM/1.2">
+      </adapter>
    </extension>
    <extension
          point="org.topcased.modeler.commandsStackListeners">
@@ -826,58 +869,5 @@
             class="org.topcased.requirement.core.extensions.DefaultRequirementIdentifierVariables"
             id="Default Variables">
       </variables>
-   </extension>
-   <extension
-         point="org.eclipse.ui.commandImages">
-      <image
-            commandId="org.topcased.requirement.core.MoveUpCommand"
-            icon="icons/up.gif">
-      </image>
-      <image
-            commandId="org.topcased.requirement.core.MoveDownCommand"
-            icon="icons/down.gif">
-      </image>
-      <image
-            commandId="org.topcased.requirement.core.LinkWithEditorCommand"
-            icon="icons/synced.gif">
-      </image>
-      <image
-            commandId="org.topcased.requirement.core.linkRequirementCommand"
-            icon="icons/current.gif">
-      </image>
-      <image
-            commandId="org.topcased.requirement.core.UpdateRequirementModelCommand"
-            icon="icons/import.gif">
-      </image>
-      <image
-            commandId="org.topcased.requirement.core.UnlinkRequirementModelCommand"
-            icon="icons/unlink.gif">
-      </image>
-      <image
-            commandId="org.topcased.requirement.core.FlatCommand"
-            icon="icons/flat-mode.gif">
-      </image>
-      <image
-            commandId="org.topcased.requirement.core.HierarchicalCommand"
-            icon="icons/tree-mode.gif">
-      </image>
-      <image
-            commandId="org.topcased.requirement.core.SortCommand"
-            icon="icons/alphabetic_sorter.gif">
-      </image>
-   </extension>
-   <extension
-         point="org.eclipse.ui.services">
-      <sourceProvider
-            provider="org.topcased.requirement.core.services.RequirementModelSourceProvider">
-         <variable
-               name="requirementActionsEnablement.hasRequirementModel"
-               priorityLevel="workbench">
-         </variable>
-         <variable
-               name="requirementActionsEnablement.isImpacted"
-               priorityLevel="workbench">
-         </variable>
-      </sourceProvider>
    </extension>
 </plugin>
