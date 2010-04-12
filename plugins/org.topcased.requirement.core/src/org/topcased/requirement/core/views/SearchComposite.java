@@ -47,8 +47,8 @@ public class SearchComposite extends Composite
     {
         super(parent, style);
         final GridLayout layout = new GridLayout(3, false);
-        layout.marginHeight = 0;
-        layout.marginWidth = 0;
+//        layout.marginHeight = 0;
+//        layout.marginWidth = 0;
 
         setLayout(layout);
         setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
