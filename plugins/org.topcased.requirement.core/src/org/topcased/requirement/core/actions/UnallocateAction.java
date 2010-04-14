@@ -18,7 +18,6 @@ import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.topcased.requirement.AnonymousRequirement;
 import org.topcased.requirement.Attribute;
 import org.topcased.requirement.AttributeAllocate;
 import org.topcased.requirement.CurrentRequirement;
@@ -69,7 +68,7 @@ public class UnallocateAction extends RequirementAction
             {
                 unallocate((HierarchicalElement) currObject);
             }
-            else if (currObject instanceof CurrentRequirement || currObject instanceof AnonymousRequirement)
+            else if (currObject instanceof Requirement)
             {
                 unallocate((Requirement) currObject);
             }
@@ -80,7 +79,6 @@ public class UnallocateAction extends RequirementAction
             // Execute it.
             editingDomain.getCommandStack().execute(compoundCmd);
         }
-        viewer.refresh();
     }
 
     /**
