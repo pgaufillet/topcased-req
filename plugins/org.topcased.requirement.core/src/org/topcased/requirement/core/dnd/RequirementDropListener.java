@@ -108,9 +108,6 @@ public class RequirementDropListener extends AbstractTransferDropTargetListener
                     ISelection selection = ((RequirementTransfer) getTransfer()).getSelection();
                     Collection< ? > source = extractDragSource(selection);
                     
-                    //get the current page
-                    CurrentPage page = (CurrentPage) view.getCurrentPage();
-
                     // handle specific action on drop                    
                     Command dropCmd = null;
                     ISpecificDropAction action=null;
@@ -137,9 +134,6 @@ public class RequirementDropListener extends AbstractTransferDropTargetListener
                     {
                         getViewer().getEditDomain().getCommandStack().execute(new EMFtoGEFCommandWrapper(dropCmd));
                     }
-                    
-                    //refresh the current page
-                    page.getViewer().refresh();
                 }
             }
         }
