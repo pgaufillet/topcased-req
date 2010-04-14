@@ -161,30 +161,22 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
             EObject model = resource.getContents().get(0);
             thePage.setModel(model);
             thePage.getViewer().setInput(model);
+            RequirementHelper.INSTANCE.setCurrentPage(thePage);
         }
+    }
+    
+    /**
+     * @see org.eclipse.ui.part.PageBookView#dispose()
+     */
+    @Override
+    public void dispose()
+    {
+        UpstreamRequirementView upstreamView = (UpstreamRequirementView) UpstreamRequirementView.getInstance();
+        if (upstreamView != null)
+        {
+            this.removeSelectionChangedListener(upstreamView);
+        }
+        super.dispose();
     }
 
-    /**
-     * @see org.topcased.requirement.core.views.AbstractRequirementView#hookListener()
-     */
-    public void hookListener()
-    {
-        IViewPart upstreamPart = UpstreamRequirementView.getInstance();
-        if (upstreamPart instanceof UpstreamRequirementView)
-        {
-            addSelectionChangedListener((UpstreamRequirementView) upstreamPart);
-        }
-    }
-
-    /**
-     * @see org.topcased.requirement.core.views.AbstractRequirementView#unhookListener()
-     */
-    public void unhookListener()
-    {
-        IViewPart upstreamPart = UpstreamRequirementView.getInstance();
-        if (upstreamPart instanceof UpstreamRequirementView)
-        {
-            removeSelectionChangedListener((UpstreamRequirementView) upstreamPart);
-        }
-    }
 }

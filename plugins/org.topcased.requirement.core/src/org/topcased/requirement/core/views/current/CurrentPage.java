@@ -358,7 +358,7 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
         // Allow to receive only selection change coming From Property View
         getSite().getPage().addSelectionListener(IPageLayout.ID_PROBLEM_VIEW, this);
     }
-
+    
     /**
      * @see org.topcased.sam.requirement.core.views.AbstractRequirementPage#dispose()
      */

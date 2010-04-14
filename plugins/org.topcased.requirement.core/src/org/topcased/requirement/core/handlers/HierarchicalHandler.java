@@ -71,7 +71,7 @@ public class HierarchicalHandler extends AbstractHandlerWithState
     {
         if (state.getValue().equals(true))
         {
-            applyRepresentation(true);
+            applyRepresentation(false);
         }
     }
 }

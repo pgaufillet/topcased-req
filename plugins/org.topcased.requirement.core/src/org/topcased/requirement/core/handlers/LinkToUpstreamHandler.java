@@ -12,16 +12,12 @@
 package org.topcased.requirement.core.handlers;
 
 import org.eclipse.core.commands.AbstractHandlerWithState;
-import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.State;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.eclipse.ui.handlers.RegistryToggleState;
-import org.topcased.requirement.core.utils.RequirementHelper;
-import org.topcased.requirement.core.views.upstream.UpstreamPage;
+import org.topcased.requirement.core.views.current.CurrentRequirementView;
+import org.topcased.requirement.core.views.upstream.UpstreamRequirementView;
 
 /**
  * Handler of the flat commands
@@ -29,38 +25,16 @@ import org.topcased.requirement.core.views.upstream.UpstreamPage;
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  * 
  */
-public class FlatHandler extends AbstractHandlerWithState
+public class LinkToUpstreamHandler extends AbstractHandlerWithState
 {
-    /** Reference to the upstream page **/
-    private UpstreamPage page;
 
     /**
-     * FIXME : for now there is two RegisteryTOGGLEState for each commands who should be RADIO styled!! Tried to put the
-     * RegisteryRadioState for each but having bugs with this state
-     * 
      * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
      */
     public Object execute(ExecutionEvent event) throws ExecutionException
     {
-        ICommandService cs = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-        Command hierarchicalCmd = cs.getCommand(ICommandConstants.HIERARCHICAL_ID);
-
         HandlerUtil.toggleCommandState(event.getCommand());
-        hierarchicalCmd.getState(RegistryToggleState.STATE_ID).setValue(!(Boolean) event.getCommand().getState(RegistryToggleState.STATE_ID).getValue());
-
         return null;
-    }
-
-    /**
-     * Applies the right representation of the tree contents
-     * 
-     * @param isFlat should we use the flat representation or the tree one ?
-     */
-    private void applyRepresentation(boolean isFlat)
-    {
-        page = RequirementHelper.INSTANCE.getUpstreamPage();
-        page.getUpstreamRequirementContentProvider().setIsFlat(isFlat);
-        page.getViewer().refresh();
     }
 
     /**
@@ -69,9 +43,21 @@ public class FlatHandler extends AbstractHandlerWithState
      */
     public void handleStateChange(State state, Object oldValue)
     {
+        CurrentRequirementView currentView = (CurrentRequirementView) CurrentRequirementView.getInstance();
+        UpstreamRequirementView upstreamView = (UpstreamRequirementView) UpstreamRequirementView.getInstance();
         if (state.getValue().equals(true))
         {
-            applyRepresentation(true);
+            if (currentView != null && upstreamView != null)
+            {
+                currentView.addSelectionChangedListener(upstreamView);
+            }
+        }
+        else
+        {
+            if (currentView != null && upstreamView != null)
+            {
+                currentView.removeSelectionChangedListener(upstreamView);
+            }
         }
     }
 }

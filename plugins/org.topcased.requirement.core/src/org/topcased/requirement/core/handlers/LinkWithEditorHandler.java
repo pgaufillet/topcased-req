@@ -30,7 +30,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.eclipse.ui.handlers.RegistryToggleState;
 import org.topcased.modeler.edit.IModelElementEditPart;
 import org.topcased.modeler.editor.Modeler;
 import org.topcased.requirement.HierarchicalElement;
@@ -206,19 +205,16 @@ public class LinkWithEditorHandler extends AbstractHandlerWithState implements I
         page = RequirementHelper.INSTANCE.getCurrentPage(); 
         if (page != null)
         {
-            if (state.getId().equals(RegistryToggleState.STATE_ID))
+            if (state.getValue().equals(true))
             {
-                if (state.getValue().equals(true))
-                {
-                    addSelectionListener();
-                    addSelectionChangedListener();
-                }
-                else
-                {
-                    removeSelectionListener();
-                    removeSelectionChangedListener();
-                } 
+                addSelectionListener();
+                addSelectionChangedListener();
             }
+            else
+            {
+                removeSelectionListener();
+                removeSelectionChangedListener();
+            } 
         }
     } 
 }

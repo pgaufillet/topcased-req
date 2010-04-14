@@ -28,4 +28,6 @@ public interface ICommandConstants
     
     static final String HIERARCHICAL_ID = "org.topcased.requirement.core.hierarchical";    
     
+    static final String LINK_TO_UPSTREAM_ID = "org.topcased.requirement.core.linkToUpstream";    
+    
 }

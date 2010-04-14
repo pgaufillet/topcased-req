@@ -135,46 +135,25 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
     }
 
     /**
-     * @see org.topcased.requirement.core.views.AbstractRequirementView#hookListener()
-     */
-    public void hookListener()
-    {
-        IViewPart currentPart = CurrentRequirementView.getInstance();
-        if (currentPart instanceof CurrentRequirementView)
-        {
-            ((CurrentRequirementView) currentPart).addSelectionChangedListener(this);
-        }
-    }
-
-    /**
-     * @see org.topcased.requirement.core.views.AbstractRequirementView#unhookListener()
-     */
-    public void unhookListener()
-    {
-        IViewPart currentPart = CurrentRequirementView.getInstance();
-        if (currentPart instanceof CurrentRequirementView)
-        {
-            ((CurrentRequirementView) currentPart).removeSelectionChangedListener(this);
-        }
-    }
-
-    /**
      * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
      */
     public void selectionChanged(SelectionChangedEvent event)
     {
-        ISelection selection = event.getSelection();
-        if (selection instanceof IStructuredSelection)
+        if (UpstreamRequirementView.getInstance() != null)
         {
-            IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-            Object element = structuredSelection.getFirstElement();
-            if (element instanceof ObjectAttribute)
+            ISelection selection = event.getSelection();
+            if (selection instanceof IStructuredSelection)
             {
-                EObject value = ((ObjectAttribute) element).getValue();
-                if (value != null && value instanceof Requirement)
+                IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+                Object element = structuredSelection.getFirstElement();
+                if (element instanceof ObjectAttribute)
                 {
-                    getSelectionProvider().setSelection(new StructuredSelection(value));
-                    setFocus();
+                    EObject value = ((ObjectAttribute) element).getValue();
+                    if (value != null && value instanceof Requirement)
+                    {
+                        getSelectionProvider().setSelection(new StructuredSelection(value));
+                        this.setFocus();
+                    }
                 }
             }
         }
@@ -195,4 +174,18 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
             RequirementCoverageComputer.INSTANCE.refreshCoverageRateDisplay();         
         }
     }   
+    
+    /**
+     * @see org.eclipse.ui.part.PageBookView#dispose()
+     */
+    @Override
+    public void dispose()
+    {
+        CurrentRequirementView currentView = (CurrentRequirementView) CurrentRequirementView.getInstance();
+        if (currentView != null)
+        {
+            currentView.removeSelectionChangedListener(this);
+        }
+        super.dispose();
+    }
 }

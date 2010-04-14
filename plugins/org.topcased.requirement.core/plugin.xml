@@ -171,6 +171,18 @@
             </with>
          </activeWhen>
       </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.LinkToUpstreamHandler"
+            commandId="org.topcased.requirement.core.linkToUpstream">
+         <activeWhen>
+            <with
+                  variable="requirementActionsEnablement.hasRequirementModel">
+               <equals
+                     value="true">
+               </equals>
+            </with>
+         </activeWhen>
+      </handler>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -234,7 +246,21 @@
          </toolbar>
       </menuContribution>
             <menuContribution
-                  locationURI="toolbar:org.topcased.requirement.core.currentView?after=additions">
+                  locationURI="toolbar:org.topcased.requirement.core.currentView">
+               <command
+                     commandId="org.topcased.requirement.core.linkToUpstream"
+                     label="&amp;Link To Upstream Requirement"
+                     style="toggle">
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="activeEditor">
+                        <instanceof
+                              value="org.topcased.modeler.editor.Modeler">
+                        </instanceof>
+                     </with>
+                  </visibleWhen>
+               </command>
                <command
                      commandId="org.topcased.requirement.core.linkWithEditor"
                      label="&amp;Link With Editor"
@@ -249,6 +275,10 @@
                      </with>
                   </visibleWhen>
                </command>
+               <separator
+                     name="org.topcased.requirement.core.separatorMiddle"
+                     visible="true">
+               </separator>
                <command
                      commandId="org.topcased.requirement.core.moveUp"
                      label="&amp;Move Up"
@@ -412,6 +442,10 @@
             commandId="org.topcased.requirement.core.sort"
             icon="icons/alphabetic_sorter.gif">
       </image>
+      <image
+            commandId="org.topcased.requirement.core.linkToUpstream"
+            icon="icons/checkout_action-1.gif">
+      </image>
    </extension>
    <extension
          point="org.eclipse.ui.perspectives">
@@ -547,6 +581,15 @@
             description="Sort alphabetically the different elements"
             id="org.topcased.requirement.core.sort"
             name="Sort">
+         <state
+               class="org.eclipse.ui.handlers.RegistryToggleState"
+               id="org.eclipse.ui.commands.toggleState">
+         </state>
+      </command>
+      <command
+            description="Link a current requirement focus to his upstream requirement reference"
+            id="org.topcased.requirement.core.linkToUpstream"
+            name="Link To Upstream Requirement">
          <state
                class="org.eclipse.ui.handlers.RegistryToggleState"
                id="org.eclipse.ui.commands.toggleState">

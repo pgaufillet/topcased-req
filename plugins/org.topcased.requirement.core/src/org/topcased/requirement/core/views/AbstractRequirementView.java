@@ -57,7 +57,7 @@ import org.topcased.requirement.core.views.upstream.UpstreamPage;
 public abstract class AbstractRequirementView extends PageBookView implements ISelectionProvider
 {
     /** The initial selection when the view opens */
-    protected ISelection bootstrapSelection;    
+    protected ISelection bootstrapSelection;
 
     /**
      * Gets the default empty page for this view.
@@ -174,15 +174,6 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
     }
 
     /**
-     * @see org.eclipse.ui.part.PageBookView#dispose()
-     */
-    @Override
-    public void dispose()
-    {
-        super.dispose();
-    }
-
-    /**
      * @see org.eclipse.ui.part.PageBookView#isImportant(org.eclipse.ui.IWorkbenchPart)
      */
     public boolean isImportant(IWorkbenchPart part)
@@ -219,7 +210,7 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
 
     protected void initializePage(Modeler modeler, IPage page)
     {
-        updatePage(page);     
+        updatePage(page);
 
         restoreCommandsPreferencesFromLastSession(page);
     }
@@ -296,22 +287,23 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
         Command sortCmd = cs.getCommand(ICommandConstants.SORT_ID);
         Command flatCmd = cs.getCommand(ICommandConstants.FLAT_ID);
         Command hierarchicalCmd = cs.getCommand(ICommandConstants.HIERARCHICAL_ID);
+        Command linkToUpstreamCmd = cs.getCommand(ICommandConstants.LINK_TO_UPSTREAM_ID);
 
         // Handle cases when the command is toggled but the associated action isn't performed
-        if (linkCmd.getState(RegistryToggleState.STATE_ID).getValue().equals(true))
+        // if (linkCmd.getState(RegistryToggleState.STATE_ID).getValue().equals(true))
+        // {
+        if (((AbstractHandlerWithState) linkCmd.getHandler()) != null && page instanceof CurrentPage)
         {
-            if (((AbstractHandlerWithState) linkCmd.getHandler()) != null && page instanceof CurrentPage)
-            {
-                ((AbstractHandlerWithState) linkCmd.getHandler()).handleStateChange(linkCmd.getState(RegistryToggleState.STATE_ID), false);
-            }
+            ((AbstractHandlerWithState) linkCmd.getHandler()).handleStateChange(linkCmd.getState(RegistryToggleState.STATE_ID), false);
         }
+        // }
 
         // Handle cases when the command is toggled but the associated action isn't performed
         if (((AbstractHandlerWithState) sortCmd.getHandler()) != null && page instanceof UpstreamPage)
         {
             ((AbstractHandlerWithState) sortCmd.getHandler()).handleStateChange(sortCmd.getState(RegistryToggleState.STATE_ID), false);
         }
-        
+
         // Handle cases when the command is toggled but the associated action isn't performed
         if (flatCmd.getState(RegistryToggleState.STATE_ID).getValue().equals(true))
         {
@@ -319,12 +311,20 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
             {
                 ((AbstractHandlerWithState) flatCmd.getHandler()).handleStateChange(flatCmd.getState(RegistryToggleState.STATE_ID), false);
             }
-        }      
+        }
         else if (hierarchicalCmd.getState(RegistryToggleState.STATE_ID).getValue().equals(true))
         {
             if (((AbstractHandlerWithState) hierarchicalCmd.getHandler()) != null && page instanceof UpstreamPage)
             {
                 ((AbstractHandlerWithState) hierarchicalCmd.getHandler()).handleStateChange(hierarchicalCmd.getState(RegistryToggleState.STATE_ID), false);
+            }
+        }
+
+        if (linkToUpstreamCmd.getState(RegistryToggleState.STATE_ID).getValue().equals(true))
+        {
+            if (((AbstractHandlerWithState) linkToUpstreamCmd.getHandler()) != null)
+            {
+                ((AbstractHandlerWithState) linkToUpstreamCmd.getHandler()).handleStateChange(linkToUpstreamCmd.getState(RegistryToggleState.STATE_ID), false);
             }
         }
     }
