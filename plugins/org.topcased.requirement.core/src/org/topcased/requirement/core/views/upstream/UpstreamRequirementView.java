@@ -22,10 +22,12 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.part.IPageBookViewPage;
+import org.eclipse.ui.services.ISourceProviderService;
 import org.topcased.modeler.documentation.IDocPage;
 import org.topcased.requirement.ObjectAttribute;
 import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.core.documentation.upstream.UpstreamDescPage;
+import org.topcased.requirement.core.services.RequirementModelSourceProvider;
 import org.topcased.requirement.core.utils.RequirementCoverageComputer;
 import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
@@ -100,6 +102,9 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
      */
     public void partActivated(IWorkbenchPart part)
     {
+        ISourceProviderService service = (ISourceProviderService)PlatformUI.getWorkbench().getService(ISourceProviderService.class);
+        RequirementModelSourceProvider provider = (RequirementModelSourceProvider)service.getSourceProvider(RequirementModelSourceProvider.HAS_REQUIREMENT_MODEL);
+        
         super.partActivated(part);
 
         if (getCurrentPage() instanceof UpstreamPage)
@@ -116,6 +121,15 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
             else
             {
                 RequirementHelper.INSTANCE.setUpstreamPage(upstreamPage);
+            }
+            
+            if (RequirementUtils.getRequirementProject(upstreamPage.getEditingDomain()) == null)
+            {
+                provider.setHasRequirementState(false);  
+            }
+            else
+            {                
+                provider.setHasRequirementState(true);  
             }
         }
     }
@@ -178,7 +192,7 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
             RequirementProject project = (RequirementProject) RequirementUtils.getRoot(resource, RequirementProject.class);
             thePage.getViewer().setInput(project.getUpstreamModel());
             RequirementHelper.INSTANCE.setUpstreamPage(thePage);
-            RequirementCoverageComputer.INSTANCE.refreshCoverageRateDisplay();
+            RequirementCoverageComputer.INSTANCE.refreshCoverageRateDisplay();         
         }
-    }
+    }   
 }

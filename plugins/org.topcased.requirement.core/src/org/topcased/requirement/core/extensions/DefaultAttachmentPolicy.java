@@ -121,7 +121,7 @@ public class DefaultAttachmentPolicy implements IModelAttachmentPolicy
             RequirementUtils.saveResource(targetModel);
 
             // unload and delete the requirement model from file system.
-            if (modeler.getEditingDomain().getResourceSet().getResources().remove(requirementModel))
+            if (RequirementUtils.unloadRequirementModel(modeler.getEditingDomain()))
             {
                 if (deleteRequirementModel)
                 {

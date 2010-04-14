@@ -93,7 +93,7 @@ public class NewRequirementModelOperation extends AbstractRequirementModelOperat
             }
             else
             {
-                copyAndCreate(monitor);
+                transformAndCreate(monitor);
             }
         }
     }

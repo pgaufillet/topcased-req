@@ -136,7 +136,7 @@
          </activeWhen>
       </handler>
       <handler
-            class="org.topcased.requirement.core.handlers.FlatOrHierarchicalHandler"
+            class="org.topcased.requirement.core.handlers.FlatHandler"
             commandId="org.topcased.requirement.core.flat">
          <activeWhen>
             <with
@@ -148,7 +148,7 @@
          </activeWhen>
       </handler>
       <handler
-            class="org.topcased.requirement.core.handlers.FlatOrHierarchicalHandler"
+            class="org.topcased.requirement.core.handlers.HierarchicalHandler"
             commandId="org.topcased.requirement.core.hierarchical">
          <activeWhen>
             <with
@@ -315,7 +315,7 @@
                <command
                      commandId="org.topcased.requirement.core.hierarchical"
                      label="&amp;Hierarchical"
-                     style="radio">
+                     style="toggle">
                   <visibleWhen
                         checkEnabled="false">
                      <with
@@ -329,7 +329,7 @@
                <command
                      commandId="org.topcased.requirement.core.flat"
                      label="&amp;Flat"
-                     style="radio">
+                     style="toggle">
                   <visibleWhen
                         checkEnabled="false">
                      <with

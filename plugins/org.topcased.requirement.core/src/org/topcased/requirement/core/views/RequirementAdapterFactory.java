@@ -15,11 +15,14 @@ package org.topcased.requirement.core.views;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.services.ISourceProviderService;
 import org.topcased.modeler.di.model.Property;
 import org.topcased.modeler.editor.Modeler;
 import org.topcased.requirement.core.extensions.DefaultAttachmentPolicy;
 import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
 import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
+import org.topcased.requirement.core.services.RequirementModelSourceProvider;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.current.CurrentPage;
 import org.topcased.requirement.core.views.current.ICurrentRequirementPage;
@@ -37,7 +40,9 @@ public class RequirementAdapterFactory implements IAdapterFactory
     @SuppressWarnings("unchecked")
     public Object getAdapter(Object adaptableObject, Class adapterType)
     {
-
+        ISourceProviderService service = (ISourceProviderService)PlatformUI.getWorkbench().getService(ISourceProviderService.class);
+        RequirementModelSourceProvider provider = (RequirementModelSourceProvider)service.getSourceProvider(RequirementModelSourceProvider.HAS_REQUIREMENT_MODEL);
+        
         if (adapterType == IUpstreamRequirementPage.class && adaptableObject instanceof Modeler)
         {
             Modeler modeler = (Modeler) adaptableObject;
@@ -56,16 +61,13 @@ public class RequirementAdapterFactory implements IAdapterFactory
             {
                 if (DefaultAttachmentPolicy.getInstance().getLinkedTargetModel(modeler.getEditingDomain().getResourceSet()) != null)
                 {
-                    if (RequirementUtils.getRequirementModel(modeler.getEditingDomain()) == null)
+                    Property requirementProperty = DefaultAttachmentPolicy.getInstance().getProperty(modeler.getActiveDiagram());
+                    if ( requirementProperty != null)
                     {
-                        Property requirementProperty = DefaultAttachmentPolicy.getInstance().getProperty(modeler.getActiveDiagram());
-                        if ( requirementProperty != null)
-                        {
-                            URI uri = URI.createURI(requirementProperty.getValue()).trimFragment().resolve(requirementProperty.eResource().getURI());
-                            RequirementUtils.loadRequirementModel(uri, modeler.getEditingDomain());
-                        }
+                        URI uri = URI.createURI(requirementProperty.getValue()).trimFragment().resolve(requirementProperty.eResource().getURI());
+                        RequirementUtils.loadRequirementModel(uri, modeler.getEditingDomain());
+                        return new UpstreamPage();
                     }
-                    return new UpstreamPage();
                 }
                     
             }
@@ -79,7 +81,7 @@ public class RequirementAdapterFactory implements IAdapterFactory
             {
                 Resource targetModel = policy.getLinkedTargetModel(modeler.getEditingDomain().getResourceSet());
                 if (targetModel != null)
-                {                    
+                {                                        
                     RequirementUtils.loadRequirementModel(targetModel.getURI(), modeler.getEditingDomain());
                     return new CurrentPage();
                 }
@@ -87,20 +89,19 @@ public class RequirementAdapterFactory implements IAdapterFactory
             else
             {   
                 if (DefaultAttachmentPolicy.getInstance().getLinkedTargetModel(modeler.getEditingDomain().getResourceSet()) != null)
-                {
-                    if (RequirementUtils.getRequirementModel(modeler.getEditingDomain()) == null)
+                {                   
+                    Property requirementProperty = DefaultAttachmentPolicy.getInstance().getProperty(modeler.getActiveDiagram());
+                    if ( requirementProperty != null)
                     {
-                        Property requirementProperty = DefaultAttachmentPolicy.getInstance().getProperty(modeler.getActiveDiagram());
-                        if ( requirementProperty != null)
-                        {
-                            URI uri = URI.createURI(requirementProperty.getValue()).trimFragment().resolve(requirementProperty.eResource().getURI());
-                            RequirementUtils.loadRequirementModel(uri, modeler.getEditingDomain());
-                        }
+                        URI uri = URI.createURI(requirementProperty.getValue()).trimFragment().resolve(requirementProperty.eResource().getURI());
+                        RequirementUtils.loadRequirementModel(uri, modeler.getEditingDomain());
+                        return new CurrentPage();
                     }
-                    return new CurrentPage();
                 }
             }
         }
+        //Notify commands that the hasRequirement variable has changed
+        provider.setHasRequirementState(false);
         return null;
     }
 

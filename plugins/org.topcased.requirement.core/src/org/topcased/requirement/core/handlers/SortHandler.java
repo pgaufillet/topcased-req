@@ -15,14 +15,10 @@ import org.eclipse.core.commands.AbstractHandlerWithState;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.State;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.topcased.modeler.editor.Modeler;
-import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.core.utils.RequirementHelper;
-import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.upstream.UpstreamPage;
 
 /**
@@ -55,24 +51,6 @@ public class SortHandler extends AbstractHandlerWithState
         {
             applySorter((Boolean)state.getValue());
         }
-    }
-      
-    /**
-     * @see org.eclipse.core.commands.AbstractHandler#isEnabled()
-     */
-    @Override
-    public boolean isEnabled()
-    {
-        Modeler modeler = Utils.getCurrentModeler();
-        if (modeler != null)
-        {
-            Resource requirement = RequirementUtils.getRequirementModel(modeler.getEditingDomain());
-            if (requirement != null)
-            {
-                return true;
-            }
-        }
-        return false;
     }
     
     /**

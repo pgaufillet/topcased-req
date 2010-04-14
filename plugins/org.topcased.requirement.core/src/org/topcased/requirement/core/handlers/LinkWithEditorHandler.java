@@ -19,7 +19,6 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.State;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -34,7 +33,6 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.handlers.RegistryToggleState;
 import org.topcased.modeler.edit.IModelElementEditPart;
 import org.topcased.modeler.editor.Modeler;
-import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
@@ -222,23 +220,5 @@ public class LinkWithEditorHandler extends AbstractHandlerWithState implements I
                 } 
             }
         }
-    }
-      
-    /**
-     * @see org.eclipse.core.commands.AbstractHandler#isEnabled()
-     */
-    @Override
-    public boolean isEnabled()
-    {
-        Modeler modeler = Utils.getCurrentModeler();
-        if (modeler != null)
-        {
-            Resource requirement = RequirementUtils.getRequirementModel(modeler.getEditingDomain());
-            if (requirement != null)
-            {
-                return true;
-            }
-        }
-        return false;
-    }   
+    } 
 }

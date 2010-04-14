@@ -47,6 +47,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.services.ISourceProviderService;
 import org.topcased.facilities.util.EditorUtil;
 import org.topcased.modeler.diagrams.model.Diagrams;
 import org.topcased.modeler.editor.Modeler;
@@ -61,6 +62,7 @@ import org.topcased.requirement.SpecialChapter;
 import org.topcased.requirement.TrashChapter;
 import org.topcased.requirement.UpstreamModel;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
+import org.topcased.requirement.core.services.RequirementModelSourceProvider;
 import org.topcased.requirement.util.RequirementCacheAdapter;
 
 import ttm.Requirement;
@@ -385,7 +387,6 @@ public final class RequirementUtils
     {
         try
         {
-            resource.unload();
             URI uri = resource.getURI();
             IResource toDelete = ResourcesPlugin.getWorkspace().getRoot().findMember(uri.toPlatformString(true));
             if (toDelete.isAccessible() && toDelete.exists())
@@ -451,21 +452,32 @@ public final class RequirementUtils
      */
     public static void loadRequirementModel(URI uri, EditingDomain domain)
     {
+        ISourceProviderService service = (ISourceProviderService)PlatformUI.getWorkbench().getService(ISourceProviderService.class);
+        RequirementModelSourceProvider provider = (RequirementModelSourceProvider)service.getSourceProvider(RequirementModelSourceProvider.HAS_REQUIREMENT_MODEL);
+        
         // Gets the requirement model from the editing domain or loads it if it's the first time
         domain.getResourceSet().getResource(uri, true);
+        
+        //Notify commands that the hasRequirement variable has changed
+        provider.setHasRequirementState(true);
     }
 
     /**
      * Unloads the requirement model from the editing domain
      * 
      * @param domain The shared editing domain
-     * @return
+     * @return true if the resource has been successfully removed from the editing domain
      */
     public static boolean unloadRequirementModel(EditingDomain domain)
     {
+        ISourceProviderService service = (ISourceProviderService)PlatformUI.getWorkbench().getService(ISourceProviderService.class);
+        RequirementModelSourceProvider provider = (RequirementModelSourceProvider)service.getSourceProvider(RequirementModelSourceProvider.HAS_REQUIREMENT_MODEL);
         Resource requirementRsc = getRequirementModel(domain);
+        
+        //Unload the requirement resource and notify commands that the hasRequirement variable has changed
         requirementRsc.unload();
-        domain.getResourceSet().getResources();
+        provider.setHasRequirementState(false);
+        
         return domain.getResourceSet().getResources().remove(requirementRsc);
     }
 
@@ -476,11 +488,14 @@ public final class RequirementUtils
      */
     public static Resource getRequirementModel(EditingDomain editingDomain)
     {
-        for (Resource resource : editingDomain.getResourceSet().getResources())
+        if (editingDomain != null)
         {
-            if ("requirement".equals(resource.getURI().fileExtension())) //$NON-NLS-1$
+            for (Resource resource : editingDomain.getResourceSet().getResources())
             {
-                return resource;
+                if ("requirement".equals(resource.getURI().fileExtension())) //$NON-NLS-1$
+                {
+                    return resource;
+                }
             }
         }
         return null;

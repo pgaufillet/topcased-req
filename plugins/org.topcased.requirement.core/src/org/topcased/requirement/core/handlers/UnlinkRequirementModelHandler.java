@@ -14,10 +14,7 @@ package org.topcased.requirement.core.handlers;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.services.ISourceProviderService;
 import org.topcased.modeler.editor.Modeler;
 import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.core.dialogs.UnlinkDialog;
@@ -25,10 +22,8 @@ import org.topcased.requirement.core.extensions.DefaultAttachmentPolicy;
 import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
 import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
 import org.topcased.requirement.core.internal.Messages;
-import org.topcased.requirement.core.services.RequirementModelSourceProvider;
 import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
-import org.topcased.requirement.core.views.AbstractRequirementView;
 
 /**
  * Handler to deal with the unlink action in the upstream view
@@ -86,14 +81,7 @@ public class UnlinkRequirementModelHandler extends AbstractHandler
                     RequirementHelper.INSTANCE.getUpstreamPage().getViewer().setInput(null);
                     RequirementHelper.INSTANCE.getUpstreamPage().refreshViewer(true);
                 }
-    
-                //Notify that the drop listener is uninstalled (for the next session)
-                AbstractRequirementView.dropListenerInstalled = false;
-
-                //Notify commands that the hasRequirement variable has changed
-                ISourceProviderService service = (ISourceProviderService)PlatformUI.getWorkbench().getService(ISourceProviderService.class);
-                RequirementModelSourceProvider provider = (RequirementModelSourceProvider)service.getSourceProvider(RequirementModelSourceProvider.HAS_REQUIREMENT_MODEL);
-                provider.setHasRequirementState(false);
+   
             }
         }
         return null;
@@ -105,23 +93,5 @@ public class UnlinkRequirementModelHandler extends AbstractHandler
     public int getDialogResult()
     {
         return dialogResult;
-    }
-    
-    /**
-     * @see org.eclipse.core.commands.AbstractHandler#isEnabled()
-     */
-    @Override
-    public boolean isEnabled()
-    {
-        Modeler modeler = Utils.getCurrentModeler();
-        if (modeler != null)
-        {
-            Resource requirement = RequirementUtils.getRequirementModel(modeler.getEditingDomain());
-            if (requirement != null)
-            {
-                return true;
-            }
-        }
-        return false;
     }
 }

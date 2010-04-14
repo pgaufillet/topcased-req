@@ -22,6 +22,8 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.topcased.modeler.diagrams.model.Diagrams;
+import org.topcased.modeler.editor.Modeler;
+import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
 import org.topcased.requirement.core.utils.RequirementUtils;
@@ -78,6 +80,9 @@ public class SAMAttachmentPolicy implements IModelAttachmentPolicy
      */
     public void unlinkRequirementModel(Resource targetModel, Resource requirementModel, boolean deleteRequirementModel)
     {
+        // Get the current modeler
+        Modeler modeler = Utils.getCurrentModeler();
+        
         // Gather the SAM Model from the SAM diagram
         String uri = null;
         EObject root = targetModel.getContents().get(0);
@@ -97,7 +102,7 @@ public class SAMAttachmentPolicy implements IModelAttachmentPolicy
         RequirementUtils.saveResource(targetModel);
 
         // unload and delete the requirement model from file system.
-        if (targetModel.getResourceSet().getResources().remove(requirementModel))
+        if (RequirementUtils.unloadRequirementModel(modeler.getEditingDomain()))
         {
             if (deleteRequirementModel)
             {

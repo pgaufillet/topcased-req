@@ -287,7 +287,7 @@ public class PreviewPage extends Page implements IPreviewPage
                         }
                         hierarchicalTemp = hierarchicalTemp.eContainer();
                     }
-                    while (!(hierarchicalTemp instanceof RequirementProject));
+                    while (!(hierarchicalTemp instanceof RequirementProject) && hierarchicalTemp != null);
                 }
                 else
                 {

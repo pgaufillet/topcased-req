@@ -95,7 +95,7 @@ public final class DefaultRequirementIdentifierVariables implements IRequirement
     {
         String result = "";
 
-        if (hierarchicalElt.getElement() != null)
+        if (hierarchicalElt != null)
         {
             EObject obj = hierarchicalElt.getElement();
             for (EAttribute attribute : obj.eClass().getEAllAttributes())

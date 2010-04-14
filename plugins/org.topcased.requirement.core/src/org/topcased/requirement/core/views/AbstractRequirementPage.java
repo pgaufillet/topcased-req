@@ -17,6 +17,7 @@ import org.eclipse.emf.common.ui.viewer.IViewerProvider;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.domain.IEditingDomainProvider;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
+import org.eclipse.jface.util.TransferDropTargetListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -29,6 +30,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.part.Page;
+import org.topcased.modeler.editor.Modeler;
+import org.topcased.modeler.utils.Utils;
+import org.topcased.requirement.core.dnd.RequirementDropListener;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
@@ -44,7 +48,9 @@ public abstract class AbstractRequirementPage extends Page implements IViewerPro
     protected EditingDomain editingDomain;
 
     protected Composite mainComposite;
-
+    
+    private TransferDropTargetListener listener = null;
+        
     /**
      * @see org.eclipse.ui.part.Page#dispose()
      */
@@ -60,6 +66,12 @@ public abstract class AbstractRequirementPage extends Page implements IViewerPro
      */
     protected void hookListeners()
     {
+        Modeler modeler = Utils.getCurrentModeler();
+        if (modeler != null)
+        {
+            listener = new RequirementDropListener(modeler.getGraphicalViewer());
+            modeler.getGraphicalViewer().addDropTargetListener(listener);
+        }
         RequirementUtils.getAdapterFactory().addListener(modelListener);
     }
 
@@ -67,8 +79,14 @@ public abstract class AbstractRequirementPage extends Page implements IViewerPro
      * Removes listener listening to model changes.
      */
     protected void unhookListeners()
-    {
-        RequirementUtils.getAdapterFactory().removeListener(modelListener);
+    {      
+        
+        Modeler modeler = Utils.getCurrentModeler();
+        if (modeler != null)
+        {
+            modeler.getGraphicalViewer().removeDropTargetListener(listener);
+        }
+        RequirementUtils.getAdapterFactory().removeListener(modelListener);      
     }
 
     /**
@@ -211,4 +229,5 @@ public abstract class AbstractRequirementPage extends Page implements IViewerPro
      * @param selection The current selection
      */
     protected abstract void executeCodeForKey(ISelection selection);
+      
 }

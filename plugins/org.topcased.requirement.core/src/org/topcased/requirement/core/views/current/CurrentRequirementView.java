@@ -17,11 +17,13 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.part.IPageBookViewPage;
+import org.eclipse.ui.services.ISourceProviderService;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
 import org.topcased.modeler.documentation.IDocPage;
 import org.topcased.requirement.core.documentation.current.CurrentDescPage;
 import org.topcased.requirement.core.properties.RequirementPropertySheetPage;
+import org.topcased.requirement.core.services.RequirementModelSourceProvider;
 import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.AbstractRequirementView;
@@ -115,6 +117,9 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
      */
     public void partActivated(IWorkbenchPart part)
     {
+        ISourceProviderService service = (ISourceProviderService)PlatformUI.getWorkbench().getService(ISourceProviderService.class);
+        RequirementModelSourceProvider provider = (RequirementModelSourceProvider)service.getSourceProvider(RequirementModelSourceProvider.HAS_REQUIREMENT_MODEL);
+        
         super.partActivated(part);
 
         if (getCurrentPage() instanceof CurrentPage)
@@ -131,6 +136,15 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
             else
             {
                 RequirementHelper.INSTANCE.setCurrentPage(currentPage);
+            }
+            
+            if (RequirementUtils.getRequirementProject(currentPage.getEditingDomain()) == null)
+            {
+                provider.setHasRequirementState(false);  
+            }
+            else
+            {                
+                provider.setHasRequirementState(true);  
             }
         }
     }

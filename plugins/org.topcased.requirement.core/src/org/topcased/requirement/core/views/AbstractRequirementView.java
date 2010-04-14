@@ -36,7 +36,6 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
 import org.topcased.modeler.editor.Modeler;
-import org.topcased.requirement.core.dnd.RequirementDropListener;
 import org.topcased.requirement.core.extensions.DefaultAttachmentPolicy;
 import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
 import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
@@ -58,10 +57,7 @@ import org.topcased.requirement.core.views.upstream.UpstreamPage;
 public abstract class AbstractRequirementView extends PageBookView implements ISelectionProvider
 {
     /** The initial selection when the view opens */
-    protected ISelection bootstrapSelection;
-
-    /** flag indicating if the drop adpater is installed or not */
-    public static boolean dropListenerInstalled = false;
+    protected ISelection bootstrapSelection;    
 
     /**
      * Gets the default empty page for this view.
@@ -175,7 +171,6 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
     {
         pageRecord.page.dispose();
         pageRecord.dispose();
-        dropListenerInstalled = false;
     }
 
     /**
@@ -184,7 +179,6 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
     @Override
     public void dispose()
     {
-        unhookListener();
         super.dispose();
     }
 
@@ -225,13 +219,7 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
 
     protected void initializePage(Modeler modeler, IPage page)
     {
-        if (dropListenerInstalled == false)
-        {
-            dropListenerInstalled = true;
-            modeler.getGraphicalViewer().addDropTargetListener(new RequirementDropListener(modeler.getGraphicalViewer()));
-        }
-
-        updatePage(page);
+        updatePage(page);     
 
         restoreCommandsPreferencesFromLastSession(page);
     }
@@ -323,7 +311,7 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
         {
             ((AbstractHandlerWithState) sortCmd.getHandler()).handleStateChange(sortCmd.getState(RegistryToggleState.STATE_ID), false);
         }
-
+        
         // Handle cases when the command is toggled but the associated action isn't performed
         if (flatCmd.getState(RegistryToggleState.STATE_ID).getValue().equals(true))
         {
@@ -331,7 +319,7 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
             {
                 ((AbstractHandlerWithState) flatCmd.getHandler()).handleStateChange(flatCmd.getState(RegistryToggleState.STATE_ID), false);
             }
-        }
+        }      
         else if (hierarchicalCmd.getState(RegistryToggleState.STATE_ID).getValue().equals(true))
         {
             if (((AbstractHandlerWithState) hierarchicalCmd.getHandler()) != null && page instanceof UpstreamPage)

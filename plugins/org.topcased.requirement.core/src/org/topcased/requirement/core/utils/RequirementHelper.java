@@ -644,13 +644,20 @@ public final class RequirementHelper
      */
     public void setUpstreamPage(UpstreamPage page)
     {
-        if (page != null && !page.equals(upstreamPage))
+        if (page != null)
         {
-            // the upstream page has changed, so have the requirements. Recompute coverage data
-            RequirementCoverageComputer.INSTANCE.reset(page.getEditingDomain());
+            if (!page.equals(upstreamPage))
+            {
+                // the upstream page has changed, so have the requirements. Recompute coverage data
+                RequirementCoverageComputer.INSTANCE.reset(page.getEditingDomain());
+            }
+            editingDomain = page.getEditingDomain();
+        }
+        else
+        {
+            editingDomain = null;
         }
         upstreamPage = page;
-        editingDomain = page.getEditingDomain();
     }
 
     /**
@@ -660,8 +667,15 @@ public final class RequirementHelper
      */
     public void setCurrentPage(CurrentPage page)
     {
+        if (page != null)
+        {
+            editingDomain = page.getEditingDomain();
+        }
+        else
+        {
+            editingDomain = null;
+        }
         currentPage = page;
-        editingDomain = page.getEditingDomain();
     }
 
     /**

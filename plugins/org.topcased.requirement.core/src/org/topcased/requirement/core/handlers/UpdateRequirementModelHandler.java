@@ -11,15 +11,12 @@
  *****************************************************************************/
 package org.topcased.requirement.core.handlers;
 
-import java.util.Collection;
-
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -29,8 +26,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.topcased.modeler.editor.Modeler;
-import org.topcased.modeler.utils.Utils;
-import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.core.extensions.DefaultAttachmentPolicy;
 import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
@@ -51,7 +46,6 @@ public class UpdateRequirementModelHandler extends AbstractHandler
      */
     public Object execute(ExecutionEvent event) throws ExecutionException 
     {      
-        
         Resource targetModel = null;
         IEditorPart part = HandlerUtil.getActiveEditor(event);
         if (part instanceof Modeler)
@@ -91,33 +85,5 @@ public class UpdateRequirementModelHandler extends AbstractHandler
             }
         }
         return null;
-    }
-    
-    /**
-     * @see org.eclipse.core.commands.AbstractHandler#isEnabled()
-     */
-    @Override
-    public boolean isEnabled()
-    {      
-        Modeler modeler = Utils.getCurrentModeler();
-        if (modeler != null)
-        {
-            Resource requirement = RequirementUtils.getRequirementModel(modeler.getEditingDomain());
-            if (requirement != null)
-            {
-                Collection<EObject> allRequirement = RequirementUtils.getAllObjects(requirement, CurrentRequirement.class);
-                // checks that all CurrentRequirement are marked as not impacted.
-                for (EObject aReq : allRequirement)
-                {
-                    if (aReq instanceof CurrentRequirement && ((CurrentRequirement) aReq).isImpacted())
-                    {
-                        // action must be disabled.
-                        return false;
-                    }
-                }
-                return true;
-            }
-        }
-        return false;
     }
 }
