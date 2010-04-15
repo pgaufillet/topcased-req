@@ -231,7 +231,7 @@
                id="org.topcased.requirement.core.mainToolbar">
             <command
                   commandId="org.topcased.requirement.core.linkRequirement"
-                  label="&amp;Define Requirements"
+                  label="&amp;Attach Requirements"
                   style="push">
                <visibleWhen
                      checkEnabled="false">
