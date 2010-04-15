@@ -355,22 +355,32 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
 
         getSite().setSelectionProvider(viewer);
 
+    }
+    
+    /**
+     * @see org.topcased.requirement.core.views.AbstractRequirementPage#hookListeners()
+     */
+    @Override
+    protected void hookListeners()
+    {
+        super.hookListeners();
+        
         // Allow to receive only selection change coming From Property View
         getSite().getPage().addSelectionListener(IPageLayout.ID_PROBLEM_VIEW, this);
     }
     
     /**
-     * @see org.topcased.sam.requirement.core.views.AbstractRequirementPage#dispose()
+     * @see org.topcased.requirement.core.views.AbstractRequirementPage#unhookListeners()
      */
     @Override
-    public void dispose()
+    protected void unhookListeners()
     {
-        super.dispose();
-
+        super.unhookListeners();
+        
         // Fix [#3087] remove the listener set on the Problem view
         getSite().getPage().removeSelectionListener(IPageLayout.ID_PROBLEM_VIEW, this);
     }
-
+    
     /**
      * Defines the content of the popup menu.
      */

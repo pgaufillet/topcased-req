@@ -10,6 +10,7 @@
  **********************************************************************************************************************/
 package org.topcased.requirement.core.views.upstream;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.viewers.ISelection;
@@ -23,10 +24,16 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.part.IPageBookViewPage;
 import org.eclipse.ui.services.ISourceProviderService;
+import org.topcased.modeler.di.model.Property;
 import org.topcased.modeler.documentation.IDocPage;
+import org.topcased.modeler.editor.Modeler;
+import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.ObjectAttribute;
 import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.core.documentation.upstream.UpstreamDescPage;
+import org.topcased.requirement.core.extensions.DefaultAttachmentPolicy;
+import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
+import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
 import org.topcased.requirement.core.services.RequirementModelSourceProvider;
 import org.topcased.requirement.core.utils.RequirementCoverageComputer;
 import org.topcased.requirement.core.utils.RequirementHelper;
@@ -102,6 +109,7 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
      */
     public void partActivated(IWorkbenchPart part)
     {
+        Modeler modeler =Utils.getCurrentModeler();        
         ISourceProviderService service = (ISourceProviderService)PlatformUI.getWorkbench().getService(ISourceProviderService.class);
         RequirementModelSourceProvider provider = (RequirementModelSourceProvider)service.getSourceProvider(RequirementModelSourceProvider.HAS_REQUIREMENT_MODEL);
         
@@ -121,16 +129,57 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
             else
             {
                 RequirementHelper.INSTANCE.setUpstreamPage(upstreamPage);
+
             }
             
-            if (RequirementUtils.getRequirementProject(upstreamPage.getEditingDomain()) == null)
+            Resource targetModel = null;
+            if (modeler != null)
             {
-                provider.setHasRequirementState(false);  
+                IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(modeler.getEditingDomain());
+                if (policy != null)
+                {
+                    targetModel = policy.getLinkedTargetModel(modeler.getEditingDomain().getResourceSet());
+                    if (targetModel != null)
+                    {
+                        provider.setHasRequirementState(true);  
+                        if (upstreamPage.getViewer().getInput() == null)
+                        {
+                            RequirementUtils.loadRequirementModel(targetModel.getURI(), modeler.getEditingDomain());
+                            updatePage(upstreamPage);
+                        }
+                    }
+                    else
+                    {
+                        provider.setHasRequirementState(false);
+                    }
+                }
+                else
+                {
+                    targetModel = DefaultAttachmentPolicy.getInstance().getLinkedTargetModel(modeler.getEditingDomain().getResourceSet());
+                    if (targetModel != null)
+                    {
+                        provider.setHasRequirementState(true);                        
+                        if (upstreamPage.getViewer().getInput() == null)
+                        {                        
+                            Property requirementProperty = DefaultAttachmentPolicy.getInstance().getProperty(modeler.getActiveDiagram());
+                            if ( requirementProperty != null)
+                            {
+                                URI uri = URI.createURI(requirementProperty.getValue()).trimFragment().resolve(requirementProperty.eResource().getURI());
+                                RequirementUtils.loadRequirementModel(uri, modeler.getEditingDomain());
+                                updatePage(upstreamPage);   
+                            }
+                        }
+                    }
+                    else
+                    {
+                        provider.setHasRequirementState(false);
+                    }
+                }
             }
-            else
-            {                
-                provider.setHasRequirementState(true);  
-            }
+        }
+        else
+        {
+            provider.setHasRequirementState(false);
         }
     }
 
@@ -171,7 +220,8 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
             RequirementProject project = (RequirementProject) RequirementUtils.getRoot(resource, RequirementProject.class);
             thePage.getViewer().setInput(project.getUpstreamModel());
             RequirementHelper.INSTANCE.setUpstreamPage(thePage);
-            RequirementCoverageComputer.INSTANCE.refreshCoverageRateDisplay();         
+            RequirementCoverageComputer.INSTANCE.refreshCoverageRateDisplay();     
+            thePage.refreshViewer(true);
         }
     }   
     

@@ -254,10 +254,10 @@
                   <visibleWhen
                         checkEnabled="false">
                      <with
-                           variable="activeEditor">
-                        <instanceof
-                              value="org.topcased.modeler.editor.Modeler">
-                        </instanceof>
+                           variable="requirementActionsEnablement.hasRequirementModel">
+                        <equals
+                              value="true">
+                        </equals>
                      </with>
                   </visibleWhen>
                </command>
@@ -268,10 +268,10 @@
                   <visibleWhen
                         checkEnabled="false">
                      <with
-                           variable="activeEditor">
-                        <instanceof
-                              value="org.topcased.modeler.editor.Modeler">
-                        </instanceof>
+                           variable="requirementActionsEnablement.hasRequirementModel">
+                        <equals
+                              value="true">
+                        </equals>
                      </with>
                   </visibleWhen>
                </command>
@@ -286,10 +286,10 @@
                   <visibleWhen
                         checkEnabled="false">
                      <with
-                           variable="activeEditor">
-                        <instanceof
-                              value="org.topcased.modeler.editor.Modeler">
-                        </instanceof>
+                           variable="requirementActionsEnablement.hasRequirementModel">
+                        <equals
+                              value="true">
+                        </equals>
                      </with>
                   </visibleWhen>
                </command>
@@ -300,10 +300,10 @@
                   <visibleWhen
                         checkEnabled="false">
                      <with
-                           variable="activeEditor">
-                        <instanceof
-                              value="org.topcased.modeler.editor.Modeler">
-                        </instanceof>
+                           variable="requirementActionsEnablement.hasRequirementModel">
+                        <equals
+                              value="true">
+                        </equals>
                      </with>
                   </visibleWhen>
                </command>
@@ -317,10 +317,10 @@
                   <visibleWhen
                         checkEnabled="false">
                      <with
-                           variable="activeEditor">
-                        <instanceof
-                              value="org.topcased.modeler.editor.Modeler">
-                        </instanceof>
+                           variable="requirementActionsEnablement.hasRequirementModel">
+                        <equals
+                              value="true">
+                        </equals>
                      </with>
                   </visibleWhen>
                </command>
@@ -331,10 +331,10 @@
                   <visibleWhen
                         checkEnabled="false">
                      <with
-                           variable="activeEditor">
-                        <instanceof
-                              value="org.topcased.modeler.editor.Modeler">
-                        </instanceof>
+                           variable="requirementActionsEnablement.hasRequirementModel">
+                        <equals
+                              value="true">
+                        </equals>
                      </with>
                   </visibleWhen>
                </command>
@@ -349,10 +349,10 @@
                   <visibleWhen
                         checkEnabled="false">
                      <with
-                           variable="activeEditor">
-                        <instanceof
-                              value="org.topcased.modeler.editor.Modeler">
-                        </instanceof>
+                           variable="requirementActionsEnablement.hasRequirementModel">
+                        <equals
+                              value="true">
+                        </equals>
                      </with>
                   </visibleWhen>
                </command>
@@ -363,10 +363,10 @@
                   <visibleWhen
                         checkEnabled="false">
                      <with
-                           variable="activeEditor">
-                        <instanceof
-                              value="org.topcased.modeler.editor.Modeler">
-                        </instanceof>
+                           variable="requirementActionsEnablement.hasRequirementModel">
+                        <equals
+                              value="true">
+                        </equals>
                      </with>
                   </visibleWhen>
                </command>
@@ -381,10 +381,10 @@
                   <visibleWhen
                         checkEnabled="false">
                      <with
-                           variable="activeEditor">
-                        <instanceof
-                              value="org.topcased.modeler.editor.Modeler">
-                        </instanceof>
+                           variable="requirementActionsEnablement.hasRequirementModel">
+                        <equals
+                              value="true">
+                        </equals>
                      </with>
                   </visibleWhen>
                </command>

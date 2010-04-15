@@ -10,6 +10,7 @@
  **********************************************************************************************************************/
 package org.topcased.requirement.core.views.current;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.ui.IViewPart;
@@ -20,8 +21,14 @@ import org.eclipse.ui.part.IPageBookViewPage;
 import org.eclipse.ui.services.ISourceProviderService;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
+import org.topcased.modeler.di.model.Property;
 import org.topcased.modeler.documentation.IDocPage;
+import org.topcased.modeler.editor.Modeler;
+import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.core.documentation.current.CurrentDescPage;
+import org.topcased.requirement.core.extensions.DefaultAttachmentPolicy;
+import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
+import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
 import org.topcased.requirement.core.properties.RequirementPropertySheetPage;
 import org.topcased.requirement.core.services.RequirementModelSourceProvider;
 import org.topcased.requirement.core.utils.RequirementHelper;
@@ -117,11 +124,13 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
      */
     public void partActivated(IWorkbenchPart part)
     {
+        Modeler modeler =Utils.getCurrentModeler();        
+        
         ISourceProviderService service = (ISourceProviderService)PlatformUI.getWorkbench().getService(ISourceProviderService.class);
         RequirementModelSourceProvider provider = (RequirementModelSourceProvider)service.getSourceProvider(RequirementModelSourceProvider.HAS_REQUIREMENT_MODEL);
         
         super.partActivated(part);
-
+        
         if (getCurrentPage() instanceof CurrentPage)
         {
             currentPage = (CurrentPage) getCurrentPage();
@@ -138,14 +147,55 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
                 RequirementHelper.INSTANCE.setCurrentPage(currentPage);
             }
             
-            if (RequirementUtils.getRequirementProject(currentPage.getEditingDomain()) == null)
+            //
+            Resource targetModel = null;
+            if (modeler != null)
             {
-                provider.setHasRequirementState(false);  
+                IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(modeler.getEditingDomain());
+                if (policy != null)
+                {
+                    targetModel = policy.getLinkedTargetModel(modeler.getEditingDomain().getResourceSet());
+                    if (targetModel != null)
+                    {
+                        provider.setHasRequirementState(true);  
+                        if (currentPage.getViewer().getInput() == null)
+                        {
+                            RequirementUtils.loadRequirementModel(targetModel.getURI(), modeler.getEditingDomain());
+                            updatePage(currentPage);
+                        }
+                    }
+                    else
+                    {
+                        provider.setHasRequirementState(false);
+                    }
+                }
+                else
+                {
+                    targetModel = DefaultAttachmentPolicy.getInstance().getLinkedTargetModel(modeler.getEditingDomain().getResourceSet());
+                    if (targetModel != null)
+                    {
+                        provider.setHasRequirementState(true);
+                        if (currentPage.getViewer().getInput() == null)
+                        {
+                            Property requirementProperty = DefaultAttachmentPolicy.getInstance().getProperty(modeler.getActiveDiagram());
+                            if ( requirementProperty != null)
+                            {
+                                URI uri = URI.createURI(requirementProperty.getValue()).trimFragment().resolve(requirementProperty.eResource().getURI());
+                                RequirementUtils.loadRequirementModel(uri, modeler.getEditingDomain());
+                                updatePage(currentPage);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        provider.setHasRequirementState(false);
+                    }
+                }
             }
-            else
-            {                
-                provider.setHasRequirementState(true);  
-            }
+        }
+        else
+        {
+            provider.setHasRequirementState(false);
         }
     }
 
@@ -162,6 +212,7 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
             thePage.setModel(model);
             thePage.getViewer().setInput(model);
             RequirementHelper.INSTANCE.setCurrentPage(thePage);
+            thePage.refreshViewer(true);
         }
     }
     

@@ -29,64 +29,65 @@ import org.topcased.requirement.core.utils.RequirementUtils;
  * Handler to deal with the unlink action in the upstream view
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
- *
+ * 
  */
 public class UnlinkRequirementModelHandler extends AbstractHandler
 {
-    /**result of the unlink dialog **/
+    /** result of the unlink dialog **/
     private int dialogResult;
-    
+
     /**
      * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
      */
-    public Object execute(ExecutionEvent event) throws ExecutionException 
-    {      
+    public Object execute(ExecutionEvent event) throws ExecutionException
+    {
         boolean deleteRequirementModel = false;
         Modeler modeler = Utils.getCurrentModeler();
-        
+
         if (modeler != null)
         {
-            //launch the unlink dialog
+            // launch the unlink dialog
             UnlinkDialog dialog = new UnlinkDialog(Display.getCurrent().getActiveShell(), Messages.getString("UnlinkRequirementModelAction.0"), Messages.getString("UnlinkRequirementModelAction.1"));//$NON-NLS-1$
             int dialogResult = dialog.open();
-            
-            //If "delete file" is checked
+
+            // If "delete file" is checked
             if (dialogResult == 2)
             {
                 deleteRequirementModel = true;
             }
-            
-            //In OK cases
+
+            // In OK cases
             if (dialogResult == 0 || dialogResult == 2)
             {
                 IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(modeler.getEditingDomain());
-    
+
                 if (policy != null)
                 {
-                    policy.unlinkRequirementModel(policy.getLinkedTargetModel(modeler.getEditingDomain().getResourceSet()), RequirementUtils.getRequirementModel(modeler.getEditingDomain()), deleteRequirementModel);         
+                    policy.unlinkRequirementModel(policy.getLinkedTargetModel(modeler.getEditingDomain().getResourceSet()), RequirementUtils.getRequirementModel(modeler.getEditingDomain()),
+                            deleteRequirementModel);
                 }
                 else
                 {
-                    DefaultAttachmentPolicy.getInstance().unlinkRequirementModel(Utils.getCurrentModeler().getResourceSet().getResources().get(0),RequirementUtils.getRequirementModel(modeler.getEditingDomain()), deleteRequirementModel);
+                    DefaultAttachmentPolicy.getInstance().unlinkRequirementModel(Utils.getCurrentModeler().getResourceSet().getResources().get(0),
+                            RequirementUtils.getRequirementModel(modeler.getEditingDomain()), deleteRequirementModel);
                 }
-    
+
                 // the content of each page (Upstream & Current) is updated
                 if (RequirementHelper.INSTANCE.getCurrentPage() != null)
                 {
                     RequirementHelper.INSTANCE.getCurrentPage().getViewer().setInput(null);
-                    RequirementHelper.INSTANCE.getCurrentPage().getViewer();
+                    RequirementHelper.INSTANCE.getCurrentPage().refreshViewer(true);
                 }
                 if (RequirementHelper.INSTANCE.getUpstreamPage() != null)
                 {
                     RequirementHelper.INSTANCE.getUpstreamPage().getViewer().setInput(null);
                     RequirementHelper.INSTANCE.getUpstreamPage().refreshViewer(true);
                 }
-   
             }
         }
         return null;
     }
-    
+
     /**
      * @return dialogResult
      */

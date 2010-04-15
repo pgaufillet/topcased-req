@@ -59,8 +59,11 @@ public class FlatHandler extends AbstractHandlerWithState
     private void applyRepresentation(boolean isFlat)
     {
         page = RequirementHelper.INSTANCE.getUpstreamPage();
-        page.getUpstreamRequirementContentProvider().setIsFlat(isFlat);
-        page.getViewer().refresh();
+        if (page != null && !page.getViewer().getControl().isDisposed())
+        {
+            page.getUpstreamRequirementContentProvider().setIsFlat(isFlat);
+            page.getViewer().refresh();
+        }
     }
 
     /**

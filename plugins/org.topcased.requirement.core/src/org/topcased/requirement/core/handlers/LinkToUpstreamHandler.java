@@ -20,7 +20,7 @@ import org.topcased.requirement.core.views.current.CurrentRequirementView;
 import org.topcased.requirement.core.views.upstream.UpstreamRequirementView;
 
 /**
- * Handler of the flat commands
+ * Handler of the Link to upstream requirement
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  * 

@@ -13,6 +13,7 @@
 package org.topcased.requirement.core.extensions;
 
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
@@ -90,17 +91,9 @@ public class DefaultAttachmentPolicy implements IModelAttachmentPolicy
         if (Utils.getCurrentModeler() != null)
         {
             setProperty(Utils.getCurrentModeler(), requirementModel);
-            RequirementUtils.closeDiagramEditor(diagramFile);
+            Utils.getCurrentModeler().doSave(new NullProgressMonitor());
             RequirementUtils.openDiagramEditor(diagramFile);
         }
-        else
-        {
-            RequirementUtils.openDiagramEditor(diagramFile);
-            setProperty(Utils.getCurrentModeler(), requirementModel);
-            RequirementUtils.closeDiagramEditor(diagramFile);
-            RequirementUtils.openDiagramEditor(diagramFile);
-        }
-
     }
 
     /**

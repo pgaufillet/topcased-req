@@ -25,7 +25,7 @@ import org.topcased.requirement.core.views.upstream.UpstreamPage;
  * Handler to deals with the Sort command in the upstream view
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
- *
+ * 
  */
 public class SortHandler extends AbstractHandlerWithState
 {
@@ -38,21 +38,22 @@ public class SortHandler extends AbstractHandlerWithState
     public Object execute(ExecutionEvent event) throws ExecutionException
     {
         HandlerUtil.toggleCommandState(event.getCommand());
-        return null; 
+        return null;
     }
 
     /**
-     * @see org.eclipse.core.commands.AbstractHandlerWithState#handleStateChange(org.eclipse.core.commands.State, java.lang.Object)
+     * @see org.eclipse.core.commands.AbstractHandlerWithState#handleStateChange(org.eclipse.core.commands.State,
+     *      java.lang.Object)
      */
     public void handleStateChange(State state, Object oldValue)
     {
-        page = RequirementHelper.INSTANCE.getUpstreamPage(); 
+        page = RequirementHelper.INSTANCE.getUpstreamPage();
         if (page != null)
         {
-            applySorter((Boolean)state.getValue());
+            applySorter((Boolean) state.getValue());
         }
     }
-    
+
     /**
      * Applies an eventual sorter on the tree viewer.
      * 
@@ -60,7 +61,10 @@ public class SortHandler extends AbstractHandlerWithState
      */
     private void applySorter(boolean state)
     {
-        ((StructuredViewer)page.getViewer()).setSorter(state ? new ViewerSorter() : null);
+        if (!page.getViewer().getControl().isDisposed())
+        {
+            ((StructuredViewer) page.getViewer()).setSorter(state ? new ViewerSorter() : null);
+        }
     }
 
 }
