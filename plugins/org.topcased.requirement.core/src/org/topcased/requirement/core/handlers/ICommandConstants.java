@@ -26,8 +26,10 @@ public interface ICommandConstants
 
     static final String FLAT_ID = "org.topcased.requirement.core.flat";
 
-    static final String HIERARCHICAL_ID = "org.topcased.requirement.core.hierarchical";
-
-    static final String LINK_TO_UPSTREAM_ID = "org.topcased.requirement.core.linkToUpstream";
+    static final String HIERARCHICAL_ID = "org.topcased.requirement.core.hierarchical";    
+    
+    static final String LINK_TO_UPSTREAM_ID = "org.topcased.requirement.core.linkToUpstream"; 
+    
+    static final String FILTER_CURRENT_REQ_ID ="org.topcased.requirement.core.filterCurrentRequirements";
 
 }

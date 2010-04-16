@@ -19,6 +19,7 @@ import org.eclipse.emf.edit.domain.IEditingDomainProvider;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.jface.util.TransferDropTargetListener;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -50,6 +51,8 @@ public abstract class AbstractRequirementPage extends Page implements IViewerPro
     protected Composite mainComposite;
 
     private TransferDropTargetListener listener = null;
+
+    protected ISelectionChangedListener upstreamListener = null;    
 
     /**
      * @see org.eclipse.ui.part.Page#dispose()

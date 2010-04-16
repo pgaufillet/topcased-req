@@ -13,6 +13,7 @@ package org.topcased.requirement.core.views.upstream;
 
 import java.util.Iterator;
 
+import org.eclipse.core.commands.Command;
 import org.eclipse.emf.edit.ui.action.RedoAction;
 import org.eclipse.emf.edit.ui.action.UndoAction;
 import org.eclipse.jface.action.IAction;
@@ -39,20 +40,28 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.handlers.RegistryToggleState;
+import org.eclipse.ui.part.IPage;
 import org.topcased.requirement.core.actions.RequirementAbstractEMFAction;
 import org.topcased.requirement.core.actions.UpstreamRequirementDeleteAction;
 import org.topcased.requirement.core.dnd.DragSourceUpstreamAdapter;
 import org.topcased.requirement.core.dnd.RequirementTransfer;
+import org.topcased.requirement.core.filters.CurrentViewSingletonFilter;
 import org.topcased.requirement.core.filters.UpstreamRequirementFilter;
+import org.topcased.requirement.core.handlers.ICommandConstants;
 import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.listeners.RequirementDoubleClickListener;
+import org.topcased.requirement.core.listeners.UpstreamSelectionChangedListener;
 import org.topcased.requirement.core.providers.UpstreamRequirementContentProvider;
 import org.topcased.requirement.core.providers.UpstreamRequirementLabelProvider;
 import org.topcased.requirement.core.utils.RequirementCoverageComputer;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.AbstractRequirementPage;
 import org.topcased.requirement.core.views.SearchComposite;
+import org.topcased.requirement.core.views.current.CurrentPage;
+import org.topcased.requirement.core.views.current.CurrentRequirementView;
 
 import ttm.Document;
 
@@ -225,5 +234,73 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
     public UpstreamRequirementContentProvider getUpstreamRequirementContentProvider()
     {
         return ctPvd;
+    }
+    
+    /**
+     * @see org.topcased.requirement.core.views.AbstractRequirementPage#hookListeners()
+     */
+    @Override
+    protected void hookListeners()
+    {
+        super.hookListeners();
+        
+        hookUpstreamSelectionChangedListener();
+    }
+    
+    /**
+     * @see org.topcased.requirement.core.views.AbstractRequirementPage#unhookListeners()
+     */
+    @Override
+    protected void unhookListeners()
+    {
+        super.unhookListeners();
+        
+        unhookUpstreamSelectionChangedListener();
+    }
+    
+    
+    /**
+     * hook the upstream selection change listener if the command is checked and the two pages are active
+     */
+    public void hookUpstreamSelectionChangedListener()
+    {
+        // Get the commands who have a registered state
+        ICommandService cs = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+        Command filterCmd = cs.getCommand(ICommandConstants.FILTER_CURRENT_REQ_ID);
+        
+        // Handle cases when the command is toggled but the associated action isn't performed
+        if (filterCmd.getState(RegistryToggleState.STATE_ID).getValue().equals(true))
+        {
+            if (((CurrentRequirementView)CurrentRequirementView.getInstance()) != null)
+            {
+                IPage currentPage = ((CurrentRequirementView)CurrentRequirementView.getInstance()).getCurrentPage();
+                if (currentPage instanceof CurrentPage && upstreamListener == null)
+                {
+                    upstreamListener = new UpstreamSelectionChangedListener((CurrentPage) currentPage);
+                    this.getViewer().addSelectionChangedListener(upstreamListener);
+                }
+            }
+        }
+    }
+    
+
+    /**
+     * unhook the upstream selection change listener when the page is disposed and reset the current page tree
+     */
+    public void unhookUpstreamSelectionChangedListener()
+    {
+        if (((CurrentRequirementView)CurrentRequirementView.getInstance()) != null)
+        {
+            IPage currentPage = ((CurrentRequirementView)CurrentRequirementView.getInstance()).getCurrentPage();
+            if (currentPage instanceof CurrentPage && upstreamListener != null)
+            {
+                this.getViewer().removeSelectionChangedListener(upstreamListener);
+                upstreamListener = null;
+                
+                //reset the tree otherwise the filter would be still active
+                CurrentViewSingletonFilter.getInstance().setSearchedRequirement(null);
+                ((CurrentPage) currentPage).getViewer().refresh();
+            }
+        }
     }
 }

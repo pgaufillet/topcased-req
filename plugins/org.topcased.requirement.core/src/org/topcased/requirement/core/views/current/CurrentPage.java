@@ -14,6 +14,7 @@ package org.topcased.requirement.core.views.current;
 
 import java.util.Iterator;
 
+import org.eclipse.core.commands.Command;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.TreeIterator;
@@ -48,6 +49,9 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.handlers.RegistryToggleState;
+import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.views.markers.MarkerItem;
 import org.topcased.requirement.AttributeConfiguration;
 import org.topcased.requirement.AttributeLink;
@@ -75,15 +79,20 @@ import org.topcased.requirement.core.dnd.DragSourceCurrentAdapter;
 import org.topcased.requirement.core.dnd.DropTargetCurrentAdapter;
 import org.topcased.requirement.core.dnd.RequirementTransfer;
 import org.topcased.requirement.core.filters.CurrentRequirementFilter;
+import org.topcased.requirement.core.filters.CurrentViewSingletonFilter;
+import org.topcased.requirement.core.handlers.ICommandConstants;
 import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.listeners.RequirementDoubleClickListener;
+import org.topcased.requirement.core.listeners.UpstreamSelectionChangedListener;
 import org.topcased.requirement.core.providers.CurrentRequirementContentProvider;
 import org.topcased.requirement.core.providers.CurrentRequirementLabelProvider;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.AbstractRequirementPage;
 import org.topcased.requirement.core.views.AddRequirementMarker;
 import org.topcased.requirement.core.views.SearchComposite;
+import org.topcased.requirement.core.views.upstream.UpstreamPage;
+import org.topcased.requirement.core.views.upstream.UpstreamRequirementView;
 
 /**
  * This class creates the page to edit a requirement model in the upstream requirement view
@@ -101,7 +110,7 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
     private MenuManager submenuManager;
 
     private MenuManager createChildMenuManager;
-
+    
     /**
      * FIXME : find a better way to adapt the focus when an element is deleted
      * 
@@ -367,6 +376,8 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
         
         // Allow to receive only selection change coming From Property View
         getSite().getPage().addSelectionListener(IPageLayout.ID_PROBLEM_VIEW, this);
+        
+        hookUpstreamSelectionChangedListener();
     }
     
     /**
@@ -379,8 +390,55 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
         
         // Fix [#3087] remove the listener set on the Problem view
         getSite().getPage().removeSelectionListener(IPageLayout.ID_PROBLEM_VIEW, this);
+        
+        unhookUpstreamSelectionChangedListener();
     }
     
+    
+    /**
+     * hook the upstream selection change listener if the command is checked and the two pages are active
+     */
+    public void hookUpstreamSelectionChangedListener()
+    {
+        // Get the commands who have a registered state
+        ICommandService cs = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+        Command filterCmd = cs.getCommand(ICommandConstants.FILTER_CURRENT_REQ_ID);
+        
+        // Handle cases when the command is toggled but the associated action isn't performed
+        if (filterCmd.getState(RegistryToggleState.STATE_ID).getValue().equals(true))
+        {
+            if (((UpstreamRequirementView)UpstreamRequirementView.getInstance()) != null)
+            {
+                IPage upstreamPage = ((UpstreamRequirementView)UpstreamRequirementView.getInstance()).getCurrentPage();
+                if (upstreamPage instanceof UpstreamPage && upstreamListener == null)
+                {
+                    upstreamListener = new UpstreamSelectionChangedListener(this);
+                    ((UpstreamPage) upstreamPage).getViewer().addSelectionChangedListener(upstreamListener);
+                }
+            }
+        }
+    }
+    
+
+    /**
+     * unhook the upstream selection change listener when the page is disposed and reset the current page tree
+     */
+    public void unhookUpstreamSelectionChangedListener()
+    {
+        if (((UpstreamRequirementView)UpstreamRequirementView.getInstance()) != null)
+        {
+            IPage upstreamPage = ((UpstreamRequirementView)UpstreamRequirementView.getInstance()).getCurrentPage();
+            if (upstreamPage instanceof UpstreamPage && upstreamListener != null)
+            {
+                ((UpstreamPage) upstreamPage).getViewer().removeSelectionChangedListener(upstreamListener);
+                upstreamListener = null;
+                
+                //reset the tree otherwise the filter would be still active
+                CurrentViewSingletonFilter.getInstance().setSearchedRequirement(null);
+                this.getViewer().refresh();
+            }
+        }
+    }
     /**
      * Defines the content of the popup menu.
      */
