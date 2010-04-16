@@ -32,10 +32,13 @@ import org.topcased.modeler.diagrams.model.util.DiagramsResourceImpl;
 import org.topcased.modeler.editor.Modeler;
 import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.core.utils.RequirementUtils;
+import org.topcased.requirement.core.views.current.CurrentRequirementView;
+import org.topcased.requirement.core.views.upstream.UpstreamRequirementView;
 
 /**
  * Define the static default policy of requirement attachment for di models
  * 
+ * @author <a href="mailto:tristan.faure@atosorigin.com">Tristan FAURE (ATOS ORIGIN INTEGRATION)</a>
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  * 
  */
@@ -68,9 +71,6 @@ public class DefaultAttachmentPolicy implements IModelAttachmentPolicy
     }
 
     /**
-     * FIXME : find a better way to refresh upstream and current views than closing and reopening the diagram to adapt
-     * the views
-     * 
      * @see org.topcased.requirement.core.extensions.IModelAttachmentPolicy#setAttachement(org.eclipse.emf.ecore.resource.Resource,
      *      org.eclipse.emf.ecore.resource.Resource)
      */
@@ -87,16 +87,19 @@ public class DefaultAttachmentPolicy implements IModelAttachmentPolicy
         // Save the contents of the resource to the file system.
         RequirementUtils.saveResource(targetModel);
 
-        // in case the diagram is already open
+        // In the end, we set the property, we save the diagram and we notify each view that the diagram has changed
         if (Utils.getCurrentModeler() != null)
         {
             setProperty(Utils.getCurrentModeler(), requirementModel);
             Utils.getCurrentModeler().doSave(new NullProgressMonitor());
-            RequirementUtils.openDiagramEditor(diagramFile);
+            ((CurrentRequirementView) CurrentRequirementView.getInstance()).partActivated(Utils.getCurrentModeler());
+            ((UpstreamRequirementView) UpstreamRequirementView.getInstance()).partActivated(Utils.getCurrentModeler());
         }
     }
 
     /**
+     * FIXME: Find a better way to refresh the modeler (the goal of the refresh is to pass in the RequirementAdapterFactory) : see line 128
+     * 
      * @see org.topcased.requirement.core.extensions.IModelAttachmentPolicy#unlinkRequirementModel(org.eclipse.emf.ecore.resource.Resource,
      *      org.eclipse.emf.ecore.resource.Resource)
      */
@@ -120,6 +123,15 @@ public class DefaultAttachmentPolicy implements IModelAttachmentPolicy
                 {
                     RequirementUtils.deleteResource(requirementModel);
                 }
+            }
+            
+            //Refresh the diagram (for now by closing and re-opening it) to adapt the views
+            IPath diagramFile = RequirementUtils.getPath(targetModel);
+            boolean closed = RequirementUtils.closeDiagramEditor(diagramFile);
+            
+            if (closed)
+            {
+                RequirementUtils.openDiagramEditor(diagramFile);
             }
         }
     }

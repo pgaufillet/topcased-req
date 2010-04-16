@@ -22,7 +22,6 @@ import org.topcased.requirement.core.extensions.DefaultAttachmentPolicy;
 import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
 import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
 import org.topcased.requirement.core.internal.Messages;
-import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
@@ -70,18 +69,6 @@ public class UnlinkRequirementModelHandler extends AbstractHandler
                 {
                     DefaultAttachmentPolicy.getInstance().unlinkRequirementModel(Utils.getCurrentModeler().getResourceSet().getResources().get(0),
                             RequirementUtils.getRequirementModel(modeler.getEditingDomain()), deleteRequirementModel);
-                }
-
-                // the content of each page (Upstream & Current) is updated
-                if (RequirementHelper.INSTANCE.getCurrentPage() != null)
-                {
-                    RequirementHelper.INSTANCE.getCurrentPage().getViewer().setInput(null);
-                    RequirementHelper.INSTANCE.getCurrentPage().refreshViewer(true);
-                }
-                if (RequirementHelper.INSTANCE.getUpstreamPage() != null)
-                {
-                    RequirementHelper.INSTANCE.getUpstreamPage().getViewer().setInput(null);
-                    RequirementHelper.INSTANCE.getUpstreamPage().refreshViewer(true);
                 }
             }
         }

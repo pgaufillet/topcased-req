@@ -39,6 +39,8 @@ public class SAMAttachmentPolicy implements IModelAttachmentPolicy
 {
 
     /**
+     * FIXME: Find a better way to refresh the modeler (the goal of the refresh is to pass in the RequirementAdapterFactory) : see line 61 and 75
+     * 
      * @see org.topcased.requirement.core.extensions.IModelAttachmentPolicy#linkRequirementModel(org.eclipse.emf.ecore.resource.Resource,
      *      org.eclipse.emf.ecore.resource.Resource)
      */
@@ -75,6 +77,8 @@ public class SAMAttachmentPolicy implements IModelAttachmentPolicy
     }
 
     /**
+     * FIXME: Find a better way to refresh the modeler (the goal of the refresh is to pass in the RequirementAdapterFactory) : see line 113
+     * 
      * @see org.topcased.requirement.core.extensions.IModelAttachmentPolicy#unlinkRequirementModel(org.eclipse.emf.ecore.resource.Resource,
      *      org.eclipse.emf.ecore.resource.Resource)
      */
@@ -109,6 +113,16 @@ public class SAMAttachmentPolicy implements IModelAttachmentPolicy
                 RequirementUtils.deleteResource(requirementModel);
             }
         }
+        
+        //Refresh the diagram (for now by closing and re-opening it) to adapt the views
+        IPath diagramFile = RequirementUtils.getPath(targetModel);
+        boolean closed = RequirementUtils.closeDiagramEditor(diagramFile);
+        
+        if (closed)
+        {
+            RequirementUtils.openDiagramEditor(diagramFile);
+        }
+        
     }
 
     /**

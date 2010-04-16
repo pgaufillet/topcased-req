@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright (c) 2008,2009 Communication & Systems.
+ * Copyright (c) 2008,2010 Communication & Systems.
  * 
  * All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse
  * Public License v1.0 which accompanies this distribution, and is available at
@@ -10,7 +10,6 @@
  **********************************************************************************************************************/
 package org.topcased.requirement.core.views.upstream;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.viewers.ISelection;
@@ -24,7 +23,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.part.IPageBookViewPage;
 import org.eclipse.ui.services.ISourceProviderService;
-import org.topcased.modeler.di.model.Property;
 import org.topcased.modeler.documentation.IDocPage;
 import org.topcased.modeler.editor.Modeler;
 import org.topcased.modeler.utils.Utils;
@@ -46,10 +44,11 @@ import ttm.Requirement;
 /**
  * Defines the upstream requirement view.<br>
  * 
- * Update : 17 March 2009<br>
+ * Update : 16 April 2010<br>
  * 
  * @author <a href="mailto:christophe.mertz@c-s.fr">Christophe Mertz</a>
  * @author <a href="mailto:sebastien.gabel@c-s.fr">Sebastien GABEL</a>
+ * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  * 
  */
 public class UpstreamRequirementView extends AbstractRequirementView implements ISelectionChangedListener
@@ -109,10 +108,11 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
      */
     public void partActivated(IWorkbenchPart part)
     {
-        Modeler modeler =Utils.getCurrentModeler();        
-        ISourceProviderService service = (ISourceProviderService)PlatformUI.getWorkbench().getService(ISourceProviderService.class);
-        RequirementModelSourceProvider provider = (RequirementModelSourceProvider)service.getSourceProvider(RequirementModelSourceProvider.HAS_REQUIREMENT_MODEL);
-        
+        Modeler modeler = Utils.getCurrentModeler();
+
+        ISourceProviderService service = (ISourceProviderService) PlatformUI.getWorkbench().getService(ISourceProviderService.class);
+        RequirementModelSourceProvider provider = (RequirementModelSourceProvider) service.getSourceProvider(RequirementModelSourceProvider.HAS_REQUIREMENT_MODEL);
+
         super.partActivated(part);
 
         if (getCurrentPage() instanceof UpstreamPage)
@@ -131,22 +131,17 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
                 RequirementHelper.INSTANCE.setUpstreamPage(upstreamPage);
 
             }
-            
-            Resource targetModel = null;
+
+            // We need to constantly set the value of the hasRequirement variable to synchronize toolbar actions
+            // enablement with the requirement model state
             if (modeler != null)
             {
                 IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(modeler.getEditingDomain());
                 if (policy != null)
                 {
-                    targetModel = policy.getLinkedTargetModel(modeler.getEditingDomain().getResourceSet());
-                    if (targetModel != null)
+                    if (policy.getLinkedTargetModel(modeler.getEditingDomain().getResourceSet()) != null)
                     {
-                        provider.setHasRequirementState(true);  
-                        if (upstreamPage.getViewer().getInput() == null)
-                        {
-                            RequirementUtils.loadRequirementModel(targetModel.getURI(), modeler.getEditingDomain());
-                            updatePage(upstreamPage);
-                        }
+                        provider.setHasRequirementState(true);
                     }
                     else
                     {
@@ -155,20 +150,9 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
                 }
                 else
                 {
-                    targetModel = DefaultAttachmentPolicy.getInstance().getLinkedTargetModel(modeler.getEditingDomain().getResourceSet());
-                    if (targetModel != null)
+                    if (DefaultAttachmentPolicy.getInstance().getLinkedTargetModel(modeler.getEditingDomain().getResourceSet()) != null)
                     {
-                        provider.setHasRequirementState(true);                        
-                        if (upstreamPage.getViewer().getInput() == null)
-                        {                        
-                            Property requirementProperty = DefaultAttachmentPolicy.getInstance().getProperty(modeler.getActiveDiagram());
-                            if ( requirementProperty != null)
-                            {
-                                URI uri = URI.createURI(requirementProperty.getValue()).trimFragment().resolve(requirementProperty.eResource().getURI());
-                                RequirementUtils.loadRequirementModel(uri, modeler.getEditingDomain());
-                                updatePage(upstreamPage);   
-                            }
-                        }
+                        provider.setHasRequirementState(true);
                     }
                     else
                     {
@@ -220,11 +204,11 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
             RequirementProject project = (RequirementProject) RequirementUtils.getRoot(resource, RequirementProject.class);
             thePage.getViewer().setInput(project.getUpstreamModel());
             RequirementHelper.INSTANCE.setUpstreamPage(thePage);
-            RequirementCoverageComputer.INSTANCE.refreshCoverageRateDisplay();     
+            RequirementCoverageComputer.INSTANCE.refreshCoverageRateDisplay();
             thePage.refreshViewer(true);
         }
-    }   
-    
+    }
+
     /**
      * @see org.eclipse.ui.part.PageBookView#dispose()
      */
