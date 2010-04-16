@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.emf.search.ui.modelSearchQueryTab">
+      <queryTab
+            id="org.topcased.requirement.search.ui.RequirementPlainTextSearchID"
+            image="icons/textQuery.gif"
+            index="0"
+            label="%ModelSearchParticipantArea.RequirementPlainTextSearchExtPoint.Label"
+            queryCompositeAreaFactory="org.eclipse.emf.search.ecore.ui.factories.EcoreTextModelSearchQueryAreaFactory"
+            targetSearchPageID="org.topcased.requirement.search.ui.pages.RequirementModelSearchPageID"
+            tooltip="%RequirementPlainTextSearchExtPoint.Tooltip"/>
+   </extension>
+   
+   <extension
+         point="org.eclipse.emf.search.ui.modelSearchParticipantTab">
+         
+      <participantTab
+            elementComposeableAdapterFactory="org.topcased.requirement.provider.RequirementItemProviderAdapterFactory"
+            elementModelEditorSelectionHandler="org.topcased.requirement.search.ui.handlers.EditorSelectionHandler"
+            id="org.topcased.requirement.RequirementPackageParticipantTab"
+            image="icons/ecore.gif"
+            index="1"
+            label="%ModelSearchParticipantArea.RequirementPackageParticipantTab.Label"
+            participantCompositeAreaFactory="org.topcased.requirement.search.ui.factories.ModelSearchParticipantAreaFactory"
+            targetSearchPageID="org.topcased.requirement.search.ui.pages.RequirementModelSearchPageID"
+            targetNsURI="http://org.topcased.requirement/1.0"
+            tooltip="%ModelSearchParticipantArea.RequirementPackageParticipantTab.Tooltip">
+      </participantTab>
+      
+      
+   </extension>
+   
+   <extension
+         point="org.eclipse.search.searchPages">
+      <page
+            canSearchEnclosingProjects="true"
+            class="org.topcased.requirement.search.ui.pages.ModelSearchPage"
+            enabled="true"
+            icon="icons/esearch.gif"
+            id="org.topcased.requirement.search.ui.pages.RequirementModelSearchPageID"
+            label="%ModelSearchParticipantArea.RequirementModelSearchPage.Label"
+            showScopeSection="true"
+            tabPosition="0"/>
+   </extension>
+   
+   <extension
+         point="org.eclipse.emf.search.ui.modelSearchEngineMapping">
+ 
+      <mapping
+            id="org.topcased.requirement.search.text4RequirementPackage"
+            engineID="org.topcased.requirement.search.RequirementSearchEngine"
+            participantsTabID="org.topcased.requirement.RequirementPackageParticipantTab"
+            queryTabID="org.topcased.requirement.search.ui.RequirementPlainTextSearchID">
+      </mapping>
+      
+   </extension>
+</plugin>
