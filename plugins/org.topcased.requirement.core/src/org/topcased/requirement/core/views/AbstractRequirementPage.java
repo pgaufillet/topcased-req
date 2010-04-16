@@ -52,7 +52,7 @@ public abstract class AbstractRequirementPage extends Page implements IViewerPro
 
     private TransferDropTargetListener listener = null;
 
-    protected ISelectionChangedListener upstreamListener = null;    
+    protected static ISelectionChangedListener upstreamListener = null;    
 
     /**
      * @see org.eclipse.ui.part.Page#dispose()

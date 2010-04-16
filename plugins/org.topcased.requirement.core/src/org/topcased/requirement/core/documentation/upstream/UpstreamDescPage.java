@@ -14,10 +14,13 @@ import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.topcased.modeler.documentation.AbstractCommentsComposite;
 import org.topcased.modeler.documentation.AbstractDocPage;
+import org.topcased.requirement.AttributeLink;
+
 import ttm.Attribute;
 import ttm.Element;
 import ttm.Requirement;
@@ -78,6 +81,10 @@ public class UpstreamDescPage extends AbstractDocPage
             else if (selectedObject instanceof Attribute)
             {
                 return (Attribute) selectedObject;
+            }
+            else if (selectedObject instanceof AttributeLink)
+            {
+                return getSelectedModelElement(new StructuredSelection(((AttributeLink) selectedObject).getValue()));
             }
         }
         return null;

@@ -435,7 +435,10 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
                 
                 //reset the tree otherwise the filter would be still active
                 CurrentViewSingletonFilter.getInstance().setSearchedRequirement(null);
-                this.getViewer().refresh();
+                if (!this.getViewer().getControl().isDisposed())
+                {
+                    this.getViewer().refresh();
+                }
             }
         }
     }
