@@ -40,6 +40,7 @@ public abstract class AdditionalCommand<T> implements CommandStackEventListener
     }
 
     
+    @SuppressWarnings("unchecked")
     final public void stackChanged(CommandStackEvent event)
     {
         modeler = Utils.getCurrentModeler();
