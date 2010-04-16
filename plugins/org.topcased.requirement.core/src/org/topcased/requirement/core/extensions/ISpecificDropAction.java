@@ -16,18 +16,17 @@ import java.util.Collection;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.ecore.EObject;
 
-
 /**
- * This interface defines the behavior to implement for the "specificDropAction" extension point
- * This method get in parameter the source objects and the target object of a requirement drag and drop
- * This method return a command who will be executed in the drop listener {@link RequirementDropListener}
+ * This interface defines the behavior to implement for the "specificDropAction" extension point This method get in
+ * parameter the source objects and the target object of a requirement drag and drop This method return a command who
+ * will be executed in the drop listener {@link RequirementDropListener}
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
- *
+ * 
  */
 public interface ISpecificDropAction
 {
-    
+
     /**
      * implement this method to add new action before command execution when a drag'n'drop occur
      * 

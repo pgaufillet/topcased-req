@@ -17,8 +17,8 @@ import java.util.Collection;
  * This class allows to keep trace of selection source for generic actions cut, copy and paste proposed in the
  * contextual menu of the Topcased modeler. When a Copy or Cut is performed, the hierarchical elements to duplicate are
  * set in this transfer area. When the paste action is invoked, this area is accessed.<br>
- * Mainly, this singleton will be used in a Topcased Modeler context and more accurately when actions on requirements will be
- * necessary.
+ * Mainly, this singleton will be used in a Topcased Modeler context and more accurately when actions on requirements
+ * will be necessary.
  * 
  * @author <a href="mailto:sebastien.gabel@c-s.fr">Sebastien GABEL</a>
  * @since Topcased 2.3.0

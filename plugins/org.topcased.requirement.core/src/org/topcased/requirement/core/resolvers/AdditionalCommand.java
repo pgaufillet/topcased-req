@@ -10,7 +10,7 @@
  *  Tristan FAURE (ATOS ORIGIN INTEGRATION) - Initial API and implementation
  *  Maxime AUDRAIN (CS) - API changes
  *
-  *****************************************************************************/
+ *****************************************************************************/
 package org.topcased.requirement.core.resolvers;
 
 import java.util.List;
@@ -31,7 +31,7 @@ import org.topcased.modeler.utils.Utils;
 public abstract class AdditionalCommand<T> implements CommandStackEventListener
 {
     private Class< ? super T> theClass = null;
-    
+
     private Modeler modeler;
 
     public AdditionalCommand(Class< ? super T> clazz)
@@ -39,7 +39,6 @@ public abstract class AdditionalCommand<T> implements CommandStackEventListener
         theClass = clazz;
     }
 
-    
     @SuppressWarnings("unchecked")
     final public void stackChanged(CommandStackEvent event)
     {
@@ -77,15 +76,14 @@ public abstract class AdditionalCommand<T> implements CommandStackEventListener
     }
 
     /**
-     * get the list of specific commands when the parameter command and the parameter clazz are equals
-     * This is the same behaviour as CommandStack.getCommands(command, clazz) but specific to the type of <T>
+     * get the list of specific commands when the parameter command and the parameter clazz are equals This is the same
+     * behaviour as CommandStack.getCommands(command, clazz) but specific to the type of <T>
      * 
      * @param command
      * @param clazz
      * @return List<Object>
      */
     protected abstract List<Object> getSpecificCommands(Command command, Class< ? > clazz);
-
 
     protected void post_undo(List<T> command)
     {
@@ -116,7 +114,7 @@ public abstract class AdditionalCommand<T> implements CommandStackEventListener
     {
         // override this method if you want to add behavior
     }
-    
+
     protected Modeler getModeler()
     {
         return modeler;

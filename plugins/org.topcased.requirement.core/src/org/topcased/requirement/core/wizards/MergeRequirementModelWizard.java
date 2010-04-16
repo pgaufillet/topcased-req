@@ -23,7 +23,7 @@ import org.topcased.requirement.core.wizards.operation.MergeRequirementModelOper
  */
 public class MergeRequirementModelWizard extends AbstractRequirementModelWizard
 {
-    
+
     /**
      * Basic Constructor
      * 
@@ -32,7 +32,7 @@ public class MergeRequirementModelWizard extends AbstractRequirementModelWizard
     {
         super();
     }
-    
+
     /**
      * Constructor
      * 

@@ -96,7 +96,7 @@ public class AddAttributeAction extends RequirementAction
             {
                 parent = ((Attribute) currObject).eContainer();
                 int newIndex = calculateIndex(parent, (EObject) currObject);
-                
+
                 Attribute toDuplicate = null;
                 if (currObject instanceof AttributeLink)
                 {
@@ -119,8 +119,7 @@ public class AddAttributeAction extends RequirementAction
             viewer.setSelection(new StructuredSelection(toSelect), true);
         }
     }
-    
-    
+
     /**
      * Deduces the index where the new attribute must be inserted.
      * 

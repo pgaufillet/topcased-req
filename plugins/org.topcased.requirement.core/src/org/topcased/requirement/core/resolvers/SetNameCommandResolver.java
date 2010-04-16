@@ -53,13 +53,13 @@ public class SetNameCommandResolver extends AdditionalCommand<SetCommand>
      */
     @Override
     protected void pre_execute(List<SetCommand> setCommands)
-    {   
+    {
         for (SetCommand setCommand : setCommands)
         {
             EStructuralFeature efs = TopcasedAdapterFactoryLabeler.getInstance().getLabelFeature(setCommand.getOwner());
             if (efs.equals(setCommand.getFeature()))
             {
-                EMFtoGEFCommandWrapper cmd = new EMFtoGEFCommandWrapper(new RenameRequirementCommand(setCommand.getOwner(),(String) setCommand.getOldValue(),(String) setCommand.getValue()));
+                EMFtoGEFCommandWrapper cmd = new EMFtoGEFCommandWrapper(new RenameRequirementCommand(setCommand.getOwner(), (String) setCommand.getOldValue(), (String) setCommand.getValue()));
                 cmd.execute();
                 commands.put(setCommand, cmd);
             }
@@ -107,7 +107,7 @@ public class SetNameCommandResolver extends AdditionalCommand<SetCommand>
     protected List<Object> getSpecificCommands(Command command, Class< ? > clazz)
     {
         List<Object> result = new ArrayList<Object>();
-        
+
         // deals with SetCommand (specific behaviour)
         if (command instanceof EMFtoGEFCommandWrapper)
         {
@@ -115,29 +115,29 @@ public class SetNameCommandResolver extends AdditionalCommand<SetCommand>
             if (cmd instanceof org.eclipse.emf.common.command.CompoundCommand)
             {
                 org.eclipse.emf.common.command.CompoundCommand compound = (org.eclipse.emf.common.command.CompoundCommand) cmd;
-                
+
                 // specific compound name from AbstractTabbedPropertySection to filter the setCommands
                 if (compound.getLabel() == "Property Change")
-                    {
+                {
                     List< ? > commands = compound.getCommandList();
                     for (Object o : commands)
                     {
-                            if (o instanceof SetCommand)
+                        if (o instanceof SetCommand)
+                        {
+                            if (((SetCommand) o).getClass().equals(clazz))
                             {
-                                if (((SetCommand) o).getClass().equals(clazz))
-                                {
-                                    result.add((SetCommand) o);
-                                }
+                                result.add((SetCommand) o);
                             }
-                            else
+                        }
+                        else
+                        {
+                            // same algorithm than CommandStack.getCommands
+                            List<Object> tmp = CommandStack.getCommands((Command) o, clazz);
+                            if (!(tmp.isEmpty()))
                             {
-                                // same algorithm than CommandStack.getCommands
-                                List<Object> tmp = CommandStack.getCommands((Command) o, clazz);
-                                if (!(tmp.isEmpty()))
-                                {
-                                    result.add(tmp);
-                                }
+                                result.add(tmp);
                             }
+                        }
                     }
                 }
             }

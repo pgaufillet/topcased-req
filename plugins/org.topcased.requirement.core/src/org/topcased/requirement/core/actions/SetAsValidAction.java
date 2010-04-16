@@ -97,7 +97,7 @@ public class SetAsValidAction extends RequirementAction
         {
             editingDomain.getCommandStack().execute(compoundCmd);
         }
-        
+
         fireValidationChanged();
     }
 
@@ -121,19 +121,19 @@ public class SetAsValidAction extends RequirementAction
             return enable;
         }
         return false;
-    }   
-    
+    }
+
     /**
      * 
-     * Notify commands that the isImpacted variable has changed.
-     * Handle the enablement of the update action when no current requirement are impacted
+     * Notify commands that the isImpacted variable has changed. Handle the enablement of the update action when no
+     * current requirement are impacted
      */
     private void fireValidationChanged()
     {
         Boolean isImpacted = true;
         Modeler modeler = Utils.getCurrentModeler();
-        ISourceProviderService spc = (ISourceProviderService)PlatformUI.getWorkbench().getService(ISourceProviderService.class);
-        RequirementModelSourceProvider myPro = (RequirementModelSourceProvider)spc.getSourceProvider(RequirementModelSourceProvider.IS_IMPACTED);
+        ISourceProviderService spc = (ISourceProviderService) PlatformUI.getWorkbench().getService(ISourceProviderService.class);
+        RequirementModelSourceProvider myPro = (RequirementModelSourceProvider) spc.getSourceProvider(RequirementModelSourceProvider.IS_IMPACTED);
         if (modeler != null && myPro != null)
         {
             Resource requirement = RequirementUtils.getRequirementModel(modeler.getEditingDomain());

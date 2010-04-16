@@ -54,7 +54,7 @@ public class CurrentRequirementCutAction extends RequirementAbstractEMFAction
         setCommand(CutToClipboardCommand.class);
         setParam(new CommandParameter(null, null, getSelection().toList()));
     }
-    
+
     /**
      * @see org.topcased.requirement.core.actions.RequirementAbstractEMFAction#isEnabled()
      */

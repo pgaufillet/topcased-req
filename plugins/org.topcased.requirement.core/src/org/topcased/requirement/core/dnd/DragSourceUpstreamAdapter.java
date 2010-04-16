@@ -76,7 +76,7 @@ public class DragSourceUpstreamAdapter extends DragSourceAdapter
             event.doit = true;
             for (TreeItem item : source.getSelection())
             {
-                if(!(item.getData() instanceof HierarchicalElement))
+                if (!(item.getData() instanceof HierarchicalElement))
                 {
                     event.doit = false;
                 }

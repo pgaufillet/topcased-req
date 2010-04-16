@@ -18,10 +18,10 @@ import org.topcased.requirement.core.utils.RequirementHelper;
 
 /**
  * @author maudrain
- *
+ * 
  */
 public class DefaultRequirementCountingAlgorithm implements IRequirementCountingAlgorithm
-{    
+{
     /**
      * @see org.topcased.requirement.core.extensions.IRequirementCountingAlgorithm#getCurrentIndex(org.topcased.requirement.Requirement)
      */
@@ -32,7 +32,8 @@ public class DefaultRequirementCountingAlgorithm implements IRequirementCounting
     }
 
     /**
-     * @see org.topcased.requirement.core.extensions.IRequirementCountingAlgorithm#increaseIndexWhenCreateRequirement(org.topcased.requirement.Requirement, long)
+     * @see org.topcased.requirement.core.extensions.IRequirementCountingAlgorithm#increaseIndexWhenCreateRequirement(org.topcased.requirement.Requirement,
+     *      long)
      */
     public void increaseIndexWhenCreateRequirement(Requirement createdRequirement, long index)
     {
@@ -46,7 +47,7 @@ public class DefaultRequirementCountingAlgorithm implements IRequirementCounting
         HierarchicalElement root = RequirementHelper.INSTANCE.getHierarchicalElementRoot();
         if (root.getNextReqIndex() == 0)
         {
-          //First time when the default step value hasn't been put
+            // First time when the default step value hasn't been put
             root.setNextReqIndex(ComputeRequirementIdentifier.getRequirementStep());
         }
     }

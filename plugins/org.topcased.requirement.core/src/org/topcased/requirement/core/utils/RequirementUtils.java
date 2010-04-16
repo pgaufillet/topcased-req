@@ -452,13 +452,13 @@ public final class RequirementUtils
      */
     public static void loadRequirementModel(URI uri, EditingDomain domain)
     {
-        ISourceProviderService service = (ISourceProviderService)PlatformUI.getWorkbench().getService(ISourceProviderService.class);
-        RequirementModelSourceProvider provider = (RequirementModelSourceProvider)service.getSourceProvider(RequirementModelSourceProvider.HAS_REQUIREMENT_MODEL);
-        
+        ISourceProviderService service = (ISourceProviderService) PlatformUI.getWorkbench().getService(ISourceProviderService.class);
+        RequirementModelSourceProvider provider = (RequirementModelSourceProvider) service.getSourceProvider(RequirementModelSourceProvider.HAS_REQUIREMENT_MODEL);
+
         // Gets the requirement model from the editing domain or loads it if it's the first time
         domain.getResourceSet().getResource(uri, true);
-        
-        //Notify commands that the hasRequirement variable has changed
+
+        // Notify commands that the hasRequirement variable has changed
         provider.setHasRequirementState(true);
     }
 
@@ -470,14 +470,14 @@ public final class RequirementUtils
      */
     public static boolean unloadRequirementModel(EditingDomain domain)
     {
-        ISourceProviderService service = (ISourceProviderService)PlatformUI.getWorkbench().getService(ISourceProviderService.class);
-        RequirementModelSourceProvider provider = (RequirementModelSourceProvider)service.getSourceProvider(RequirementModelSourceProvider.HAS_REQUIREMENT_MODEL);
+        ISourceProviderService service = (ISourceProviderService) PlatformUI.getWorkbench().getService(ISourceProviderService.class);
+        RequirementModelSourceProvider provider = (RequirementModelSourceProvider) service.getSourceProvider(RequirementModelSourceProvider.HAS_REQUIREMENT_MODEL);
         Resource requirementRsc = getRequirementModel(domain);
-        
-        //Unload the requirement resource and notify commands that the hasRequirement variable has changed
+
+        // Unload the requirement resource and notify commands that the hasRequirement variable has changed
         requirementRsc.unload();
         provider.setHasRequirementState(false);
-        
+
         return domain.getResourceSet().getResources().remove(requirementRsc);
     }
 
@@ -681,7 +681,7 @@ public final class RequirementUtils
         }
         return null;
     }
-    
+
     /**
      * Opens the given diagram resource given in parameter.
      * 

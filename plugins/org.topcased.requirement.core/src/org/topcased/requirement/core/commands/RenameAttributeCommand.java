@@ -71,9 +71,9 @@ public class RenameAttributeCommand extends CompoundCommand
                     appendIfCanExecute(SetCommand.create(editingDomain, attribute, RequirementPackage.eINSTANCE.getAttribute_Name(), newName));
                 }
             }
-        }  
+        }
     }
-    
+
     /**
      * @see org.eclipse.emf.common.command.AbstractCommand#canExecute()
      */

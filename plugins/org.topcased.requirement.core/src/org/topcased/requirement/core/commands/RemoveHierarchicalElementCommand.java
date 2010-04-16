@@ -25,7 +25,8 @@ import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
- * Handles remove operations of a hierarchical element and its requirements when the cut action of the modeler's contextual menu is used.<br>
+ * Handles remove operations of a hierarchical element and its requirements when the cut action of the modeler's
+ * contextual menu is used.<br>
  * 
  * Update : 06 may 2009<br>
  * 

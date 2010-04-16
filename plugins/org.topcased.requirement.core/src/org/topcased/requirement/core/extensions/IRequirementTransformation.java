@@ -14,25 +14,23 @@ package org.topcased.requirement.core.extensions;
 import org.eclipse.core.resources.IFile;
 
 /**
- *  This interface have to be implemented by the requirementTransformation extension point
- *  This must provide the way to transform a file source to a file dest. 
- *  By default (requirement way), the dest file must have the ".requirement" extension
- *  
+ * This interface have to be implemented by the requirementTransformation extension point This must provide the way to
+ * transform a file source to a file dest. By default (requirement way), the dest file must have the ".requirement"
+ * extension
+ * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
- *
+ * 
  */
 public interface IRequirementTransformation
 {
 
-    
     /**
-     * Implement this method to define the transformation you want to use 
-     * when the requirement project wizard is opened
+     * Implement this method to define the transformation you want to use when the requirement project wizard is opened
      * 
      * @param source the source file to transform
      * @param dest the destination requirement file
      * @return not necessarily boolean
      */
     public void transformation(IFile source, IFile dest);
-    
+
 }

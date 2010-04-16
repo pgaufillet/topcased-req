@@ -98,7 +98,8 @@ public class DefaultAttachmentPolicy implements IModelAttachmentPolicy
     }
 
     /**
-     * FIXME: Find a better way to refresh the modeler (the goal of the refresh is to pass in the RequirementAdapterFactory) : see line 128
+     * FIXME: Find a better way to refresh the modeler (the goal of the refresh is to pass in the
+     * RequirementAdapterFactory) : see line 128
      * 
      * @see org.topcased.requirement.core.extensions.IModelAttachmentPolicy#unlinkRequirementModel(org.eclipse.emf.ecore.resource.Resource,
      *      org.eclipse.emf.ecore.resource.Resource)
@@ -124,11 +125,11 @@ public class DefaultAttachmentPolicy implements IModelAttachmentPolicy
                     RequirementUtils.deleteResource(requirementModel);
                 }
             }
-            
-            //Refresh the diagram (for now by closing and re-opening it) to adapt the views
+
+            // Refresh the diagram (for now by closing and re-opening it) to adapt the views
             IPath diagramFile = RequirementUtils.getPath(targetModel);
             boolean closed = RequirementUtils.closeDiagramEditor(diagramFile);
-            
+
             if (closed)
             {
                 RequirementUtils.openDiagramEditor(diagramFile);

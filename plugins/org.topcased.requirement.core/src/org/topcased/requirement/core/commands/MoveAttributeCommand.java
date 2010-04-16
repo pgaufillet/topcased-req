@@ -23,8 +23,8 @@ import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
  * This class defines the <b>Move</b> operation for {@link Attribute}s contained in {@link Requirement}. For each
- * current requirements, the attribute is first searched, then if it was found, this compound command moves the
- * the positin of the concerned attribute into its own list (i.e the position changes).<br>
+ * current requirements, the attribute is first searched, then if it was found, this compound command moves the the
+ * positin of the concerned attribute into its own list (i.e the position changes).<br>
  * 
  * @author <a href="mailto:sebastien.gabel@c-s.fr">Sebastien GABEL</a>
  * @since Topcased 2.3.0
@@ -55,7 +55,7 @@ public class MoveAttributeCommand extends CompoundCommand
         newIndex = index;
         initializeCommands();
     }
-    
+
     /**
      * Initializes the commands contained in this compound command
      */

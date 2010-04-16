@@ -11,12 +11,11 @@
  *****************************************************************************/
 package org.topcased.requirement.core.handlers;
 
-
 /**
  * The Move Up Handler who just need to set the up value to true
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
- *
+ * 
  */
 public class MoveUpHandler extends AbstractMoveHandler
 {

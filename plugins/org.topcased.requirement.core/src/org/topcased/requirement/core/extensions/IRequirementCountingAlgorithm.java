@@ -14,7 +14,7 @@ package org.topcased.requirement.core.extensions;
 import org.topcased.requirement.Requirement;
 
 /**
- * This interface defines the behavior to implement for the "requirementCountingAlgorithm" extension point 
+ * This interface defines the behavior to implement for the "requirementCountingAlgorithm" extension point
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  * 

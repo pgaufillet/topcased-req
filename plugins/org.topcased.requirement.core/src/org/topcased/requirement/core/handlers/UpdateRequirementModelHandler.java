@@ -37,21 +37,21 @@ import org.topcased.requirement.core.wizards.MergeRequirementModelWizard;
  * Handler to deals with the update action in the upstream view
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
- *
+ * 
  */
 public class UpdateRequirementModelHandler extends AbstractHandler
 {
     /**
      * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
      */
-    public Object execute(ExecutionEvent event) throws ExecutionException 
-    {      
+    public Object execute(ExecutionEvent event) throws ExecutionException
+    {
         Resource targetModel = null;
         IEditorPart part = HandlerUtil.getActiveEditor(event);
         if (part instanceof Modeler)
-        { 
-            Modeler modeler = (Modeler) part;     
-            //Get the policy and the linked target model
+        {
+            Modeler modeler = (Modeler) part;
+            // Get the policy and the linked target model
             IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(modeler.getEditingDomain());
             if (policy != null)
             {
@@ -63,14 +63,14 @@ public class UpdateRequirementModelHandler extends AbstractHandler
             }
             if (targetModel != null)
             {
-                //creation of the merge wizard
+                // creation of the merge wizard
                 Resource requirement = RequirementUtils.getRequirementModel(modeler.getEditingDomain());
                 RequirementProject requirementProject = (RequirementProject) requirement.getContents().get(0);
                 MergeRequirementModelWizard wizard = new MergeRequirementModelWizard(requirementProject.getIdentifier(), requirementProject.getShortDescription());
-                
+
                 IFile targetFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(targetModel.getURI().toPlatformString(true)));
                 wizard.init(PlatformUI.getWorkbench(), new StructuredSelection(targetFile));
-        
+
                 // launch the wizard allowing to perform the operations
                 WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wizard)
                 {

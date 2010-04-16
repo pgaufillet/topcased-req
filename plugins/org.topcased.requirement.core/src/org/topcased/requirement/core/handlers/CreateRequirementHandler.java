@@ -34,8 +34,9 @@ import org.topcased.requirement.core.utils.RequirementUtils;
  */
 public abstract class CreateRequirementHandler extends AbstractHandler
 {
-    /** boolean to check if the commands are enabled*/
+    /** boolean to check if the commands are enabled */
     private boolean isEnabled = false;
+
     /**
      * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
      */
@@ -64,7 +65,7 @@ public abstract class CreateRequirementHandler extends AbstractHandler
     }
 
     protected abstract CreateRequirementCommand getCreateCommand();
-    
+
     /**
      * @see org.eclipse.core.commands.AbstractHandler#isEnabled()
      */
@@ -73,9 +74,10 @@ public abstract class CreateRequirementHandler extends AbstractHandler
     {
         return isEnabled;
     }
-    
+
     /**
-     * set commands enabled when the current diagram has a link with requirements and the object selected is enable for requirement creation
+     * set commands enabled when the current diagram has a link with requirements and the object selected is enable for
+     * requirement creation
      * 
      * @see org.eclipse.core.commands.AbstractHandler#setEnabled(java.lang.Object)
      */
@@ -83,19 +85,19 @@ public abstract class CreateRequirementHandler extends AbstractHandler
     public void setEnabled(Object evaluationContext)
     {
         String fileExtension = Modeler.getCurrentIFile().getFileExtension();
-        
-        //Check if the modeler is linked to requirements
+
+        // Check if the modeler is linked to requirements
         if (RequirementUtils.getRequirementModel(Utils.getCurrentModeler().getEditingDomain()) != null)
         {
             EvaluationContext eval = (EvaluationContext) evaluationContext;
-            if (eval.getDefaultVariable() instanceof List<?>)
+            if (eval.getDefaultVariable() instanceof List< ? >)
             {
                 List<Object> vars = (List<Object>) eval.getDefaultVariable();
                 for (Object var : vars)
                 {
                     if (var instanceof IModelElementEditPart)
                     {
-                        //Check if the selected element has drop allowed for it
+                        // Check if the selected element has drop allowed for it
                         IModelElementEditPart editPart = (IModelElementEditPart) var;
                         isEnabled = DropRestrictionManager.getInstance().isDropAllowed(fileExtension, editPart.getEObject());
                         break;
@@ -105,7 +107,7 @@ public abstract class CreateRequirementHandler extends AbstractHandler
         }
         else
         {
-            isEnabled = false; 
+            isEnabled = false;
         }
     }
 }

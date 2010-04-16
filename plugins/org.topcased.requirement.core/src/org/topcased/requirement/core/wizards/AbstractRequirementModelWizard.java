@@ -42,13 +42,13 @@ public abstract class AbstractRequirementModelWizard extends Wizard implements I
     protected IStructuredSelection selection;
 
     protected boolean existingRequirementModel = false;
-    
+
     protected RequirementWizardPage page;
 
     protected String projectName;
 
     protected String projectDescription;
-    
+
     /**
      * Constructor
      * 
@@ -57,9 +57,9 @@ public abstract class AbstractRequirementModelWizard extends Wizard implements I
     public AbstractRequirementModelWizard()
     {
         super();
-        setDefaultPageImageDescriptor(SharedImageHelper.getTopcasedDialogImageDescriptor());        
+        setDefaultPageImageDescriptor(SharedImageHelper.getTopcasedDialogImageDescriptor());
     }
-    
+
     /**
      * @see org.eclipse.jface.wizard.Wizard#addPages()
      */
@@ -80,7 +80,7 @@ public abstract class AbstractRequirementModelWizard extends Wizard implements I
         page = new RequirementWizardPage(selection, alreadyAttachedRequirementPath);
         addPage(page);
     }
-    
+
     /**
      * @see org.eclipse.jface.wizard.Wizard#createPageControls(org.eclipse.swt.widgets.Composite)
      */
@@ -96,7 +96,7 @@ public abstract class AbstractRequirementModelWizard extends Wizard implements I
             page.getButton().setEnabled(false);
         }
     }
-    
+
     /**
      * @see org.eclipse.jface.wizard.Wizard#performFinish()
      */
@@ -121,7 +121,6 @@ public abstract class AbstractRequirementModelWizard extends Wizard implements I
     {
         this.selection = pSelection;
     }
-
 
     /**
      * Creation of the requirement model
@@ -156,10 +155,10 @@ public abstract class AbstractRequirementModelWizard extends Wizard implements I
             return false;
         }
     }
-    
+
     /**
-     * Get the operation to perform (new requirement model or merge requirement model
-     * This method is intended to be implemented.
+     * Get the operation to perform (new requirement model or merge requirement model This method is intended to be
+     * implemented.
      * 
      * @return the AbstractRequirementModelOperation to perform
      */

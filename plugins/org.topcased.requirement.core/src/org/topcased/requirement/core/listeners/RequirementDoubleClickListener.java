@@ -69,13 +69,13 @@ public class RequirementDoubleClickListener implements IDoubleClickListener
     private void handleObjectAttribute(DoubleClickEvent event, Object firstElement)
     {
         Collection<Object> content = RequirementUtils.getChooseDialogContent(firstElement);
-    	ChooseDialog chooseDialog = new ChooseDialog(Display.getCurrent().getActiveShell(), content.toArray());
+        ChooseDialog chooseDialog = new ChooseDialog(Display.getCurrent().getActiveShell(), content.toArray());
         chooseDialog.setLabelProvider(new AdapterFactoryLabelProvider(RequirementUtils.getAdapterFactory()));
         chooseDialog.setAdvancedLabelProvider(new AdvancedRequirementLabelProvider(RequirementUtils.getAdapterFactory()));
         if (chooseDialog.open() == Dialog.OK)
         {
-        	Object theResult = chooseDialog.getResult()[0];
-        	EditingDomain domain = TopcasedAdapterFactoryEditingDomain.getEditingDomainFor((ObjectAttribute) firstElement);
+            Object theResult = chooseDialog.getResult()[0];
+            EditingDomain domain = TopcasedAdapterFactoryEditingDomain.getEditingDomainFor((ObjectAttribute) firstElement);
             Command cmd = SetCommand.create(domain, firstElement, RequirementPackage.eINSTANCE.getObjectAttribute_Value(), "".equals(theResult) ? null : theResult);
             if (cmd.canExecute())
             {
@@ -83,7 +83,7 @@ public class RequirementDoubleClickListener implements IDoubleClickListener
             }
         }
     }
-    
+
     /**
      * Expands/Collapses nodes in the tree viewer.
      * 

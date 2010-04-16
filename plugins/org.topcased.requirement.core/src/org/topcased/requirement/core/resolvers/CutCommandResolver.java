@@ -66,7 +66,7 @@ public class CutCommandResolver extends AdditionalCommand<CutToClipboardCommand>
             {
                 TopcasedAdapterFactoryEditingDomain.getEditingDomainFor(e);
                 if (e instanceof EObject)
-                {                    
+                {
                     RemoveHierarchicalElementCommand cmd = new RemoveHierarchicalElementCommand((EObject) e);
                     command.add(new EMFtoGEFCommandWrapper(cmd));
                     HierarchicalElementTransfer.INSTANCE.setResult(cmd.getResult());

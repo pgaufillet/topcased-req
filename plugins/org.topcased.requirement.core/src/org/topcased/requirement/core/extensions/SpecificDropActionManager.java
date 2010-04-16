@@ -21,15 +21,15 @@ import org.topcased.facilities.extensions.AbstractExtensionManager;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
 
 /**
- * Define the manager of the extension point "specificDropAction" 
- * who enable to create action for an element when a drag and drop occurs on it
+ * Define the manager of the extension point "specificDropAction" who enable to create action for an element when a drag
+ * and drop occurs on it
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
- *
+ * 
  */
 public class SpecificDropActionManager extends AbstractExtensionManager
 {
-    
+
     /** constant representing the name of the extension point */
     private static final String SPECIFIC_DROP_ACTION_EXTENSION_POINT = "specificDropAction"; //$NON-NLS-1$
 
@@ -38,7 +38,6 @@ public class SpecificDropActionManager extends AbstractExtensionManager
 
     /** The set of registered actions */
     private Set<SpecificDropActionDescriptor> actions;
-    
 
     /**
      * Private constructor
@@ -63,6 +62,7 @@ public class SpecificDropActionManager extends AbstractExtensionManager
         }
         return manager;
     }
+
     /**
      * @see org.topcased.facilities.extensions.AbstractExtensionManager#addExtension(org.eclipse.core.runtime.IExtension)
      */

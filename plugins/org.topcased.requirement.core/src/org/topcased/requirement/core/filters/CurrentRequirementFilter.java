@@ -164,15 +164,15 @@ public class CurrentRequirementFilter extends ViewerFilter implements IRequireme
             if (link.getValue() instanceof Requirement)
             {
                 Requirement upstreamReq = (Requirement) link.getValue();
-                if(upstreamReq.getIdent().indexOf(searched) > -1)    
+                if (upstreamReq.getIdent().indexOf(searched) > -1)
                 {
                     display = true;
                 }
             }
-            else if(link.getValue() instanceof org.topcased.requirement.Requirement)
+            else if (link.getValue() instanceof org.topcased.requirement.Requirement)
             {
                 org.topcased.requirement.Requirement currentReq = (org.topcased.requirement.Requirement) link.getValue();
-                if(currentReq.getIdentifier().indexOf(searched) > -1)    
+                if (currentReq.getIdentifier().indexOf(searched) > -1)
                 {
                     display = true;
                 }

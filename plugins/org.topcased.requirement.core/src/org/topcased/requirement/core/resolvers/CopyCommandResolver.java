@@ -74,7 +74,8 @@ public class CopyCommandResolver extends AdditionalCommand<CopyToClipboardComman
     }
 
     /**
-     * @see org.topcased.requirement.core.resolvers.AdditionalCommand#getSpecificCommands(org.eclipse.gef.commands.Command, java.lang.Class)
+     * @see org.topcased.requirement.core.resolvers.AdditionalCommand#getSpecificCommands(org.eclipse.gef.commands.Command,
+     *      java.lang.Class)
      */
     @Override
     protected List<Object> getSpecificCommands(Command command, Class< ? > clazz)

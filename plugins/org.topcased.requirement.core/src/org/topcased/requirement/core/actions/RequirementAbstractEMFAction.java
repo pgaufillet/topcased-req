@@ -108,7 +108,7 @@ public abstract class RequirementAbstractEMFAction extends Action
 
     /**
      * @see org.eclipse.jface.action.Action#isEnabled() <bR>
-     * FIXME : Provide a better solution for handling update of requirement models.
+     *      FIXME : Provide a better solution for handling update of requirement models.
      */
     @Override
     public boolean isEnabled()
@@ -170,7 +170,7 @@ public abstract class RequirementAbstractEMFAction extends Action
             monitor.setTaskName(Messages.getString("RequirementAbstractEMFAction.2")); //$NON-NLS-1$
             preAction(compoundCmd);
             monitor.worked(1);
-           
+
             compoundCmd.appendIfCanExecute(editingDomain.createCommand(getCommand(), getParam()));
 
             monitor.setTaskName(Messages.getString("RequirementAbstractEMFAction.3")); //$NON-NLS-1$

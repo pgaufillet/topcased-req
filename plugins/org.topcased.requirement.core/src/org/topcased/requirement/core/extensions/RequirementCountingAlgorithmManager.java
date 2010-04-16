@@ -23,8 +23,8 @@ import org.topcased.facilities.extensions.AbstractExtensionManager;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
 
 /**
- * Define the manager of the extension point "requirementCountingAlgorithm" who provide
- * the way to change the count algorithm of current requirements
+ * Define the manager of the extension point "requirementCountingAlgorithm" who provide the way to change the count
+ * algorithm of current requirements
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  * 
@@ -40,17 +40,17 @@ public class RequirementCountingAlgorithmManager extends AbstractExtensionManage
 
     /** Value of the extension point attribute corresponding to the class. */
     static final String ATT_CLASS = "class"; //$NON-NLS-1$
-    
+
     /** Value of the extension point attribute corresponding to the description. */
     static final String ATT_DESCRIPTION = "description"; //$NON-NLS-1$
 
     /** the shared instance */
     private static RequirementCountingAlgorithmManager manager;
 
-    /** Map of a name of the algorithm and the associated class*/
+    /** Map of a name of the algorithm and the associated class */
     public Map<String, IRequirementCountingAlgorithm> mapClass;
-    
-    /** Map of a name of the algorithm and the associated description*/
+
+    /** Map of a name of the algorithm and the associated description */
     public Map<String, String> mapName;
 
     /**
@@ -135,7 +135,7 @@ public class RequirementCountingAlgorithmManager extends AbstractExtensionManage
         }
         return null;
     }
-    
+
     /**
      * This method return all the requirement counting algorithm name
      * 
@@ -145,7 +145,7 @@ public class RequirementCountingAlgorithmManager extends AbstractExtensionManage
     {
         return mapClass.keySet();
     }
-    
+
     /**
      * This method return the requirement counting algorithm description for a given algorithm name
      * 
@@ -160,4 +160,3 @@ public class RequirementCountingAlgorithmManager extends AbstractExtensionManage
         return null;
     }
 }
-

@@ -22,7 +22,8 @@ import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
- * This class defined the <b>Remove</b> operation for an {@link Attribute} that is normally contained in a {@link Requirement}.<br>
+ * This class defined the <b>Remove</b> operation for an {@link Attribute} that is normally contained in a
+ * {@link Requirement}.<br>
  * So, if the attribute exists in the {@link Requirement}, the attribute is removed.
  * 
  * @author <a href="mailto:sebastien.gabel@c-s.fr">Sebastien GABEL</a>
@@ -68,7 +69,7 @@ public class RemoveAttributeCommand extends CompoundCommand
             }
         }
     }
-    
+
     /**
      * @see org.eclipse.emf.common.command.AbstractCommand#canExecute()
      */

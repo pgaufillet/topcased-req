@@ -10,7 +10,7 @@
  *  Tristan FAURE (ATOS ORIGIN INTEGRATION) - Initial API and implementation
  *  Maxime AUDRAIN (CS) - API changes
  *
-  *****************************************************************************/
+ *****************************************************************************/
 
 package org.topcased.requirement.core.resolvers;
 
@@ -108,16 +108,16 @@ public class DeleteCommandResolver extends AdditionalCommand<DeleteModelCommand>
         }
     }
 
-
     /**
-     * @see org.topcased.requirement.core.resolvers.AdditionalCommand#getSpecificCommands(org.eclipse.gef.commands.Command, java.lang.Class)
+     * @see org.topcased.requirement.core.resolvers.AdditionalCommand#getSpecificCommands(org.eclipse.gef.commands.Command,
+     *      java.lang.Class)
      */
     @Override
     protected List<Object> getSpecificCommands(Command command, Class< ? > clazz)
     {
         List<Object> result = new LinkedList<Object>();
-        
-     // deals with DeleteModelContentCommand (specific behaviour)
+
+        // deals with DeleteModelContentCommand (specific behaviour)
         if (command instanceof CompoundCommand)
         {
             CompoundCommand compound = (CompoundCommand) command;

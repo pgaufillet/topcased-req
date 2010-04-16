@@ -10,7 +10,7 @@
  *  Tristan FAURE (ATOS ORIGIN INTEGRATION) - Initial API and implementation
  *  Maxime AUDRAIN (CS) - API changes
  *
-  *****************************************************************************/
+ *****************************************************************************/
 
 package org.topcased.requirement.core.resolvers;
 
@@ -31,7 +31,7 @@ import org.topcased.requirement.core.commands.MoveHierarchicalElementCommand;
 import org.topcased.requirement.core.utils.RequirementHelper;
 
 /**
- *
+ * 
  * This Class handle specific behaviour for requirements when a DragAndDropCommand is executed.
  * 
  * @author <a href="tristan.faure@atosorigin.com">Tristan FAURE</a>
@@ -59,19 +59,19 @@ public class DragAndDropCommandResolver extends AdditionalCommand<DragAndDropCom
      */
     @Override
     protected void post_execute(List<DragAndDropCommand> dndCommands)
-    {        
+    {
         CompoundCommand compound = new CompoundCommand();
-        
+
         for (DragAndDropCommand dndCommand : dndCommands)
-        {           
+        {
             MoveHierarchicalElementCommand cmd = new MoveHierarchicalElementCommand((EObject) dndCommand.getOwner(), dndCommand.getCollection());
             compound.appendIfCanExecute(cmd);
-            
+
             for (Object currSrc : dndCommand.getCollection())
             {
                 if (currSrc instanceof CurrentRequirement)
                 {
-                    //Handle case of current view requirements drag'n'drop
+                    // Handle case of current view requirements drag'n'drop
                     org.topcased.requirement.CurrentRequirement requirement = (org.topcased.requirement.CurrentRequirement) currSrc;
                     compound.appendIfCanExecute(RequirementHelper.INSTANCE.renameRequirement(requirement));
                 }
@@ -123,34 +123,35 @@ public class DragAndDropCommandResolver extends AdditionalCommand<DragAndDropCom
     protected List<Object> getSpecificCommands(Command command, Class< ? > clazz)
     {
         List<Object> result = new LinkedList<Object>();
-        
-            // deals with DragAndDropCommand (specific behaviour)
-           if (command instanceof EMFtoGEFCommandWrapper)
-           {
-               org.eclipse.emf.common.command.Command emfCommand = ((EMFtoGEFCommandWrapper) command).getEMFCommand();
-               
-               if (emfCommand instanceof CompoundCommand)
-               {             
-                   List<?> commands = ((CompoundCommand)emfCommand).getCommandList();
-                   for (Object o : commands)
-                   {
-                       // if we got a compound command with one or more DragAndDropCommand, we add the command to the result
-                       if (o instanceof DragAndDropCommand)
-                       {
-                           result.add((DragAndDropCommand) o);
-                       }
-                   }
-           }
-           else
-           {
-               // same algorithm than CommandStack.getCommands
-               List<Object> tmp = CommandStack.getCommands(command, clazz);
-               if (!(tmp.isEmpty()))
-               {
-                   result.add(tmp);
-               }
-           }
-       }
-       return result;
+
+        // deals with DragAndDropCommand (specific behaviour)
+        if (command instanceof EMFtoGEFCommandWrapper)
+        {
+            org.eclipse.emf.common.command.Command emfCommand = ((EMFtoGEFCommandWrapper) command).getEMFCommand();
+
+            if (emfCommand instanceof CompoundCommand)
+            {
+                List< ? > commands = ((CompoundCommand) emfCommand).getCommandList();
+                for (Object o : commands)
+                {
+                    // if we got a compound command with one or more DragAndDropCommand, we add the command to the
+                    // result
+                    if (o instanceof DragAndDropCommand)
+                    {
+                        result.add((DragAndDropCommand) o);
+                    }
+                }
+            }
+            else
+            {
+                // same algorithm than CommandStack.getCommands
+                List<Object> tmp = CommandStack.getCommands(command, clazz);
+                if (!(tmp.isEmpty()))
+                {
+                    result.add(tmp);
+                }
+            }
+        }
+        return result;
     }
 }

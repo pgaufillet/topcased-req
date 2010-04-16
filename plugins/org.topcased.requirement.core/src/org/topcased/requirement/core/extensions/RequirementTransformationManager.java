@@ -22,8 +22,8 @@ import org.topcased.facilities.extensions.AbstractExtensionManager;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
 
 /**
- * Define the manager of the extension point "requirementTransformation" who provide the way to 
- * transform models into requirement model.
+ * Define the manager of the extension point "requirementTransformation" who provide the way to transform models into
+ * requirement model.
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  * 
@@ -84,9 +84,9 @@ public class RequirementTransformationManager extends AbstractExtensionManager
                 String fileExtensions = confElt.getAttribute(ATT_FILE_EXTENSIONS);
                 IRequirementTransformation transformation = (IRequirementTransformation) confElt.createExecutableExtension(ATT_CLASS);
                 String[] ext = fileExtensions.split("[\\s]*,[\\s]*");
-                for(String str : ext)
+                for (String str : ext)
                 {
-                   mapClass.put(str, transformation);
+                    mapClass.put(str, transformation);
                 }
             }
             catch (CoreException e)
@@ -109,14 +109,14 @@ public class RequirementTransformationManager extends AbstractExtensionManager
         {
             String elts = confElt.getAttribute(ATT_FILE_EXTENSIONS);
             String[] ext = elts.split("[\\s]*,[\\s]*");
-            for(String str : ext)
+            for (String str : ext)
             {
                 mapClass.remove(str);
             }
         }
 
     }
-    
+
     /**
      * This method return the requirement transformation for a given fileExtension
      * 
@@ -131,7 +131,7 @@ public class RequirementTransformationManager extends AbstractExtensionManager
         }
         return null;
     }
-    
+
     /**
      * This method return true if the file extension in parameter is in the map
      * 

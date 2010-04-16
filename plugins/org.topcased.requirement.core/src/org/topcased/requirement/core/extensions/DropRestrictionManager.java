@@ -25,12 +25,12 @@ import org.eclipse.emf.ecore.EObject;
 import org.topcased.facilities.extensions.AbstractExtensionManager;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
 
-/** 
- * Define the manager of the extension point "dropRestriction" 
- * who can disable drop on objects specified in the extension
+/**
+ * Define the manager of the extension point "dropRestriction" who can disable drop on objects specified in the
+ * extension
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
- *
+ * 
  */
 public class DropRestrictionManager extends AbstractExtensionManager
 {
@@ -47,7 +47,7 @@ public class DropRestrictionManager extends AbstractExtensionManager
     /** the shared instance */
     private static DropRestrictionManager manager;
 
-    /**Map of a file extension and the metamodel object to restrict */
+    /** Map of a file extension and the metamodel object to restrict */
     public Map<String, Collection<Class< ? >>> map;
 
     /**
@@ -101,7 +101,6 @@ public class DropRestrictionManager extends AbstractExtensionManager
                         map.put(model, values);
                     }
                     values.add(Platform.getBundle(childElt.getContributor().getName()).loadClass(elt));
-                    
 
                 }
                 catch (ClassNotFoundException e)

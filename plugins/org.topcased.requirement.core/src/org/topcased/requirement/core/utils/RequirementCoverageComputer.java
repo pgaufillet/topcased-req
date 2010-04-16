@@ -742,13 +742,13 @@ public final class RequirementCoverageComputer
                 final IStatusLineManager statusLineManager = actionBars.getStatusLineManager();
                 if (statusLineManager != null)
                 {
-	                // get elements for coverage rate
-	                int numberOfRequirements = getNumberOfRequirements();
-	                int numberOfcoveredRequirements = getNumberOfCoveredRequirements();
-	                String coverageRate = getCoverageRate();
-	                // Construct message with coverage rate
-	                final String message = String.format(Messages.getString("UpstreamPage.1"), numberOfcoveredRequirements, numberOfRequirements, coverageRate); //$NON-NLS-1$
-               
+                    // get elements for coverage rate
+                    int numberOfRequirements = getNumberOfRequirements();
+                    int numberOfcoveredRequirements = getNumberOfCoveredRequirements();
+                    String coverageRate = getCoverageRate();
+                    // Construct message with coverage rate
+                    final String message = String.format(Messages.getString("UpstreamPage.1"), numberOfcoveredRequirements, numberOfRequirements, coverageRate); //$NON-NLS-1$
+
                     // status line must be updated in a particular thread to avoid thread access violation.
                     Display.getDefault().syncExec(new Runnable()
                     {

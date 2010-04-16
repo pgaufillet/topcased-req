@@ -71,7 +71,7 @@ public class TopcasedRequirementPerspectiveFactory implements IPerspectiveFactor
         bottomLeft.addView(CurrentRequirementView.VIEW_ID);
         bottomLeft.addView(IPageLayout.ID_OUTLINE);
         layout.getViewLayout(CurrentRequirementView.VIEW_ID);
-        
+
         // Bottom
         IFolderLayout bottom = layout.createFolder("bottom", IPageLayout.BOTTOM, (float) 0.66, editorArea); //$NON-NLS-1$
         bottom.addView(DocView.VIEW_ID);

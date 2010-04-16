@@ -31,7 +31,7 @@ public class NewRequirementModelWizard extends AbstractRequirementModelWizard
     {
         super();
     }
-    
+
     /**
      * Constructor
      * 
@@ -45,7 +45,7 @@ public class NewRequirementModelWizard extends AbstractRequirementModelWizard
         projectName = theProjectName;
         projectDescription = theProjectDescription;
     }
-    
+
     /**
      * @see org.topcased.requirement.core.wizards.AbstractRequirementModelWizard#getOperation()
      */

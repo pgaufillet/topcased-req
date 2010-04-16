@@ -41,7 +41,7 @@ import org.topcased.requirement.core.views.current.CurrentPage;
  * Handler for the link with editor command in the current requirement view
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
- *
+ * 
  */
 public class LinkWithEditorHandler extends AbstractHandlerWithState implements ISelectionListener, ISelectionChangedListener
 {
@@ -49,9 +49,8 @@ public class LinkWithEditorHandler extends AbstractHandlerWithState implements I
     private CurrentPage page;
 
     /** Flag set during selection modification */
-    private boolean isDispatching = false;    
+    private boolean isDispatching = false;
 
-    
     /**
      * Adds a selection listener on the page when the action is checked
      */
@@ -150,8 +149,8 @@ public class LinkWithEditorHandler extends AbstractHandlerWithState implements I
     }
 
     /**
-     * When the Current View is linked with the modeler, try to select existing graphical occurrences selected from
-     * the Current View.
+     * When the Current View is linked with the modeler, try to select existing graphical occurrences selected from the
+     * Current View.
      */
     protected void selectAssociatedPartsInEditor()
     {
@@ -194,15 +193,16 @@ public class LinkWithEditorHandler extends AbstractHandlerWithState implements I
     public Object execute(ExecutionEvent event) throws ExecutionException
     {
         HandlerUtil.toggleCommandState(event.getCommand());
-        return null; 
+        return null;
     }
 
     /**
-     * @see org.eclipse.core.commands.AbstractHandlerWithState#handleStateChange(org.eclipse.core.commands.State, java.lang.Object)
+     * @see org.eclipse.core.commands.AbstractHandlerWithState#handleStateChange(org.eclipse.core.commands.State,
+     *      java.lang.Object)
      */
     public void handleStateChange(State state, Object oldValue)
     {
-        page = RequirementHelper.INSTANCE.getCurrentPage(); 
+        page = RequirementHelper.INSTANCE.getCurrentPage();
         if (page != null)
         {
             if (state.getValue().equals(true))
@@ -214,7 +214,7 @@ public class LinkWithEditorHandler extends AbstractHandlerWithState implements I
             {
                 removeSelectionListener();
                 removeSelectionChangedListener();
-            } 
+            }
         }
-    } 
+    }
 }

@@ -48,9 +48,9 @@ public abstract class AbstractRequirementPage extends Page implements IViewerPro
     protected EditingDomain editingDomain;
 
     protected Composite mainComposite;
-    
+
     private TransferDropTargetListener listener = null;
-        
+
     /**
      * @see org.eclipse.ui.part.Page#dispose()
      */
@@ -79,14 +79,14 @@ public abstract class AbstractRequirementPage extends Page implements IViewerPro
      * Removes listener listening to model changes.
      */
     protected void unhookListeners()
-    {      
-        
+    {
+
         Modeler modeler = Utils.getCurrentModeler();
         if (modeler != null)
         {
             modeler.getGraphicalViewer().removeDropTargetListener(listener);
         }
-        RequirementUtils.getAdapterFactory().removeListener(modelListener);      
+        RequirementUtils.getAdapterFactory().removeListener(modelListener);
     }
 
     /**
@@ -229,5 +229,5 @@ public abstract class AbstractRequirementPage extends Page implements IViewerPro
      * @param selection The current selection
      */
     protected abstract void executeCodeForKey(ISelection selection);
-      
+
 }

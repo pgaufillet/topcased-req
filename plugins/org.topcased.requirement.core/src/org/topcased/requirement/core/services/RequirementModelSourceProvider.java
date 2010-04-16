@@ -17,18 +17,19 @@ import java.util.Map;
 import org.eclipse.ui.AbstractSourceProvider;
 
 /**
- * A Source provider to define commands activation. There is two variables :
- * hasRequirementModel who will notify commands when a requirement model has been linked or unlinked to the current page
- * isImpacted who will notify commands when there is no more impacted requirements in the current page requirement model
+ * A Source provider to define commands activation. There is two variables : hasRequirementModel who will notify
+ * commands when a requirement model has been linked or unlinked to the current page isImpacted who will notify commands
+ * when there is no more impacted requirements in the current page requirement model
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
- *
+ * 
  */
 public class RequirementModelSourceProvider extends AbstractSourceProvider
 {
     public final static String HAS_REQUIREMENT_MODEL = "requirementActionsEnablement.hasRequirementModel";
+
     public final static String IS_IMPACTED = "requirementActionsEnablement.isImpacted";
-    
+
     private static Map<String, Boolean> currentState;
 
     /**
@@ -43,15 +44,15 @@ public class RequirementModelSourceProvider extends AbstractSourceProvider
      * @see org.eclipse.ui.ISourceProvider#getCurrentState()
      */
     public Map<String, Boolean> getCurrentState()
-    {    
+    {
         if (!currentState.containsKey(HAS_REQUIREMENT_MODEL))
         {
-            currentState.put(HAS_REQUIREMENT_MODEL, true);       
-        }     
+            currentState.put(HAS_REQUIREMENT_MODEL, true);
+        }
         if (!currentState.containsKey(IS_IMPACTED))
         {
-            currentState.put(IS_IMPACTED, true);       
-        }        
+            currentState.put(IS_IMPACTED, true);
+        }
         return currentState;
 
     }
@@ -70,9 +71,9 @@ public class RequirementModelSourceProvider extends AbstractSourceProvider
     public void dispose()
     {
         // No need to implement this
-        
+
     }
-    
+
     /**
      * Provide way to notify the commands about a changing state of the hasRequirement variable
      * 
@@ -81,7 +82,7 @@ public class RequirementModelSourceProvider extends AbstractSourceProvider
     public void setHasRequirementState(Boolean enablement)
     {
         fireSourceChanged(0, HAS_REQUIREMENT_MODEL, enablement);
-    }    
+    }
 
     /**
      * Provide way to notify the commands about a changing state of the isImpacted variable
@@ -91,5 +92,5 @@ public class RequirementModelSourceProvider extends AbstractSourceProvider
     public void setIsImpactedState(Boolean enablement)
     {
         fireSourceChanged(0, IS_IMPACTED, enablement);
-    }    
+    }
 }

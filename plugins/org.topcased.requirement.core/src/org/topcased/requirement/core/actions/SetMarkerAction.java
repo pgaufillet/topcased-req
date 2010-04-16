@@ -18,8 +18,7 @@ import org.topcased.requirement.core.views.current.CurrentPage;
 
 /**
  * The action set marker position for the creation of a new requirement
- * {@link org.topcased.requirement.AnonymousRequirement}
- * and {@link org.topcased.requirement.CurrentRequirement}
+ * {@link org.topcased.requirement.AnonymousRequirement} and {@link org.topcased.requirement.CurrentRequirement}
  * 
  * @author <a href="mailto:christophe.mertz@c-s.fr">Christophe Mertz</a>
  */
@@ -48,7 +47,8 @@ public class SetMarkerAction extends RequirementAction
     public void run()
     {
         AddRequirementMarker.eINSTANCE.setPosition(type);
-        if (type == AddRequirementMarker.eINSTANCE.pOS) {
+        if (type == AddRequirementMarker.eINSTANCE.pOS)
+        {
             AddRequirementMarker.eINSTANCE.setMarkedObject(selection.getFirstElement());
         }
     }

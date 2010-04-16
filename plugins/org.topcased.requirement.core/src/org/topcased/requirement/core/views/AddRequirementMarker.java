@@ -67,8 +67,7 @@ public class AddRequirementMarker
             }
             else if (AddRequirementMarker.eINSTANCE.getPosition() == AddRequirementMarker.eINSTANCE.pOS)
             {
-                pos = ((HierarchicalElement) hierarchicalElement).getRequirement().indexOf(AddRequirementMarker.eINSTANCE.getMarkedObject())
-                        + RequirementUtils.countChildrens(hierarchicalElement);
+                pos = ((HierarchicalElement) hierarchicalElement).getRequirement().indexOf(AddRequirementMarker.eINSTANCE.getMarkedObject()) + RequirementUtils.countChildrens(hierarchicalElement);
             }
         }
 

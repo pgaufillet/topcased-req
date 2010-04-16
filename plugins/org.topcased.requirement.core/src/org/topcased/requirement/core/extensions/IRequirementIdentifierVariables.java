@@ -17,8 +17,8 @@ import java.util.Map;
 import org.eclipse.emf.edit.domain.EditingDomain;
 
 /**
- * This interface defines the behavior to implement for the "requirementIdentifierVariables" extension point.
- * The added variables can be seen in the table of the requirement naming preference page.
+ * This interface defines the behavior to implement for the "requirementIdentifierVariables" extension point. The added
+ * variables can be seen in the table of the requirement naming preference page.
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  * 

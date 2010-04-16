@@ -103,7 +103,7 @@ public class RenameCommandResolver extends AdditionalCommand<ChangeLabelTextComm
     @Override
     protected List<Object> getSpecificCommands(Command command, Class< ? > clazz)
     {
-        //nothing special to handle
+        // nothing special to handle
         return CommandStack.getCommands(command, clazz);
     }
 }

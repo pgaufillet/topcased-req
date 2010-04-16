@@ -87,7 +87,7 @@ public class DragSourceCurrentAdapter extends DragSourceAdapter
 
     /**
      * 
-     * The getter of the current selection 
+     * The getter of the current selection
      * 
      * @param event
      * 

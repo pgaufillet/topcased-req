@@ -46,7 +46,7 @@ public class RenameRequirementCommand extends CompoundCommand
     private String newName;
 
     /**
-     * Constructor 
+     * Constructor
      * 
      * @param element The element whose the name changed.
      * @param oldValue The old attribute value
@@ -56,9 +56,9 @@ public class RenameRequirementCommand extends CompoundCommand
     {
         this(TopcasedAdapterFactoryEditingDomain.getEditingDomainFor(element), element, oldValue, newValue);
     }
-    
+
     /**
-     * Constructor 
+     * Constructor
      * 
      * @param domain The editing domain to use
      * @param element The element whose the name changed.
@@ -94,7 +94,7 @@ public class RenameRequirementCommand extends CompoundCommand
                     }
                     else if ("".equals(oldName))
                     {
-                        identifier = identifier.replaceFirst("__", "_" + newName + "_"); 
+                        identifier = identifier.replaceFirst("__", "_" + newName + "_");
                     }
                     else
                     {

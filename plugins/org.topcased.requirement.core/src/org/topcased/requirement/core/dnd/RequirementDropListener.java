@@ -107,10 +107,10 @@ public class RequirementDropListener extends AbstractTransferDropTargetListener
                     // extract source objects
                     ISelection selection = ((RequirementTransfer) getTransfer()).getSelection();
                     Collection< ? > source = extractDragSource(selection);
-                    
-                    // handle specific action on drop                    
+
+                    // handle specific action on drop
                     Command dropCmd = null;
-                    ISpecificDropAction action=null;
+                    ISpecificDropAction action = null;
                     String uri = EcoreUtil.getURI(eobject.eClass().getEPackage()).trimFragment().toString();
                     SpecificDropActionDescriptor descriptor = SpecificDropActionManager.getInstance().find(uri);
                     if (descriptor != null)
@@ -128,8 +128,8 @@ public class RequirementDropListener extends AbstractTransferDropTargetListener
                         ((CreateRequirementCommand) dropCmd).setRequirements(source);
                         ((CreateRequirementCommand) dropCmd).setTarget(eobject);
                     }
-                    
-                    //execution of the command
+
+                    // execution of the command
                     if (dropCmd != null && dropCmd.canExecute())
                     {
                         getViewer().getEditDomain().getCommandStack().execute(new EMFtoGEFCommandWrapper(dropCmd));
@@ -156,8 +156,8 @@ public class RequirementDropListener extends AbstractTransferDropTargetListener
             EObject eobject = getEObject();
             URI graphicalModelName = URI.createURI(Utils.getCurrentModeler().getPartName());
             String fileExtension = graphicalModelName.fileExtension();
-            
-            //if the target is restricted by the extension dropRestriction
+
+            // if the target is restricted by the extension dropRestriction
             if (!(DropRestrictionManager.getInstance().isDropAllowed(fileExtension, eobject)))
             {
                 event.operations = DND.DROP_NONE;

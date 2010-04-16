@@ -28,11 +28,11 @@ import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.wizards.NewRequirementModelWizard;
 
 /**
- * Handler to link requirement models to the current modeler.
- * Careful: this execution cannot merge requirement models, only create new models
+ * Handler to link requirement models to the current modeler. Careful: this execution cannot merge requirement models,
+ * only create new models
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
- *
+ * 
  */
 public class LinkRequirementModelHandler extends AbstractHandler
 {
@@ -45,25 +45,25 @@ public class LinkRequirementModelHandler extends AbstractHandler
         NewRequirementModelWizard wizard = null;
         IEditorPart part = HandlerUtil.getActiveEditor(event);
         if (part instanceof Modeler)
-        { 
-            Modeler modeler = (Modeler) part;            
+        {
+            Modeler modeler = (Modeler) part;
             Resource requirementResource = RequirementUtils.getRequirementModel(modeler.getEditingDomain());
-            
+
             if (requirementResource != null)
             {
                 RequirementProject requirementProject = (RequirementProject) requirementResource.getContents().get(0);
-                //Create a new requirement wizard with already attached requirement model informations
+                // Create a new requirement wizard with already attached requirement model informations
                 wizard = new NewRequirementModelWizard(requirementProject.getIdentifier(), requirementProject.getShortDescription());
 
             }
             else
             {
-                //Create a new requirement wizard with nothing to display in the dialog
+                // Create a new requirement wizard with nothing to display in the dialog
                 wizard = new NewRequirementModelWizard();
             }
 
             wizard.init(PlatformUI.getWorkbench(), new StructuredSelection(Modeler.getCurrentIFile()));
-    
+
             // launch the wizard allowing to perform the operations
             WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wizard)
             {
@@ -73,9 +73,9 @@ public class LinkRequirementModelHandler extends AbstractHandler
                     newShell.setMinimumSize(530, 580);
                     newShell.setSize(530, 580);
                 }
-            };            
+            };
             wizardDialog.open();
-        }         
+        }
         return null;
     }
 

@@ -53,7 +53,7 @@ public class AddAttributeCommand extends CompoundCommand
         attribute = confAtt;
         initializeCommands();
     }
-    
+
     /**
      * Initializes the commands contained in this compound command
      */
@@ -94,7 +94,7 @@ public class AddAttributeCommand extends CompoundCommand
             }
             newAttribute.setName(attribute.getName());
             appendIfCanExecute(AddCommand.create(editingDomain, requirement, RequirementPackage.eINSTANCE.getRequirement_Attribute(), newAttribute));
-        } 
+        }
     }
 
     /**

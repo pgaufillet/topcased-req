@@ -387,7 +387,7 @@ public class DropTargetCurrentAdapter extends EditingDomainViewerDropAdapter
      */
     private void addUpstreamToHierarchicalElementCommand(Requirement upstreamReq, HierarchicalElement hierarchicalElt)
     {
-        //Create the requirement
+        // Create the requirement
         CurrentRequirement current = RequirementHelper.INSTANCE.create(hierarchicalElt, upstreamReq, getCommand());
         toSelect.add(current);
     }

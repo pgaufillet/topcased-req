@@ -104,7 +104,7 @@ public class MoveHierarchicalElementCommand extends CompoundCommand
             HierarchicalElement sourceElt = RequirementUtils.getHierarchicalElementFor(element);
             if (sourceElt != null)
             {
-                //adjustTarget(element);
+                // adjustTarget(element);
                 initializeTarget();
                 appendIfCanExecute(AddCommand.create(domain, targetElt, RequirementPackage.eINSTANCE.getHierarchicalElement_Children(), sourceElt));
                 toSelect.add(sourceElt);

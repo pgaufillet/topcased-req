@@ -26,12 +26,12 @@ import org.topcased.requirement.core.utils.RequirementUtils;
 
 public class RegexRequirementCountingAlgorithm implements IRequirementCountingAlgorithm
 {
-    /** The next index initialize for the first current requirement creation when the step is at zero*/
+    /** The next index initialize for the first current requirement creation when the step is at zero */
     private static long nextIndex = ComputeRequirementIdentifier.getRequirementStep();
-    
-    /** The Step saved every time it change for synchronizme with the preference page*/
+
+    /** The Step saved every time it change for synchronizme with the preference page */
     private static long step = ComputeRequirementIdentifier.getRequirementStep();
-    
+
     /**
      * @see org.topcased.requirement.core.extensions.IRequirementCountingAlgorithm#getCurrentIndex(org.topcased.requirement.Requirement)
      */
@@ -41,9 +41,9 @@ public class RegexRequirementCountingAlgorithm implements IRequirementCountingAl
         long max = getMax();
         if (currentStep != step)
         {
-            nextIndex = nextIndex - step + currentStep; 
+            nextIndex = nextIndex - step + currentStep;
             step = currentStep;
-        } 
+        }
         else if (max != 0)
         {
             nextIndex = max + ComputeRequirementIdentifier.getRequirementStep();
@@ -52,12 +52,13 @@ public class RegexRequirementCountingAlgorithm implements IRequirementCountingAl
     }
 
     /**
-     * @see org.topcased.requirement.core.extensions.IRequirementCountingAlgorithm#increaseIndexWhenCreateRequirement(org.topcased.requirement.Requirement, long)
+     * @see org.topcased.requirement.core.extensions.IRequirementCountingAlgorithm#increaseIndexWhenCreateRequirement(org.topcased.requirement.Requirement,
+     *      long)
      */
     public void increaseIndexWhenCreateRequirement(Requirement createdRequirement, long index)
     {
     }
-    
+
     /**
      * Gets the max. compute the max using the format of the requirement
      * 
@@ -84,7 +85,7 @@ public class RegexRequirementCountingAlgorithm implements IRequirementCountingAl
         result = max;
         return result;
     }
-    
+
     /**
      * @param current the current requirement
      * @return the number of the current
@@ -116,7 +117,7 @@ public class RegexRequirementCountingAlgorithm implements IRequirementCountingAl
      */
     public void setFirstIndex(Requirement firstCreatedRequirement)
     {
-        nextIndex = ComputeRequirementIdentifier.getRequirementStep();        
+        nextIndex = ComputeRequirementIdentifier.getRequirementStep();
     }
 
 }

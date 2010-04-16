@@ -36,6 +36,7 @@ import org.topcased.requirement.core.views.current.CurrentPage;
 public class CurrentRequirementPasteAction extends RequirementAbstractEMFAction
 {
     private EditingDomain editingDomain;
+
     /**
      * Constructor
      * 
@@ -76,31 +77,32 @@ public class CurrentRequirementPasteAction extends RequirementAbstractEMFAction
         CurrentPage currentPage = RequirementHelper.INSTANCE.getCurrentPage();
         Collection< ? > source = cmd.getAffectedObjects();
         CompoundCommand compound = new CompoundCommand("Renaming moving requirements");
-        
-        //Process the renaming of the newly pasted requirements 
+
+        // Process the renaming of the newly pasted requirements
         if (doPaste())
-        { 
+        {
             for (Object currSource : source)
             {
                 if (currSource instanceof CurrentRequirement)
                 {
                     // rename the current requirement
                     CurrentRequirement requirement = (CurrentRequirement) currSource;
-                    compound.appendIfCanExecute(RequirementHelper.INSTANCE.renameRequirement(requirement));                    
+                    compound.appendIfCanExecute(RequirementHelper.INSTANCE.renameRequirement(requirement));
                 }
             }
         }
-        
+
         if (!compound.isEmpty() && compound.canExecute())
         {
             // Execute the renaming commands
             editingDomain.getCommandStack().execute(compound);
         }
-        
+
         if (currentPage != null && compound.getAffectedObjects() != null)
         {
             currentPage.refreshViewer(true);
-            //currentPage.getViewer().setSelection(new StructuredSelection((List<?>) compound.getAffectedObjects()), true);
+            // currentPage.getViewer().setSelection(new StructuredSelection((List<?>) compound.getAffectedObjects()),
+            // true);
         }
     }
 
