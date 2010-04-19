@@ -287,7 +287,6 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
         Command sortCmd = cs.getCommand(ICommandConstants.SORT_ID);
         Command flatCmd = cs.getCommand(ICommandConstants.FLAT_ID);
         Command hierarchicalCmd = cs.getCommand(ICommandConstants.HIERARCHICAL_ID);
-        Command linkToUpstreamCmd = cs.getCommand(ICommandConstants.LINK_TO_UPSTREAM_ID);
 
         // Handle cases when the command is toggled but the associated action isn't performed
         // if (linkCmd.getState(RegistryToggleState.STATE_ID).getValue().equals(true))
@@ -317,14 +316,6 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
             if (((AbstractHandlerWithState) hierarchicalCmd.getHandler()) != null && page instanceof UpstreamPage)
             {
                 ((AbstractHandlerWithState) hierarchicalCmd.getHandler()).handleStateChange(hierarchicalCmd.getState(RegistryToggleState.STATE_ID), false);
-            }
-        }
-
-        if (linkToUpstreamCmd.getState(RegistryToggleState.STATE_ID).getValue().equals(true))
-        {
-            if (((AbstractHandlerWithState) linkToUpstreamCmd.getHandler()) != null)
-            {
-                ((AbstractHandlerWithState) linkToUpstreamCmd.getHandler()).handleStateChange(linkToUpstreamCmd.getState(RegistryToggleState.STATE_ID), false);
             }
         }
     }

@@ -10,11 +10,14 @@
  **********************************************************************************************************************/
 package org.topcased.requirement.core.views.current;
 
+import org.eclipse.core.commands.Command;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.handlers.RegistryToggleState;
 import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.part.IPageBookViewPage;
 import org.eclipse.ui.services.ISourceProviderService;
@@ -27,6 +30,7 @@ import org.topcased.requirement.core.documentation.current.CurrentDescPage;
 import org.topcased.requirement.core.extensions.DefaultAttachmentPolicy;
 import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
 import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
+import org.topcased.requirement.core.handlers.ICommandConstants;
 import org.topcased.requirement.core.properties.RequirementPropertySheetPage;
 import org.topcased.requirement.core.services.RequirementModelSourceProvider;
 import org.topcased.requirement.core.utils.RequirementHelper;
@@ -204,12 +208,44 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
     @Override
     public void dispose()
     {
-        UpstreamRequirementView upstreamView = (UpstreamRequirementView) UpstreamRequirementView.getInstance();
-        if (upstreamView != null)
-        {
-            this.removeSelectionChangedListener(upstreamView);
-        }
+        unhookListener();
+        
         super.dispose();
+    }
+
+    /**
+     * @see org.topcased.requirement.core.views.AbstractRequirementView#hookListener()
+     */
+    @Override
+    public void hookListener()
+    {
+        super.hookListener();
+
+        // Get the commands who have a registered state
+        ICommandService cs = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+        Command linkCmd = cs.getCommand(ICommandConstants.LINK_TO_UPSTREAM_ID);
+        
+        if (linkCmd.getState(RegistryToggleState.STATE_ID).getValue().equals(true))
+        {
+            if (((UpstreamRequirementView)UpstreamRequirementView.getInstance()) != null)
+            {
+                this.addSelectionChangedListener(((UpstreamRequirementView)UpstreamRequirementView.getInstance()));
+            }
+        }
+    }
+    
+    /**
+     * @see org.topcased.requirement.core.views.AbstractRequirementView#unhookListener()
+     */
+    @Override
+    public void unhookListener()
+    {
+        super.unhookListener();
+        
+        if (((UpstreamRequirementView)UpstreamRequirementView.getInstance()) != null)
+        {
+            this.removeSelectionChangedListener(((UpstreamRequirementView)UpstreamRequirementView.getInstance()));
+        }
     }
 
 }

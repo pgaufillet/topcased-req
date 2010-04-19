@@ -10,6 +10,7 @@
  **********************************************************************************************************************/
 package org.topcased.requirement.core.views.upstream;
 
+import org.eclipse.core.commands.Command;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.viewers.ISelection;
@@ -20,6 +21,8 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.handlers.RegistryToggleState;
 import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.part.IPageBookViewPage;
 import org.eclipse.ui.services.ISourceProviderService;
@@ -32,6 +35,7 @@ import org.topcased.requirement.core.documentation.upstream.UpstreamDescPage;
 import org.topcased.requirement.core.extensions.DefaultAttachmentPolicy;
 import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
 import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
+import org.topcased.requirement.core.handlers.ICommandConstants;
 import org.topcased.requirement.core.services.RequirementModelSourceProvider;
 import org.topcased.requirement.core.utils.RequirementCoverageComputer;
 import org.topcased.requirement.core.utils.RequirementHelper;
@@ -215,11 +219,43 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
     @Override
     public void dispose()
     {
-        CurrentRequirementView currentView = (CurrentRequirementView) CurrentRequirementView.getInstance();
-        if (currentView != null)
-        {
-            currentView.removeSelectionChangedListener(this);
-        }
+        unhookListener();
+        
         super.dispose();
+    }
+    
+    /**
+     * @see org.topcased.requirement.core.views.AbstractRequirementView#hookListener()
+     */
+    @Override
+    public void hookListener()
+    {
+        super.hookListener();
+
+        // Get the commands who have a registered state
+        ICommandService cs = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
+        Command linkCmd = cs.getCommand(ICommandConstants.LINK_TO_UPSTREAM_ID);
+        
+        if (linkCmd.getState(RegistryToggleState.STATE_ID).getValue().equals(true))
+        {
+            if (((CurrentRequirementView)CurrentRequirementView.getInstance()) != null)
+            {
+                ((CurrentRequirementView)CurrentRequirementView.getInstance()).addSelectionChangedListener(this);
+            }
+        }
+    }
+    
+    /**
+     * @see org.topcased.requirement.core.views.AbstractRequirementView#unhookListener()
+     */
+    @Override
+    public void unhookListener()
+    {
+        super.unhookListener();
+        
+        if (((CurrentRequirementView)CurrentRequirementView.getInstance()) != null)
+        {
+            ((CurrentRequirementView)CurrentRequirementView.getInstance()).removeSelectionChangedListener(this);
+        }
     }
 }

@@ -43,7 +43,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.RegistryToggleState;
 import org.eclipse.ui.part.IPage;
-import org.topcased.requirement.core.actions.RequirementAbstractEMFAction;
 import org.topcased.requirement.core.actions.UpstreamRequirementDeleteAction;
 import org.topcased.requirement.core.dnd.DragSourceUpstreamAdapter;
 import org.topcased.requirement.core.dnd.RequirementTransfer;
@@ -77,6 +76,8 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
     private IStructuredSelection currSelection;
 
     private UpstreamRequirementContentProvider ctPvd;
+    
+    static final String UPSTREAM_POPUP_ID = "org.topcased.requirement.core.views.upstream.popupMenu"; //$NON-NLS-1$
 
     /**
      * @see org.eclipse.ui.part.Page#createControl(org.eclipse.swt.widgets.Composite)
@@ -131,38 +132,47 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
     }
 
     /**
-     * Defines the popup menu
+     * Defines the default popup menu. It only contains undo & redo actions. 
+     * All others actions are defined via the extension point org.eclipse.ui.menus
      */
     protected void hookContextMenu()
     {
-        MenuManager createChildMenuManager = new MenuManager("#PopupMenu"); //$NON-NLS-1$
-        createChildMenuManager.setRemoveAllWhenShown(true);
-        createChildMenuManager.addMenuListener(new IMenuListener()
+        
+        //Create menu
+        MenuManager menuManager = new MenuManager();
+        menuManager.setRemoveAllWhenShown(true);
+        menuManager.addMenuListener(new IMenuListener()
         {
             public void menuAboutToShow(IMenuManager manager)
             {
-                if (toDisplay(currSelection, Document.class))
-                {
-                    RequirementAbstractEMFAction deleteAction = new UpstreamRequirementDeleteAction(currSelection, editingDomain);
-                    deleteAction.setEnabled(deleteAction.isEnabled());
-                    manager.add(deleteAction);
-                }
-
-                manager.add(new Separator("separator_2")); //$NON-NLS-1$
                 ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
-
-                RedoAction redoAction = new RedoAction(editingDomain);
-                redoAction.setImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_REDO));
-                manager.add(redoAction);
-
+                
+                //add a first separator to surround undo & redo actions
+                Separator first = new Separator("firstSeparator"); //$NON-NLS-1$
+                first.setVisible(true);
+                manager.add(first);  
+                
                 UndoAction undoAction = new UndoAction(editingDomain);
                 undoAction.setImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_UNDO));
                 manager.add(undoAction);
+                
+                RedoAction redoAction = new RedoAction(editingDomain);
+                redoAction.setImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_REDO));
+                manager.add(redoAction);
+                
+                //add a last separator to surround undo & redo actions
+                Separator last = new Separator("lastSeparator"); //$NON-NLS-1$
+                last.setVisible(true);
+                manager.add(last);
+
             }
         });
 
-        Menu menu = createChildMenuManager.createContextMenu(viewer.getControl());
-        viewer.getTree().setMenu(menu);
+        Menu menu = menuManager.createContextMenu(viewer.getControl());
+        viewer.getControl().setMenu(menu);
+        
+        // Register menu for extension.
+        getSite().registerContextMenu(UPSTREAM_POPUP_ID, menuManager, viewer);
     }
 
     /**

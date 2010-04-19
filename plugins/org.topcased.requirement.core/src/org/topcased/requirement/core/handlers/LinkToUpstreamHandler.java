@@ -17,7 +17,6 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.State;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.topcased.requirement.core.views.current.CurrentRequirementView;
-import org.topcased.requirement.core.views.upstream.UpstreamRequirementView;
 
 /**
  * Handler of the Link to upstream requirement
@@ -44,19 +43,18 @@ public class LinkToUpstreamHandler extends AbstractHandlerWithState
     public void handleStateChange(State state, Object oldValue)
     {
         CurrentRequirementView currentView = (CurrentRequirementView) CurrentRequirementView.getInstance();
-        UpstreamRequirementView upstreamView = (UpstreamRequirementView) UpstreamRequirementView.getInstance();
         if (state.getValue().equals(true))
         {
-            if (currentView != null && upstreamView != null)
+            if (currentView != null)
             {
-                currentView.addSelectionChangedListener(upstreamView);
+                currentView.hookListener();
             }
         }
         else
         {
-            if (currentView != null && upstreamView != null)
+            if (currentView != null)
             {
-                currentView.removeSelectionChangedListener(upstreamView);
+                currentView.unhookListener();
             }
         }
     }

@@ -195,6 +195,10 @@
             </with>
          </activeWhen>
       </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.UpstreamRequirementDeleteHandler"
+            commandId="org.topcased.requirement.core.upstreamRequirementDelete">
+      </handler>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -464,6 +468,26 @@
                   </visibleWhen>
                </command>
             </menuContribution>
+            <menuContribution
+                  locationURI="popup:org.topcased.requirement.core.views.upstream.popupMenu?before=firstSeparator">
+               <command
+                     commandId="org.topcased.requirement.core.upstreamRequirementDelete"
+                     label="&amp;Delete"
+                     style="push">
+                  <visibleWhen
+                        checkEnabled="true">
+                     <with
+                           variable="activeMenuSelection">
+                        <iterate
+                              ifEmpty="false">
+                           <instanceof
+                                 value="ttm.Document">
+                           </instanceof>
+                        </iterate>
+                     </with>
+                  </visibleWhen>
+               </command>
+            </menuContribution>
      </extension>
    <extension
          point="org.eclipse.ui.services">
@@ -516,6 +540,11 @@
       <image
             commandId="org.topcased.requirement.core.sort"
             icon="icons/alphabetic_sorter.gif">
+      </image>
+      <image
+            commandId="org.topcased.requirement.core.upstreamRequirementDelete"
+            disabledIcon="IMG_TOOL_DELETE_DISABLED"
+            icon="IMG_TOOL_DELETE">
       </image>
    </extension>
    <extension
@@ -674,6 +703,11 @@
                class="org.eclipse.ui.handlers.RegistryToggleState"
                id="org.eclipse.ui.commands.toggleState">
          </state>
+      </command>
+      <command
+            description="Delete Upstream Requirement"
+            id="org.topcased.requirement.core.upstreamRequirementDelete"
+            name="Delete Upstream Requirement">
       </command>
    </extension>
    <extension
