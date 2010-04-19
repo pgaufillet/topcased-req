@@ -52,7 +52,7 @@ public abstract class AbstractRequirementPage extends Page implements IViewerPro
 
     private TransferDropTargetListener listener = null;
 
-    protected static ISelectionChangedListener upstreamListener = null;    
+    protected static ISelectionChangedListener upstreamListener = null;
 
     /**
      * @see org.eclipse.ui.part.Page#dispose()
@@ -101,7 +101,7 @@ public abstract class AbstractRequirementPage extends Page implements IViewerPro
         {
             if (!getControl().isDisposed())
             {
-                refreshViewer(true);
+                refreshViewer(false);
             }
         }
     };
@@ -143,7 +143,9 @@ public abstract class AbstractRequirementPage extends Page implements IViewerPro
     }
 
     /**
-     * Refreshes the viewer
+     * Refreshes this viewer with information freshly obtained from this viewer's model. If <code>updateLabels</code> is
+     * <code>true</code> then labels for otherwise unaffected elements are updated as well. Otherwise, it assumes labels
+     * for existing elements are unchanged, and labels are only obtained as needed (for example, for new elements).
      * 
      * @param updateLabel : true if the label is update
      */
