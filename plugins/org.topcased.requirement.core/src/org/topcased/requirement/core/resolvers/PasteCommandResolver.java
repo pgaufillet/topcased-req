@@ -24,7 +24,6 @@ import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.gef.commands.Command;
 import org.topcased.modeler.commands.CommandStack;
 import org.topcased.modeler.commands.EMFtoGEFCommandWrapper;
-import org.topcased.requirement.core.actions.HierarchicalElementTransfer;
 import org.topcased.requirement.core.commands.PasteHierarchicalElementCommand;
 
 /**

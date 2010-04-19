@@ -25,7 +25,6 @@ import org.eclipse.gef.commands.CompoundCommand;
 import org.topcased.modeler.commands.CommandStack;
 import org.topcased.modeler.commands.EMFtoGEFCommandWrapper;
 import org.topcased.modeler.editor.TopcasedAdapterFactoryEditingDomain;
-import org.topcased.requirement.core.actions.HierarchicalElementTransfer;
 import org.topcased.requirement.core.commands.RemoveHierarchicalElementCommand;
 
 /**

@@ -47,7 +47,7 @@ public abstract class RequirementAbstractEMFCommandHandler extends AbstractHandl
 {
     private CompoundCommand compoundCmd;
         
-    private EditingDomain editingDomain;
+    protected EditingDomain editingDomain;
     
     protected ExecutionEvent evt;
         

@@ -8,7 +8,7 @@
  * Contributors: Sebastien GABEL (CS) - initial API and implementation
  * 
  **********************************************************************************************************************/
-package org.topcased.requirement.core.actions;
+package org.topcased.requirement.core.resolvers;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -22,7 +22,6 @@ import org.eclipse.gef.commands.Command;
 import org.topcased.modeler.commands.CommandStack;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.RequirementPackage;
-import org.topcased.requirement.core.actions.HierarchicalElementTransfer;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**

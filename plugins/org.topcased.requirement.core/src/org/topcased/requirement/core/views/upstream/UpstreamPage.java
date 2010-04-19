@@ -16,7 +16,6 @@ import java.util.Iterator;
 import org.eclipse.core.commands.Command;
 import org.eclipse.emf.edit.ui.action.RedoAction;
 import org.eclipse.emf.edit.ui.action.UndoAction;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
@@ -43,7 +42,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.RegistryToggleState;
 import org.eclipse.ui.part.IPage;
-import org.topcased.requirement.core.actions.UpstreamRequirementDeleteAction;
 import org.topcased.requirement.core.dnd.DragSourceUpstreamAdapter;
 import org.topcased.requirement.core.dnd.RequirementTransfer;
 import org.topcased.requirement.core.filters.CurrentViewSingletonFilter;
@@ -176,6 +174,8 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
     }
 
     /**
+     * FIXME : Handle key with an extension point
+     * 
      * @see org.topcased.requirement.core.views.AbstractRequirementPage#executeCodeForKey(org.eclipse.jface.viewers.ISelection)
      */
     @Override
@@ -197,11 +197,11 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
         }
         if (process)
         {
-            IAction action = new UpstreamRequirementDeleteAction(currSelection, editingDomain);
-            if (action.isEnabled())
-            {
-                action.run();
-            }
+//            IAction action = new UpstreamRequirementDeleteAction(currSelection, editingDomain);
+//            if (action.isEnabled())
+//            {
+//                action.run();
+//            }
         }
     }
 

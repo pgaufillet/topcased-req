@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright (c) 2008,2009 Communication & Systems.
+ * Copyright (c) 2008,2010 Communication & Systems.
  * 
  * All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse
  * Public License v1.0 which accompanies this distribution, and is available at
@@ -61,14 +61,6 @@ import org.topcased.requirement.ObjectAttribute;
 import org.topcased.requirement.Requirement;
 import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.core.actions.AddAttributeAction;
-import org.topcased.requirement.core.actions.CreateAnonymousRequirementAction;
-import org.topcased.requirement.core.actions.CreateCurrentRequirementAction;
-import org.topcased.requirement.core.actions.CurrentRequirementCopyAction;
-import org.topcased.requirement.core.actions.CurrentRequirementCutAction;
-import org.topcased.requirement.core.actions.CurrentRequirementDeleteAction;
-import org.topcased.requirement.core.actions.CurrentRequirementPasteAction;
-import org.topcased.requirement.core.actions.LoadResourceAction;
-import org.topcased.requirement.core.actions.RequirementAbstractEMFAction;
 import org.topcased.requirement.core.actions.SetAsValidAction;
 import org.topcased.requirement.core.actions.SetMarkerAction;
 import org.topcased.requirement.core.actions.SetUnsetPartialAction;
@@ -109,7 +101,9 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
 
     private MenuManager submenuManager;
 
-    private MenuManager createChildMenuManager;
+    private MenuManager menuManager;
+    
+    static final String CURRENT_POPUP_ID = "org.topcased.requirement.core.views.current.popupMenu"; //$NON-NLS-1$
     
     /**
      * FIXME : find a better way to adapt the focus when an element is deleted
@@ -248,23 +242,41 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
         {
             if (model != null)
             {
-                createSubMenuMarker(manager);
+                //add a first separator to surround undo & redo actions
+                Separator first = new Separator("firstSeparator"); //$NON-NLS-1$
+                first.setVisible(true);
+                manager.add(first);
+                
+                UndoAction undoAction = new UndoAction(editingDomain);
+                undoAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_UNDO));
+                manager.add(undoAction);
 
-                final RequirementAbstractEMFAction copyAction = new CurrentRequirementCopyAction(selection, editingDomain);
-                copyAction.setEnabled(copyAction.isEnabled());
-                manager.add(copyAction);
+                RedoAction redoAction = new RedoAction(editingDomain);
+                redoAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_REDO));
+                manager.add(redoAction);
+                
+                //add a last separator to surround undo & redo actions
+                Separator last = new Separator("lastSeparator"); //$NON-NLS-1$
+                last.setVisible(true);
+                manager.add(last);
+                
+                  createSubMenuMarker(manager);
 
-                final RequirementAbstractEMFAction cutAction = new CurrentRequirementCutAction(selection, editingDomain);
-                cutAction.setEnabled(cutAction.isEnabled());
-                manager.add(cutAction);
-
-                final RequirementAbstractEMFAction deleteAction = new CurrentRequirementDeleteAction(selection, editingDomain);
-                deleteAction.setEnabled(deleteAction.isEnabled());
-                manager.add(deleteAction);
-
-                final RequirementAbstractEMFAction pasteAction = new CurrentRequirementPasteAction(selection, editingDomain);
-                pasteAction.setEnabled(pasteAction.isEnabled());
-                manager.add(pasteAction);
+//                final RequirementAbstractEMFAction copyAction = new CurrentRequirementCopyAction(selection, editingDomain);
+//                copyAction.setEnabled(copyAction.isEnabled());
+//                manager.add(copyAction);
+//
+//                final RequirementAbstractEMFAction cutAction = new CurrentRequirementCutAction(selection, editingDomain);
+//                cutAction.setEnabled(cutAction.isEnabled());
+//                manager.add(cutAction);
+//
+//                final RequirementAbstractEMFAction deleteAction = new CurrentRequirementDeleteAction(selection, editingDomain);
+//                deleteAction.setEnabled(deleteAction.isEnabled());
+//                manager.add(deleteAction);
+//
+//                final RequirementAbstractEMFAction pasteAction = new CurrentRequirementPasteAction(selection, editingDomain);
+//                pasteAction.setEnabled(pasteAction.isEnabled());
+//                manager.add(pasteAction);
 
                 manager.add(new Separator("separator_0")); //$NON-NLS-1$
 
@@ -281,9 +293,9 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
 
                 if (toDisplay(selection, HierarchicalElement.class) || toDisplay(selection, CurrentRequirement.class))
                 {
-                    manager.add(new CreateCurrentRequirementAction(selection));
-                    manager.add(new CreateAnonymousRequirementAction(selection));
-                    manager.appendToGroup("SET_MARKER", submenuManager); //$NON-NLS-1$
+//                    manager.add(new CreateCurrentRequirementAction(selection));
+//                    manager.add(new CreateAnonymousRequirementAction(selection));
+//                    manager.appendToGroup("SET_MARKER", submenuManager); //$NON-NLS-1$
                     manager.add(new Separator("separator_1")); //$NON-NLS-1$
                     manager.add(new UpdateAttributeAction(selection, CurrentPage.this));
                     manager.add(new UnallocateAction(selection, CurrentPage.this));
@@ -306,19 +318,11 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
                     manager.add(new UpdateAttributeConfigurationAction(selection, CurrentPage.this));
                 }
 
-                manager.add(new Separator("separator_2")); //$NON-NLS-1$
-                manager.add(new LoadResourceAction(editingDomain));
-                manager.add(new Separator("separator_2")); //$NON-NLS-1$
+//                manager.add(new Separator("separator_2")); //$NON-NLS-1$
+//                manager.add(new LoadResourceAction(editingDomain));
+//                manager.add(new Separator("separator_2")); //$NON-NLS-1$
 
-                UndoAction undoAction = new UndoAction(editingDomain);
-                undoAction.setActionDefinitionId("org.topcased.requirement.core.undo"); //$NON-NLS-1$
-                undoAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_UNDO));
-                manager.add(undoAction);
 
-                RedoAction redoAction = new RedoAction(editingDomain);
-                redoAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_REDO));
-                redoAction.setActionDefinitionId("org.topcased.requirement.core.redo"); //$NON-NLS-1$
-                manager.add(redoAction);
             }
         }
     }
@@ -447,12 +451,16 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
      */
     private void hookContextMenu()
     {
-        createChildMenuManager = new MenuManager("#PopupMenu"); //$NON-NLS-1$
-        createChildMenuManager.setRemoveAllWhenShown(true);
-        createChildMenuManager.addMenuListener(new CurrentMenuManager());
+        //Create menu
+        menuManager = new MenuManager();
+        menuManager.setRemoveAllWhenShown(true);
+        menuManager.addMenuListener(new CurrentMenuManager());
 
-        Menu menu = createChildMenuManager.createContextMenu(viewer.getControl());
+        Menu menu = menuManager.createContextMenu(viewer.getControl());
         viewer.getTree().setMenu(menu);
+        
+        // Register menu for extension.
+        getSite().registerContextMenu(CURRENT_POPUP_ID, menuManager, viewer);
     }
 
     /**
@@ -528,6 +536,8 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
     }
 
     /**
+     * FIXME : handle key with an extension point
+     * 
      * @see org.topcased.requirement.core.views.AbstractRequirementPage#executeCodeForKey(org.eclipse.jface.viewers.ISelection)
      */
     @Override
@@ -549,11 +559,11 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
         }
         if (process)
         {
-            IAction action = new CurrentRequirementDeleteAction((IStructuredSelection) selection, editingDomain);
-            if (action.isEnabled())
-            {
-                action.run();
-            }
+//            IAction action = new CurrentRequirementDeleteAction((IStructuredSelection) selection, editingDomain);
+//            if (action.isEnabled())
+//            {
+//                action.run();
+//            }
         }
     }
 

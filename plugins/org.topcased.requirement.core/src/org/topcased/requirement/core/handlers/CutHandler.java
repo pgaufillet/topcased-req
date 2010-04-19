@@ -16,15 +16,15 @@ import java.util.List;
 import org.eclipse.core.expressions.EvaluationContext;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.edit.command.CommandParameter;
-import org.eclipse.emf.edit.command.DeleteCommand;
+import org.eclipse.emf.edit.command.CutToClipboardCommand;
 
 /**
- * This class defines the EMF <b>delete</b> command for the Upstream Requirements.
+ * This class defines the EMF <b>cut</b> command
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  *
  */
-public class UpstreamRequirementDeleteHandler extends RequirementAbstractEMFCommandHandler
+public class CutHandler extends RequirementAbstractEMFCommandHandler
 {
 
     /**
@@ -33,7 +33,7 @@ public class UpstreamRequirementDeleteHandler extends RequirementAbstractEMFComm
     @Override
     public Class< ? extends Command> getCommand()
     {
-        return DeleteCommand.class;
+        return CutToClipboardCommand.class;
     }
 
     /**

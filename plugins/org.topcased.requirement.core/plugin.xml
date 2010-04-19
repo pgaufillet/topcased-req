@@ -196,8 +196,88 @@
          </activeWhen>
       </handler>
       <handler
-            class="org.topcased.requirement.core.handlers.UpstreamRequirementDeleteHandler"
-            commandId="org.topcased.requirement.core.upstreamRequirementDelete">
+            class="org.topcased.requirement.core.handlers.DeleteHandler"
+            commandId="org.topcased.requirement.core.delete">
+         <activeWhen>
+            <with
+                  variable="activeMenuSelection">
+               <iterate
+                     ifEmpty="false">
+                  <or>
+                     <instanceof
+                           value="org.topcased.requirement.Requirement">
+                     </instanceof>
+                     <instanceof
+                           value="org.topcased.requirement.HierarchicalElement">
+                     </instanceof>
+                     <instanceof
+                           value="ttm.Document">
+                     </instanceof>
+                     <and>
+                        <instanceof
+                              value="org.topcased.requirement.ObjectAttribute">
+                        </instanceof>
+                        <test
+                              property="org.topcased.requirement.core.notLastAttribute">
+                        </test>
+                     </and>
+                  </or>
+               </iterate>
+            </with></activeWhen>
+      </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.CopyHandler"
+            commandId="org.topcased.requirement.core.copy">
+         <activeWhen>
+            <with
+                  variable="activeMenuSelection">
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="org.topcased.requirement.Requirement">
+                  </instanceof>
+               </iterate>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.CutHandler"
+            commandId="org.topcased.requirement.core.cut">
+         <activeWhen>
+            <with
+                  variable="activeMenuSelection">
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="org.topcased.requirement.Requirement">
+                  </instanceof>
+               </iterate>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.PasteHandler"
+            commandId="org.topcased.requirement.core.paste">
+         <activeWhen>
+            <with
+                  variable="activeMenuSelection">
+               <iterate
+                     ifEmpty="false">
+                  <and>
+                     <instanceof
+                           value="org.topcased.requirement.HierarchicalElement">
+                     </instanceof>
+                     <test
+                           property="org.topcased.requirement.core.canPaste">
+                     </test>
+                  </and>
+               </iterate>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.LoadResourceHandler"
+            commandId="org.topcased.requirement.core.loadResource">
       </handler>
    </extension>
    <extension
@@ -206,8 +286,7 @@
             locationURI="popup:org.eclipse.ui.popup.any?after=additions">
          <command
                commandId="org.topcased.requirement.core.createCurrentRequirement"
-               icon="icons/current.gif"
-               label="Create Current Requirement"
+               label="&amp;Create Current Requirement"
                style="push">
             <visibleWhen
                   checkEnabled="true">
@@ -215,17 +294,21 @@
                      variable="activeMenuSelection">
                   <iterate
                         ifEmpty="false">
-                     <instanceof
-                           value="org.topcased.modeler.edit.IModelElementEditPart">
-                     </instanceof>
+                     <and>
+                        <instanceof
+                              value="org.topcased.modeler.edit.IModelElementEditPart">
+                        </instanceof>
+                        <test
+                              property="org.topcased.requirement.core.canCreateRequirement">
+                        </test>
+                     </and>
                   </iterate>
                </with>
             </visibleWhen>
          </command>
          <command
                commandId="org.topcased.requirement.core.createAnonymousRequirement"
-               icon="icons/anonymous.gif"
-               label="Create Free Text"
+               label="&amp;Create Free Text"
                style="push">
             <visibleWhen
                   checkEnabled="true">
@@ -233,9 +316,14 @@
                      variable="activeMenuSelection">
                   <iterate
                         ifEmpty="false">
-                     <instanceof
-                           value="org.topcased.modeler.edit.IModelElementEditPart">
-                     </instanceof>
+                     <and>
+                        <instanceof
+                              value="org.topcased.modeler.edit.IModelElementEditPart">
+                        </instanceof>
+                        <test
+                              property="org.topcased.requirement.core.canCreateRequirement">
+                        </test>
+                     </and>
                   </iterate>
                </with>
             </visibleWhen>
@@ -469,9 +557,9 @@
                </command>
             </menuContribution>
             <menuContribution
-                  locationURI="popup:org.topcased.requirement.core.views.upstream.popupMenu?before=firstSeparator">
+                  locationURI="popup:org.topcased.requirement.core.views.upstream.popupMenu?after=lastSeparator">
                <command
-                     commandId="org.topcased.requirement.core.upstreamRequirementDelete"
+                     commandId="org.topcased.requirement.core.delete"
                      label="&amp;Delete"
                      style="push">
                   <visibleWhen
@@ -486,6 +574,90 @@
                         </iterate>
                      </with>
                   </visibleWhen>
+               </command>
+               <separator
+                     name="org.topcased.requirement.core.separator1"
+                     visible="true">
+               </separator>
+            </menuContribution>
+            <menuContribution
+                  locationURI="popup:org.topcased.requirement.core.views.current.popupMenu?after=lastSeparator">
+               <command
+                     commandId="org.topcased.requirement.core.copy"
+                     label="&amp;Copy"
+                     style="push">
+               </command>
+               <command
+                     commandId="org.topcased.requirement.core.cut"
+                     label="&amp;Cut"
+                     style="push">
+               </command>
+               <command
+                     commandId="org.topcased.requirement.core.delete"
+                     label="&amp;Delete"
+                     style="push">
+               </command>
+               <command
+                     commandId="org.topcased.requirement.core.paste"
+                     label="&amp;Paste"
+                     style="push">
+               </command>
+               <separator
+                     name="separator1"
+                     visible="true">
+               </separator>
+               <command
+                     commandId="org.topcased.requirement.core.createCurrentRequirement"
+                     label="&amp;Create Current Requirement"
+                     style="push">
+                  <visibleWhen
+                        checkEnabled="true">
+                     <with
+                           variable="activeMenuSelection">
+                        <iterate
+                              ifEmpty="false">
+                           <or>
+                              <instanceof
+                                    value="org.topcased.requirement.Requirement">
+                              </instanceof>
+                              <instanceof
+                                    value="org.topcased.requirement.HierarchicalElement">
+                              </instanceof>
+                           </or>
+                        </iterate>
+                     </with>
+                  </visibleWhen>
+               </command>
+               <command
+                     commandId="org.topcased.requirement.core.createAnonymousRequirement"
+                     label="&amp;Create Free Text"
+                     style="push">
+                  <visibleWhen
+                        checkEnabled="true">
+                     <with
+                           variable="activeMenuSelection">
+                        <iterate
+                              ifEmpty="false">
+                           <or>
+                              <instanceof
+                                    value="org.topcased.requirement.Requirement">
+                              </instanceof>
+                              <instanceof
+                                    value="org.topcased.requirement.HierarchicalElement">
+                              </instanceof>
+                           </or>
+                        </iterate>
+                     </with>
+                  </visibleWhen>
+               </command>
+               <separator
+                     name="separator2"
+                     visible="true">
+               </separator>
+               <command
+                     commandId="org.topcased.requirement.core.loadResource"
+                     label="&amp;Load Additional Resource"
+                     style="push">
                </command>
             </menuContribution>
      </extension>
@@ -542,9 +714,31 @@
             icon="icons/alphabetic_sorter.gif">
       </image>
       <image
-            commandId="org.topcased.requirement.core.upstreamRequirementDelete"
+            commandId="org.topcased.requirement.core.delete"
             disabledIcon="IMG_TOOL_DELETE_DISABLED"
             icon="IMG_TOOL_DELETE">
+      </image>
+      <image
+            commandId="org.topcased.requirement.core.copy"
+            disabledIcon="IMG_TOOL_COPY_DISABLED"
+            icon="IMG_TOOL_COPY">
+      </image>
+      <image
+            commandId="org.topcased.requirement.core.cut"
+            disabledIcon="IMG_TOOL_CUT_DISABLED"
+            icon="IMG_TOOL_CUT">
+      </image>
+      <image
+            commandId="org.topcased.requirement.core.paste"
+            icon="IMG_TOOL_PASTE">
+      </image>
+      <image
+            commandId="org.topcased.requirement.core.createCurrentRequirement"
+            icon="icons/current.gif">
+      </image>
+      <image
+            commandId="org.topcased.requirement.core.createAnonymousRequirement"
+            icon="icons/anonymous.gif">
       </image>
    </extension>
    <extension
@@ -587,33 +781,27 @@
          point="org.eclipse.ui.commands">
       <command
             categoryId="org.eclipse.ui.category.edit"
-            description="Cut a model object with its children"
-            id="org.topcased.requirement.core.cutModelObject"
-            name="Cut">
-      </command>
-      <command
-            categoryId="org.eclipse.ui.category.edit"
-            description="Copy a model object with its children"
-            id="org.topcased.requirement.core.copyModelObject"
+            description="Copy the selection with its children"
+            id="org.topcased.requirement.core.copy"
             name="Copy">
       </command>
       <command
             categoryId="org.eclipse.ui.category.edit"
-            description="Paste a model object with its children"
-            id="org.topcased.requirement.core.pasteModelObject"
+            description="Cut the selection with its children"
+            id="org.topcased.requirement.core.cut"
+            name="Cut">
+      </command>
+      <command
+            categoryId="org.eclipse.ui.category.edit"
+            description="Delete the selection with its children"
+            id="org.topcased.requirement.core.delete"
+            name="Delete">
+      </command>
+      <command
+            categoryId="org.eclipse.ui.category.edit"
+            description="Paste the selection with its children"
+            id="org.topcased.requirement.core.paste"
             name="Paste">
-      </command>
-      <command
-            categoryId="org.eclipse.ui.category.edit"
-            description="Undo an operation executed from the stack"
-            id="org.topcased.requirement.core.undo"
-            name="Undo">
-      </command>
-      <command
-            categoryId="org.eclipse.ui.category.edit"
-            description="Redo an operation executed from the stack"
-            id="org.topcased.requirement.core.redo"
-            name="Redo">
       </command>
             <command
             description="Create an anonymous requirement (free text)"
@@ -705,9 +893,9 @@
          </state>
       </command>
       <command
-            description="Delete Upstream Requirement"
-            id="org.topcased.requirement.core.upstreamRequirementDelete"
-            name="Delete Upstream Requirement">
+            description="Load a resource into an editing domain&apos;s resource set"
+            id="org.topcased.requirement.core.loadResource"
+            name="Load Resource">
       </command>
    </extension>
    <extension
@@ -1026,5 +1214,29 @@
             class="org.topcased.requirement.core.extensions.DefaultRequirementIdentifierVariables"
             id="Default Variables">
       </variables>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="org.topcased.requirement.core.testers.NotLastAttributePropertyTester"
+            id="org.topcased.requirement.core.testers.NotLastAttributePropertyTester"
+            namespace="org.topcased.requirement.core"
+            properties="notLastAttribute"
+            type="org.topcased.requirement.ObjectAttribute">
+      </propertyTester>
+      <propertyTester
+            class="org.topcased.requirement.core.testers.CanPastePropertyTester"
+            id="org.topcased.requirement.core.testers.CanPastePropertyTester"
+            namespace="org.topcased.requirement.core"
+            properties="canPaste"
+            type="org.topcased.requirement.HierarchicalElement">
+      </propertyTester>
+      <propertyTester
+            class="org.topcased.requirement.core.testers.CanCreateRequirementPropertyTester"
+            id="org.topcased.requirement.core.testers.CanCreateRequirementPropertyTester"
+            namespace="org.topcased.requirement.core"
+            properties="canCreateRequirement"
+            type="org.topcased.modeler.edit.IModelElementEditPart">
+      </propertyTester>
    </extension>
 </plugin>
