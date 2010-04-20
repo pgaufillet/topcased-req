@@ -48,7 +48,7 @@ public class HandleDropOnFlow implements ISpecificDropAction
 
             if (dialog.open() == Dialog.OK)
             {
-                CreateRequirementCommand dropCmd = new CreateCurrentReqCommand(Messages.getString("CreateCurrentRequirementAction.0"));
+                CreateRequirementCommand dropCmd = new CreateCurrentReqCommand(Messages.getString("HandleDropOnFlow.0"));
                 dropCmd.setRequirements(source);
 
                 int result = dialog.getReturnCode();

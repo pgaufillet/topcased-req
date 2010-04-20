@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.Requirement;
 import org.topcased.requirement.TextAttribute;
+import org.topcased.requirement.core.internal.Messages;
 
 /**
  * An EMF {@link AbstractCommand} use to update value of : 
@@ -46,7 +47,7 @@ public class ChangeRequirementElementCommand extends AbstractCommand
      */
     public ChangeRequirementElementCommand(EObject element, String documentation)
     {
-        super("Change documentation of EModelElement"); //$NON-NLS-1$
+        super(Messages.getString("ChangeRequirementElementCommand.0"));//$NON-NLS-1$
 
         this.element = element;
         this.newDocumentation = documentation;

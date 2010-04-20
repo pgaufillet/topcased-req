@@ -31,6 +31,7 @@ import org.topcased.modeler.editor.Modeler;
 import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.Attribute;
 import org.topcased.requirement.CurrentRequirement;
+import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.services.RequirementModelSourceProvider;
 import org.topcased.requirement.core.utils.RequirementHelper;
@@ -58,7 +59,7 @@ public class SetAsValidHandler extends AbstractHandler
         {
             //Get the current selection
             List<?> elements = ((List<?>)((EvaluationContext)event.getApplicationContext()).getDefaultVariable());
-            CompoundCommand compoundCmd = new CompoundCommand("SetAsValidHandler.0"); //$NON-NLS-1$
+            CompoundCommand compoundCmd = new CompoundCommand(Messages.getString("SetAsValidHandler.0")); //$NON-NLS-1$
             for (Object element : elements)
             {
                 try
@@ -81,7 +82,7 @@ public class SetAsValidHandler extends AbstractHandler
                 }
                 catch (CoreException e)
                 {
-                    RequirementCorePlugin.log("SetAsValidHandler.1", IStatus.ERROR, e); //$NON-NLS-1$
+                    RequirementCorePlugin.log(Messages.getString("SetAsValidHandler.1"), IStatus.ERROR, e); //$NON-NLS-1$
                 }
             }
             if (!compoundCmd.isEmpty() && compoundCmd.canExecute())

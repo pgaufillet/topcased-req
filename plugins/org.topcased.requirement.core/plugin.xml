@@ -852,6 +852,10 @@
                      label="&amp;Load additional resource"
                      style="push">
                </command>
+               <separator
+                     name="SEPARATOR4"
+                     visible="true">
+               </separator>
             </menuContribution>
      </extension>
    <extension

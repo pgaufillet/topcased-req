@@ -124,7 +124,7 @@ public class RequirementDropListener extends AbstractTransferDropTargetListener
                     // default requirement creation
                     else if (eobject != null)
                     {
-                        dropCmd = new CreateCurrentReqCommand(Messages.getString("CreateCurrentRequirementAction.0"));
+                        dropCmd = new CreateCurrentReqCommand(Messages.getString("CreateCurrentRequirementHandler.0")); //$NON-NLS-1$
                         ((CreateRequirementCommand) dropCmd).setRequirements(source);
                         ((CreateRequirementCommand) dropCmd).setTarget(eobject);
                     }
