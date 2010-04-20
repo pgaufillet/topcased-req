@@ -31,5 +31,7 @@ public interface ICommandConstants
     static final String LINK_TO_UPSTREAM_ID = "org.topcased.requirement.core.linkToUpstream"; 
     
     static final String FILTER_CURRENT_REQ_ID ="org.topcased.requirement.core.filterCurrentRequirements";
+    
+    static final String SET_MARKER_TYPE_PARAM = "org.topcased.requirement.core.setMarkerCommandParameter";
 
 }

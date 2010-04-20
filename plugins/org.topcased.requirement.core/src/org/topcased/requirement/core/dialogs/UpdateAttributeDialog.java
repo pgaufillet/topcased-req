@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2008 TOPCASED consortium.
+ * Copyright (c) 2008,2010 TOPCASED consortium.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -8,6 +8,7 @@
  *
  * Contributors:
  *  	Christophe Mertz (CS) <christophe.mertz@c-s.fr>
+ *      Maxime AUDRAIN (CS) - API changes
  *    
  ******************************************************************************/
 
@@ -21,7 +22,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -57,11 +57,12 @@ import org.topcased.requirement.core.utils.RequirementUtils;
  * A dialog for the attribute modification
  * 
  * @author <a href="mailto:christophe.mertz@c-s.fr">Christophe Mertz</a>
+ * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  * 
  */
 public class UpdateAttributeDialog extends TitleAreaDialog
 {
-    private IStructuredSelection selection;
+    private List<?> selection;
 
     private Text textValue;
 
@@ -83,7 +84,7 @@ public class UpdateAttributeDialog extends TitleAreaDialog
      * @param selection The current selection
      * @param parentShell The parent shell
      */
-    public UpdateAttributeDialog(IStructuredSelection selection, Shell parentShell)
+    public UpdateAttributeDialog(List<?> selection, Shell parentShell)
     {
         super(parentShell);
         this.selection = selection;
@@ -140,7 +141,7 @@ public class UpdateAttributeDialog extends TitleAreaDialog
         comboAttribute.setText(Messages.getString("UpdateAttributeDialog.3")); //$NON-NLS-1$
         comboAttribute.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
 
-        Object firstElement = selection.getFirstElement();
+        Object firstElement = selection.get(0);
         if (firstElement instanceof EObject)
         {
             AttributeConfiguration configuration = RequirementUtils.getAttributeConfiguration(((EObject) firstElement).eResource());
@@ -222,7 +223,7 @@ public class UpdateAttributeDialog extends TitleAreaDialog
         @SuppressWarnings("unchecked")
         public void widgetSelected(SelectionEvent e)
         {
-            EObject currObject = (EObject) selection.getFirstElement();
+            EObject currObject = (EObject) selection.get(0);
             listEObjects = new ArrayList<EObject>();
 
             if (currObject instanceof Requirement)
@@ -296,7 +297,14 @@ public class UpdateAttributeDialog extends TitleAreaDialog
             EObject[] tabEObjects = listEObjects.toArray(new EObject[listEObjects.size()]);
             try
             {
-                attributeValueEObject = tabEObjects[comboValue.getSelectionIndex()];
+                if (comboValue.getSelectionIndex() == -1)
+                {
+                    attributeValueEObject = null;
+                }
+                else
+                {
+                    attributeValueEObject = tabEObjects[comboValue.getSelectionIndex()];
+                }
             }
             catch (ArrayIndexOutOfBoundsException e)
             {

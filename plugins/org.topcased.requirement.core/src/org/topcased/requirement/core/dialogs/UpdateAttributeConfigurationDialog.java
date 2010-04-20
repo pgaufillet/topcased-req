@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright (c) 2008 TOPCASED consortium.
+ * Copyright (c) 2008,2010 TOPCASED consortium.
  * 
  * All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse
  * Public License v1.0 which accompanies this distribution, and is available at
@@ -9,6 +9,8 @@
  * 
  **********************************************************************************************************************/
 package org.topcased.requirement.core.dialogs;
+
+import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
@@ -48,6 +50,7 @@ import org.topcased.requirement.core.utils.RequirementUtils;
  * On the right side, the local project attribute configuration is shown.
  * 
  * @author <a href="mailto:sebastien.gabel@c-s.fr">Sebastien GABEL</a>
+ * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  * 
  */
 public class UpdateAttributeConfigurationDialog extends TitleAreaDialog
@@ -67,14 +70,14 @@ public class UpdateAttributeConfigurationDialog extends TitleAreaDialog
      * 
      * @param parentShell The parent shell
      */
-    public UpdateAttributeConfigurationDialog(IStructuredSelection theSelection, Shell parentShell)
+    public UpdateAttributeConfigurationDialog(List<?> theSelection, Shell parentShell)
     {
         super(parentShell);
         setShellStyle(getShellStyle() | SWT.RESIZE);
         setTitleImage(SharedImageHelper.getTopcasedDialogImage());
-        if (theSelection.getFirstElement() instanceof AttributeConfiguration)
+        if (theSelection.get(0) instanceof AttributeConfiguration)
         {
-            localConf = (AttributeConfiguration) theSelection.getFirstElement();
+            localConf = (AttributeConfiguration) theSelection.get(0);
             workspaceConf = CurrentPreferenceHelper.getConfigurationInWorkspace();
             manager = new UpdateAttributeManager(localConf);
         }

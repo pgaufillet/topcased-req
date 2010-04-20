@@ -66,12 +66,12 @@ public class AbstractMoveHandler extends AbstractHandler
         {
             if (currObject instanceof Requirement)
             {
-                cmd.setLabel(Messages.getString("MoveAction.2"));//$NON-NLS-1$
+                cmd.setLabel(Messages.getString("AbstractMoveHandler.2"));//$NON-NLS-1$
                 cmd.appendIfCanExecute(RequirementHelper.INSTANCE.move((Requirement) currObject, up));
             }
             else if (currObject instanceof HierarchicalElement)
             {
-                cmd.setLabel(Messages.getString("MoveAction.3"));//$NON-NLS-1$
+                cmd.setLabel(Messages.getString("AbstractMoveHandler.3"));//$NON-NLS-1$
                 cmd.appendIfCanExecute(RequirementHelper.INSTANCE.move((HierarchicalElement) currObject, up));
             }
         }

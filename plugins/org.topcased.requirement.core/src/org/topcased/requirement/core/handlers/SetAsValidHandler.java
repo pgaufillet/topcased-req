@@ -12,86 +12,85 @@
 package org.topcased.requirement.core.handlers;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Path;
+import org.eclipse.core.expressions.EvaluationContext;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorPart;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.services.ISourceProviderService;
+import org.topcased.facilities.util.EMFMarkerUtil;
 import org.topcased.modeler.editor.Modeler;
 import org.topcased.modeler.utils.Utils;
+import org.topcased.requirement.Attribute;
 import org.topcased.requirement.CurrentRequirement;
-import org.topcased.requirement.RequirementProject;
-import org.topcased.requirement.core.extensions.DefaultAttachmentPolicy;
-import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
-import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
+import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.services.RequirementModelSourceProvider;
+import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
-import org.topcased.requirement.core.wizards.MergeRequirementModelWizard;
 
 /**
- * Handler to deals with the update action in the upstream view
- * 
+ * This handler allows to set a Current Requirement as valid after an update operation.<br>
+ * The warning is so removed from the Problem View and the decorator presented in the viewer is also deleted.<br>
+ * The <b>impacted</b> feature of the Current Requirement(s) is/are switch to <code>false</code><br>
+ * The feature <b>status</b> of the upstream requirement(s) is/are also modified.<br>
+ *  
+ * @author <a href="mailto:sebastien.gabel@c-s.fr">Sebastien GABEL</a>
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
- * 
  */
-public class UpdateRequirementModelHandler extends AbstractHandler
+public class SetAsValidHandler extends AbstractHandler
 {
     /**
      * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
      */
     public Object execute(ExecutionEvent event) throws ExecutionException
     {
-        Resource targetModel = null;
-        IEditorPart part = HandlerUtil.getActiveEditor(event);
-        if (part instanceof Modeler)
+        EditingDomain  editingDomain = Utils.getCurrentModeler().getEditingDomain();
+        
+        if (((EvaluationContext)event.getApplicationContext()).getDefaultVariable() instanceof List<?>)
         {
-            Modeler modeler = (Modeler) part;
-            // Get the policy and the linked target model
-            IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(modeler.getEditingDomain());
-            if (policy != null)
+            //Get the current selection
+            List<?> elements = ((List<?>)((EvaluationContext)event.getApplicationContext()).getDefaultVariable());
+            CompoundCommand compoundCmd = new CompoundCommand("SetAsValidHandler.0"); //$NON-NLS-1$
+            for (Object element : elements)
             {
-                targetModel = policy.getLinkedTargetModel(modeler.getEditingDomain().getResourceSet());
-            }
-            else
-            {
-                targetModel = DefaultAttachmentPolicy.getInstance().getLinkedTargetModel(modeler.getEditingDomain().getResourceSet());
-            }
-            if (targetModel != null)
-            {
-                // creation of the merge wizard
-                Resource requirement = RequirementUtils.getRequirementModel(modeler.getEditingDomain());
-                RequirementProject requirementProject = (RequirementProject) requirement.getContents().get(0);
-                MergeRequirementModelWizard wizard = new MergeRequirementModelWizard(requirementProject.getIdentifier(), requirementProject.getShortDescription());
-
-                IFile targetFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(targetModel.getURI().toPlatformString(true)));
-                wizard.init(PlatformUI.getWorkbench(), new StructuredSelection(targetFile));
-
-                // launch the wizard allowing to perform the operations
-                WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wizard)
+                try
                 {
-                    protected void configureShell(Shell newShell)
+                    // gets the concerned EObject
+                    EObject currentRequirement = (EObject) element;
+
+                    if (currentRequirement instanceof CurrentRequirement)
                     {
-                        super.configureShell(newShell);
-                        newShell.setMinimumSize(530, 580);
-                        newShell.setSize(530, 580);
+                        CurrentRequirement req = (CurrentRequirement) currentRequirement;
+                        for (Attribute anAttribute : req.getAttribute())
+                        {
+                            // Try to remove marker for each attribute.
+                            EMFMarkerUtil.removeMarkerFor(anAttribute);
+                        }
                     }
-                };
-                wizardDialog.open();
+
+                    // then update the feature
+                    compoundCmd.appendIfCanExecute(RequirementHelper.INSTANCE.revertImpact(currentRequirement));
+                }
+                catch (CoreException e)
+                {
+                    RequirementCorePlugin.log("SetAsValidHandler.1", IStatus.ERROR, e); //$NON-NLS-1$
+                }
             }
+            if (!compoundCmd.isEmpty() && compoundCmd.canExecute())
+            {
+                editingDomain.getCommandStack().execute(compoundCmd);
+            }
+
+            fireValidationChanged();
         }
-        fireValidationChanged();
         return null;
     }
     
@@ -126,4 +125,5 @@ public class UpdateRequirementModelHandler extends AbstractHandler
             }
         }
     }
+
 }

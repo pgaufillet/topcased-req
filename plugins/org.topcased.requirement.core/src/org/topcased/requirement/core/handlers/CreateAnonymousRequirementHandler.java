@@ -28,7 +28,7 @@ public class CreateAnonymousRequirementHandler extends CreateRequirementHandler
     @Override
     protected CreateRequirementCommand getCreateCommand()
     {
-        return new CreateAnonymousReqCommand(Messages.getString("CreateAnonymousRequirementAction.0")); //$NON-NLS-1$
+        return new CreateAnonymousReqCommand(Messages.getString("CreateAnonymousRequirementHandler.0")); //$NON-NLS-1$
     }
 
 }

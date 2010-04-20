@@ -26,6 +26,7 @@ import org.topcased.requirement.core.commands.CreateRequirementCommand;
 
 /**
  * Implements FR#2066
+ * Execute a requirement creation in the current view from the modeler popup menu or from the current view popup menu
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  */

@@ -12,8 +12,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.emf.compare.match
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: org.topcased.requirement.core.actions,
- org.topcased.requirement.core.commands,
+Export-Package: org.topcased.requirement.core.commands,
  org.topcased.requirement.core.dnd,
  org.topcased.requirement.core.documentation.current,
  org.topcased.requirement.core.extensions,

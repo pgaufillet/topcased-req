@@ -63,7 +63,7 @@ public abstract class RequirementAbstractEMFCommandHandler extends AbstractHandl
         ProgressMonitorDialog progressDialog = new ProgressMonitorDialog(Display.getDefault().getActiveShell());
         try
         {
-            progressDialog.run(true, false, new IRunnableWithProgress()
+            progressDialog.run(false, false, new IRunnableWithProgress()
             {
                 public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException
                 {

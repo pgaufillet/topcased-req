@@ -28,6 +28,6 @@ public class CreateCurrentRequirementHandler extends CreateRequirementHandler
     @Override
     protected CreateRequirementCommand getCreateCommand()
     {
-        return new CreateCurrentReqCommand(Messages.getString("CreateCurrentRequirementAction.0")); //$NON-NLS-1$;
+        return new CreateCurrentReqCommand(Messages.getString("CreateCurrentRequirementHandler.0")); //$NON-NLS-1$;
     }
 }

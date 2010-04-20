@@ -101,7 +101,7 @@ public abstract class AbstractRequirementPage extends Page implements IViewerPro
         {
             if (!getControl().isDisposed())
             {
-                refreshViewer(false);
+                refreshViewer(true);
             }
         }
     };

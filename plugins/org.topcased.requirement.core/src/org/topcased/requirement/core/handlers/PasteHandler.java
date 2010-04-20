@@ -19,15 +19,16 @@ import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.edit.command.CommandParameter;
 import org.eclipse.emf.edit.command.PasteFromClipboardCommand;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.views.current.CurrentPage;
 
 /**
- * This class defines the EMF <b>copy</b> command
+ * This class defines the EMF <b>paste</b> command
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
- *
+ * 
  */
 public class PasteHandler extends RequirementAbstractEMFCommandHandler
 {
@@ -47,25 +48,23 @@ public class PasteHandler extends RequirementAbstractEMFCommandHandler
     @Override
     public CommandParameter getParam()
     {
-        if (((EvaluationContext)evt.getApplicationContext()).getDefaultVariable() instanceof List<?>)
+        if (((EvaluationContext) evt.getApplicationContext()).getDefaultVariable() instanceof List< ? >)
         {
-            return new CommandParameter(((List<?>)((EvaluationContext)evt.getApplicationContext()).getDefaultVariable()).get(0), null,((List<?>)((EvaluationContext)evt.getApplicationContext()).getDefaultVariable()).size());
+            return new CommandParameter(((List< ? >) ((EvaluationContext) evt.getApplicationContext()).getDefaultVariable()).get(0), null,
+                    ((List< ? >) ((EvaluationContext) evt.getApplicationContext()).getDefaultVariable()).size());
         }
         else
         {
             return null;
         }
-        
     }
-    
+
     /**
-     * FIXME : selection bug!!!
-     * 
      * @see org.topcased.requirement.core.actions.RequirementAbstractEMFAction#endAction(org.eclipse.emf.common.command.CompoundCommand)
      */
     @Override
     public void endAction(CompoundCommand cmd)
-    {   
+    {
         CurrentPage currentPage = RequirementHelper.INSTANCE.getCurrentPage();
         Collection< ? > source = cmd.getAffectedObjects();
         CompoundCommand compound = new CompoundCommand("Renaming moving requirements");
@@ -89,9 +88,7 @@ public class PasteHandler extends RequirementAbstractEMFCommandHandler
 
         if (currentPage != null && compound.getAffectedObjects() != null)
         {
-            currentPage.refreshViewer(true);
-//            currentPage.getViewer().setSelection(new StructuredSelection((List<?>) compound.getAffectedObjects()), true);
-
+            currentPage.getViewer().setSelection(new StructuredSelection((List< ? >) compound.getAffectedObjects()), true);
         }
     }
 

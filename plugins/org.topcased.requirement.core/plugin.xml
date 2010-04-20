@@ -279,6 +279,58 @@
             class="org.topcased.requirement.core.handlers.LoadResourceHandler"
             commandId="org.topcased.requirement.core.loadResource">
       </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.AddAttributeHandler"
+            commandId="org.topcased.requirement.core.addAttribute">
+      </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.SetAsValidHandler"
+            commandId="org.topcased.requirement.core.setAsValid">
+         <activeWhen>
+            <with
+                  variable="activeMenuSelection">
+               <iterate
+                     ifEmpty="false">
+                  <and>
+                     <instanceof
+                           value="org.topcased.requirement.Requirement">
+                     </instanceof>
+                     <test
+                           property="org.topcased.requirement.core.isImpacted">
+                     </test>
+                  </and>
+               </iterate>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.SetUnsetPartialHandler"
+            commandId="org.topcased.requirement.core.setUnsetPartial">
+      </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.UnallocateHandler"
+            commandId="org.topcased.requirement.core.unallocate">
+      </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.UpdateAttributeHandler"
+            commandId="org.topcased.requirement.core.updateAttribute">
+      </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.UpdateAttributeConfigurationHandler"
+            commandId="org.topcased.requirement.core.updateAttributeConfiguration">
+         <activeWhen>
+            <with
+                  variable="requirementActionsEnablement.isImpacted">
+               <equals
+                     value="true">
+               </equals>
+            </with>
+         </activeWhen>
+      </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.SetMarkerHandler"
+            commandId="org.topcased.requirement.core.setMarker">
+      </handler>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -289,7 +341,7 @@
                label="&amp;Create Current Requirement"
                style="push">
             <visibleWhen
-                  checkEnabled="true">
+                  checkEnabled="false">
                <with
                      variable="activeMenuSelection">
                   <iterate
@@ -311,7 +363,7 @@
                label="&amp;Create Free Text"
                style="push">
             <visibleWhen
-                  checkEnabled="true">
+                  checkEnabled="false">
                <with
                      variable="activeMenuSelection">
                   <iterate
@@ -351,29 +403,6 @@
       </menuContribution>
             <menuContribution
                   locationURI="toolbar:org.topcased.requirement.core.currentView">
-               <menu
-                     id="viewsLink"
-                     label="Requirement Views link">
-                  <command
-                        commandId="org.topcased.requirement.core.linkToUpstream"
-                        label="&amp;Link To Upstream Requirement"
-                        style="toggle">
-                  </command>
-                  <command
-                        commandId="org.topcased.requirement.core.filterCurrentRequirements"
-                        label="&amp;Filter Current Requirements"
-                        style="toggle">
-                  </command>
-                  <visibleWhen
-                        checkEnabled="false">
-                     <with
-                           variable="requirementActionsEnablement.hasRequirementModel">
-                        <equals
-                              value="true">
-                        </equals>
-                     </with>
-                  </visibleWhen>
-               </menu>
                <command
                      commandId="org.topcased.requirement.core.linkWithEditor"
                      label="&amp;Link With Editor"
@@ -563,7 +592,7 @@
                      label="&amp;Delete"
                      style="push">
                   <visibleWhen
-                        checkEnabled="true">
+                        checkEnabled="false">
                      <with
                            variable="activeMenuSelection">
                         <iterate
@@ -602,16 +631,115 @@
                      label="&amp;Paste"
                      style="push">
                </command>
+               <menu
+                     id="markerMenu"
+                     label="Set marker position">
+                  <command
+                        commandId="org.topcased.requirement.core.setMarker"
+                        label="&amp;Set to start"
+                        style="push">
+                     <parameter
+                           name="org.topcased.requirement.core.setMarkerCommandParameter"
+                           value="1">
+                     </parameter>
+                  </command>
+                  <command
+                        commandId="org.topcased.requirement.core.setMarker"
+                        label="&amp;Set to end"
+                        style="push">
+                     <parameter
+                           name="org.topcased.requirement.core.setMarkerCommandParameter"
+                           value="2">
+                     </parameter>
+                  </command>
+                  <command
+                        commandId="org.topcased.requirement.core.setMarker"
+                        label="&amp;Set here"
+                        style="push">
+                     <parameter
+                           name="org.topcased.requirement.core.setMarkerCommandParameter"
+                           value="3">
+                     </parameter>
+                  </command>
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="activeMenuSelection">
+                        <iterate
+                              ifEmpty="false">
+                           <or>
+                              <instanceof
+                                    value="org.topcased.requirement.Requirement">
+                              </instanceof>
+                              <instanceof
+                                    value="org.topcased.requirement.HierarchicalElement">
+                              </instanceof>
+                           </or>
+                        </iterate>
+                     </with>
+                  </visibleWhen>
+               </menu>
                <separator
-                     name="separator1"
+                     name="SEPARATOR1"
                      visible="true">
                </separator>
+               <command
+                     commandId="org.topcased.requirement.core.setAsValid"
+                     label="&amp;Set as valid"
+                     style="push">
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="activeMenuSelection">
+                        <iterate
+                              ifEmpty="false">
+                           <instanceof
+                                 value="org.topcased.requirement.Requirement">
+                           </instanceof>
+                        </iterate>
+                     </with>
+                  </visibleWhen>
+               </command>
+               <command
+                     commandId="org.topcased.requirement.core.addAttribute"
+                     label="&amp;Create a new attribute"
+                     style="push">
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="activeMenuSelection">
+                        <iterate
+                              ifEmpty="false">
+                           <instanceof
+                                 value="org.topcased.requirement.AttributeLink">
+                           </instanceof>
+                        </iterate>
+                     </with>
+                  </visibleWhen>
+               </command>
+               <command
+                     commandId="org.topcased.requirement.core.setUnsetPartial"
+                     label="&amp;Set/unset partial"
+                     style="push">
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="activeMenuSelection">
+                        <iterate
+                              ifEmpty="false">
+                           <instanceof
+                                 value="org.topcased.requirement.AttributeLink">
+                           </instanceof>
+                        </iterate>
+                     </with>
+                  </visibleWhen>
+               </command>
                <command
                      commandId="org.topcased.requirement.core.createCurrentRequirement"
                      label="&amp;Create Current Requirement"
                      style="push">
                   <visibleWhen
-                        checkEnabled="true">
+                        checkEnabled="false">
                      <with
                            variable="activeMenuSelection">
                         <iterate
@@ -633,7 +761,72 @@
                      label="&amp;Create Free Text"
                      style="push">
                   <visibleWhen
-                        checkEnabled="true">
+                        checkEnabled="false">
+                     <with
+                           variable="activeMenuSelection">
+                        <iterate
+                              ifEmpty="false">
+                           <or>
+                              <instanceof
+                                    value="org.topcased.requirement.Requirement">
+                              </instanceof>
+                              <instanceof
+                                    value="org.topcased.requirement.HierarchicalElement">
+                              </instanceof>
+                           </or>
+                        </iterate>
+                     </with>
+                  </visibleWhen>
+               </command>
+               <command
+                     commandId="org.topcased.requirement.core.updateAttributeConfiguration"
+                     label="&amp;Update configuration"
+                     style="push">
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="activeMenuSelection">
+                        <iterate
+                              ifEmpty="false">
+                           <instanceof
+                                 value="org.topcased.requirement.AttributeConfiguration">
+                           </instanceof>
+                        </iterate>
+                     </with>
+                  </visibleWhen>
+               </command>
+               <separator
+                     name="SEPARATOR2"
+                     visible="true">
+               </separator>
+               <command
+                     commandId="org.topcased.requirement.core.updateAttribute"
+                     label="&amp;Update attribute"
+                     style="push">
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="activeMenuSelection">
+                        <iterate
+                              ifEmpty="false">
+                           <or>
+                              <instanceof
+                                    value="org.topcased.requirement.Requirement">
+                              </instanceof>
+                              <instanceof
+                                    value="org.topcased.requirement.HierarchicalElement">
+                              </instanceof>
+                           </or>
+                        </iterate>
+                     </with>
+                  </visibleWhen>
+               </command>
+               <command
+                     commandId="org.topcased.requirement.core.unallocate"
+                     label="&amp;Unallocate requirement"
+                     style="push">
+                  <visibleWhen
+                        checkEnabled="false">
                      <with
                            variable="activeMenuSelection">
                         <iterate
@@ -651,12 +844,12 @@
                   </visibleWhen>
                </command>
                <separator
-                     name="separator2"
+                     name="SEPARATOR3"
                      visible="true">
                </separator>
                <command
                      commandId="org.topcased.requirement.core.loadResource"
-                     label="&amp;Load Additional Resource"
+                     label="&amp;Load additional resource"
                      style="push">
                </command>
             </menuContribution>
@@ -739,6 +932,30 @@
       <image
             commandId="org.topcased.requirement.core.createAnonymousRequirement"
             icon="icons/anonymous.gif">
+      </image>
+      <image
+            commandId="org.topcased.requirement.core.addAttribute"
+            icon="icons/AttributeLink.gif">
+      </image>
+      <image
+            commandId="org.topcased.requirement.core.setAsValid"
+            icon="icons/checked.gif">
+      </image>
+      <image
+            commandId="org.topcased.requirement.core.setUnsetPartial"
+            icon="icons/partial.gif">
+      </image>
+      <image
+            commandId="org.topcased.requirement.core.unallocate"
+            icon="icons/unallocate.gif">
+      </image>
+      <image
+            commandId="org.topcased.requirement.core.updateAttribute"
+            icon="icons/update.gif">
+      </image>
+      <image
+            commandId="org.topcased.requirement.core.updateAttributeConfiguration"
+            icon="icons/update.gif">
       </image>
    </extension>
    <extension
@@ -896,6 +1113,46 @@
             description="Load a resource into an editing domain&apos;s resource set"
             id="org.topcased.requirement.core.loadResource"
             name="Load Resource">
+      </command>
+      <command
+            description="Adds an Attribute for a Requirement"
+            id="org.topcased.requirement.core.addAttribute"
+            name="Add Attribute">
+      </command>
+      <command
+            description="Set a current requirement as valid after a requirement models merge"
+            id="org.topcased.requirement.core.setAsValid"
+            name="Set As Valid">
+      </command>
+      <command
+            description="Set or unset an attribute link to partial"
+            id="org.topcased.requirement.core.setUnsetPartial"
+            name="Set/Unset Partial">
+      </command>
+      <command
+            description="Unallocate a hierarchical element or a current requirement"
+            id="org.topcased.requirement.core.unallocate"
+            name="Unallocate">
+      </command>
+      <command
+            description="Update attributes of all the current requirements"
+            id="org.topcased.requirement.core.updateAttribute"
+            name="Update Attribute">
+      </command>
+      <command
+            description="Update the current requirements attribute configuration"
+            id="org.topcased.requirement.core.updateAttributeConfiguration"
+            name="Update Attribute Configuration">
+      </command>
+      <command
+            description="Set the marker to a position in the current requirement tree"
+            id="org.topcased.requirement.core.setMarker"
+            name="Set Marker">
+         <commandParameter
+               id="org.topcased.requirement.core.setMarkerCommandParameter"
+               name="type"
+               optional="false">
+         </commandParameter>
       </command>
    </extension>
    <extension
@@ -1237,6 +1494,20 @@
             namespace="org.topcased.requirement.core"
             properties="canCreateRequirement"
             type="org.topcased.modeler.edit.IModelElementEditPart">
+      </propertyTester>
+      <propertyTester
+            class="org.topcased.requirement.core.testers.IsImpactedPropertyTester"
+            id="org.topcased.requirement.core.testers.IsImpactedPropertyTester"
+            namespace="org.topcased.requirement.core"
+            properties="isImpacted"
+            type="org.topcased.requirement.Requirement">
+      </propertyTester>
+      <propertyTester
+            class="org.topcased.requirement.core.testers.RequirementsAreNotImpactedPropertyTester"
+            id="org.topcased.requirement.core.testers.RequirementsAreNotImpactedPropertyTester"
+            namespace="org.topcased.requirement.core"
+            properties="requirementsAreNotImpacted"
+            type="org.topcased.requirement.CurrentRequirement">
       </propertyTester>
    </extension>
 </plugin>

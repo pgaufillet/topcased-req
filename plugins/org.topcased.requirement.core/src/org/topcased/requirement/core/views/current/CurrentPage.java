@@ -23,7 +23,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.edit.ui.action.RedoAction;
 import org.eclipse.emf.edit.ui.action.UndoAction;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -53,27 +52,16 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.RegistryToggleState;
 import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.views.markers.MarkerItem;
-import org.topcased.requirement.AttributeConfiguration;
 import org.topcased.requirement.AttributeLink;
-import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.HierarchicalElement;
-import org.topcased.requirement.ObjectAttribute;
 import org.topcased.requirement.Requirement;
 import org.topcased.requirement.RequirementProject;
-import org.topcased.requirement.core.actions.AddAttributeAction;
-import org.topcased.requirement.core.actions.SetAsValidAction;
-import org.topcased.requirement.core.actions.SetMarkerAction;
-import org.topcased.requirement.core.actions.SetUnsetPartialAction;
-import org.topcased.requirement.core.actions.UnallocateAction;
-import org.topcased.requirement.core.actions.UpdateAttributeAction;
-import org.topcased.requirement.core.actions.UpdateAttributeConfigurationAction;
 import org.topcased.requirement.core.dnd.DragSourceCurrentAdapter;
 import org.topcased.requirement.core.dnd.DropTargetCurrentAdapter;
 import org.topcased.requirement.core.dnd.RequirementTransfer;
 import org.topcased.requirement.core.filters.CurrentRequirementFilter;
 import org.topcased.requirement.core.filters.CurrentViewSingletonFilter;
 import org.topcased.requirement.core.handlers.ICommandConstants;
-import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.listeners.RequirementDoubleClickListener;
 import org.topcased.requirement.core.listeners.UpstreamSelectionChangedListener;
@@ -81,7 +69,6 @@ import org.topcased.requirement.core.providers.CurrentRequirementContentProvider
 import org.topcased.requirement.core.providers.CurrentRequirementLabelProvider;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.AbstractRequirementPage;
-import org.topcased.requirement.core.views.AddRequirementMarker;
 import org.topcased.requirement.core.views.SearchComposite;
 import org.topcased.requirement.core.views.upstream.UpstreamPage;
 import org.topcased.requirement.core.views.upstream.UpstreamRequirementView;
@@ -98,8 +85,6 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
     private EObject model;
 
     private IStructuredSelection selection;
-
-    private MenuManager submenuManager;
 
     private MenuManager menuManager;
     
@@ -231,9 +216,9 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
     }
 
     /**
-     * This class create the menu of the current requirement view
+     * This class create the default menu of the current requirement view
      * 
-     * @author <a href="mailto:christophe.mertz@c-s.fr">Christophe Mertz</a>
+     * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
      * 
      */
     private class CurrentMenuManager implements IMenuListener
@@ -259,70 +244,6 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
                 Separator last = new Separator("lastSeparator"); //$NON-NLS-1$
                 last.setVisible(true);
                 manager.add(last);
-                
-                  createSubMenuMarker(manager);
-
-//                final RequirementAbstractEMFAction copyAction = new CurrentRequirementCopyAction(selection, editingDomain);
-//                copyAction.setEnabled(copyAction.isEnabled());
-//                manager.add(copyAction);
-//
-//                final RequirementAbstractEMFAction cutAction = new CurrentRequirementCutAction(selection, editingDomain);
-//                cutAction.setEnabled(cutAction.isEnabled());
-//                manager.add(cutAction);
-//
-//                final RequirementAbstractEMFAction deleteAction = new CurrentRequirementDeleteAction(selection, editingDomain);
-//                deleteAction.setEnabled(deleteAction.isEnabled());
-//                manager.add(deleteAction);
-//
-//                final RequirementAbstractEMFAction pasteAction = new CurrentRequirementPasteAction(selection, editingDomain);
-//                pasteAction.setEnabled(pasteAction.isEnabled());
-//                manager.add(pasteAction);
-
-                manager.add(new Separator("separator_0")); //$NON-NLS-1$
-
-                if (toDisplay(selection, Requirement.class))
-                {
-                    manager.add(new Separator("separator_1")); //$NON-NLS-1$
-                    manager.add(new SetAsValidAction(selection, editingDomain));
-                }
-
-                if (toDisplay(selection, HierarchicalElement.class))
-                {
-                    manager.add(new Separator("separator_1")); //$NON-NLS-1$
-                }
-
-                if (toDisplay(selection, HierarchicalElement.class) || toDisplay(selection, CurrentRequirement.class))
-                {
-//                    manager.add(new CreateCurrentRequirementAction(selection));
-//                    manager.add(new CreateAnonymousRequirementAction(selection));
-//                    manager.appendToGroup("SET_MARKER", submenuManager); //$NON-NLS-1$
-                    manager.add(new Separator("separator_1")); //$NON-NLS-1$
-                    manager.add(new UpdateAttributeAction(selection, CurrentPage.this));
-                    manager.add(new UnallocateAction(selection, CurrentPage.this));
-                }
-
-                if (toDisplay(selection, ObjectAttribute.class))
-                {
-                    manager.add(new AddAttributeAction(selection, CurrentPage.this));
-                }
-
-                if (toDisplay(selection, AttributeLink.class))
-                {
-                    manager.add(new Separator("separator_1")); //$NON-NLS-1$
-                    manager.add(new SetUnsetPartialAction(selection, CurrentPage.this));
-                }
-
-                if (toDisplay(selection, AttributeConfiguration.class))
-                {
-                    manager.add(new Separator("separator_2")); //$NON-NLS-1$
-                    manager.add(new UpdateAttributeConfigurationAction(selection, CurrentPage.this));
-                }
-
-//                manager.add(new Separator("separator_2")); //$NON-NLS-1$
-//                manager.add(new LoadResourceAction(editingDomain));
-//                manager.add(new Separator("separator_2")); //$NON-NLS-1$
-
-
             }
         }
     }
@@ -447,7 +368,7 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
         }
     }
     /**
-     * Defines the content of the popup menu.
+     * Defines the default content of the popup menu.
      */
     private void hookContextMenu()
     {
@@ -461,27 +382,6 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
         
         // Register menu for extension.
         getSite().registerContextMenu(CURRENT_POPUP_ID, menuManager, viewer);
-    }
-
-    /**
-     * Creates a sub menu.
-     * 
-     * @param manager The menu manager to use.
-     */
-    private void createSubMenuMarker(IMenuManager manager)
-    {
-        manager.add(new Separator("SET_MARKER")); //$NON-NLS-1$
-
-        submenuManager = new MenuManager(Messages.getString("CurrentPage.3")); //$NON-NLS-1$
-        IAction setStartMarker = new SetMarkerAction(selection, this, AddRequirementMarker.eINSTANCE.sTART);
-        setStartMarker.setText(Messages.getString("CurrentPage.4")); //$NON-NLS-1$
-        IAction setEndMarker = new SetMarkerAction(selection, this, AddRequirementMarker.eINSTANCE.eND);
-        setEndMarker.setText(Messages.getString("CurrentPage.5")); //$NON-NLS-1$
-        IAction setPosMarker = new SetMarkerAction(selection, this, AddRequirementMarker.eINSTANCE.pOS);
-        setPosMarker.setText(Messages.getString("CurrentPage.6")); //$NON-NLS-1$
-        submenuManager.add(setStartMarker);
-        submenuManager.add(setEndMarker);
-        submenuManager.add(setPosMarker);
     }
 
     /**

@@ -1,27 +1,29 @@
 /*****************************************************************************
- * Copyright (c) 2008 TOPCASED consortium.
- *
- * All rights reserved. This program and the accompanying materials
+ * Copyright (c) 2010 Communication & Systems
+ * 
+ * All rights reserved. This program and the accompanying materials 
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *  	Christophe Mertz (CS) <christophe.mertz@c-s.fr>
- *    
- ******************************************************************************/
-package org.topcased.requirement.core.actions;
+ * 
+ * Contributors : Maxime AUDRAIN (CS) - initial API and implementation
+ * 
+ *****************************************************************************/
+package org.topcased.requirement.core.handlers;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.expressions.EvaluationContext;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
+import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.Attribute;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.ObjectAttribute;
@@ -30,18 +32,20 @@ import org.topcased.requirement.RequirementPackage;
 import org.topcased.requirement.TextAttribute;
 import org.topcased.requirement.core.dialogs.UpdateAttributeDialog;
 import org.topcased.requirement.core.internal.Messages;
-import org.topcased.requirement.core.internal.RequirementCorePlugin;
+import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.current.CurrentPage;
 
 /**
- * The action "Update attribut" accessible from a set of hierarchical elements or a set of requirements (anonymous or
- * current).
+ * The "Update attribute" handler is accessible from a set of hierarchical elements or a set of requirements (anonymous
+ * or current).
  * 
  * @author <a href="mailto:christophe.mertz@c-s.fr">Christophe Mertz</a>
+ * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  */
-public class UpdateAttributeAction extends RequirementAction
+public class UpdateAttributeHandler extends AbstractHandler
 {
+
     private String attributeName;
 
     private EObject eObject;
@@ -50,61 +54,44 @@ public class UpdateAttributeAction extends RequirementAction
 
     private CompoundCommand compoundCmd;
 
-    /**
-     * Constructor
-     * 
-     * @param selection The selection done
-     * @param treeViewer The tree viewer
-     * @param editingDomain The editing domain to use
-     */
-    public UpdateAttributeAction(IStructuredSelection selection, CurrentPage page)
-    {
-        super(selection, page.getViewer(), page.getEditingDomain());
-        this.selection = wrapSelection(selection);
-        setImageDescriptor(RequirementCorePlugin.getImageDescriptor("icons/update.gif")); //$NON-NLS-1$
-        setText(Messages.getString("UpdateAttributeAction.0")); //$NON-NLS-1$
-    }
+    private EditingDomain editingDomain;
+
+    private List< ? > selection;
 
     /**
-     * @see org.eclipse.jface.action.Action#run()
+     * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
      */
-    @Override
-    public void run()
+    public Object execute(ExecutionEvent event) throws ExecutionException
     {
-        UpdateAttributeDialog dialog = new UpdateAttributeDialog(selection, viewer.getControl().getShell());
-        if (dialog.open() == Dialog.OK)
-        {
-            setAttributeName(dialog.getAttributeName());
-            setEObject(dialog.getAttributeValueObject());
-            setText(dialog.getAttributeValueText());
-            updateAttribute();
-        }
-    }
+        editingDomain = Utils.getCurrentModeler().getEditingDomain();
+        CurrentPage page = RequirementHelper.INSTANCE.getCurrentPage();
 
-    /**
-     * @see org.eclipse.jface.action.Action#isEnabled()
-     */
-    @Override
-    public boolean isEnabled()
-    {
-        for (Object obj : selection.toList())
+        if (((EvaluationContext) event.getApplicationContext()).getDefaultVariable() instanceof List< ? >)
         {
-            if (!(obj instanceof HierarchicalElement || obj instanceof Requirement))
+            // Get the current selection and wrap it
+            selection = wrapSelection(((List< ? >) ((EvaluationContext) event.getApplicationContext()).getDefaultVariable()));
+
+            UpdateAttributeDialog dialog = new UpdateAttributeDialog(selection, page.getViewer().getControl().getShell());
+            if (dialog.open() == Dialog.OK)
             {
-                return false;
+                setAttributeName(dialog.getAttributeName());
+                setEObject(dialog.getAttributeValueObject());
+                setText(dialog.getAttributeValueText());
+                updateAttribute();
             }
         }
-        return super.isEnabled();
+        return null;
     }
 
+    /**
+     * Update the attributes
+     */
     public void updateAttribute()
     {
-        compoundCmd = new CompoundCommand(Messages.getString("UpdateAttributeAction.0")); //$NON-NLS-1$
+        compoundCmd = new CompoundCommand(Messages.getString("UpdateAttributeHandler.0")); //$NON-NLS-1$
 
-        for (Iterator< ? > iter = selection.iterator(); iter.hasNext();)
+        for (Object currObject : selection)
         {
-            Object currObject = iter.next();
-
             if (currObject instanceof Requirement)
             {
                 updateAttribute((Requirement) currObject);
@@ -117,6 +104,9 @@ public class UpdateAttributeAction extends RequirementAction
         }
     }
 
+    /**
+     * Update the attributes
+     */
     private void updateAttribute(Requirement currReq)
     {
         for (Attribute attribute : currReq.getAttribute())
@@ -188,14 +178,14 @@ public class UpdateAttributeAction extends RequirementAction
     /**
      * Wraps the selection in order to obtain only {@link Requirement}.
      * 
-     * @param oldSelection The selection received in the constructor.
-     * @return a new {@link IStructuredSelection} without {@link HierarchicalElement}.
+     * @param oldSelection The selection received from the event.
+     * @return a new {@link List} without {@link HierarchicalElement}.
      */
-    private IStructuredSelection wrapSelection(IStructuredSelection oldSelection)
+    private List< ? > wrapSelection(List< ? > oldSelection)
     {
-        Set<Requirement> newList = new HashSet<Requirement>();
+        List<Requirement> newList = new ArrayList<Requirement>();
 
-        for (Object obj : oldSelection.toList())
+        for (Object obj : oldSelection)
         {
             if (obj instanceof HierarchicalElement)
             {
@@ -206,7 +196,6 @@ public class UpdateAttributeAction extends RequirementAction
                 newList.add((Requirement) obj);
             }
         }
-        return new StructuredSelection(newList.toArray());
+        return (List< ? >) newList;
     }
-
 }

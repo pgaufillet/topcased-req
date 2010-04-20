@@ -12,20 +12,16 @@
 package org.topcased.requirement.core.testers;
 
 import org.eclipse.core.expressions.PropertyTester;
-import org.topcased.modeler.edit.IModelElementEditPart;
-import org.topcased.modeler.editor.Modeler;
-import org.topcased.modeler.utils.Utils;
-import org.topcased.requirement.core.extensions.DropRestrictionManager;
-import org.topcased.requirement.core.utils.RequirementUtils;
+import org.topcased.requirement.CurrentRequirement;
 
 /**
- * A Property tester who check if a IModelElementEditPart of a modeler can have requirement creation This property
- * This tester is used in the popup menu of a modeler to enable or disable requirement creation commands
+ * A Property tester who check if a selected current requirement is impacted
+ * This tester is used in the popup menu of the current view to enable or disable the set as valid command
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  * 
  */
-public class CanCreateRequirementPropertyTester extends PropertyTester
+public class IsImpactedPropertyTester extends PropertyTester
 {
 
     /**
@@ -34,16 +30,12 @@ public class CanCreateRequirementPropertyTester extends PropertyTester
      */
     public boolean test(Object receiver, String property, Object[] args, Object expectedValue)
     {
-        // Check if the modeler is linked to requirements
-        if (RequirementUtils.getRequirementModel(Utils.getCurrentModeler().getEditingDomain()) != null)
+        if (receiver instanceof CurrentRequirement)
         {
-            String fileExtension = Modeler.getCurrentIFile().getFileExtension();
-
-            if (receiver instanceof IModelElementEditPart)
+            CurrentRequirement current = (CurrentRequirement) receiver;
+            if (current.isImpacted())
             {
-                // Check if the selected element has drop allowed for it
-                IModelElementEditPart editPart = (IModelElementEditPart) receiver;
-                return DropRestrictionManager.getInstance().isDropAllowed(fileExtension, editPart.getEObject());
+                return true;
             }
             else
             {
@@ -51,6 +43,5 @@ public class CanCreateRequirementPropertyTester extends PropertyTester
             }
         }
         return false;
-
     }
 }

@@ -1,23 +1,27 @@
 /*****************************************************************************
- * Copyright (c) 2008 TOPCASED consortium.
- *
- * All rights reserved. This program and the accompanying materials
+ * Copyright (c) 2010 Communication & Systems
+ * 
+ * All rights reserved. This program and the accompanying materials 
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *  	Christophe Mertz (CS) <christophe.mertz@c-s.fr>
- *    
- ******************************************************************************/
-package org.topcased.requirement.core.actions;
+ * 
+ * Contributors : Maxime AUDRAIN (CS) - initial API and implementation
+ * 
+ *****************************************************************************/
+package org.topcased.requirement.core.handlers;
 
-import java.util.Iterator;
+import java.util.List;
 
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.expressions.EvaluationContext;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.edit.command.SetCommand;
-import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.emf.edit.domain.EditingDomain;
+import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.Attribute;
 import org.topcased.requirement.AttributeAllocate;
 import org.topcased.requirement.CurrentRequirement;
@@ -25,62 +29,52 @@ import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.Requirement;
 import org.topcased.requirement.RequirementPackage;
 import org.topcased.requirement.core.internal.Messages;
-import org.topcased.requirement.core.internal.RequirementCorePlugin;
-import org.topcased.requirement.core.views.current.CurrentPage;
 
 /**
- * The action "Unallocate" for a hierarchical element or a current requirement
+ * The "Unallocate" handler for a hierarchical element or a current requirement
  * 
  * @author <a href="mailto:christophe.mertz@c-s.fr">Christophe Mertz</a>
  * @author <a href="mailto:sebastien.gabel@c-s.fr">Sebastien GABEL</a>
+ * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  */
-public class UnallocateAction extends RequirementAction
+public class UnallocateHandler extends AbstractHandler
 {
     /** A single EMF compound command */
     private CompoundCommand compoundCmd;
+    
+    private EditingDomain  editingDomain;
 
     /**
-     * Constructor
-     * 
-     * @param selection The selection done
-     * @param page The current page.
-     * @param editingDomain The editing domain
+     * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
      */
-    public UnallocateAction(IStructuredSelection selection, CurrentPage page)
+    public Object execute(ExecutionEvent event) throws ExecutionException
     {
-        super(selection, page.getViewer(), page.getEditingDomain());
-        setImageDescriptor(RequirementCorePlugin.getImageDescriptor("icons/unallocate.gif")); //$NON-NLS-1$
-        setText(Messages.getString("UnallocateAction.0")); //$NON-NLS-1$
-    }
-
-    /**
-     * @see org.eclipse.jface.action.Action#run()
-     */
-    @Override
-    public void run()
-    {
-        compoundCmd = new CompoundCommand(Messages.getString("UnallocateAction.0")); //$NON-NLS-1$
-
-        for (Iterator< ? > iter = selection.iterator(); iter.hasNext();)
+        editingDomain = Utils.getCurrentModeler().getEditingDomain();
+        
+        if (((EvaluationContext)event.getApplicationContext()).getDefaultVariable() instanceof List<?>)
         {
-            Object currObject = iter.next();
-            if (currObject instanceof HierarchicalElement)
+            //Get the current selection
+            List<?> elements = ((List<?>)((EvaluationContext)event.getApplicationContext()).getDefaultVariable());
+            compoundCmd = new CompoundCommand(Messages.getString("UnallocateHandler.0")); //$NON-NLS-1$
+            for (Object currObject : elements)
             {
-                unallocate((HierarchicalElement) currObject);
+                if (currObject instanceof HierarchicalElement)
+                {
+                    unallocate((HierarchicalElement) currObject);
+                }
+                else if (currObject instanceof Requirement)
+                {
+                    unallocate((Requirement) currObject);
+                }
             }
-            else if (currObject instanceof Requirement)
+            if (!compoundCmd.isEmpty() && compoundCmd.canExecute())
             {
-                unallocate((Requirement) currObject);
+                editingDomain.getCommandStack().execute(compoundCmd);
             }
         }
-
-        if (!compoundCmd.isEmpty() && compoundCmd.canExecute())
-        {
-            // Execute it.
-            editingDomain.getCommandStack().execute(compoundCmd);
-        }
+        return null;
     }
-
+    
     /**
      * Unallocates a current requirement.
      * 
