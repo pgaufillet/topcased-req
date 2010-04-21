@@ -442,6 +442,14 @@
             class="org.topcased.requirement.core.handlers.SetMarkerHandler"
             commandId="org.topcased.requirement.core.setMarker">
       </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.UndoHandler"
+            commandId="org.topcased.requirement.core.undo">
+      </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.RedoHandler"
+            commandId="org.topcased.requirement.core.redo">
+      </handler>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -1265,6 +1273,16 @@
                optional="false">
          </commandParameter>
       </command>
+      <command
+            description="Undo last executed command"
+            id="org.topcased.requirement.core.undo"
+            name="Undo">
+      </command>
+      <command
+            description="Redo last executed command"
+            id="org.topcased.requirement.core.redo"
+            name="Redo">
+      </command>
    </extension>
    <extension
          point="org.eclipse.ui.decorators">
@@ -1381,6 +1399,30 @@
             contextId="org.topcased.requirement.core.currentView"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="L">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.undo"
+            contextId="org.topcased.requirement.core.currentView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+Z">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.undo"
+            contextId="org.topcased.requirement.core.upstreamView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+Z">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.redo"
+            contextId="org.topcased.requirement.core.currentView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+Y">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.redo"
+            contextId="org.topcased.requirement.core.upstreamView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+Y">
       </key>
    </extension>
    <extension

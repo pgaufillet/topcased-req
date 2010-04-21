@@ -55,12 +55,16 @@ import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.AttributeAllocate;
 import org.topcased.requirement.AttributeConfiguration;
 import org.topcased.requirement.AttributeLink;
+import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.ObjectAttribute;
 import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.SpecialChapter;
 import org.topcased.requirement.TrashChapter;
 import org.topcased.requirement.UpstreamModel;
+import org.topcased.requirement.core.extensions.DefaultAttachmentPolicy;
+import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
+import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.services.RequirementModelSourceProvider;
 import org.topcased.requirement.util.RequirementCacheAdapter;
@@ -733,5 +737,74 @@ public final class RequirementUtils
             }
         }
         return closed;
+    }
+    
+    /**
+     * 
+     * Notify commands that the isImpacted variable has changed. Handle the enablement/disablement of commands when no
+     * current requirement are impacted
+     */
+    public static void fireIsImpactedVariableChanged()
+    {
+        Boolean isImpacted = true;
+        Modeler modeler = Utils.getCurrentModeler();
+        ISourceProviderService spc = (ISourceProviderService) PlatformUI.getWorkbench().getService(ISourceProviderService.class);
+        RequirementModelSourceProvider myPro = (RequirementModelSourceProvider) spc.getSourceProvider(RequirementModelSourceProvider.IS_IMPACTED);
+        if (modeler != null && myPro != null)
+        {
+            Resource requirement = RequirementUtils.getRequirementModel(modeler.getEditingDomain());
+            if (requirement != null)
+            {
+                Collection<EObject> allRequirement = RequirementUtils.getAllObjects(requirement, CurrentRequirement.class);
+                // checks that all CurrentRequirement are marked as not impacted.
+                for (EObject aReq : allRequirement)
+                {
+                    if (aReq instanceof CurrentRequirement && ((CurrentRequirement) aReq).isImpacted())
+                    {
+                        // action must be disabled.
+                        isImpacted = false;
+                        break;
+                    }
+                }
+                myPro.setIsImpactedState(isImpacted);
+            }
+        }
+    }
+    
+    /**
+     * 
+     * Notify commands that the hasRequirement variable has changed. Handle the enablement/disablement of commands when there
+     * is a requirement model attached to the current modeler.
+     */
+    public static void fireHasRequirementVariableChanged(RequirementModelSourceProvider provider)
+    {
+        Modeler modeler = Utils.getCurrentModeler();
+        
+        if (modeler != null)
+        {
+            IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(modeler.getEditingDomain());
+            if (policy != null)
+            {
+                if (policy.getLinkedTargetModel(modeler.getEditingDomain().getResourceSet()) != null)
+                {
+                    provider.setHasRequirementState(true);
+                }
+                else
+                {
+                    provider.setHasRequirementState(false);
+                }
+            }
+            else
+            {
+                if (DefaultAttachmentPolicy.getInstance().getLinkedTargetModel(modeler.getEditingDomain().getResourceSet()) != null)
+                {
+                    provider.setHasRequirementState(true);
+                }
+                else
+                {
+                    provider.setHasRequirementState(false);
+                }
+            }
+        }
     }
 }

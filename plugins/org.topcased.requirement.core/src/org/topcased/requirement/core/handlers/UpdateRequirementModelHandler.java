@@ -11,15 +11,12 @@
  *****************************************************************************/
 package org.topcased.requirement.core.handlers;
 
-import java.util.Collection;
-
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -28,15 +25,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.eclipse.ui.services.ISourceProviderService;
 import org.topcased.modeler.editor.Modeler;
-import org.topcased.modeler.utils.Utils;
-import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.core.extensions.DefaultAttachmentPolicy;
 import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
 import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
-import org.topcased.requirement.core.services.RequirementModelSourceProvider;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.wizards.MergeRequirementModelWizard;
 
@@ -91,39 +84,7 @@ public class UpdateRequirementModelHandler extends AbstractHandler
                 wizardDialog.open();
             }
         }
-        fireValidationChanged();
+        RequirementUtils.fireIsImpactedVariableChanged();
         return null;
-    }
-    
-    /**
-     * 
-     * Notify commands that the isImpacted variable has changed. Handle the enablement of the update command when no
-     * current requirement are impacted
-     */
-    private void fireValidationChanged()
-    {
-        Boolean isImpacted = true;
-        Modeler modeler = Utils.getCurrentModeler();
-        ISourceProviderService spc = (ISourceProviderService) PlatformUI.getWorkbench().getService(ISourceProviderService.class);
-        RequirementModelSourceProvider myPro = (RequirementModelSourceProvider) spc.getSourceProvider(RequirementModelSourceProvider.IS_IMPACTED);
-        if (modeler != null && myPro != null)
-        {
-            Resource requirement = RequirementUtils.getRequirementModel(modeler.getEditingDomain());
-            if (requirement != null)
-            {
-                Collection<EObject> allRequirement = RequirementUtils.getAllObjects(requirement, CurrentRequirement.class);
-                // checks that all CurrentRequirement are marked as not impacted.
-                for (EObject aReq : allRequirement)
-                {
-                    if (aReq instanceof CurrentRequirement && ((CurrentRequirement) aReq).isImpacted())
-                    {
-                        // action must be disabled.
-                        isImpacted = false;
-                        break;
-                    }
-                }
-                myPro.setIsImpactedState(isImpacted);
-            }
-        }
     }
 }

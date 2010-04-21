@@ -11,7 +11,6 @@
  *****************************************************************************/
 package org.topcased.requirement.core.handlers;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.commands.AbstractHandler;
@@ -22,18 +21,13 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.domain.EditingDomain;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.services.ISourceProviderService;
 import org.topcased.facilities.util.EMFMarkerUtil;
-import org.topcased.modeler.editor.Modeler;
 import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.Attribute;
 import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
-import org.topcased.requirement.core.services.RequirementModelSourceProvider;
 import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
@@ -90,41 +84,8 @@ public class SetAsValidHandler extends AbstractHandler
                 editingDomain.getCommandStack().execute(compoundCmd);
             }
 
-            fireValidationChanged();
+            RequirementUtils.fireIsImpactedVariableChanged();
         }
         return null;
     }
-    
-    /**
-     * 
-     * Notify commands that the isImpacted variable has changed. Handle the enablement of the update command when no
-     * current requirement are impacted
-     */
-    private void fireValidationChanged()
-    {
-        Boolean isImpacted = true;
-        Modeler modeler = Utils.getCurrentModeler();
-        ISourceProviderService spc = (ISourceProviderService) PlatformUI.getWorkbench().getService(ISourceProviderService.class);
-        RequirementModelSourceProvider myPro = (RequirementModelSourceProvider) spc.getSourceProvider(RequirementModelSourceProvider.IS_IMPACTED);
-        if (modeler != null && myPro != null)
-        {
-            Resource requirement = RequirementUtils.getRequirementModel(modeler.getEditingDomain());
-            if (requirement != null)
-            {
-                Collection<EObject> allRequirement = RequirementUtils.getAllObjects(requirement, CurrentRequirement.class);
-                // checks that all CurrentRequirement are marked as not impacted.
-                for (EObject aReq : allRequirement)
-                {
-                    if (aReq instanceof CurrentRequirement && ((CurrentRequirement) aReq).isImpacted())
-                    {
-                        // action must be disabled.
-                        isImpacted = false;
-                        break;
-                    }
-                }
-                myPro.setIsImpactedState(isImpacted);
-            }
-        }
-    }
-
 }

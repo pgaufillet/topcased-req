@@ -26,12 +26,7 @@ import org.eclipse.ui.services.ISourceProviderService;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
 import org.topcased.modeler.documentation.IDocPage;
-import org.topcased.modeler.editor.Modeler;
-import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.core.documentation.current.CurrentDescPage;
-import org.topcased.requirement.core.extensions.DefaultAttachmentPolicy;
-import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
-import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
 import org.topcased.requirement.core.handlers.ICommandConstants;
 import org.topcased.requirement.core.properties.RequirementPropertySheetPage;
 import org.topcased.requirement.core.services.RequirementModelSourceProvider;
@@ -67,6 +62,7 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
     {        
         super.createPartControl(parent);
         
+        //activate the view context for key binding
         IContextService contextService = (IContextService) getSite().getService(IContextService.class);
         contextService.activateContext(VIEW_ID);
     }
@@ -141,9 +137,6 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
      */
     public void partActivated(IWorkbenchPart part)
     {
-        
-        Modeler modeler = Utils.getCurrentModeler();
-
         ISourceProviderService service = (ISourceProviderService) PlatformUI.getWorkbench().getService(ISourceProviderService.class);
         RequirementModelSourceProvider provider = (RequirementModelSourceProvider) service.getSourceProvider(RequirementModelSourceProvider.HAS_REQUIREMENT_MODEL);
 
@@ -165,34 +158,12 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
                 RequirementHelper.INSTANCE.setCurrentPage(currentPage);
             }
 
+            //Update the IsImpacted variable as often as possible!
+            RequirementUtils.fireIsImpactedVariableChanged();
+            
             // We need to constantly set the value of the hasRequirement variable to synchronize toolbar actions
             // enablement with the requirement model state
-            if (modeler != null)
-            {
-                IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(modeler.getEditingDomain());
-                if (policy != null)
-                {
-                    if (policy.getLinkedTargetModel(modeler.getEditingDomain().getResourceSet()) != null)
-                    {
-                        provider.setHasRequirementState(true);
-                    }
-                    else
-                    {
-                        provider.setHasRequirementState(false);
-                    }
-                }
-                else
-                {
-                    if (DefaultAttachmentPolicy.getInstance().getLinkedTargetModel(modeler.getEditingDomain().getResourceSet()) != null)
-                    {
-                        provider.setHasRequirementState(true);
-                    }
-                    else
-                    {
-                        provider.setHasRequirementState(false);
-                    }
-                }
-            }
+            RequirementUtils.fireHasRequirementVariableChanged(provider);
         }
         else
         {

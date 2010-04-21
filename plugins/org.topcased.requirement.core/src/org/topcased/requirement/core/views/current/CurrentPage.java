@@ -234,12 +234,12 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
                 
                 UndoAction undoAction = new UndoAction(editingDomain);
                 undoAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_UNDO));
-//                undoAction.setActionDefinitionId("org.topcased.requirement.core.undo"); //$NON-NLS-1$
+                undoAction.setActionDefinitionId("org.topcased.requirement.core.undo"); //$NON-NLS-1$
                 manager.add(undoAction);
 
                 RedoAction redoAction = new RedoAction(editingDomain);
                 redoAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_REDO));
-//                undoAction.setActionDefinitionId("org.topcased.requirement.core.redo"); //$NON-NLS-1$
+                undoAction.setActionDefinitionId("org.topcased.requirement.core.redo"); //$NON-NLS-1$
                 manager.add(redoAction);
                 
                 //add a last separator to surround undo & redo actions
