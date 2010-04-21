@@ -29,14 +29,6 @@
    <extension
          point="org.eclipse.ui.handlers">
       <handler
-            class="org.topcased.requirement.core.handlers.CreateCurrentRequirementHandler"
-            commandId="org.topcased.requirement.core.createCurrentRequirement">
-      </handler>
-      <handler
-            class="org.topcased.requirement.core.handlers.CreateAnonymousRequirementHandler"
-            commandId="org.topcased.requirement.core.createAnonymousRequirement">
-      </handler>
-      <handler
             class="org.topcased.requirement.core.handlers.LinkRequirementModelHandler"
             commandId="org.topcased.requirement.core.linkRequirement">
          <activeWhen>
@@ -198,9 +190,9 @@
       <handler
             class="org.topcased.requirement.core.handlers.DeleteHandler"
             commandId="org.topcased.requirement.core.delete">
-         <activeWhen>
+         <enabledWhen>
             <with
-                  variable="activeMenuSelection">
+                  variable="selection">
                <iterate
                      ifEmpty="false">
                   <or>
@@ -223,14 +215,15 @@
                      </and>
                   </or>
                </iterate>
-            </with></activeWhen>
+            </with>
+         </enabledWhen>
       </handler>
       <handler
             class="org.topcased.requirement.core.handlers.CopyHandler"
             commandId="org.topcased.requirement.core.copy">
-         <activeWhen>
+         <enabledWhen>
             <with
-                  variable="activeMenuSelection">
+                  variable="selection">
                <iterate
                      ifEmpty="false">
                   <instanceof
@@ -238,14 +231,14 @@
                   </instanceof>
                </iterate>
             </with>
-         </activeWhen>
+         </enabledWhen>
       </handler>
       <handler
             class="org.topcased.requirement.core.handlers.CutHandler"
             commandId="org.topcased.requirement.core.cut">
-         <activeWhen>
+         <enabledWhen>
             <with
-                  variable="activeMenuSelection">
+                  variable="selection">
                <iterate
                      ifEmpty="false">
                   <instanceof
@@ -253,14 +246,14 @@
                   </instanceof>
                </iterate>
             </with>
-         </activeWhen>
+         </enabledWhen>
       </handler>
       <handler
             class="org.topcased.requirement.core.handlers.PasteHandler"
             commandId="org.topcased.requirement.core.paste">
-         <activeWhen>
+         <enabledWhen>
             <with
-                  variable="activeMenuSelection">
+                  variable="selection">
                <iterate
                      ifEmpty="false">
                   <and>
@@ -273,22 +266,88 @@
                   </and>
                </iterate>
             </with>
-         </activeWhen>
+         </enabledWhen>
       </handler>
       <handler
             class="org.topcased.requirement.core.handlers.LoadResourceHandler"
             commandId="org.topcased.requirement.core.loadResource">
       </handler>
       <handler
+            class="org.topcased.requirement.core.handlers.CreateCurrentRequirementHandler"
+            commandId="org.topcased.requirement.core.createCurrentRequirement">
+         <enabledWhen>
+            <with
+                  variable="selection">
+               <iterate
+                     ifEmpty="false">
+                  <or>
+                     <instanceof
+                           value="org.topcased.requirement.Requirement">
+                     </instanceof>
+                     <instanceof
+                           value="org.topcased.requirement.HierarchicalElement">
+                     </instanceof>
+                     <and>
+                        <instanceof
+                              value="org.topcased.modeler.edit.IModelElementEditPart">
+                        </instanceof>
+                        <test
+                              property="org.topcased.requirement.core.canCreateRequirement">
+                        </test>
+                     </and>
+                  </or>
+               </iterate>
+            </with>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.CreateAnonymousRequirementHandler"
+            commandId="org.topcased.requirement.core.createAnonymousRequirement">
+         <enabledWhen>
+            <with
+                  variable="selection">
+               <iterate
+                     ifEmpty="false">
+                  <or>
+                     <instanceof
+                           value="org.topcased.requirement.Requirement">
+                     </instanceof>
+                     <instanceof
+                           value="org.topcased.requirement.HierarchicalElement">
+                     </instanceof>
+                     <and>
+                        <instanceof
+                              value="org.topcased.modeler.edit.IModelElementEditPart">
+                        </instanceof>
+                        <test
+                              property="org.topcased.requirement.core.canCreateRequirement">
+                        </test>
+                     </and>
+                  </or>
+               </iterate>
+            </with></enabledWhen>
+      </handler>
+      <handler
             class="org.topcased.requirement.core.handlers.AddAttributeHandler"
             commandId="org.topcased.requirement.core.addAttribute">
+         <enabledWhen>
+            <with
+                  variable="selection">
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="org.topcased.requirement.AttributeLink">
+                  </instanceof>
+               </iterate>
+            </with>
+         </enabledWhen>
       </handler>
       <handler
             class="org.topcased.requirement.core.handlers.SetAsValidHandler"
             commandId="org.topcased.requirement.core.setAsValid">
-         <activeWhen>
+         <enabledWhen>
             <with
-                  variable="activeMenuSelection">
+                  variable="selection">
                <iterate
                      ifEmpty="false">
                   <and>
@@ -301,31 +360,83 @@
                   </and>
                </iterate>
             </with>
-         </activeWhen>
+         </enabledWhen>
       </handler>
       <handler
             class="org.topcased.requirement.core.handlers.SetUnsetPartialHandler"
             commandId="org.topcased.requirement.core.setUnsetPartial">
+         <enabledWhen>
+            <with
+                  variable="selection">
+               <iterate
+                     ifEmpty="false">
+                  <instanceof
+                        value="org.topcased.requirement.AttributeLink">
+                  </instanceof>
+               </iterate>
+            </with></enabledWhen>
       </handler>
       <handler
             class="org.topcased.requirement.core.handlers.UnallocateHandler"
             commandId="org.topcased.requirement.core.unallocate">
+         <enabledWhen>
+            <with
+                  variable="selection">
+               <iterate
+                     ifEmpty="false">
+                  <or>
+                     <instanceof
+                           value="org.topcased.requirement.Requirement">
+                     </instanceof>
+                     <instanceof
+                           value="org.topcased.requirement.HierarchicalElement">
+                     </instanceof>
+                  </or>
+               </iterate>
+            </with>
+         </enabledWhen>
       </handler>
       <handler
             class="org.topcased.requirement.core.handlers.UpdateAttributeHandler"
             commandId="org.topcased.requirement.core.updateAttribute">
+         <enabledWhen>
+            <with
+                  variable="selection">
+               <iterate
+                     ifEmpty="false">
+                  <or>
+                     <instanceof
+                           value="org.topcased.requirement.Requirement">
+                     </instanceof>
+                     <instanceof
+                           value="org.topcased.requirement.HierarchicalElement">
+                     </instanceof>
+                  </or>
+               </iterate>
+            </with></enabledWhen>
       </handler>
       <handler
             class="org.topcased.requirement.core.handlers.UpdateAttributeConfigurationHandler"
             commandId="org.topcased.requirement.core.updateAttributeConfiguration">
-         <activeWhen>
-            <with
-                  variable="requirementActionsEnablement.isImpacted">
-               <equals
-                     value="true">
-               </equals>
-            </with>
-         </activeWhen>
+         <enabledWhen>
+            <and>
+               <with
+                     variable="selection">
+                  <iterate
+                        ifEmpty="false">
+                     <instanceof
+                           value="org.topcased.requirement.AttributeConfiguration">
+                     </instanceof>
+                  </iterate>
+               </with>
+               <with
+                     variable="requirementActionsEnablement.isImpacted">
+                  <equals
+                        value="true">
+                  </equals>
+               </with>
+            </and>
+         </enabledWhen>
       </handler>
       <handler
             class="org.topcased.requirement.core.handlers.SetMarkerHandler"
@@ -1001,25 +1112,21 @@
    <extension
          point="org.eclipse.ui.commands">
       <command
-            categoryId="org.eclipse.ui.category.edit"
             description="Copy the selection with its children"
             id="org.topcased.requirement.core.copy"
             name="Copy">
       </command>
       <command
-            categoryId="org.eclipse.ui.category.edit"
             description="Cut the selection with its children"
             id="org.topcased.requirement.core.cut"
             name="Cut">
       </command>
       <command
-            categoryId="org.eclipse.ui.category.edit"
             description="Delete the selection with its children"
             id="org.topcased.requirement.core.delete"
             name="Delete">
       </command>
       <command
-            categoryId="org.eclipse.ui.category.edit"
             description="Paste the selection with its children"
             id="org.topcased.requirement.core.paste"
             name="Paste">
@@ -1188,6 +1295,108 @@
             </adapt>
          </enabledWhen>
       </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="org.topcased.requirement.core.delete"
+            contextId="org.topcased.requirement.core.currentView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="DEL">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.delete"
+            contextId="org.topcased.requirement.core.upstreamView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="DEL">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.cut"
+            contextId="org.topcased.requirement.core.currentView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+X">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.copy"
+            contextId="org.topcased.requirement.core.currentView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+C">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.paste"
+            contextId="org.topcased.requirement.core.currentView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+V">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.updateAttribute"
+            contextId="org.topcased.requirement.core.currentView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="U A">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.updateAttributeConfiguration"
+            contextId="org.topcased.requirement.core.currentView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="U C">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.unallocate"
+            contextId="org.topcased.requirement.core.currentView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="N">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.setUnsetPartial"
+            contextId="org.topcased.requirement.core.currentView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="P">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.setAsValid"
+            contextId="org.topcased.requirement.core.currentView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="CR">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.addAttribute"
+            contextId="org.topcased.requirement.core.currentView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="A">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.createAnonymousRequirement"
+            contextId="org.topcased.requirement.core.currentView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="C F">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.createCurrentRequirement"
+            contextId="org.topcased.requirement.core.currentView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="C C">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.loadResource"
+            contextId="org.topcased.requirement.core.currentView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="L">
+      </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.contexts">
+      <context
+            description="The current view context"
+            id="org.topcased.requirement.core.currentView"
+            name="In current view"
+            parentId="org.eclipse.ui.contexts.window">
+      </context>
+      <context
+            description="The upstream view context"
+            id="org.topcased.requirement.core.upstreamView"
+            name="In upstream view"
+            parentId="org.eclipse.ui.contexts.window">
+      </context>
    </extension>
 
    <extension

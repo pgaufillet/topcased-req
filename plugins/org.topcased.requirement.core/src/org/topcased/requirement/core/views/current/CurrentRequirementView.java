@@ -13,10 +13,12 @@ package org.topcased.requirement.core.views.current;
 import org.eclipse.core.commands.Command;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.handlers.RegistryToggleState;
 import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.part.IPageBookViewPage;
@@ -57,6 +59,18 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
     /** PropertySheet page */
     private RequirementPropertySheetPage mPropertySheetPage;
 
+    /**
+     * @see org.eclipse.ui.part.PageBookView#createPartControl(org.eclipse.swt.widgets.Composite)
+     */
+    @Override
+    public void createPartControl(Composite parent)
+    {        
+        super.createPartControl(parent);
+        
+        IContextService contextService = (IContextService) getSite().getService(IContextService.class);
+        contextService.activateContext(VIEW_ID);
+    }
+    
     /**
      * @see org.eclipse.ui.part.PageBookView#getAdapter(java.lang.Class)
      */
@@ -127,6 +141,7 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
      */
     public void partActivated(IWorkbenchPart part)
     {
+        
         Modeler modeler = Utils.getCurrentModeler();
 
         ISourceProviderService service = (ISourceProviderService) PlatformUI.getWorkbench().getService(ISourceProviderService.class);

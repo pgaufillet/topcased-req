@@ -406,7 +406,7 @@ public class CurrentPreferencePage extends PreferencePage implements IWorkbenchP
 
     public void init(IWorkbench workbench)
     {
-        // TODO Auto-generated method stub
+        //Nothing to do
     }
 
     /**
@@ -638,7 +638,6 @@ public class CurrentPreferencePage extends PreferencePage implements IWorkbenchP
         @Override
         public void widgetDefaultSelected(SelectionEvent e)
         {
-            // TODO Auto-generated method stub
             super.widgetDefaultSelected(e);
         }
 

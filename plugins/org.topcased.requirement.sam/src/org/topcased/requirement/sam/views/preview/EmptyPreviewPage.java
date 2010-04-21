@@ -75,8 +75,7 @@ public class EmptyPreviewPage extends Page implements IPreviewPage
 
     public void addSelectionChangedListener(ISelectionChangedListener listener)
     {
-        // TODO Auto-generated method stub
-        
+        // Nothing to do       
     }
 
     public ISelection getSelection()
