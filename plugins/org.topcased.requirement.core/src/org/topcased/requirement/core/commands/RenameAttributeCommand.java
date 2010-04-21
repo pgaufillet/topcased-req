@@ -80,6 +80,6 @@ public class RenameAttributeCommand extends CompoundCommand
     @Override
     public boolean canExecute()
     {
-        return super.canExecute() && !"".equals(newName) && !"".equals(oldName) && editingDomain != null; //$NON-NLS-1$
+        return super.canExecute() && !"".equals(newName) && !"".equals(oldName) && editingDomain != null; //$NON-NLS-1$ //$NON-NLS-2$
     }
 }

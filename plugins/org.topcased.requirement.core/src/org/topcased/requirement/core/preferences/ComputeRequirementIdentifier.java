@@ -145,7 +145,7 @@ public class ComputeRequirementIdentifier
     {
         IPreferenceStore store = AbstractRequirementView.getPreferenceStore();
         String nameStored = store.getString(RequirementNamingConstants.REQUIREMENT_COUNTING_ALGORITHM);
-        return !"".equals(nameStored) ? nameStored : RequirementNamingConstants.DEFAULT_COUNTING_ALGORITHM;
+        return !"".equals(nameStored) ? nameStored : RequirementNamingConstants.DEFAULT_COUNTING_ALGORITHM; //$NON-NLS-1$
     }
 
 }

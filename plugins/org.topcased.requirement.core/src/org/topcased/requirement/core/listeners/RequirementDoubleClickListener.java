@@ -76,7 +76,7 @@ public class RequirementDoubleClickListener implements IDoubleClickListener
         {
             Object theResult = chooseDialog.getResult()[0];
             EditingDomain domain = TopcasedAdapterFactoryEditingDomain.getEditingDomainFor((ObjectAttribute) firstElement);
-            Command cmd = SetCommand.create(domain, firstElement, RequirementPackage.eINSTANCE.getObjectAttribute_Value(), "".equals(theResult) ? null : theResult);
+            Command cmd = SetCommand.create(domain, firstElement, RequirementPackage.eINSTANCE.getObjectAttribute_Value(), "".equals(theResult) ? null : theResult); //$NON-NLS-1$
             if (cmd.canExecute())
             {
                 domain.getCommandStack().execute(cmd);

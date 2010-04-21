@@ -24,7 +24,7 @@ public class RequirementCorePlugin extends AbstractUIPlugin
 {
 
     // The plug-in ID
-    public static final String PLUGIN_ID = "org.topcased.requirement.core";
+    public static final String PLUGIN_ID = "org.topcased.requirement.core"; //$NON-NLS-1$
 
     // The shared instance
     private static RequirementCorePlugin plugin;

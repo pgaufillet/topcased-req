@@ -26,10 +26,10 @@ public interface IUpstreamRequirementPage extends IPageBookViewPage
 
     Boolean DEFAULT_SORT_UPSTREAM_ALPHABETICALLY = false;
     
-    String SHOW_TREE_HIERARCHY_PREF = "show_tree_hierarchy_pref";
+    String SHOW_TREE_HIERARCHY_PREF = "show_tree_hierarchy_pref"; //$NON-NLS-1$
     
-    String SHOW_FLAT_HIERARCHY_PREF = "show_flat_hierarchy_pref";
+    String SHOW_FLAT_HIERARCHY_PREF = "show_flat_hierarchy_pref"; //$NON-NLS-1$
     
-    String SORT_UPSTREAM_ALPHABETICALLY_PREF = "sort_upstream_alphabetically_pref";
+    String SORT_UPSTREAM_ALPHABETICALLY_PREF = "sort_upstream_alphabetically_pref"; //$NON-NLS-1$
     
 }

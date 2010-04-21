@@ -106,7 +106,7 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
      */
     public String getContributorId()
     {
-        return "org.topcased.requirement.core.contributor";
+        return "org.topcased.requirement.core.contributor"; //$NON-NLS-1$
     }
 
     /**

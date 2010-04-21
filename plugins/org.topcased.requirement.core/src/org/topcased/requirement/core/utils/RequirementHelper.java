@@ -301,7 +301,7 @@ public final class RequirementHelper
     {
         long index = 0;
         HierarchicalElement root = RequirementHelper.INSTANCE.getHierarchicalElementRoot();
-        String source = "";
+        String source = ""; //$NON-NLS-1$
         IRequirementCountingAlgorithm algorithm = RequirementCountingAlgorithmManager.getInstance().getCountingAlgorithm(ComputeRequirementIdentifier.getCurrentAlgorithm());
 
         // Handle the create from upstream case
@@ -425,7 +425,7 @@ public final class RequirementHelper
     {
         TextAttribute newAtt = RequirementFactory.eINSTANCE.createTextAttribute();
         newAtt.setName(attribute.getName());
-        String value = attribute.getDefaultValue() != null ? attribute.getDefaultValue().getValue().getValue() : "";
+        String value = attribute.getDefaultValue() != null ? attribute.getDefaultValue().getValue().getValue() : ""; //$NON-NLS-1$
         newAtt.setValue(value);
         return newAtt;
     }

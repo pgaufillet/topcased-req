@@ -44,7 +44,7 @@ public class SpecificDropActionManager extends AbstractExtensionManager
      */
     private SpecificDropActionManager()
     {
-        super(RequirementCorePlugin.getId() + "." + SPECIFIC_DROP_ACTION_EXTENSION_POINT);
+        super(RequirementCorePlugin.getId() + "." + SPECIFIC_DROP_ACTION_EXTENSION_POINT); //$NON-NLS-1$
         actions = new HashSet<SpecificDropActionDescriptor>();
         readRegistry();
     }

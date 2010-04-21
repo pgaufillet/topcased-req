@@ -51,7 +51,7 @@ public class RequirementTransformationManager extends AbstractExtensionManager
      */
     private RequirementTransformationManager()
     {
-        super(RequirementCorePlugin.getId() + "." + REQUIREMENT_TRANSFORMATION_EXTENSION_POINT);
+        super(RequirementCorePlugin.getId() + "." + REQUIREMENT_TRANSFORMATION_EXTENSION_POINT); //$NON-NLS-1$
         mapClass = new HashMap<String, IRequirementTransformation>();
         readRegistry();
     }
@@ -83,7 +83,7 @@ public class RequirementTransformationManager extends AbstractExtensionManager
             {
                 String fileExtensions = confElt.getAttribute(ATT_FILE_EXTENSIONS);
                 IRequirementTransformation transformation = (IRequirementTransformation) confElt.createExecutableExtension(ATT_CLASS);
-                String[] ext = fileExtensions.split("[\\s]*,[\\s]*");
+                String[] ext = fileExtensions.split("[\\s]*,[\\s]*"); //$NON-NLS-1$
                 for (String str : ext)
                 {
                     mapClass.put(str, transformation);
@@ -108,7 +108,7 @@ public class RequirementTransformationManager extends AbstractExtensionManager
         for (IConfigurationElement confElt : elements)
         {
             String elts = confElt.getAttribute(ATT_FILE_EXTENSIONS);
-            String[] ext = elts.split("[\\s]*,[\\s]*");
+            String[] ext = elts.split("[\\s]*,[\\s]*"); //$NON-NLS-1$
             for (String str : ext)
             {
                 mapClass.remove(str);

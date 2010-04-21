@@ -53,7 +53,7 @@ public class RequirementIdentifierVariablesManager extends AbstractExtensionMana
      */
     private RequirementIdentifierVariablesManager()
     {
-        super(RequirementCorePlugin.getId() + "." + REQUIREMENT_IDENTIFIER_VARIABLES_EXTENSION_POINT);
+        super(RequirementCorePlugin.getId() + "." + REQUIREMENT_IDENTIFIER_VARIABLES_EXTENSION_POINT); //$NON-NLS-1$
         mapClass = new HashMap<String, IRequirementIdentifierVariables>();
         readRegistry();
     }

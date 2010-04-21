@@ -55,7 +55,7 @@ public class DropRestrictionManager extends AbstractExtensionManager
      */
     private DropRestrictionManager()
     {
-        super(RequirementCorePlugin.getId() + "." + DROP_RESTRICTION_EXTENSION_POINT);
+        super(RequirementCorePlugin.getId() + "." + DROP_RESTRICTION_EXTENSION_POINT); //$NON-NLS-1$
         map = new HashMap<String, Collection<Class< ? >>>();
         readRegistry();
     }

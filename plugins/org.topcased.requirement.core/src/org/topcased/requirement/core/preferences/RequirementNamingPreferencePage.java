@@ -346,7 +346,7 @@ public class RequirementNamingPreferencePage extends AbstractTopcasedPreferenceP
             }
             else
             {
-                descriptionText.setText("");
+                descriptionText.setText(""); //$NON-NLS-1$
             }
         }
     }

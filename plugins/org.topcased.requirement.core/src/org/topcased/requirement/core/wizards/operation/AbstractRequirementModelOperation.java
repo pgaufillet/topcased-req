@@ -80,7 +80,7 @@ public abstract class AbstractRequirementModelOperation extends WorkspaceModifyO
      */
     protected void updateRequirementReference(IProgressMonitor monitor)
     {
-        monitor.subTask("updating references in target model");
+        monitor.subTask(Messages.AbstractRequirementModelOperation_0);
         IModelAttachmentPolicy policy = null;
         Resource targetModelResource = RequirementUtils.getResource(targetModelFile.getFullPath());
         
@@ -107,14 +107,14 @@ public abstract class AbstractRequirementModelOperation extends WorkspaceModifyO
     */
     protected void mergeOperation(Resource requirementResourceMerged, IProgressMonitor monitor)
     {
-        monitor.subTask("merging requirement model");
+        monitor.subTask(Messages.AbstractRequirementModelOperation_1);
         try
         {
             // Close the corresponding diagram if open
             IPath diagramFile = targetModelFile.getFullPath();
-            if (!diagramFile.getFileExtension().endsWith("di"))
+            if (!diagramFile.getFileExtension().endsWith("di")) //$NON-NLS-1$
             {
-                diagramFile = diagramFile.removeFileExtension().addFileExtension(diagramFile.getFileExtension() + "di");
+                diagramFile = diagramFile.removeFileExtension().addFileExtension(diagramFile.getFileExtension() + "di"); //$NON-NLS-1$
             }
             boolean closed = RequirementUtils.closeDiagramEditor(diagramFile);
 

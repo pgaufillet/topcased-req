@@ -58,7 +58,7 @@ public class RequirementCountingAlgorithmManager extends AbstractExtensionManage
      */
     private RequirementCountingAlgorithmManager()
     {
-        super(RequirementCorePlugin.getId() + "." + REQUIREMENT_COUNTING_ALGORITHM_EXTENSION_POINT);
+        super(RequirementCorePlugin.getId() + "." + REQUIREMENT_COUNTING_ALGORITHM_EXTENSION_POINT); //$NON-NLS-1$
         mapClass = new HashMap<String, IRequirementCountingAlgorithm>();
         mapName = new HashMap<String, String>();
         readRegistry();

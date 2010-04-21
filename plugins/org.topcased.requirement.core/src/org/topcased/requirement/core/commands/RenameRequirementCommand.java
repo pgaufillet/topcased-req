@@ -90,11 +90,11 @@ public class RenameRequirementCommand extends CompoundCommand
                     String identifier = requirement.getIdentifier();
                     if (oldName == null)
                     {
-                        identifier = identifier.replaceFirst("null", newName); // null is the default value
+                        identifier = identifier.replaceFirst("null", newName); // null is the default value //$NON-NLS-1$
                     }
-                    else if ("".equals(oldName))
+                    else if ("".equals(oldName)) //$NON-NLS-1$
                     {
-                        identifier = identifier.replaceFirst("__", "_" + newName + "_");
+                        identifier = identifier.replaceFirst("__", "_" + newName + "_"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                     }
                     else
                     {

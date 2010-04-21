@@ -46,7 +46,7 @@ public class UnlinkRequirementModelHandler extends AbstractHandler
         if (modeler != null)
         {
             // launch the unlink dialog
-            UnlinkDialog dialog = new UnlinkDialog(Display.getCurrent().getActiveShell(), Messages.getString("UnlinkRequirementModelHandler.0"), Messages.getString("UnlinkRequirementModelHandler.1"));//$NON-NLS-1$
+            UnlinkDialog dialog = new UnlinkDialog(Display.getCurrent().getActiveShell(), Messages.getString("UnlinkRequirementModelHandler.0"), Messages.getString("UnlinkRequirementModelHandler.1"));//$NON-NLS-1$ //$NON-NLS-2$
             int dialogResult = dialog.open();
 
             // If "delete file" is checked

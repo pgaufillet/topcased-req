@@ -53,7 +53,7 @@ public class ModelAttachmentPolicyManager extends AbstractExtensionManager
      */
     private ModelAttachmentPolicyManager()
     {
-        super(RequirementCorePlugin.getId() + "." + MODEL_ATTACHMENT_POLICY_EXTENSION_POINT);
+        super(RequirementCorePlugin.getId() + "." + MODEL_ATTACHMENT_POLICY_EXTENSION_POINT); //$NON-NLS-1$
         mapClass = new HashMap<String, IModelAttachmentPolicy>();
         readRegistry();
     }

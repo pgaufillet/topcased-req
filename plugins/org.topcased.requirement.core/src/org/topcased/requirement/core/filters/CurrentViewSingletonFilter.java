@@ -38,7 +38,7 @@ import ttm.Requirement;
  */
 public class CurrentViewSingletonFilter extends ViewerFilter
 {
-    private static final String LINK_TO = "#Link_to";
+    private static final String LINK_TO = "#Link_to"; //$NON-NLS-1$
     
 	private static CurrentViewSingletonFilter instance = new CurrentViewSingletonFilter();
 

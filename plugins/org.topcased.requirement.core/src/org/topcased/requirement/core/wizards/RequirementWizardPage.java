@@ -119,7 +119,7 @@ public class RequirementWizardPage extends WizardPage
         }
         else
         {
-            ALREADY_ATTACHED_REQUIREMENT = "";
+            ALREADY_ATTACHED_REQUIREMENT = ""; //$NON-NLS-1$
         }
     }
 
@@ -336,7 +336,7 @@ public class RequirementWizardPage extends WizardPage
         {
             if (!ModelAttachmentPolicyManager.getInstance().isEnableFor(getTargetModelFile().getFileExtension()))
             {
-                if (!getTargetModelFile().getFileExtension().endsWith("di"))
+                if (!getTargetModelFile().getFileExtension().endsWith("di")) //$NON-NLS-1$
                 {
                     message = Messages.getString("RequirementWizardPage.1"); //$NON-NLS-1$
                 }
@@ -351,13 +351,13 @@ public class RequirementWizardPage extends WizardPage
         {
             if (!RequirementTransformationManager.getInstance().isEnableFor(getSourceModelFile().getFileExtension()))
             {
-                if (!getSourceModelFile().getFileExtension().equals("requirement"))
+                if (!getSourceModelFile().getFileExtension().equals("requirement")) //$NON-NLS-1$
                 {
                     message = Messages.getString("RequirementWizardPage.19"); //$NON-NLS-1$
                 }
             }
         }
-        if (importModelFd.getText().equals(ALREADY_ATTACHED_REQUIREMENT) && !ALREADY_ATTACHED_REQUIREMENT.equals(""))
+        if (importModelFd.getText().equals(ALREADY_ATTACHED_REQUIREMENT) && !ALREADY_ATTACHED_REQUIREMENT.equals("")) //$NON-NLS-1$
         {
             setMessage(Messages.getString("RequirementWizardPage.20"), INFORMATION); //$NON-NLS-1$
         }
@@ -395,7 +395,7 @@ public class RequirementWizardPage extends WizardPage
         {
             result = false;
         }
-        else if (importModelFd.getText().equals(ALREADY_ATTACHED_REQUIREMENT) && !ALREADY_ATTACHED_REQUIREMENT.equals(""))
+        else if (importModelFd.getText().equals(ALREADY_ATTACHED_REQUIREMENT) && !ALREADY_ATTACHED_REQUIREMENT.equals("")) //$NON-NLS-1$
         {
             result = false;
         }

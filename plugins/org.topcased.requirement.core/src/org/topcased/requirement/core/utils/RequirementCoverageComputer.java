@@ -56,7 +56,7 @@ public final class RequirementCoverageComputer
     public static final RequirementCoverageComputer INSTANCE = new RequirementCoverageComputer();
 
     /** The format for displaying a percentage. */
-    private static final DecimalFormat PERCENT_FORMAT = new DecimalFormat("#0.##%");
+    private static final DecimalFormat PERCENT_FORMAT = new DecimalFormat("#0.##%"); //$NON-NLS-1$
 
     /** The editing domain in which coverage rate is computed */
     private EditingDomain editingDomain = null;
