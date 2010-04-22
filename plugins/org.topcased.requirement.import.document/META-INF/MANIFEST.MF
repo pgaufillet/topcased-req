@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Requirement Import From Document
+Bundle-SymbolicName: org.topcased.requirement.import.document;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.topcased.requirement.document.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.ui.forms,
+ org.eclipse.emf.common.ui,
+ org.topcased.document.parser,
+ org.topcased.doc2model.parser,
+ org.eclipse.uml2.uml,
+ org.topcased.sysml,
+ org.topcased.requirement.core;bundle-version="3.3.0"
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Import-Package: org.topcased.regexviewer.views
+Export-Package: org.topcased.requirement.document.utils
+Bundle-Vendor: Topcased
