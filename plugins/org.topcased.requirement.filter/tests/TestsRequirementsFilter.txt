@@ -1,0 +1,58 @@
+Test filtre des exigences :
+ - fichier de 10493 exigences.
+
+Test 1 : 1 Regex
+	Filtrer les exigences dont l'attribut FRS possede un 5
+Résultat : success!
+
+Test 2 : 2 Regex OR
+	Filtrer les exigences dont l'attribut FRS possede un 5 ou un 8
+Résultat : success!
+
+Test 4 : 2 Regex AND
+	Filtrer les exigences dont l'attribut FRS possede un 5 et un 8
+Résultat : success!
+
+Test 5 : 2 Regex OR sur 2 attributs
+	Filtrer les exigences dont l'attribut FRS possede un 5 ou l'attribut MOC possede un 8
+Résultat : success!
+
+Test 6 : 2 Regex AND sur 2 attributs
+	Filtrer les exigences dont l'attribut FRS possede un 5 et l'attribut MOC possede un 8
+Résultat : success!
+
+Test 7 : 3 Regex OR sur 3 attributs
+	Filtrer les exigences dont l'attribut FRS possede un 5 ou l'attribut MOC possede un 8 ou l'attribut QTP possede un 3
+Résultat : success!
+
+Test 8 : 3 Regex AND sur 3 attributs
+	Filtrer les exigences dont l'attribut FRS possede un 5 et l'attribut MOC possede un 8 et l'attribut QTP possede un 3
+Résultat : success!
+
+Test 9 : 5 Regex OR sur 5 attributs
+	FRS 5, MOC 8, QTP 3, Fct 9, Comment 2,
+Résultat : success!
+
+Test 10 : 5 Regex AND sur 5 attributs
+	FRS 5, MOC 8, QTP 3, Fct 9, Comment 2,
+Résultat : success!
+
+Test11 : 1 Regex egal strict sur 1 attribut
+	Comment doit être égal à Comment1
+Résultat : success !
+
+Test 12 : 1 Regex Negation (^) sur 1 attributs
+	FRS ne contient pas 5
+Résultat : success !
+
+Test 13 : 1 Regex Negation (^) + 1 Regex contient, OR sur 2 attributs
+Comment ne contient pas 5 ou FRS contient 2 
+Résultat : success !
+
+Test 14 : 1 Regex Negation (^) + 1 Regex contient, AND sur 2 attributs
+Comment ne contient pas 5 et FRS contient 2 
+Résultat : success !
+
+
+
+

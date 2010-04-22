@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Requirements Filter Plug-in
+Bundle-SymbolicName: org.topcased.requirement.filter;singleton:=true
+Bundle-Version: 1.0.3.qualifier
+Bundle-Activator: org.topcased.requirement.generic.filter.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.emf.ecore,
+ org.topcased.regexviewer,
+ org.eclipse.emf.edit,
+ org.eclipse.ui.forms,
+ org.topcased.facilities,
+ org.topcased.requirement.core,
+ org.topcased.requirement.import.document
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Export-Package: org.topcased.requirement.generic.filter,
+ org.topcased.requirement.generic.filter.ui
+Import-Package: org.eclipse.gef.commands
+Bundle-Vendor: Topcased
