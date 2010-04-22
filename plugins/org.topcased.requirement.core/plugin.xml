@@ -731,6 +731,11 @@
             <menuContribution
                   locationURI="popup:org.topcased.requirement.core.views.current.popupMenu?after=lastSeparator">
                <command
+                     commandId="org.topcased.requirement.core.delete"
+                     label="&amp;Delete"
+                     style="push">
+               </command>
+               <command
                      commandId="org.topcased.requirement.core.copy"
                      label="&amp;Copy"
                      style="push">
@@ -741,15 +746,14 @@
                      style="push">
                </command>
                <command
-                     commandId="org.topcased.requirement.core.delete"
-                     label="&amp;Delete"
-                     style="push">
-               </command>
-               <command
                      commandId="org.topcased.requirement.core.paste"
                      label="&amp;Paste"
                      style="push">
                </command>
+               <separator
+                     name="SEPARATOR0"
+                     visible="true">
+               </separator>
                <menu
                      id="markerMenu"
                      label="Set marker position">
@@ -1445,7 +1449,7 @@
          point="org.eclipse.ui.views">
       <view
             name="Upstream Requirement"
-            icon="icons/current.gif"
+            icon="icons/upstream.gif"
             category="org.topcased.facilities.views"
             class="org.topcased.requirement.core.views.upstream.UpstreamRequirementView"
             id="org.topcased.requirement.core.upstreamView">
@@ -1756,13 +1760,6 @@
             namespace="org.topcased.requirement.core"
             properties="isImpacted"
             type="org.topcased.requirement.Requirement">
-      </propertyTester>
-      <propertyTester
-            class="org.topcased.requirement.core.testers.RequirementsAreNotImpactedPropertyTester"
-            id="org.topcased.requirement.core.testers.RequirementsAreNotImpactedPropertyTester"
-            namespace="org.topcased.requirement.core"
-            properties="requirementsAreNotImpacted"
-            type="org.topcased.requirement.CurrentRequirement">
       </propertyTester>
    </extension>
 </plugin>
