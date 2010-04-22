@@ -1350,13 +1350,13 @@
             commandId="org.topcased.requirement.core.updateAttribute"
             contextId="org.topcased.requirement.core.currentView"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="U A">
+            sequence="M2+A">
       </key>
       <key
             commandId="org.topcased.requirement.core.updateAttributeConfiguration"
             contextId="org.topcased.requirement.core.currentView"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="U C">
+            sequence="M1+M2+A">
       </key>
       <key
             commandId="org.topcased.requirement.core.unallocate"
@@ -1386,13 +1386,13 @@
             commandId="org.topcased.requirement.core.createAnonymousRequirement"
             contextId="org.topcased.requirement.core.currentView"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="C F">
+            sequence="M2+F">
       </key>
       <key
             commandId="org.topcased.requirement.core.createCurrentRequirement"
             contextId="org.topcased.requirement.core.currentView"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="C C">
+            sequence="M2+C">
       </key>
       <key
             commandId="org.topcased.requirement.core.loadResource"
