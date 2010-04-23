@@ -23,6 +23,7 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 import org.topcased.modeler.DuplicationAdapter;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.RequirementPackage;
+import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
@@ -49,7 +50,7 @@ public class RequirementDuplicationAdapter implements DuplicationAdapter
      */
     public Command getPostProcessingCommand(EditingDomain editingDomain, EObject original, Map<EObject, EObject> mainMapping, Map<EObject, EObject> additionalMapping)
     {
-        CompoundCommand cc = new CompoundCommand("Duplicate Hierarchical Elements");
+        CompoundCommand cc = new CompoundCommand(Messages.getString("RequirementDuplicationAdapter.0")); //$NON-NLS-1$
         HierarchicalElement hierarchicalElt = RequirementUtils.getHierarchicalElementFor(original);
         if (hierarchicalElt != null)
         {

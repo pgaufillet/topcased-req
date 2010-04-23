@@ -49,7 +49,7 @@ public class TTM2RequirementService implements IService
 
     private static final String TRANSFO_ID = "org.topcased.requirement.transformation.import"; //$NON-NLS-1$
     
-    private static final String CHANGE_URI_ID = "org.topcased.service.changeuri";
+    private static final String CHANGE_URI_ID = "org.topcased.service.changeuri"; //$NON-NLS-1$
     
     //parameters
     private static final String inParam = "IN"; //$NON-NLS-1$

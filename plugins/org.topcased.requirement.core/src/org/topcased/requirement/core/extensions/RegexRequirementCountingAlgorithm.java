@@ -105,7 +105,7 @@ public class RegexRequirementCountingAlgorithm implements IRequirementCountingAl
         {
             String format = RequirementCorePlugin.getDefault().getPreferenceStore().getString(RequirementNamingConstants.REQUIREMENT_NAMING_FORMAT);
             String regex = format.replace(DefaultRequirementIdentifierVariables.INDEX_VAR, "(\\d*)"); //$NON-NLS-1$
-            regex = regex.replaceAll("\\{[^\\{]*\\}", "[\\\\w ]*"); //$NON-NLS-1$
+            regex = regex.replaceAll("\\{[^\\{]*\\}", "[\\\\w ]*"); //$NON-NLS-1$ //$NON-NLS-2$
             Pattern pat = Pattern.compile(regex);
             Matcher m = pat.matcher(current.getIdentifier());
             if (m.matches())

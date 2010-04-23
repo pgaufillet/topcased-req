@@ -28,7 +28,7 @@ public class RequirementSAMPlugin extends AbstractUIPlugin
 {
 
     // The plug-in ID
-    public static final String PLUGIN_ID = "org.topcased.requirement.sam";
+    public static final String PLUGIN_ID = "org.topcased.requirement.sam"; //$NON-NLS-1$
 
     // The shared instance
     private static RequirementSAMPlugin plugin;

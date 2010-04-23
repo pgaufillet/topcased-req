@@ -81,6 +81,7 @@ import org.topcased.requirement.SpecialChapter;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.current.CurrentPage;
 import org.topcased.requirement.core.views.current.CurrentRequirementView;
+import org.topcased.requirement.sam.internal.Messages;
 import org.topcased.requirement.sam.internal.RequirementSAMPlugin;
 import org.topcased.sam.System;
 
@@ -137,7 +138,7 @@ public class PreviewPage extends Page implements IPreviewPage
     /**
      * Path of the acceleo template to generate the content of the Document View
      */
-    protected static final String DOCUMENT_GENERATOR_PATH = "/org.topcased.requirement.sam/src/org/topcased/requirement/sam/views/preview/template/Document.mt";
+    protected static final String DOCUMENT_GENERATOR_PATH = "/org.topcased.requirement.sam/src/org/topcased/requirement/sam/views/preview/template/Document.mt"; //$NON-NLS-1$
 
     private Action modeSelectionAction;
 
@@ -206,17 +207,6 @@ public class PreviewPage extends Page implements IPreviewPage
                     {
                         ProjectionAnnotationModel model = (ProjectionAnnotationModel) getModel();
                         model.toggleExpansionState(annotation);
-                        // try
-                        // {
-                        // documentSourceViewer.setTextColor(STATIC_TEXT_FOREGROUND,
-                        // documentSourceViewer.getDocument().getLineOffset(lineNumber), 19, false);
-                        // documentSourceViewer.setTextColor(STATIC_TEXT_FOREGROUND,
-                        // documentSourceViewer.getDocument().getLineOffset(lineNumber + 1) - 3, 1, true);
-                        // }
-                        // catch (BadLocationException e)
-                        // {
-                        // e.printStackTrace();
-                        // }
                     }
                 }
             }
@@ -352,8 +342,8 @@ public class PreviewPage extends Page implements IPreviewPage
 
         public AutomaticRefreshAction()
         {
-            super("Automatic Refresh", Action.AS_CHECK_BOX);
-            this.setImageDescriptor(RequirementSAMPlugin.getImageDescriptor("icons/link_obj.gif"));
+            super(Messages.getString("PreviewPage.0"), Action.AS_CHECK_BOX); //$NON-NLS-1$
+            this.setImageDescriptor(RequirementSAMPlugin.getImageDescriptor("icons/link_obj.gif")); //$NON-NLS-1$
         }
 
         @Override
@@ -377,8 +367,8 @@ public class PreviewPage extends Page implements IPreviewPage
          */
         public ManualRefreshAction()
         {
-            super("Refresh", Action.AS_PUSH_BUTTON);
-            this.setImageDescriptor(RequirementSAMPlugin.getImageDescriptor("icons/update.gif"));
+            super(Messages.getString("PreviewPage.1"), Action.AS_PUSH_BUTTON); //$NON-NLS-1$
+            this.setImageDescriptor(RequirementSAMPlugin.getImageDescriptor("icons/update.gif")); //$NON-NLS-1$
         }
 
         /**
@@ -497,7 +487,7 @@ public class PreviewPage extends Page implements IPreviewPage
             }
             else
             {
-                throw new IOException("Template not found " + DOCUMENT_GENERATOR_PATH);
+                throw new IOException(Messages.getString("PreviewPage.2") + DOCUMENT_GENERATOR_PATH); //$NON-NLS-1$
             }
         }
         catch (IOException e)

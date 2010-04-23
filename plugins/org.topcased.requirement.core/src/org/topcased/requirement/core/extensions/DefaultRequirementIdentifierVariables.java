@@ -93,7 +93,7 @@ public final class DefaultRequirementIdentifierVariables implements IRequirement
      */
     private String getHierarchicalElementIdentifier(HierarchicalElement hierarchicalElt)
     {
-        String result = "";
+        String result = ""; //$NON-NLS-1$
 
         if (hierarchicalElt != null)
         {

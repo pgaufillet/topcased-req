@@ -78,9 +78,9 @@ public class DefaultAttachmentPolicy implements IModelAttachmentPolicy
     {
         // get the diagram file from the target model resource
         IPath diagramFile = RequirementUtils.getPath(targetModel);
-        if (!diagramFile.getFileExtension().endsWith("di"))
+        if (!diagramFile.getFileExtension().endsWith("di")) //$NON-NLS-1$
         {
-            diagramFile = diagramFile.removeFileExtension().addFileExtension(diagramFile.getFileExtension() + "di");
+            diagramFile = diagramFile.removeFileExtension().addFileExtension(diagramFile.getFileExtension() + "di"); //$NON-NLS-1$
             targetModel = RequirementUtils.getResource(diagramFile);
         }
 
@@ -232,7 +232,7 @@ public class DefaultAttachmentPolicy implements IModelAttachmentPolicy
                     }
                 }
 
-                String fragment = requirementModel.getURI().trimFragment().deresolve(URI.createURI(eobject.eResource().getURI().toString().replace(" ", "%20"))).toString();
+                String fragment = requirementModel.getURI().trimFragment().deresolve(URI.createURI(eobject.eResource().getURI().toString().replace(" ", "%20"))).toString(); //$NON-NLS-1$ //$NON-NLS-2$
                 // when we want to add the property
                 if (property == null && firstDiagram != null)
                 {

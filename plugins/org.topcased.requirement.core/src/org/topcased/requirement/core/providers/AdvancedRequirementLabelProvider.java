@@ -61,7 +61,7 @@ public class AdvancedRequirementLabelProvider extends CurrentRequirementLabelPro
             RequirementProject project = RequirementUtils.getRequirementProject(domain);
             return getTreePathText(project.getHierarchicalElement(), requirement);
         }
-        return "";
+        return ""; //$NON-NLS-1$
     }
 
     /**
@@ -79,7 +79,7 @@ public class AdvancedRequirementLabelProvider extends CurrentRequirementLabelPro
         while (endingPoint.eContainer() != null && !startingPoint.contains(endingPoint))
         {
             endingPoint = endingPoint.eContainer();
-            sb = sb.insert(0, super.getText(endingPoint) + "::");
+            sb = sb.insert(0, super.getText(endingPoint) + "::"); //$NON-NLS-1$
         }
         return sb.toString();
     }

@@ -69,7 +69,7 @@ public class TopcasedRequirementPerspectiveFactory implements IPerspectiveFactor
         layout.getViewLayout(navigatorId); 
 
         // Bottom Left
-        IFolderLayout bottomLeft = layout.createFolder("bottomLeft", IPageLayout.BOTTOM, (float) 0.66, "topLeft"); //$NON-NLS-1$
+        IFolderLayout bottomLeft = layout.createFolder("bottomLeft", IPageLayout.BOTTOM, (float) 0.66, "topLeft"); //$NON-NLS-1$ //$NON-NLS-2$
         bottomLeft.addView(CurrentRequirementView.VIEW_ID);
         bottomLeft.addView(IPageLayout.ID_OUTLINE);
         layout.getViewLayout(CurrentRequirementView.VIEW_ID);
@@ -80,7 +80,7 @@ public class TopcasedRequirementPerspectiveFactory implements IPerspectiveFactor
         layout.getViewLayout(DocView.VIEW_ID);
 
         // Bottom Right
-        IFolderLayout bottomRight = layout.createFolder("bottomRight", IPageLayout.RIGHT, (float) 0.66, "bottom"); //$NON-NLS-1$
+        IFolderLayout bottomRight = layout.createFolder("bottomRight", IPageLayout.RIGHT, (float) 0.66, "bottom"); //$NON-NLS-1$ //$NON-NLS-2$
         bottomRight.addView(IPageLayout.ID_PROP_SHEET);
         bottomRight.addView(IPageLayout.ID_PROBLEM_VIEW);
         layout.getViewLayout(IPageLayout.ID_PROP_SHEET);
