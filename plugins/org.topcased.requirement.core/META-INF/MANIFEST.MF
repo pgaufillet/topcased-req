@@ -1,6 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
 Bundle-SymbolicName: org.topcased.requirement.core;singleton:=true
 Bundle-Version: 3.3.0.qualifier
 Bundle-Activator: org.topcased.requirement.core.internal.RequirementCorePlugin
@@ -26,4 +28,4 @@ Export-Package: org.topcased.requirement.core.commands,
  org.topcased.requirement.core.views.upstream,
  org.topcased.requirement.core.wizards,
  org.topcased.requirement.core.wizards.operation
-Bundle-Vendor: %providerName
+
