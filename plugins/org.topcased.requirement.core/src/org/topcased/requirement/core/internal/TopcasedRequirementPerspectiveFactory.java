@@ -28,6 +28,8 @@ import org.topcased.requirement.core.views.upstream.UpstreamRequirementView;
 public class TopcasedRequirementPerspectiveFactory implements IPerspectiveFactory
 {
 
+    private final static String navigatorId = "org.topcased.ui.navigator.view"; //$NON-NLS-1$
+    
     /**
      * @see org.eclipse.ui.IPerspectiveFactory#createInitialLayout(org.eclipse.ui.IPageLayout)
      */
@@ -63,8 +65,8 @@ public class TopcasedRequirementPerspectiveFactory implements IPerspectiveFactor
         // Top Left
         IFolderLayout topLeft = layout.createFolder("topLeft", IPageLayout.LEFT, (float) 0.25, editorArea); //$NON-NLS-1$
         topLeft.addView(UpstreamRequirementView.VIEW_ID);
-        topLeft.addView("org.topcased.ui.navigator.view"); //$NON-NLS-1$
-        layout.getViewLayout("org.topcased.ui.navigator.view");
+        topLeft.addView(navigatorId); 
+        layout.getViewLayout(navigatorId); 
 
         // Bottom Left
         IFolderLayout bottomLeft = layout.createFolder("bottomLeft", IPageLayout.BOTTOM, (float) 0.66, "topLeft"); //$NON-NLS-1$

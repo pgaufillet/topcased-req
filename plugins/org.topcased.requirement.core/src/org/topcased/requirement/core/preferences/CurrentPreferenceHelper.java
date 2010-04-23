@@ -43,37 +43,37 @@ import org.topcased.requirement.core.utils.RequirementUtils;
  */
 public final class CurrentPreferenceHelper
 {
-    public static final String STRING_DEFAULT_VALUE = "(default)";
+    public static final String STRING_DEFAULT_VALUE = "(default)"; //$NON-NLS-1$
 
-    public static final String STRING_IS_ALLOCATE = "(allocate)";
+    public static final String STRING_IS_ALLOCATE = "(allocate)"; //$NON-NLS-1$
 
-    public static final String STRING_IS_TEXT = "(text)";
+    public static final String STRING_IS_TEXT = "(text)"; //$NON-NLS-1$
 
-    public static final String STRING_IS_REFERENCE = "(reference)";
+    public static final String STRING_IS_REFERENCE = "(reference)"; //$NON-NLS-1$
 
-    public static final String STRING_IS_LINK = "(link)";
+    public static final String STRING_IS_LINK = "(link)"; //$NON-NLS-1$
 
-    public static final String PREFERENCE_DELIMITER_ATTRIBUTE = "||";
+    public static final String PREFERENCE_DELIMITER_ATTRIBUTE = "||"; //$NON-NLS-1$
 
-    public static final String PREFERENCE_DELIMITER_VALUE = ";;";
+    public static final String PREFERENCE_DELIMITER_VALUE = ";;"; //$NON-NLS-1$
 
-    public static final String CURRENT_ATTRIBUTES_STORE = "defaultCurrentAttributes";
+    public static final String CURRENT_ATTRIBUTES_STORE = "defaultCurrentAttributes"; //$NON-NLS-1$
 
     public static final String[] DEFAULT_ATTRIBUTES = {
 
-    "#Maturity" + STRING_IS_TEXT,
+    "#Maturity" + STRING_IS_TEXT, //$NON-NLS-1$
 
-    "#Allocate" + STRING_IS_ALLOCATE,
+    "#Allocate" + STRING_IS_ALLOCATE, //$NON-NLS-1$
 
-    "#Link_to" + STRING_IS_LINK,
+    "#Link_to" + STRING_IS_LINK, //$NON-NLS-1$
 
-    "#Covered_by" + STRING_IS_TEXT,
+    "#Covered_by" + STRING_IS_TEXT, //$NON-NLS-1$
 
-    "#Justify" + STRING_IS_TEXT
+    "#Justify" + STRING_IS_TEXT //$NON-NLS-1$
 
     };
 
-    private static final String[][] DEFAULT_VALUES = { {"TBD" + STRING_DEFAULT_VALUE, "TBC"}, {}, {}, {}, {}};
+    private static final String[][] DEFAULT_VALUES = { {"TBD" + STRING_DEFAULT_VALUE, "TBC"}, {}, {}, {}, {}}; //$NON-NLS-1$ //$NON-NLS-2$
 
     private static IPreferenceStore preferenceStorePlugIn = RequirementCorePlugin.getDefault().getPreferenceStore();
 
@@ -256,7 +256,7 @@ public final class CurrentPreferenceHelper
 
     public static String getLabelAttribute(String value)
     {
-        String result = "";
+        String result = ""; //$NON-NLS-1$
         int pos;
 
         pos = value.indexOf(CurrentPreferenceHelper.STRING_IS_ALLOCATE);

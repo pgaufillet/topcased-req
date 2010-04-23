@@ -439,10 +439,6 @@
          </enabledWhen>
       </handler>
       <handler
-            class="org.topcased.requirement.core.handlers.SetMarkerHandler"
-            commandId="org.topcased.requirement.core.setMarker">
-      </handler>
-      <handler
             class="org.topcased.requirement.core.handlers.UndoHandler"
             commandId="org.topcased.requirement.core.undo">
       </handler>
@@ -751,39 +747,12 @@
                      style="push">
                </command>
                <separator
-                     name="SEPARATOR0"
+                     name="SEPARATOR1"
                      visible="true">
                </separator>
                <menu
                      id="markerMenu"
                      label="Set marker position">
-                  <command
-                        commandId="org.topcased.requirement.core.setMarker"
-                        label="&amp;Set to start"
-                        style="push">
-                     <parameter
-                           name="org.topcased.requirement.core.setMarkerCommandParameter"
-                           value="1">
-                     </parameter>
-                  </command>
-                  <command
-                        commandId="org.topcased.requirement.core.setMarker"
-                        label="&amp;Set to end"
-                        style="push">
-                     <parameter
-                           name="org.topcased.requirement.core.setMarkerCommandParameter"
-                           value="2">
-                     </parameter>
-                  </command>
-                  <command
-                        commandId="org.topcased.requirement.core.setMarker"
-                        label="&amp;Set here"
-                        style="push">
-                     <parameter
-                           name="org.topcased.requirement.core.setMarkerCommandParameter"
-                           value="3">
-                     </parameter>
-                  </command>
                   <visibleWhen
                         checkEnabled="false">
                      <with
@@ -801,11 +770,11 @@
                         </iterate>
                      </with>
                   </visibleWhen>
+                  <dynamic
+                        class="org.topcased.requirement.core.handlers.SetMarkerDynamic"
+                        id="org.topcased.requirement.core.setMarkerdynamic">
+                  </dynamic>
                </menu>
-               <separator
-                     name="SEPARATOR1"
-                     visible="true">
-               </separator>
                <command
                      commandId="org.topcased.requirement.core.setAsValid"
                      label="&amp;Set as valid"
@@ -1266,16 +1235,6 @@
             description="Update the current requirements attribute configuration"
             id="org.topcased.requirement.core.updateAttributeConfiguration"
             name="Update Attribute Configuration">
-      </command>
-      <command
-            description="Set the marker to a position in the current requirement tree"
-            id="org.topcased.requirement.core.setMarker"
-            name="Set Marker">
-         <commandParameter
-               id="org.topcased.requirement.core.setMarkerCommandParameter"
-               name="type"
-               optional="false">
-         </commandParameter>
       </command>
       <command
             description="Undo last executed command"

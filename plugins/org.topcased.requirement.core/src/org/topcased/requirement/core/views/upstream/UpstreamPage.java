@@ -11,8 +11,6 @@
  **********************************************************************************************************************/
 package org.topcased.requirement.core.views.upstream;
 
-import java.util.Iterator;
-
 import org.eclipse.core.commands.Command;
 import org.eclipse.emf.edit.ui.action.RedoAction;
 import org.eclipse.emf.edit.ui.action.UndoAction;
@@ -24,7 +22,6 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -44,7 +41,7 @@ import org.eclipse.ui.handlers.RegistryToggleState;
 import org.eclipse.ui.part.IPage;
 import org.topcased.requirement.core.dnd.DragSourceUpstreamAdapter;
 import org.topcased.requirement.core.dnd.RequirementTransfer;
-import org.topcased.requirement.core.filters.CurrentViewSingletonFilter;
+import org.topcased.requirement.core.filters.CurrentViewFilterFromUpstreamSelection;
 import org.topcased.requirement.core.filters.UpstreamRequirementFilter;
 import org.topcased.requirement.core.handlers.ICommandConstants;
 import org.topcased.requirement.core.internal.Messages;
@@ -54,6 +51,7 @@ import org.topcased.requirement.core.listeners.UpstreamSelectionChangedListener;
 import org.topcased.requirement.core.providers.UpstreamRequirementContentProvider;
 import org.topcased.requirement.core.providers.UpstreamRequirementLabelProvider;
 import org.topcased.requirement.core.utils.RequirementCoverageComputer;
+import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.AbstractRequirementPage;
 import org.topcased.requirement.core.views.SearchComposite;
@@ -122,7 +120,6 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
         findIt.setFilter(viewer, upstreamRequirementFilter);
 
         hookContextMenu();
-        hookKeyListeners();
         hookListeners();
 
         getSite().setSelectionProvider(viewer);
@@ -146,20 +143,22 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
                 ISharedImages sharedImages = PlatformUI.getWorkbench().getSharedImages();
                 
                 //add a first separator to surround undo & redo actions
-                Separator first = new Separator("firstSeparator"); //$NON-NLS-1$
+                Separator first = new Separator(firstPopupMenuSeparator);
                 first.setVisible(true);
                 manager.add(first);  
                 
                 UndoAction undoAction = new UndoAction(editingDomain);
                 undoAction.setImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_UNDO));
+                undoAction.setActionDefinitionId(ICommandConstants.UNDO_ID);
                 manager.add(undoAction);
                 
                 RedoAction redoAction = new RedoAction(editingDomain);
                 redoAction.setImageDescriptor(sharedImages.getImageDescriptor(ISharedImages.IMG_TOOL_REDO));
+                redoAction.setActionDefinitionId(ICommandConstants.REDO_ID);
                 manager.add(redoAction);
                 
                 //add a last separator to surround undo & redo actions
-                Separator last = new Separator("lastSeparator"); //$NON-NLS-1$
+                Separator last = new Separator(lastPopupMenuSeparator);
                 last.setVisible(true);
                 manager.add(last);
 
@@ -171,38 +170,6 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
         
         // Register menu for extension.
         getSite().registerContextMenu(UPSTREAM_POPUP_ID, menuManager, viewer);
-    }
-
-    /**
-     * FIXME : Handle key with an extension point
-     * 
-     * @see org.topcased.requirement.core.views.AbstractRequirementPage#executeCodeForKey(org.eclipse.jface.viewers.ISelection)
-     */
-    @Override
-    protected void executeCodeForKey(ISelection selection)
-    {
-        Boolean process = false;
-        if (selection instanceof IStructuredSelection)
-        {
-            process = true;
-            Iterator< ? > it = ((IStructuredSelection) selection).iterator();
-            while (it.hasNext())
-            {
-                Object o = it.next();
-                if (!(o instanceof ttm.Requirement || o instanceof Document))
-                {
-                    process = false;
-                }
-            }
-        }
-        if (process)
-        {
-//            IAction action = new UpstreamRequirementDeleteAction(currSelection, editingDomain);
-//            if (action.isEnabled())
-//            {
-//                action.run();
-//            }
-        }
     }
 
     /**
@@ -281,14 +248,11 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
         // Handle cases when the command is toggled but the associated action isn't performed
         if (filterCmd.getState(RegistryToggleState.STATE_ID).getValue().equals(true))
         {
-            if (((CurrentRequirementView)CurrentRequirementView.getInstance()) != null)
+            IPage currentPage = RequirementHelper.INSTANCE.getCurrentPage();
+            if (currentPage instanceof CurrentPage && upstreamListener == null)
             {
-                IPage currentPage = ((CurrentRequirementView)CurrentRequirementView.getInstance()).getCurrentPage();
-                if (currentPage instanceof CurrentPage && upstreamListener == null)
-                {
-                    upstreamListener = new UpstreamSelectionChangedListener((CurrentPage) currentPage);
-                    this.getViewer().addSelectionChangedListener(upstreamListener);
-                }
+                upstreamListener = new UpstreamSelectionChangedListener((CurrentPage) currentPage);
+                this.getViewer().addSelectionChangedListener(upstreamListener);
             }
         }
     }
@@ -302,14 +266,17 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
         if (((CurrentRequirementView)CurrentRequirementView.getInstance()) != null)
         {
             IPage currentPage = ((CurrentRequirementView)CurrentRequirementView.getInstance()).getCurrentPage();
-            if (currentPage instanceof CurrentPage && upstreamListener != null)
+            if (upstreamListener != null)
             {
                 this.getViewer().removeSelectionChangedListener(upstreamListener);
                 upstreamListener = null;
                 
-                //reset the tree otherwise the filter would be still active
-                CurrentViewSingletonFilter.getInstance().setSearchedRequirement(null);
-                ((CurrentPage) currentPage).getViewer().refresh();
+                if (currentPage instanceof CurrentPage)
+                {
+                    //reset the tree otherwise the filter would be still active
+                    CurrentViewFilterFromUpstreamSelection.getInstance().setSearchedRequirement(null);
+                    ((CurrentPage) currentPage).getViewer().refresh();
+                }
             }
         }
     }

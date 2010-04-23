@@ -19,7 +19,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.topcased.requirement.AttributeConfiguration;
 import org.topcased.requirement.CurrentRequirement;
-import org.topcased.requirement.core.filters.CurrentViewSingletonFilter;
+import org.topcased.requirement.core.filters.CurrentViewFilterFromUpstreamSelection;
 import org.topcased.requirement.core.views.current.CurrentPage;
 import org.topcased.requirement.core.views.current.CurrentRequirementView;
 
@@ -40,7 +40,7 @@ public class UpstreamSelectionChangedListener implements ISelectionChangedListen
 
     private TreeViewer viewer;
 
-    private CurrentViewSingletonFilter currentFilter;
+    private CurrentViewFilterFromUpstreamSelection currentFilter;
 
     /**
      * Constructor
@@ -88,7 +88,7 @@ public class UpstreamSelectionChangedListener implements ISelectionChangedListen
                     // we set the selection to null to avoid stack overflow
                     // ie : the current page will not try to restore a selection which is not visible
                     viewer.setSelection(null);
-                    currentFilter = CurrentViewSingletonFilter.getInstance();
+                    currentFilter = CurrentViewFilterFromUpstreamSelection.getInstance();
                     currentFilter.setSearchedRequirement(current);
                     viewer.addFilter(currentFilter);
                     viewer.expandAll();

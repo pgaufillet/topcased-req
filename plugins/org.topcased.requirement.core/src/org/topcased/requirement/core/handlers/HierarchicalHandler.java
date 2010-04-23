@@ -24,7 +24,7 @@ import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.views.upstream.UpstreamPage;
 
 /**
- * Handler of the hierarchical commands
+ * Handler of the hierarchical command
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  * 

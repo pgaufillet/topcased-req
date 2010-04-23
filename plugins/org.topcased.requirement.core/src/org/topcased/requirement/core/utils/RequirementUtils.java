@@ -353,11 +353,11 @@ public final class RequirementUtils
         URI uri = resource.getURI();
         String scheme = uri.scheme();
         IPath path = null;
-        if ("platform".equals(scheme))
+        if ("platform".equals(scheme)) //$NON-NLS-1$
         {
             path = Path.fromPortableString(uri.toPlatformString(true));
         }
-        else if ("file".equals(scheme))
+        else if ("file".equals(scheme)) //$NON-NLS-1$
         {
             path = Path.fromPortableString(uri.toFileString());
         }
@@ -456,14 +456,8 @@ public final class RequirementUtils
      */
     public static void loadRequirementModel(URI uri, EditingDomain domain)
     {
-        ISourceProviderService service = (ISourceProviderService) PlatformUI.getWorkbench().getService(ISourceProviderService.class);
-        RequirementModelSourceProvider provider = (RequirementModelSourceProvider) service.getSourceProvider(RequirementModelSourceProvider.HAS_REQUIREMENT_MODEL);
-
         // Gets the requirement model from the editing domain or loads it if it's the first time
         domain.getResourceSet().getResource(uri, true);
-
-        // Notify commands that the hasRequirement variable has changed
-        provider.setHasRequirementState(true);
     }
 
     /**
@@ -474,13 +468,10 @@ public final class RequirementUtils
      */
     public static boolean unloadRequirementModel(EditingDomain domain)
     {
-        ISourceProviderService service = (ISourceProviderService) PlatformUI.getWorkbench().getService(ISourceProviderService.class);
-        RequirementModelSourceProvider provider = (RequirementModelSourceProvider) service.getSourceProvider(RequirementModelSourceProvider.HAS_REQUIREMENT_MODEL);
         Resource requirementRsc = getRequirementModel(domain);
 
         // Unload the requirement resource and notify commands that the hasRequirement variable has changed
         requirementRsc.unload();
-        provider.setHasRequirementState(false);
 
         return domain.getResourceSet().getResources().remove(requirementRsc);
     }
@@ -517,7 +508,7 @@ public final class RequirementUtils
         EditingDomain editingDomain = modeler.getEditingDomain();
         for (Resource resource : editingDomain.getResourceSet().getResources())
         {
-            if (resource.getURI().fileExtension().endsWith("di"))
+            if (resource.getURI().fileExtension().endsWith("di")) //$NON-NLS-1$
             {
                 String uri = null;
                 EObject root = resource.getContents().get(0);
@@ -636,7 +627,7 @@ public final class RequirementUtils
     {
         Collection<Object> listObjects = new ArrayList<Object>();
         // this is the value inserted to reset the affected value
-        listObjects.add("");
+        listObjects.add(""); //$NON-NLS-1$
         if (selected instanceof AttributeAllocate)
         {
             // add all the model elements
@@ -776,8 +767,13 @@ public final class RequirementUtils
      * Notify commands that the hasRequirement variable has changed. Handle the enablement/disablement of commands when there
      * is a requirement model attached to the current modeler.
      */
-    public static void fireHasRequirementVariableChanged(RequirementModelSourceProvider provider)
+    public static void fireHasRequirementVariableChanged()
     {
+        boolean enable = false;
+        
+        ISourceProviderService service = (ISourceProviderService) PlatformUI.getWorkbench().getService(ISourceProviderService.class);
+        RequirementModelSourceProvider provider = (RequirementModelSourceProvider) service.getSourceProvider(RequirementModelSourceProvider.HAS_REQUIREMENT_MODEL);
+
         Modeler modeler = Utils.getCurrentModeler();
         
         if (modeler != null)
@@ -787,24 +783,30 @@ public final class RequirementUtils
             {
                 if (policy.getLinkedTargetModel(modeler.getEditingDomain().getResourceSet()) != null)
                 {
-                    provider.setHasRequirementState(true);
+                    enable = true;
                 }
                 else
                 {
-                    provider.setHasRequirementState(false);
+                    enable = false;
                 }
             }
             else
             {
                 if (DefaultAttachmentPolicy.getInstance().getLinkedTargetModel(modeler.getEditingDomain().getResourceSet()) != null)
                 {
-                    provider.setHasRequirementState(true);
+                    enable = true;
                 }
                 else
                 {
-                    provider.setHasRequirementState(false);
+                    enable = false;
                 }
             }
         }
+        else
+        {
+            enable = false;
+        }
+        
+        provider.setHasRequirementState(enable);
     }
 }

@@ -117,7 +117,7 @@ public class SetNameCommandResolver extends AdditionalCommand<SetCommand>
                 org.eclipse.emf.common.command.CompoundCommand compound = (org.eclipse.emf.common.command.CompoundCommand) cmd;
 
                 // specific compound name from AbstractTabbedPropertySection to filter the setCommands
-                if (compound.getLabel() == "Property Change")
+                if (compound.getLabel() == "Property Change") //$NON-NLS-1$
                 {
                     List< ? > commands = compound.getCommandList();
                     for (Object o : commands)

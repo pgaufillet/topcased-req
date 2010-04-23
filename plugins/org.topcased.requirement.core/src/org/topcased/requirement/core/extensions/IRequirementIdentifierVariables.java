@@ -31,7 +31,7 @@ public interface IRequirementIdentifierVariables
      * 
      * @param the map of variables already constructed
      * @param editingDomain the editing domain
-     * @return the map plus the new variables and there values
+     * @return the already created map plus the new variables and there values
      */
     public Map<String, String> setValuesToVariables(EditingDomain editingDomain, Map<String, String> alreadyCreatedMap);
 

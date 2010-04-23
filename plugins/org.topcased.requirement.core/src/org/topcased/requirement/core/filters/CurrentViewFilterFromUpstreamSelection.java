@@ -36,18 +36,18 @@ import ttm.Requirement;
  * @author christophe.mertz@c-s.fr
  * @author tristan.faure@atosorigin.com
  */
-public class CurrentViewSingletonFilter extends ViewerFilter
+public class CurrentViewFilterFromUpstreamSelection extends ViewerFilter
 {
     private static final String LINK_TO = "#Link_to"; //$NON-NLS-1$
     
-	private static CurrentViewSingletonFilter instance = new CurrentViewSingletonFilter();
+	private static CurrentViewFilterFromUpstreamSelection instance = new CurrentViewFilterFromUpstreamSelection();
 
-    public static CurrentViewSingletonFilter getInstance()
+    public static CurrentViewFilterFromUpstreamSelection getInstance()
     {
         return instance;
     }
 
-    private CurrentViewSingletonFilter()
+    private CurrentViewFilterFromUpstreamSelection()
     {
         //avoid instantiation
     }

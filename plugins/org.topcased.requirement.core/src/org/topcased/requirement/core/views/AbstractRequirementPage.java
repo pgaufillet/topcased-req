@@ -10,23 +10,15 @@
  **********************************************************************************************************************/
 package org.topcased.requirement.core.views;
 
-import java.util.Iterator;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.ui.viewer.IViewerProvider;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.domain.IEditingDomainProvider;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.jface.util.TransferDropTargetListener;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -44,6 +36,10 @@ import org.topcased.requirement.core.utils.RequirementUtils;
  */
 public abstract class AbstractRequirementPage extends Page implements IViewerProvider, IEditingDomainProvider
 {
+    protected static String firstPopupMenuSeparator = "firstSeparator";  //$NON-NLS-1$
+    
+    protected static String lastPopupMenuSeparator = "lastSeparator";  //$NON-NLS-1$
+    
     protected TreeViewer viewer;
 
     protected EditingDomain editingDomain;
@@ -184,55 +180,4 @@ public abstract class AbstractRequirementPage extends Page implements IViewerPro
     {
         // do nothing
     }
-
-    /**
-     * Determines if the selection is an object of type clazz
-     * 
-     * @param theSelection
-     * @param clazz
-     * 
-     * @return true if the selection is an object of type clazz
-     */
-    protected Boolean toDisplay(IStructuredSelection theSelection, java.lang.Class< ? > clazz)
-    {
-        if (theSelection == null)
-        {
-            return false;
-        }
-        for (Iterator< ? > object = theSelection.iterator(); object.hasNext();)
-        {
-            if (!clazz.isInstance(object.next()))
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Add a listener to listen the key control
-     */
-    protected void hookKeyListeners()
-    {
-        KeyListener keyListener = new KeyAdapter()
-        {
-            public void keyReleased(KeyEvent e)
-            {
-                if (e.keyCode == SWT.DEL)
-                {
-                    executeCodeForKey(getViewer().getSelection());
-                }
-            }
-        };
-        getViewer().getControl().addKeyListener(keyListener);
-    }
-
-    /**
-     * Method call by the key listener.<br>
-     * This method is intended to be implemented.
-     * 
-     * @param selection The current selection
-     */
-    protected abstract void executeCodeForKey(ISelection selection);
-
 }

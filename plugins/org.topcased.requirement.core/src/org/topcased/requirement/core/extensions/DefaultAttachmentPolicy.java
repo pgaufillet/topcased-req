@@ -179,7 +179,7 @@ public class DefaultAttachmentPolicy implements IModelAttachmentPolicy
                     if (tmp instanceof Property)
                     {
                         Property element = (Property) tmp;
-                        if ("requirements".equals(element.getKey()))
+                        if ("requirements".equals(element.getKey())) //$NON-NLS-1$
                         {
                             return element;
                         }
@@ -237,7 +237,7 @@ public class DefaultAttachmentPolicy implements IModelAttachmentPolicy
                 if (property == null && firstDiagram != null)
                 {
                     property = DiagramInterchangeFactory.eINSTANCE.createProperty();
-                    property.setKey("requirements");
+                    property.setKey("requirements"); //$NON-NLS-1$
                     property.setValue(fragment);
                     command = AddCommand.create(targetModeler.getEditingDomain(), firstDiagram, DiagramInterchangePackage.Literals.DIAGRAM_ELEMENT__PROPERTY, property);
                 }

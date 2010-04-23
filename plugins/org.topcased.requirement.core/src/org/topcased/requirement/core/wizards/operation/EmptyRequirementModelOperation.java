@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.topcased.requirement.RequirementFactory;
 import org.topcased.requirement.RequirementProject;
+import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
@@ -47,7 +48,7 @@ public class EmptyRequirementModelOperation extends AbstractRequirementModelOper
     protected void execute(IProgressMonitor monitor)
     {
         // Create the empty requirement model
-        monitor.beginTask("Requirement Model Creation : ", 4);
+        monitor.beginTask(Messages.getString("EmptyRequirementModelOperation.0"), 4); //$NON-NLS-1$
         createEmptyRequirementModel(monitor);
 
         // Update the model
@@ -61,7 +62,7 @@ public class EmptyRequirementModelOperation extends AbstractRequirementModelOper
      */
     protected void createEmptyRequirementModel(IProgressMonitor monitor)
     {
-        monitor.subTask("creating empty requirement model");
+        monitor.subTask(Messages.getString("EmptyRequirementModelOperation.1")); //$NON-NLS-1$
         ResourceSet resourceSet = new ResourceSetImpl();
         URI fileURI = URI.createPlatformResourceURI(requirementModelFile.getFullPath().addFileExtension(MODEL_EXTENSION).toString(), true);
         requirementResource = resourceSet.createResource(fileURI);

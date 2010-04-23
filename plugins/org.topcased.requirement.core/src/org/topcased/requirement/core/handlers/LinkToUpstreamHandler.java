@@ -19,7 +19,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.topcased.requirement.core.views.current.CurrentRequirementView;
 
 /**
- * Handler of the Link to upstream requirement
+ * Handler of the Link to upstream requirement command
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  * 

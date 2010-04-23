@@ -22,14 +22,12 @@ import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.handlers.RegistryToggleState;
 import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.part.IPageBookViewPage;
-import org.eclipse.ui.services.ISourceProviderService;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
 import org.topcased.modeler.documentation.IDocPage;
 import org.topcased.requirement.core.documentation.current.CurrentDescPage;
 import org.topcased.requirement.core.handlers.ICommandConstants;
 import org.topcased.requirement.core.properties.RequirementPropertySheetPage;
-import org.topcased.requirement.core.services.RequirementModelSourceProvider;
 import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.AbstractRequirementView;
@@ -137,9 +135,6 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
      */
     public void partActivated(IWorkbenchPart part)
     {
-        ISourceProviderService service = (ISourceProviderService) PlatformUI.getWorkbench().getService(ISourceProviderService.class);
-        RequirementModelSourceProvider provider = (RequirementModelSourceProvider) service.getSourceProvider(RequirementModelSourceProvider.HAS_REQUIREMENT_MODEL);
-
         super.partActivated(part);
 
         if (getCurrentPage() instanceof CurrentPage)
@@ -149,9 +144,11 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
             // When the view is first opened, pass the selection to the page
             if (bootstrapSelection != null)
             {
+                //ATTENTION : here, there is no need to call the hookListener method: 
+                //Now the selection listener is installed in the linkToUpstreamHandler
+                //This listener is no more a default listener, it is installed/uninstalled by the user via a command
                 bootstrapSelection = null;
                 loadPage(part, currentPage);
-                hookListener();
             }
             else
             {
@@ -160,15 +157,11 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
 
             //Update the IsImpacted variable as often as possible!
             RequirementUtils.fireIsImpactedVariableChanged();
-            
-            // We need to constantly set the value of the hasRequirement variable to synchronize toolbar actions
-            // enablement with the requirement model state
-            RequirementUtils.fireHasRequirementVariableChanged(provider);
         }
-        else
-        {
-            provider.setHasRequirementState(false);
-        }
+
+        // We need to constantly set the value of the hasRequirement variable to synchronize toolbar actions
+        // enablement with the requirement model state
+        RequirementUtils.fireHasRequirementVariableChanged();
     }
 
     /**

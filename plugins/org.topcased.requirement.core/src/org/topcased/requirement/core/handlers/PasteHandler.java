@@ -21,6 +21,7 @@ import org.eclipse.emf.edit.command.CommandParameter;
 import org.eclipse.emf.edit.command.PasteFromClipboardCommand;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.topcased.requirement.CurrentRequirement;
+import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.views.current.CurrentPage;
 
@@ -67,7 +68,7 @@ public class PasteHandler extends RequirementAbstractEMFCommandHandler
     {
         CurrentPage currentPage = RequirementHelper.INSTANCE.getCurrentPage();
         Collection< ? > source = cmd.getAffectedObjects();
-        CompoundCommand compound = new CompoundCommand("Renaming moving requirements");
+        CompoundCommand compound = new CompoundCommand(Messages.getString("PasteHandler.0")); //$NON-NLS-1$
 
         // Process the renaming of the newly pasted requirements
         for (Object currSource : source)

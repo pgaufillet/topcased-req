@@ -24,12 +24,19 @@ import org.topcased.requirement.core.preferences.RequirementNamingConstants;
 import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
+/**
+ * This algorithm is based on non stored index. The getCurrentIndex method iterate on all 
+ * the current requirement and return the maximum index + the step.
+ * 
+ * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
+ *
+ */
 public class RegexRequirementCountingAlgorithm implements IRequirementCountingAlgorithm
 {
-    /** The next index initialize for the first current requirement creation when the step is at zero */
+    /** The next index initialized for the first current requirement creation when the step is at zero */
     private static long nextIndex = ComputeRequirementIdentifier.getRequirementStep();
 
-    /** The Step saved every time it change for synchronizme with the preference page */
+    /** The Step saved every time it changes to be synchronize with the preference page */
     private static long step = ComputeRequirementIdentifier.getRequirementStep();
 
     /**
@@ -41,6 +48,7 @@ public class RegexRequirementCountingAlgorithm implements IRequirementCountingAl
         long max = getMax();
         if (currentStep != step)
         {
+            //We got to be synchronized with the user modifications in the preference page 
             nextIndex = nextIndex - step + currentStep;
             step = currentStep;
         }
@@ -57,15 +65,13 @@ public class RegexRequirementCountingAlgorithm implements IRequirementCountingAl
      */
     public void increaseIndexWhenCreateRequirement(Requirement createdRequirement, long index)
     {
+        //No need to implement this as the index is never stored
     }
 
     /**
      * Gets the max. compute the max using the format of the requirement
      * 
-     * @param editingDomainFor the editing domain for
-     * @param hier the hier
-     * 
-     * @return the max
+     * @return the max of all the current requirements
      */
     private static long getMax()
     {
@@ -87,6 +93,8 @@ public class RegexRequirementCountingAlgorithm implements IRequirementCountingAl
     }
 
     /**
+     * get the current requirement number using regex
+     * 
      * @param current the current requirement
      * @return the number of the current
      */
@@ -96,8 +104,8 @@ public class RegexRequirementCountingAlgorithm implements IRequirementCountingAl
         if (current.getIdentifier() != null && current.getIdentifier().length() > 0)
         {
             String format = RequirementCorePlugin.getDefault().getPreferenceStore().getString(RequirementNamingConstants.REQUIREMENT_NAMING_FORMAT);
-            String regex = format.replace("{number}", "(\\d*)");
-            regex = regex.replaceAll("\\{[^\\{]*\\}", "[\\\\w ]*");
+            String regex = format.replace(DefaultRequirementIdentifierVariables.INDEX_VAR, "(\\d*)"); //$NON-NLS-1$
+            regex = regex.replaceAll("\\{[^\\{]*\\}", "[\\\\w ]*"); //$NON-NLS-1$
             Pattern pat = Pattern.compile(regex);
             Matcher m = pat.matcher(current.getIdentifier());
             if (m.matches())

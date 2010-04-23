@@ -157,7 +157,7 @@ public class RequirementDropListener extends AbstractTransferDropTargetListener
             URI graphicalModelName = URI.createURI(Utils.getCurrentModeler().getPartName());
             String fileExtension = graphicalModelName.fileExtension();
 
-            // if the target is restricted by the extension dropRestriction
+            // if the target is restricted by the extension point dropRestriction
             if (!(DropRestrictionManager.getInstance().isDropAllowed(fileExtension, eobject)))
             {
                 event.operations = DND.DROP_NONE;
@@ -229,6 +229,9 @@ public class RequirementDropListener extends AbstractTransferDropTargetListener
         return semanticModelObject;
     }
 
+    /**
+     * @see org.eclipse.gef.dnd.AbstractTransferDropTargetListener#getTargetEditPart()
+     */
     @Override
     protected EditPart getTargetEditPart()
     {

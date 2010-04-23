@@ -12,8 +12,6 @@
  **********************************************************************************************************************/
 package org.topcased.requirement.core.views.current;
 
-import java.util.Iterator;
-
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
@@ -52,7 +50,6 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.RegistryToggleState;
 import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.views.markers.MarkerItem;
-import org.topcased.requirement.AttributeLink;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.Requirement;
 import org.topcased.requirement.RequirementProject;
@@ -60,13 +57,14 @@ import org.topcased.requirement.core.dnd.DragSourceCurrentAdapter;
 import org.topcased.requirement.core.dnd.DropTargetCurrentAdapter;
 import org.topcased.requirement.core.dnd.RequirementTransfer;
 import org.topcased.requirement.core.filters.CurrentRequirementFilter;
-import org.topcased.requirement.core.filters.CurrentViewSingletonFilter;
+import org.topcased.requirement.core.filters.CurrentViewFilterFromUpstreamSelection;
 import org.topcased.requirement.core.handlers.ICommandConstants;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.listeners.RequirementDoubleClickListener;
 import org.topcased.requirement.core.listeners.UpstreamSelectionChangedListener;
 import org.topcased.requirement.core.providers.CurrentRequirementContentProvider;
 import org.topcased.requirement.core.providers.CurrentRequirementLabelProvider;
+import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.AbstractRequirementPage;
 import org.topcased.requirement.core.views.SearchComposite;
@@ -228,22 +226,22 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
             if (model != null)
             {
                 //add a first separator to surround undo & redo actions
-                Separator first = new Separator("firstSeparator"); //$NON-NLS-1$
+                Separator first = new Separator(firstPopupMenuSeparator);
                 first.setVisible(true);
                 manager.add(first);
                 
                 UndoAction undoAction = new UndoAction(editingDomain);
                 undoAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_UNDO));
-                undoAction.setActionDefinitionId("org.topcased.requirement.core.undo"); //$NON-NLS-1$
+                undoAction.setActionDefinitionId(ICommandConstants.UNDO_ID);
                 manager.add(undoAction);
 
                 RedoAction redoAction = new RedoAction(editingDomain);
                 redoAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_REDO));
-                undoAction.setActionDefinitionId("org.topcased.requirement.core.redo"); //$NON-NLS-1$
+                undoAction.setActionDefinitionId(ICommandConstants.REDO_ID);
                 manager.add(redoAction);
                 
                 //add a last separator to surround undo & redo actions
-                Separator last = new Separator("lastSeparator"); //$NON-NLS-1$
+                Separator last = new Separator(lastPopupMenuSeparator);
                 last.setVisible(true);
                 manager.add(last);
             }
@@ -285,7 +283,6 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
         final SearchComposite findIt = new SearchComposite(mainComposite, SWT.NONE);
         findIt.setFilter(viewer, currentFilter);
 
-        hookKeyListeners();
         hookContextMenu();
         hookListeners();
 
@@ -334,14 +331,11 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
         // Handle cases when the command is toggled but the associated action isn't performed
         if (filterCmd.getState(RegistryToggleState.STATE_ID).getValue().equals(true))
         {
-            if (((UpstreamRequirementView)UpstreamRequirementView.getInstance()) != null)
+            IPage upstreamPage =RequirementHelper.INSTANCE.getUpstreamPage();
+            if (upstreamPage instanceof UpstreamPage && upstreamListener == null)
             {
-                IPage upstreamPage = ((UpstreamRequirementView)UpstreamRequirementView.getInstance()).getCurrentPage();
-                if (upstreamPage instanceof UpstreamPage && upstreamListener == null)
-                {
-                    upstreamListener = new UpstreamSelectionChangedListener(this);
-                    ((UpstreamPage) upstreamPage).getViewer().addSelectionChangedListener(upstreamListener);
-                }
+                upstreamListener = new UpstreamSelectionChangedListener(this);
+                ((UpstreamPage) upstreamPage).getViewer().addSelectionChangedListener(upstreamListener);
             }
         }
     }
@@ -361,7 +355,7 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
                 upstreamListener = null;
                 
                 //reset the tree otherwise the filter would be still active
-                CurrentViewSingletonFilter.getInstance().setSearchedRequirement(null);
+                CurrentViewFilterFromUpstreamSelection.getInstance().setSearchedRequirement(null);
                 if (!this.getViewer().getControl().isDisposed())
                 {
                     this.getViewer().refresh();
@@ -434,38 +428,6 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
                     }
                 }
             }
-        }
-    }
-
-    /**
-     * FIXME : handle key with an extension point
-     * 
-     * @see org.topcased.requirement.core.views.AbstractRequirementPage#executeCodeForKey(org.eclipse.jface.viewers.ISelection)
-     */
-    @Override
-    protected void executeCodeForKey(ISelection theSelection)
-    {
-        Boolean process = false;
-        if (theSelection instanceof IStructuredSelection)
-        {
-            process = true;
-            Iterator< ? > it = ((IStructuredSelection) theSelection).iterator();
-            while (it.hasNext())
-            {
-                Object o = it.next();
-                if (!(o instanceof Requirement) && !(o instanceof HierarchicalElement) && !(o instanceof AttributeLink))
-                {
-                    process = false;
-                }
-            }
-        }
-        if (process)
-        {
-//            IAction action = new CurrentRequirementDeleteAction((IStructuredSelection) selection, editingDomain);
-//            if (action.isEnabled())
-//            {
-//                action.run();
-//            }
         }
     }
 

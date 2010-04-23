@@ -289,13 +289,10 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
         Command hierarchicalCmd = cs.getCommand(ICommandConstants.HIERARCHICAL_ID);
 
         // Handle cases when the command is toggled but the associated action isn't performed
-        // if (linkCmd.getState(RegistryToggleState.STATE_ID).getValue().equals(true))
-        // {
         if (((AbstractHandlerWithState) linkCmd.getHandler()) != null && page instanceof CurrentPage)
         {
             ((AbstractHandlerWithState) linkCmd.getHandler()).handleStateChange(linkCmd.getState(RegistryToggleState.STATE_ID), false);
         }
-        // }
 
         // Handle cases when the command is toggled but the associated action isn't performed
         if (((AbstractHandlerWithState) sortCmd.getHandler()) != null && page instanceof UpstreamPage)

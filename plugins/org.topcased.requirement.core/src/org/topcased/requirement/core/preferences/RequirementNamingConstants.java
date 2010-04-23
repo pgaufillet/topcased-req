@@ -24,17 +24,16 @@ public interface RequirementNamingConstants
 {
 
     // keys
-    String REQUIREMENT_NAMING_FORMAT = "namingFormatRequirement";
+    String REQUIREMENT_NAMING_FORMAT = "namingFormatRequirement"; //$NON-NLS-1$
 
-    String REQUIREMENT_STEP_INDEX = "requirementStepIndex";
+    String REQUIREMENT_STEP_INDEX = "requirementStepIndex"; //$NON-NLS-1$
 
-    String REQUIREMENT_COUNTING_ALGORITHM = "requirementAlgorithm";
+    String REQUIREMENT_COUNTING_ALGORITHM = "requirementAlgorithm"; //$NON-NLS-1$
 
     // default values
-    String DEFAULT_NAMING_FORMAT = "E_" + DefaultRequirementIdentifierVariables.PROJECT_VAR + "_" + DefaultRequirementIdentifierVariables.HIERARCHICAL_ELEMENT_VAR + "_"
-            + DefaultRequirementIdentifierVariables.INDEX_VAR;
+    String DEFAULT_NAMING_FORMAT = "E_" + DefaultRequirementIdentifierVariables.PROJECT_VAR + "_" + DefaultRequirementIdentifierVariables.HIERARCHICAL_ELEMENT_VAR + "_" + DefaultRequirementIdentifierVariables.INDEX_VAR; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-    String DEFAULT_COUNTING_ALGORITHM = "Default Algorithm";
+    String DEFAULT_COUNTING_ALGORITHM = "Default Algorithm"; //$NON-NLS-1$
 
     int DEFAULT_INDEX_STEP = 10;
 }

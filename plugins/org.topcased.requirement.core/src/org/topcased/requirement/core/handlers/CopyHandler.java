@@ -22,7 +22,7 @@ import org.eclipse.emf.edit.command.CopyToClipboardCommand;
  * This class defines the EMF <b>copy</b> command
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
- *
+ * 
  */
 public class CopyHandler extends RequirementAbstractEMFCommandHandler
 {
@@ -42,15 +42,13 @@ public class CopyHandler extends RequirementAbstractEMFCommandHandler
     @Override
     public CommandParameter getParam()
     {
-        if (((EvaluationContext)evt.getApplicationContext()).getDefaultVariable() instanceof List<?>)
+        if (((EvaluationContext) evt.getApplicationContext()).getDefaultVariable() instanceof List< ? >)
         {
-            return new CommandParameter(null, null, ((List<?>)((EvaluationContext)evt.getApplicationContext()).getDefaultVariable()));
+            return new CommandParameter(null, null, ((List< ? >) ((EvaluationContext) evt.getApplicationContext()).getDefaultVariable()));
         }
         else
         {
             return null;
         }
-        
     }
-
 }

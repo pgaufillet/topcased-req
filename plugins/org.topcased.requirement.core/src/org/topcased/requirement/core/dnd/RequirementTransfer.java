@@ -13,9 +13,10 @@
 package org.topcased.requirement.core.dnd;
 
 import org.eclipse.jface.util.LocalSelectionTransfer;
+import org.topcased.requirement.core.internal.Messages;
 
 /**
- * The data tranfer for drag and drop between upstream view and current view
+ * The data transfer for drag and drop between upstream view and current view
  * 
  * @author <a href="mailto:christophe.mertz@c-s.fr">Christophe Mertz</a>
  * 
@@ -23,7 +24,7 @@ import org.eclipse.jface.util.LocalSelectionTransfer;
 public final class RequirementTransfer extends LocalSelectionTransfer
 {
 
-    public static final String TYPE_NAME = "Upstream Requirement to Current Requirement view"; //$NON-NLS-1$
+    public static final String TYPE_NAME = Messages.getString("RequirementTransfer.0"); //$NON-NLS-1$
 
     private static RequirementTransfer tRANSFER = null;
 

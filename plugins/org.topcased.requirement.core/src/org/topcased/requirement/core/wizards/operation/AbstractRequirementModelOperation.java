@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.topcased.requirement.AttributeConfiguration;
 import org.topcased.requirement.RequirementProject;
+import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.extensions.DefaultAttachmentPolicy;
 import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
@@ -80,7 +81,7 @@ public abstract class AbstractRequirementModelOperation extends WorkspaceModifyO
      */
     protected void updateRequirementReference(IProgressMonitor monitor)
     {
-        monitor.subTask(Messages.AbstractRequirementModelOperation_0);
+        monitor.subTask(Messages.getString("AbstractRequirementModelOperation.0")); //$NON-NLS-1$
         IModelAttachmentPolicy policy = null;
         Resource targetModelResource = RequirementUtils.getResource(targetModelFile.getFullPath());
         
@@ -107,7 +108,7 @@ public abstract class AbstractRequirementModelOperation extends WorkspaceModifyO
     */
     protected void mergeOperation(Resource requirementResourceMerged, IProgressMonitor monitor)
     {
-        monitor.subTask(Messages.AbstractRequirementModelOperation_1);
+        monitor.subTask(Messages.getString("AbstractRequirementModelOperation.1")); //$NON-NLS-1$
         try
         {
             // Close the corresponding diagram if open

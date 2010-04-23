@@ -27,13 +27,11 @@ import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.handlers.RegistryToggleState;
 import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.part.IPageBookViewPage;
-import org.eclipse.ui.services.ISourceProviderService;
 import org.topcased.modeler.documentation.IDocPage;
 import org.topcased.requirement.ObjectAttribute;
 import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.core.documentation.upstream.UpstreamDescPage;
 import org.topcased.requirement.core.handlers.ICommandConstants;
-import org.topcased.requirement.core.services.RequirementModelSourceProvider;
 import org.topcased.requirement.core.utils.RequirementCoverageComputer;
 import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
@@ -121,9 +119,6 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
      */
     public void partActivated(IWorkbenchPart part)
     {
-        ISourceProviderService service = (ISourceProviderService) PlatformUI.getWorkbench().getService(ISourceProviderService.class);
-        RequirementModelSourceProvider provider = (RequirementModelSourceProvider) service.getSourceProvider(RequirementModelSourceProvider.HAS_REQUIREMENT_MODEL);
-
         super.partActivated(part);
 
         if (getCurrentPage() instanceof UpstreamPage)
@@ -145,14 +140,13 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
             
             //Update the IsImpacted variable as often as possible!
             RequirementUtils.fireIsImpactedVariableChanged();
+        }
 
+        if (bootstrapSelection != null)
+        {
             // We need to constantly set the value of the hasRequirement variable to synchronize toolbar actions
             // enablement with the requirement model state
-            RequirementUtils.fireHasRequirementVariableChanged(provider);
-        }
-        else
-        {
-            provider.setHasRequirementState(false);
+            RequirementUtils.fireHasRequirementVariableChanged();
         }
     }
 

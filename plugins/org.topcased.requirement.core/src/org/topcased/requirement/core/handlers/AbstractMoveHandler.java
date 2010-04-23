@@ -30,8 +30,7 @@ import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.views.current.CurrentRequirementView;
 
 /**
- * Abstract class intended to be subclassed by clients. This handler is designed for move operations inside the
- * {@link CurrentRequirementView}.
+ * This handler is designed for move operations inside the {@link CurrentRequirementView}.
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  * @see {@link MoveDownHandler}

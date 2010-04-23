@@ -29,23 +29,23 @@ import org.topcased.requirement.core.utils.RequirementUtils;
 /**
  * Default added variables for the requirement naming pattern in the preference page
  * 
- * @author maudrain
+ * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  * 
  */
 public final class DefaultRequirementIdentifierVariables implements IRequirementIdentifierVariables
 {
 
-    public static final String PROJECT_VAR = "{project name}";
+    public static final String PROJECT_VAR = "{project name}"; //$NON-NLS-1$
+ 
+    public static final String RESOURCE_VAR = "{resource name}"; //$NON-NLS-1$
 
-    public static final String RESOURCE_VAR = "{resource name}";
+    public static final String HIERARCHICAL_ELEMENT_VAR = "{hierarchical element}"; //$NON-NLS-1$
 
-    public static final String HIERARCHICAL_ELEMENT_VAR = "{hierarchical element}";
+    public static final String UPSTREAM_REQUIREMENT_VAR = "{upstream requirement}"; //$NON-NLS-1$
 
-    public static final String UPSTREAM_REQUIREMENT_VAR = "{upstream requirement}";
+    public static final String INDEX_VAR = "{index}"; //$NON-NLS-1$
 
-    public static final String INDEX_VAR = "{index}";
-
-    private static final String DEFAULT_HIERARCHICAL_ELEMENT_NAME = "xxx";
+    private static final String DEFAULT_HIERARCHICAL_ELEMENT_NAME = "xxx"; //$NON-NLS-1$
 
     /**
      * @see org.topcased.requirement.core.extensions.IRequirementIdentifierVariables#setValuesToVariables(org.eclipse.emf.edit.domain.EditingDomain,

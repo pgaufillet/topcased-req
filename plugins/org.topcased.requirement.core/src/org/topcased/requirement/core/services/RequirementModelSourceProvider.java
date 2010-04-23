@@ -26,9 +26,9 @@ import org.eclipse.ui.AbstractSourceProvider;
  */
 public class RequirementModelSourceProvider extends AbstractSourceProvider
 {
-    public final static String HAS_REQUIREMENT_MODEL = "requirementActionsEnablement.hasRequirementModel";
+    public final static String HAS_REQUIREMENT_MODEL = "requirementActionsEnablement.hasRequirementModel"; //$NON-NLS-1$
 
-    public final static String IS_IMPACTED = "requirementActionsEnablement.isImpacted";
+    public final static String IS_IMPACTED = "requirementActionsEnablement.isImpacted"; //$NON-NLS-1$
 
     private static Map<String, Boolean> currentState;
 

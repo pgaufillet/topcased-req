@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.core.extensions.IRequirementTransformation;
 import org.topcased.requirement.core.extensions.RequirementTransformationManager;
+import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
@@ -58,9 +59,9 @@ public class MergeRequirementModelOperation extends AbstractRequirementModelOper
     protected void execute(IProgressMonitor monitor)
     {
 
-        if (sourceModelFile.getFileExtension().equals("requirement"))
+        if (sourceModelFile.getFileExtension().equals("requirement")) //$NON-NLS-1$
         {
-            monitor.subTask("Copy requirement file ");
+            monitor.subTask(Messages.getString("MergeRequirementModelOperation.0")); //$NON-NLS-1$
             // rename the file from the name given in the dialog and temporally copy it next to the target model
             IPath mergePath = requirementModelFile.getFullPath().addFileExtension(MODEL_TMP);
             try
@@ -79,7 +80,7 @@ public class MergeRequirementModelOperation extends AbstractRequirementModelOper
         }
         else
         {
-            monitor.subTask("Importing requirement model");
+            monitor.subTask(Messages.getString("MergeRequirementModelOperation.1")); //$NON-NLS-1$
 
             IPath mergePath = requirementModelFile.getFullPath().addFileExtension(MODEL_TMP);
             IFile mergeFile = ResourcesPlugin.getWorkspace().getRoot().getFile(mergePath);
@@ -117,7 +118,7 @@ public class MergeRequirementModelOperation extends AbstractRequirementModelOper
      */
     protected void mergeRequirementModel(IPath mergePath, IProgressMonitor monitor)
     {
-        monitor.beginTask("Update : ", 3);
+        monitor.beginTask(Messages.getString("MergeRequirementModelOperation.2"), 3); //$NON-NLS-1$
 
         // Get a resource of the destination file
         requirementResource = RequirementUtils.getResource(requirementModelFile.getFullPath().addFileExtension(MODEL_EXTENSION));
@@ -133,7 +134,7 @@ public class MergeRequirementModelOperation extends AbstractRequirementModelOper
         mergeOperation(requirementResourceMerged, monitor);
 
         // Delete the temporary model
-        monitor.subTask("deleting temporary file");
+        monitor.subTask(Messages.getString("MergeRequirementModelOperation.3")); //$NON-NLS-1$
         Resource toDelete = RequirementUtils.getResource(mergePath.addFileExtension(MODEL_EXTENSION));
         RequirementUtils.deleteResource(toDelete);
         monitor.worked(1);

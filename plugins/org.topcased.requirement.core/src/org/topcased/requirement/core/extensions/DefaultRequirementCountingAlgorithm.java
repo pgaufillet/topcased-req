@@ -17,8 +17,10 @@ import org.topcased.requirement.core.preferences.ComputeRequirementIdentifier;
 import org.topcased.requirement.core.utils.RequirementHelper;
 
 /**
- * @author maudrain
+ * This algorithm attach the counting index on the hierarchical element root of the requirement model.
+ * Each current requirement created in whatever container got his index increased
  * 
+ * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  */
 public class DefaultRequirementCountingAlgorithm implements IRequirementCountingAlgorithm
 {
@@ -42,6 +44,9 @@ public class DefaultRequirementCountingAlgorithm implements IRequirementCounting
         root.setNextReqIndex(index);
     }
 
+    /**
+     * @see org.topcased.requirement.core.extensions.IRequirementCountingAlgorithm#setFirstIndex(org.topcased.requirement.Requirement)
+     */
     public void setFirstIndex(Requirement firstCreatedRequirement)
     {
         HierarchicalElement root = RequirementHelper.INSTANCE.getHierarchicalElementRoot();

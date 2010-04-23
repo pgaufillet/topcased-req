@@ -15,6 +15,13 @@ import org.topcased.requirement.Requirement;
 
 /**
  * This interface defines the behavior to implement for the "requirementCountingAlgorithm" extension point
+ * The process for creating a requirement is this way:
+ * 1) Create the requirement
+ * 2) Attach it to the requirement model
+ * 3) In case this is the first requirement of the requirement model, we call setFirstIndex method
+ * 4) Call getCurrentIndex for this requirement
+ * 5) Set the requirement identifier
+ * 6) Call increaseIndexWhenCreateRequirement method
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  * 
@@ -23,32 +30,25 @@ public interface IRequirementCountingAlgorithm
 {
 
     /**
-     * Get the current index of your counting algorithm For the Default counting algorithm, there is no need for a
-     * hierarchical element parameter as the index is stored somewhere else
+     * Get the current index of your counting algorithm, the requirement in parameter
+     * is the newly created requirement (or the requirement to rename) with NO new identifier put at this point
      * 
-     * @param requirementContainer if you choose to store the index in the hierarchical element
+     * @param currentRequirement the newly created requirement
      * @return current index of your counting algorithm
      */
     public long getCurrentIndex(Requirement currentRequirement);
 
     /**
      * Implement here the increasing of your index on current requirement creation
+     * This is an AFTER requirement creation (or requirement renaming) increasing method
      * 
-     * @param requirementContainer if you choose to store the index in the hierarchical element
+     * @param createdRequirement the newly created requirement
      * @param index the current index
      */
     public void increaseIndexWhenCreateRequirement(Requirement createdRequirement, long index);
 
     /**
-     * Implement here the decreasing of your index on current requirement deletion
-     * 
-     * @param theDeletedRequirement deleted requirement
-     * @param index the current index
-     */
-    // public void decreaseIndexWhenDeleteRequirement(Requirement theDeletedRequirement);
-
-    /**
-     * Set the first index here before the first current requirement is created
+     * Set the first index here when the first current requirement is created
      * 
      * @param firstCreatedRequirement the first requirement of the model
      */

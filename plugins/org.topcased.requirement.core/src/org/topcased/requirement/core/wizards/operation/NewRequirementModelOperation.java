@@ -27,6 +27,7 @@ import org.topcased.requirement.core.extensions.IRequirementTransformation;
 import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
 import org.topcased.requirement.core.extensions.RequirementTransformationManager;
 import org.topcased.requirement.core.handlers.UnlinkRequirementModelHandler;
+import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
@@ -74,7 +75,7 @@ public class NewRequirementModelOperation extends AbstractRequirementModelOperat
         }  
         
         // Deals with source model file extension and the fact that the target model could already have a requirement project attached
-        if (sourceModelFile.getFileExtension().equals("requirement"))
+        if (sourceModelFile.getFileExtension().equals("requirement")) //$NON-NLS-1$
         {
             if (isCurrentModelerAlreadyAttached(domain))
             {
@@ -117,7 +118,7 @@ public class NewRequirementModelOperation extends AbstractRequirementModelOperat
      */
     protected void newRequirementModel(IProgressMonitor monitor)
     {
-        monitor.beginTask("Creation : ", 4);
+        monitor.beginTask(Messages.getString("NewRequirementModelOperation.0"), 4); //$NON-NLS-1$
 
         // Get a resource of the destination file
         requirementResource = RequirementUtils.getResource(requirementModelFile.getFullPath().addFileExtension(MODEL_EXTENSION));
@@ -147,7 +148,7 @@ public class NewRequirementModelOperation extends AbstractRequirementModelOperat
         //If the requirement model file is not close to the target model file
         if (!fileDest.exists())
         {
-            monitor.subTask("Copy requirement file ");
+            monitor.subTask(Messages.getString("NewRequirementModelOperation.1")); //$NON-NLS-1$
             // rename the file from the name given in the dialog and copy it next to the target model
             try
             {
@@ -173,7 +174,7 @@ public class NewRequirementModelOperation extends AbstractRequirementModelOperat
      */
     protected void unlinkAndCreate(EditingDomain domain, IProgressMonitor monitor, boolean toTransform)
     {
-        monitor.subTask("Unlink Old Requirement File ");
+        monitor.subTask(Messages.getString("NewRequirementModelOperation.2")); //$NON-NLS-1$
 
         Resource oldRequirementResource = RequirementUtils.getRequirementModel(domain);
         IFile oldRequirementFile = RequirementUtils.getFile(oldRequirementResource);
@@ -195,7 +196,7 @@ public class NewRequirementModelOperation extends AbstractRequirementModelOperat
             // The file has not been deleted by the user, we need to rename it
             if (unlinkAction.getDialogResult() == 0)
             {
-                monitor.subTask("Rename Old Requirement File ");
+                monitor.subTask(Messages.getString("NewRequirementModelOperation.3")); //$NON-NLS-1$
                 
                 // rename the file to add with the extension ".old.requirement"
                 IPath path = oldRequirementFile.getFullPath().removeFileExtension().addFileExtension(MODEL_OLD); 
@@ -230,7 +231,7 @@ public class NewRequirementModelOperation extends AbstractRequirementModelOperat
      */
     protected void transformAndCreate(IProgressMonitor monitor)
     {
-        monitor.subTask("Importing requirement model");
+        monitor.subTask(Messages.getString("NewRequirementModelOperation.4")); //$NON-NLS-1$
         // Get the transformation from the requirementTransformation extension point
         IRequirementTransformation reqTransfo = RequirementTransformationManager.getInstance().getRequirementTransformation(sourceModelFile.getFileExtension());
         if (reqTransfo != null)

@@ -33,6 +33,9 @@ import org.topcased.requirement.core.utils.RequirementUtils;
 public class CopyCommandResolver extends AdditionalCommand<CopyToClipboardCommand>
 {
 
+    /**
+     *  Default Constructor
+     */
     public CopyCommandResolver()
     {
         this(CopyToClipboardCommand.class);
