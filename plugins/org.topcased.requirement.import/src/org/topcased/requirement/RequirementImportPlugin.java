@@ -11,7 +11,7 @@ import org.osgi.framework.BundleContext;
 public class RequirementImportPlugin extends AbstractUIPlugin {
 
     // The plug-in ID
-    public static final String PLUGIN_ID = "org.topcased.requirement.import";
+    public static final String PLUGIN_ID = "org.topcased.requirement.import"; //$NON-NLS-1$
 
     // The shared instance
     private static RequirementImportPlugin plugin;

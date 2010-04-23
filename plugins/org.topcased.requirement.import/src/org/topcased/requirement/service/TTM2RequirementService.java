@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright (c) 2008 TOPCASED consortium.
+ * Copyright (c) 2008,2010 TOPCASED consortium.
  * 
  * All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse
  * Public License v1.0 which accompanies this distribution, and is available at
@@ -28,6 +28,7 @@ import org.topcased.bus.core.IService;
 import org.topcased.bus.core.ServicesManager;
 import org.topcased.bus.core.constant.IServiceCst;
 import org.topcased.requirement.RequirementImportPlugin;
+import org.topcased.requirement.internal.Messages;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -39,15 +40,26 @@ import ttm.TtmPackage;
  * Defines the Tramway to Requirements import service.
  * 
  * @author <a href="mailto:christophe.le-camus@c-s.fr">Christophe LE CAMUS</a>
+ * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  */
 public class TTM2RequirementService implements IService
 {
-    // Constante defining namespace
-    public static final String ID = "org.topcased.requirement.service.import";
+    // Constant defining namespace
+    public static final String ID = "org.topcased.requirement.service.import"; //$NON-NLS-1$
 
-    private static final String XMLNS_EXTENSION = "xmlns";
-
-    private static final String TRANSFO_ID = "org.topcased.requirement.transformation.import";
+    private static final String TRANSFO_ID = "org.topcased.requirement.transformation.import"; //$NON-NLS-1$
+    
+    private static final String CHANGE_URI_ID = "org.topcased.service.changeuri";
+    
+    //parameters
+    private static final String inParam = "IN"; //$NON-NLS-1$
+    
+    private static final String outParam = "OUT"; //$NON-NLS-1$
+    
+    private static final String pathParam = "Path"; //$NON-NLS-1$
+    
+    //time format
+    private static final String timeFormat = "yyyy-MM-dd hh'h'mm"; //$NON-NLS-1$
 
     /**
      * @see org.topcased.bus.core.IService#serviceRun(java.util.Map)
@@ -57,26 +69,26 @@ public class TTM2RequirementService implements IService
         // first checks the parameters
         if (checkServiceParameters(parameters))
         {
-            String beginTime = new SimpleDateFormat("yyyy-MM-dd hh'h'mm").format(new Date());
-            RequirementImportPlugin.log("Entering TRAMway to Requirements import service at ".concat(beginTime), IStatus.INFO);
+            String beginTime = new SimpleDateFormat(timeFormat).format(new Date()); 
+            RequirementImportPlugin.log(Messages.getString("TTM2RequirementService.0").concat(beginTime), IStatus.INFO); //$NON-NLS-1$
 
-            String inpath = (String) parameters.get("IN");
-            IPath outpath = new Path((String) parameters.get("OUT"));
-            outpath = outpath.addFileExtension("requirement");
-            IPath path = (IPath) parameters.get("Path");
+            String inpath = (String) parameters.get(inParam); 
+            IPath outpath = new Path((String) parameters.get(outParam)); 
+            outpath = outpath.addFileExtension("requirement"); //$NON-NLS-1$
+            IPath path = (IPath) parameters.get(pathParam); 
 
             HashMap<String, String> models = new HashMap<String, String>();
-            models.put("IN", inpath);
-            models.put("OUT", outpath.toOSString());
+            models.put(inParam, inpath); 
+            models.put(outParam, outpath.toOSString()); 
 
             HashMap<String, Object> serviceParameters = new HashMap<String, Object>();
-            serviceParameters.put("Id", TRANSFO_ID);
-            serviceParameters.put("Models", models);
-            serviceParameters.put("ProjectPath", path);
-            serviceParameters.put("IsXml", new Boolean(false));
+            serviceParameters.put("Id", TRANSFO_ID); //$NON-NLS-1$
+            serviceParameters.put("Models", models); //$NON-NLS-1$
+            serviceParameters.put("ProjectPath", path); //$NON-NLS-1$
+            serviceParameters.put("IsXml", new Boolean(false)); //$NON-NLS-1$
 
             Object newInputFilePath = convertTTMModel(parameters);
-            models.put("IN", (String) newInputFilePath);
+            models.put(inParam, (String) newInputFilePath); 
 
             IService transformation = ServicesManager.getInstance().getService(IServiceCst.TRANSFORMATION);
             transformation.serviceRun(serviceParameters);
@@ -84,8 +96,8 @@ public class TTM2RequirementService implements IService
             File tempFile = new File((String) newInputFilePath);
             tempFile.delete();
 
-            String endTime = new SimpleDateFormat("yyyy-MM-dd hh'h'mm").format(new Date());
-            RequirementImportPlugin.log("Leaving TRAMway to Requirements import service at ".concat(endTime), IStatus.INFO);
+            String endTime = new SimpleDateFormat(timeFormat).format(new Date());
+            RequirementImportPlugin.log(Messages.getString("TTM2RequirementService.1").concat(endTime), IStatus.INFO); //$NON-NLS-1$
         }
 
         return null;
@@ -105,7 +117,7 @@ public class TTM2RequirementService implements IService
         factoryIn.setCoalescing(true);
         factoryIn.setIgnoringElementContentWhitespace(true);
         factoryIn.setNamespaceAware(true);
-        File model = new File((String) parameters.get("IN"));
+        File model = new File((String) parameters.get(inParam));
         Map<String, Object> namespaces = new HashMap<String, Object>();
 
         try
@@ -119,7 +131,7 @@ public class TTM2RequirementService implements IService
             {
                 Node currentHeader = attNodes.item(i);
                 // Looks for all the attributes with an 'xmlns' namespace
-                if (currentHeader.getPrefix() != null && currentHeader.getPrefix().equals(XMLNS_EXTENSION))
+                if (currentHeader.getPrefix() != null && currentHeader.getPrefix().equals("xmlns")) //$NON-NLS-1$
                 {
                     namespaces.put(currentHeader.getLocalName(), currentHeader.getNodeValue());
                 }
@@ -127,7 +139,7 @@ public class TTM2RequirementService implements IService
         }
         catch (ParserConfigurationException e)
         {
-            RequirementImportPlugin.log("Parser configuration exception", IStatus.ERROR, e);
+            RequirementImportPlugin.log(Messages.getString("TTM2RequirementService.2"), IStatus.ERROR, e); //$NON-NLS-1$
         }
         catch (IOException e)
         {
@@ -141,16 +153,16 @@ public class TTM2RequirementService implements IService
         namespaces.put(TtmPackage.eNAME, TtmPackage.eNS_URI);
 
         // Prepare and call the service aimed to change URIs
-        IService changeUriService = ServicesManager.getInstance().getService("org.topcased.service.changeuri");
+        IService changeUriService = ServicesManager.getInstance().getService(CHANGE_URI_ID);
 
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("InFilePath", parameters.get("IN"));
-        params.put("OutFilePath", ((String) parameters.get("IN")).concat("_temp"));
-        params.put("NSURI", namespaces);
+        params.put("InFilePath", parameters.get(inParam));//$NON-NLS-1$
+        params.put("OutFilePath", ((String) parameters.get(inParam)).concat("_temp"));//$NON-NLS-1$ //$NON-NLS-2$
+        params.put("NSURI", namespaces); //$NON-NLS-1$
 
         changeUriService.serviceRun(params);
 
-        return params.get("OutFilePath");
+        return params.get("OutFilePath"); //$NON-NLS-1$
     }
 
     /**
@@ -160,39 +172,39 @@ public class TTM2RequirementService implements IService
      */
     private boolean checkServiceParameters(Map<String, Object> parameters)
     {
-        if (!parameters.containsKey("IN"))
+        if (!parameters.containsKey(inParam))
         {
-            RequirementImportPlugin.log("The parameter IN must be set.", IStatus.ERROR);
+            RequirementImportPlugin.log(Messages.getString("TTM2RequirementService.3"), IStatus.ERROR); //$NON-NLS-1$
             return false;
         }
 
-        if (!parameters.containsKey("OUT"))
+        if (!parameters.containsKey(outParam))
         {
-            RequirementImportPlugin.log("The parameter OUT must be set.", IStatus.ERROR);
+            RequirementImportPlugin.log(Messages.getString("TTM2RequirementService.4"), IStatus.ERROR); //$NON-NLS-1$
             return false;
         }
 
-        if (!parameters.containsKey("Path"))
+        if (!parameters.containsKey(pathParam))
         {
-            RequirementImportPlugin.log("The parameter Path must be set.", IStatus.ERROR);
+            RequirementImportPlugin.log(Messages.getString("TTM2RequirementService.5"), IStatus.ERROR); //$NON-NLS-1$
             return false;
         }
 
-        if (!(parameters.get("IN") instanceof String))
+        if (!(parameters.get(inParam) instanceof String))
         {
-            RequirementImportPlugin.log("The parameter IN must be a String.", IStatus.ERROR);
+            RequirementImportPlugin.log(Messages.getString("TTM2RequirementService.6"), IStatus.ERROR); //$NON-NLS-1$
             return false;
         }
 
-        if (!(parameters.get("OUT") instanceof String))
+        if (!(parameters.get(outParam) instanceof String))
         {
-            RequirementImportPlugin.log("The parameter OUT must be a String.", IStatus.ERROR);
+            RequirementImportPlugin.log(Messages.getString("TTM2RequirementService.7"), IStatus.ERROR); //$NON-NLS-1$
             return false;
         }
 
-        if (!(parameters.get("Path") instanceof IPath))
+        if (!(parameters.get(pathParam) instanceof IPath))
         {
-            RequirementImportPlugin.log("The parameter Path must be a IPath.", IStatus.ERROR);
+            RequirementImportPlugin.log(Messages.getString("TTM2RequirementService.8"), IStatus.ERROR); //$NON-NLS-1$
             return false;
         }
         return true;
