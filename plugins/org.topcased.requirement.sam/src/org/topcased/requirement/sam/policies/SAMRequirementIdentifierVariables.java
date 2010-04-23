@@ -27,7 +27,7 @@ import org.topcased.requirement.core.utils.RequirementUtils;
 public class SAMRequirementIdentifierVariables implements IRequirementIdentifierVariables
 {
 
-    public static final String UPSTREAM_MODEL_VAR = "{upstream model}";
+    public static final String UPSTREAM_MODEL_VAR = "{upstream model}"; //$NON-NLS-1$
 
     /**
      * @see org.topcased.requirement.core.extensions.IRequirementIdentifierVariables#addValuesToPatterns(org.eclipse.emf.edit.domain.EditingDomain,

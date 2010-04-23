@@ -17,6 +17,9 @@ import org.topcased.requirement.core.extensions.IRequirementCountingAlgorithm;
 import org.topcased.requirement.core.preferences.ComputeRequirementIdentifier;
 
 /**
+ * This algorithm provide index storing on the hierarchical element parent of the current requirement created
+ * In fact every hierarchical element containing requirements got his own counting index
+ * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  */
 public class SAMRequirementCountingAlgorithm implements IRequirementCountingAlgorithm

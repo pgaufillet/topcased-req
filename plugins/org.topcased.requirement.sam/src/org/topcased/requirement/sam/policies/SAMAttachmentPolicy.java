@@ -137,7 +137,7 @@ public class SAMAttachmentPolicy implements IModelAttachmentPolicy
             {
                 if (((Model) model).getRequirementModel() != null)
                 {
-                    IPath path = new Path(resource.getURI().toString() + "di");
+                    IPath path = new Path(resource.getURI().toString() + "di"); //$NON-NLS-1$
                     URI fileURI = URI.createURI(path.toString());
                     Resource samModel = resourceSet.getResource(fileURI, true);
                     return samModel;
