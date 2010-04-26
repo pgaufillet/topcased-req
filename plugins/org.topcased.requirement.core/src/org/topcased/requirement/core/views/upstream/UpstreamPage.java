@@ -188,7 +188,7 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
                 {
                     Document currentDoc = (Document) currSelection.getFirstElement();
                     // add message about document which requirement were extracted from
-                    message.append(String.format(Messages.getString("UpstreamPage.0"), currentDoc.getFilename())); //$NON-NLS-1$
+                    message.append(String.format(Messages.getString("UpstreamPage.0"), currentDoc.getIdent())); //$NON-NLS-1$
                 }
                 // get elements for coverage rate
                 int numberOfRequirements = RequirementCoverageComputer.INSTANCE.getNumberOfRequirements();

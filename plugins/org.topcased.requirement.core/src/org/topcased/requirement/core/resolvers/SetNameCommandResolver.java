@@ -57,7 +57,7 @@ public class SetNameCommandResolver extends AdditionalCommand<SetCommand>
         for (SetCommand setCommand : setCommands)
         {
             EStructuralFeature efs = TopcasedAdapterFactoryLabeler.getInstance().getLabelFeature(setCommand.getOwner());
-            if (efs.equals(setCommand.getFeature()))
+            if (efs != null && efs.equals(setCommand.getFeature()))
             {
                 EMFtoGEFCommandWrapper cmd = new EMFtoGEFCommandWrapper(new RenameRequirementCommand(setCommand.getOwner(), (String) setCommand.getOldValue(), (String) setCommand.getValue()));
                 cmd.execute();

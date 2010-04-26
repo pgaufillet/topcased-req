@@ -1387,6 +1387,18 @@
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+Y">
       </key>
+      <key
+            commandId="org.topcased.requirement.core.createCurrentRequirement"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M2+C">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.createAnonymousRequirement"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M2+F">
+      </key>
    </extension>
    <extension
          point="org.eclipse.ui.contexts">
