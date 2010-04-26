@@ -71,15 +71,12 @@ public class RequirementAdapterFactory implements IAdapterFactory
      */
     private boolean loadRequirementModelWithDefaultPolicy (Modeler modeler)
     {
-        if (DefaultAttachmentPolicy.getInstance().getLinkedTargetModel(modeler.getEditingDomain().getResourceSet()) != null)
+        Property requirementProperty = DefaultAttachmentPolicy.getInstance().getProperty(modeler.getDiagrams());
+        if (requirementProperty != null)
         {
-            Property requirementProperty = DefaultAttachmentPolicy.getInstance().getProperty(modeler.getActiveDiagram());
-            if (requirementProperty != null)
-            {
-                URI uri = URI.createURI(requirementProperty.getValue()).trimFragment().resolve(requirementProperty.eResource().getURI());
-                RequirementUtils.loadRequirementModel(uri, modeler.getEditingDomain());
-                return true;
-            }
+            URI uri = URI.createURI(requirementProperty.getValue()).trimFragment().resolve(requirementProperty.eResource().getURI());
+            RequirementUtils.loadRequirementModel(uri, modeler.getEditingDomain());
+            return true;
         }
         return false;
     }

@@ -29,7 +29,7 @@ public interface Constants
     public static String REQUIREMENT_EXTENSION = "requirement";
 
     /** The METAMODE l_ traceability. */
-    public static String METAMODEL_TRACEABILITY = "http://org.topcased.traceability.model/1.0";
+    public static String METAMODEL_TRACEABILITY = "http://org.topcased.traceability.model";
 
     /** The METAMODE l_ uml. */
     public static String METAMODEL_UML = "http://www.eclipse.org/uml2/3.0.0/UML";

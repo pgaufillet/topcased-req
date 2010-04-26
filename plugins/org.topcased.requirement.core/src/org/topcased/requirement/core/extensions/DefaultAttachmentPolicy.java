@@ -106,7 +106,7 @@ public class DefaultAttachmentPolicy implements IModelAttachmentPolicy
      */
     public void unlinkRequirementModel(Resource targetModel, Resource requirementModel, boolean deleteRequirementModel)
     {
-        if (getProperty(targetModel.getContents().get(0)) != null)
+        if (getProperty((Diagrams)(targetModel.getContents().get(0))) != null)
         {
             // Get the current modeler
             Modeler modeler = Utils.getCurrentModeler();
@@ -148,7 +148,7 @@ public class DefaultAttachmentPolicy implements IModelAttachmentPolicy
             {
                 DiagramsResourceImpl res = (DiagramsResourceImpl) resource;
 
-                if (getProperty(res.getContents().get(0)) != null)
+                if (getProperty((Diagrams)(res.getContents().get(0))) != null)
                 {
                     return res;
                 }
@@ -166,12 +166,12 @@ public class DefaultAttachmentPolicy implements IModelAttachmentPolicy
      * 
      * @return the requirement property
      */
-    public Property getProperty(EObject eobject)
+    public Property getProperty(Diagrams diagram)
     {
-        if (eobject != null)
+        if (diagram != null)
         {
-            URI uriOriginal = eobject.eResource().getURI();
-            for (TreeIterator<EObject> i = eobject.eAllContents(); i.hasNext();)
+            URI uriOriginal = diagram.eResource().getURI();
+            for (TreeIterator<EObject> i = diagram.eAllContents(); i.hasNext();)
             {
                 EObject tmp = i.next();
                 if (tmp.eResource() != null && tmp.eResource().getURI().equals(uriOriginal))
@@ -206,7 +206,7 @@ public class DefaultAttachmentPolicy implements IModelAttachmentPolicy
             Command command = null;
             Diagram firstDiagram = null;
             Property property = null;
-            property = getProperty(eobject);
+            property = getProperty((Diagrams)eobject);
 
             // when we want to delete the property
             if (requirementModel == null && property != null)
