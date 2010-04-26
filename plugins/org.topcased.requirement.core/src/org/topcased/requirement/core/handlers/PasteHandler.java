@@ -11,19 +11,12 @@
  *****************************************************************************/
 package org.topcased.requirement.core.handlers;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.expressions.EvaluationContext;
 import org.eclipse.emf.common.command.Command;
-import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.edit.command.CommandParameter;
 import org.eclipse.emf.edit.command.PasteFromClipboardCommand;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.topcased.requirement.CurrentRequirement;
-import org.topcased.requirement.core.internal.Messages;
-import org.topcased.requirement.core.utils.RequirementHelper;
-import org.topcased.requirement.core.views.current.CurrentPage;
 
 /**
  * This class defines the EMF <b>paste</b> command
@@ -59,38 +52,4 @@ public class PasteHandler extends RequirementAbstractEMFCommandHandler
             return null;
         }
     }
-
-    /**
-     * @see org.topcased.requirement.core.actions.RequirementAbstractEMFAction#endAction(org.eclipse.emf.common.command.CompoundCommand)
-     */
-    @Override
-    public void endAction(CompoundCommand cmd)
-    {
-        CurrentPage currentPage = RequirementHelper.INSTANCE.getCurrentPage();
-        Collection< ? > source = cmd.getAffectedObjects();
-        CompoundCommand compound = new CompoundCommand(Messages.getString("PasteHandler.0")); //$NON-NLS-1$
-
-        // Process the renaming of the newly pasted requirements
-        for (Object currSource : source)
-        {
-            if (currSource instanceof CurrentRequirement)
-            {
-                // rename the current requirement
-                CurrentRequirement requirement = (CurrentRequirement) currSource;
-                compound.appendIfCanExecute(RequirementHelper.INSTANCE.renameRequirement(requirement));
-            }
-        }
-
-        if (!compound.isEmpty() && compound.canExecute())
-        {
-            // Execute the renaming commands
-            editingDomain.getCommandStack().execute(compound);
-        }
-
-        if (currentPage != null && compound.getAffectedObjects() != null)
-        {
-            currentPage.getViewer().setSelection(new StructuredSelection((List< ? >) compound.getAffectedObjects()), true);
-        }
-    }
-
 }

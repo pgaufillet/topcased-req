@@ -73,7 +73,7 @@ public class DragAndDropCommandResolver extends AdditionalCommand<DragAndDropCom
                 {
                     // Handle case of current view requirements drag'n'drop
                     org.topcased.requirement.CurrentRequirement requirement = (org.topcased.requirement.CurrentRequirement) currSrc;
-                    compound.appendIfCanExecute(RequirementHelper.INSTANCE.renameRequirement(requirement));
+                    compound.appendAndExecute(RequirementHelper.INSTANCE.renameRequirement(requirement));
                 }
             }
             compound.execute();

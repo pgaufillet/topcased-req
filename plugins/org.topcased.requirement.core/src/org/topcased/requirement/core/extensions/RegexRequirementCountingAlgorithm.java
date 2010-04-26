@@ -36,9 +36,6 @@ public class RegexRequirementCountingAlgorithm implements IRequirementCountingAl
     /** The next index initialized for the first current requirement creation when the step is at zero */
     private static long nextIndex = ComputeRequirementIdentifier.getRequirementStep();
 
-    /** The Step saved every time it changes to be synchronize with the preference page */
-    private static long step = ComputeRequirementIdentifier.getRequirementStep();
-
     /**
      * @see org.topcased.requirement.core.extensions.IRequirementCountingAlgorithm#getCurrentIndex(org.topcased.requirement.Requirement)
      */
@@ -46,15 +43,13 @@ public class RegexRequirementCountingAlgorithm implements IRequirementCountingAl
     {
         long currentStep = ComputeRequirementIdentifier.getRequirementStep();
         long max = getMax();
-        if (currentStep != step)
+        if (max != 0)
         {
-            //We got to be synchronized with the user modifications in the preference page 
-            nextIndex = nextIndex - step + currentStep;
-            step = currentStep;
+            nextIndex = max + currentStep;
         }
-        else if (max != 0)
+        else
         {
-            nextIndex = max + ComputeRequirementIdentifier.getRequirementStep();
+            nextIndex = currentStep;
         }
         return nextIndex;
     }
@@ -125,7 +120,7 @@ public class RegexRequirementCountingAlgorithm implements IRequirementCountingAl
      */
     public void setFirstIndex(Requirement firstCreatedRequirement)
     {
-        nextIndex = ComputeRequirementIdentifier.getRequirementStep();
+        //No need to implement this as the index is never stored
     }
 
 }

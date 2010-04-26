@@ -66,7 +66,7 @@ public class CreateCurrentReqCommandResolver extends AdditionalCommand<CreateCur
                     {
                         // Handle case of current view requirements drag'n'drop
                         org.topcased.requirement.CurrentRequirement requirement = (org.topcased.requirement.CurrentRequirement) req;
-                        compound.appendIfCanExecute(RequirementHelper.INSTANCE.renameRequirement(requirement));
+                        compound.appendAndExecute(RequirementHelper.INSTANCE.renameRequirement(requirement));
                     }
                 }
                 compound.execute();
