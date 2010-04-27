@@ -19,8 +19,8 @@ import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EValidator;
-import org.eclipse.emf.edit.ui.action.RedoAction;
-import org.eclipse.emf.edit.ui.action.UndoAction;
+import org.eclipse.gef.ui.actions.RedoAction;
+import org.eclipse.gef.ui.actions.UndoAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -50,6 +50,7 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.RegistryToggleState;
 import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.views.markers.MarkerItem;
+import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.Requirement;
 import org.topcased.requirement.RequirementProject;
@@ -223,21 +224,26 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
     {
         public void menuAboutToShow(IMenuManager manager)
         {
-            if (model != null)
+            if (model != null && Utils.getCurrentModeler() != null)
             {
+
                 //add a first separator to surround undo & redo actions
                 Separator first = new Separator(firstPopupMenuSeparator);
                 first.setVisible(true);
                 manager.add(first);
                 
-                UndoAction undoAction = new UndoAction(editingDomain);
+                //using gef undo stack action because emf undo/redo got label problems.
+                UndoAction undoAction = new UndoAction(Utils.getCurrentModeler().getSite().getPart());
                 undoAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_UNDO));
+                undoAction.update();
                 undoAction.setActionDefinitionId(ICommandConstants.UNDO_ID);
                 manager.add(undoAction);
 
-                RedoAction redoAction = new RedoAction(editingDomain);
+                //using gef redo stack actions because emf undo/redo got label problems.
+                RedoAction redoAction = new RedoAction(Utils.getCurrentModeler().getSite().getPart());
                 redoAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_REDO));
-                undoAction.setActionDefinitionId(ICommandConstants.REDO_ID);
+                redoAction.update();
+                redoAction.setActionDefinitionId(ICommandConstants.REDO_ID);
                 manager.add(redoAction);
                 
                 //add a last separator to surround undo & redo actions
