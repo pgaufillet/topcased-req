@@ -11,7 +11,7 @@
  *  Amine Bouchikhi (ATOS ORIGIN INTEGRATION) amine.bouchikhi@atosorigin.com - Initial API and implementation
  *
  *****************************************************************************/
-package org.topcased.requirement.generic.filter.ui;
+package org.topcased.requirement.filter.ui;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.topcased.requirement.document.utils.Serializer;
-import org.topcased.requirement.generic.filter.Activator;
+import org.topcased.requirement.filter.Activator;
 
 /**
  * The Class RequirementPage.
@@ -276,6 +276,7 @@ public class RequirementPage extends WizardPage
      * 
      * @param table the table
      */
+    @SuppressWarnings("unchecked")
     private void initFromPreference(Table table)
     {
         List<String> attributes = (List<String>) getFromPreference(PREFERENCE_FILTER_ATTRIBUTES);
@@ -298,8 +299,11 @@ public class RequirementPage extends WizardPage
 
     }
 
-    @SuppressWarnings("unchecked")
-    Object getFromPreference(String pref)
+    /**
+     * @param pref
+     * @return the preferences
+     */
+    private Object getFromPreference(String pref)
     {
         String s = Activator.getDefault().getPreferenceStore().getString(pref);
         Serializer<Object> ser = new Serializer<Object>();

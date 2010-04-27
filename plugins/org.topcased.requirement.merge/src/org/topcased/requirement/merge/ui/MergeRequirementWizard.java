@@ -11,7 +11,7 @@
  *  Caroline Bourdeu d'Aguerre (ATOS ORIGIN INTEGRATION) caroline.bourdeudaguerre@atosorigin.com - Initial API and implementation
  *
  *****************************************************************************/
-package org.topcased.requirement.generic.merge.ui;
+package org.topcased.requirement.merge.ui;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
@@ -25,7 +25,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.PlatformUI;
-import org.topcased.requirement.generic.merge.process.Merge;
+import org.topcased.requirement.merge.process.Merge;
 
 public class MergeRequirementWizard extends Wizard
 {

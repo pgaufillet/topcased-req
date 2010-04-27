@@ -11,7 +11,7 @@
  *  Amine Bouchikhi (ATOS ORIGIN INTEGRATION) amine.bouchikhi@atosorigin.com - Initial API and implementation
  *
  *****************************************************************************/
-package org.topcased.requirement.generic.filter;
+package org.topcased.requirement.filter;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -24,7 +24,7 @@ public class Activator extends AbstractUIPlugin
 {
 
     // The plug-in ID
-    public static final String PLUGIN_ID = "org.topcased.requirement.generic.filter";
+    public static final String PLUGIN_ID = "org.topcased.requirement.filter";
 
     // The shared instance
     private static Activator plugin;

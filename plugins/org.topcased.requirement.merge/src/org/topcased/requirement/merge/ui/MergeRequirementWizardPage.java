@@ -11,7 +11,7 @@
  *  Caroline Bourdeu d'Aguerre (ATOS ORIGIN INTEGRATION) caroline.bourdeudaguerre@atosorigin.com - Initial API and implementation
  *
  *****************************************************************************/
-package org.topcased.requirement.generic.merge.ui;
+package org.topcased.requirement.merge.ui;
 
 import java.util.HashMap;
 import java.util.Iterator;

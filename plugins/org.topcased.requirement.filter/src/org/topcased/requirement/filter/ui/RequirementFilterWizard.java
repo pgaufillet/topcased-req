@@ -11,7 +11,7 @@
  *  Amine Bouchikhi (ATOS ORIGIN INTEGRATION) amine.bouchikhi@atosorigin.com - Initial API and implementation
  *
  *****************************************************************************/
-package org.topcased.requirement.generic.filter.ui;
+package org.topcased.requirement.filter.ui;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
-import org.topcased.requirement.generic.filter.FilterProcess;
+import org.topcased.requirement.filter.FilterProcess;
 
 /**
  * The Class RequirementFilterWizard.

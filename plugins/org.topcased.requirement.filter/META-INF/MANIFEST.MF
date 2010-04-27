@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.topcased.requirement.filter;singleton:=true
 Bundle-Version: 1.0.3.qualifier
-Bundle-Activator: org.topcased.requirement.generic.filter.Activator
+Bundle-Activator: org.topcased.requirement.filter.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
@@ -12,10 +12,11 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.forms,
  org.topcased.requirement.core,
  org.topcased.requirement.import.document,
- org.topcased.regexviewer
+ org.topcased.regexviewer,
+ org.eclipse.core.expressions
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: org.topcased.requirement.generic.filter,
- org.topcased.requirement.generic.filter.ui
+Export-Package: org.topcased.requirement.filter,
+ org.topcased.requirement.filter.ui
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin

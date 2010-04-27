@@ -11,7 +11,8 @@
  *  Amine Bouchikhi (ATOS ORIGIN INTEGRATION) amine.bouchikhi@atosorigin.com - Initial API and implementation
  *
  *****************************************************************************/
-package org.topcased.requirement.generic.filter.ui;
+
+package org.topcased.requirement.filter.ui;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -29,7 +30,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.Form;
@@ -37,10 +37,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.topcased.regexviewer.views.RegexViewerComposite;
 
-/**
- * The Class RegexPopupDialog.
- */
-public class RegexPopupDialog extends Dialog
+public class NameRegexDialog extends Dialog
 {
 
     /** The composite. */
@@ -52,19 +49,15 @@ public class RegexPopupDialog extends Dialog
     /** The text. */
     private Text regexText;
 
-    private Text attributeNameText;
-
     /** The value. */
     private String value;
-
-    private String nameValue;
 
     /**
      * Instantiates a new regex popup dialog.
      * 
      * @param parentShell the parent shell
      */
-    protected RegexPopupDialog(Shell parentShell)
+    protected NameRegexDialog(Shell parentShell)
     {
         super(parentShell);
     }
@@ -80,26 +73,17 @@ public class RegexPopupDialog extends Dialog
         try
         {
             Pattern.compile(regexText.getText());
-            if (attributeNameText != null)
+
+            if (regexText.getText() != "")
             {
-                if (attributeNameText.getText() != "")
-                {
-                    if (regexText.getText() != "")
-                    {
 
-                        super.okPressed();
-                    }
-                    else
-                    {
-                        MessageDialog.openWarning(getShell(), "Syntax error", "please enter the regular expression. \n");
-                    }
-                }
-                else
-                {
-                    MessageDialog.openWarning(getShell(), "Syntax error", "please enter the attribute name. \n");
-                }
-
+                super.okPressed();
             }
+            else
+            {
+                MessageDialog.openWarning(getShell(), "Syntax error", "please enter the regular expression. \n");
+            }
+
         }
         catch (PatternSyntaxException e)
         {
@@ -121,7 +105,7 @@ public class RegexPopupDialog extends Dialog
     /*
      * (non-Javadoc)
      * 
-     * @see org.topcased.requirement.generic.filter.ui.CustomDialog#getInitialLocation(org.eclipse.swt.graphics.Point)
+     * @see org.topcased.requirement.filter.ui.CustomDialog#getInitialLocation(org.eclipse.swt.graphics.Point)
      */
     @Override
     protected Point getInitialLocation(Point initialSize)
@@ -153,10 +137,8 @@ public class RegexPopupDialog extends Dialog
         Composite compo = toolkit.createComposite(sec);
         compo.setLayout(new GridLayout(2, false));
         sec.setClient(compo);
-        Label name = toolkit.createLabel(compo, "Attribute Name : ");
-        attributeNameText = toolkit.createText(compo, "", SWT.BORDER);
-        attributeNameText.setFocus();
-        Label l = toolkit.createLabel(compo, "Regular expression : ");
+
+        toolkit.createLabel(compo, "Regular expression : ");
         regexText = toolkit.createText(compo, "", SWT.BORDER);
 
         regexText.addModifyListener(new ModifyListener()
@@ -167,15 +149,7 @@ public class RegexPopupDialog extends Dialog
                 value = regexText.getText();
             }
         });
-        attributeNameText.addModifyListener(new ModifyListener()
-        {
-            public void modifyText(ModifyEvent e)
-            {
-                nameValue = attributeNameText.getText();
-            }
-        });
 
-        attributeNameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 0, 0));
         regexText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
         regex = new RegexViewerComposite(form.getBody(), SWT.NONE, RegexViewerComposite.EXPANDED | RegexViewerComposite.MATCH);
@@ -193,11 +167,6 @@ public class RegexPopupDialog extends Dialog
     public String getUserRegex()
     {
         return value;
-    }
-
-    public String getUserAttrName()
-    {
-        return nameValue;
     }
 
 }

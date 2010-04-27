@@ -3,20 +3,66 @@
 <plugin>
 
    <extension
-         point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            id="org.topcased.requirement.generic.filter.contribution1"
-            nameFilter="*.requirement"
-            objectClass="org.eclipse.core.resources.IFile">
-         <action
-               class="org.topcased.requirement.generic.filter.popup.actions.RequirementsFilter"
-               enablesFor="+"
-               id="org.topcased.requirement.generic.filter.newAction"
-               label="Filter upstream requirements"
-               menubarPath="org.topcased.facilities.menu.topcased/org.topcased.facilities.menu.topcased.requirement/topcasedGroup"
-               tooltip="Filter requirements file with regular expressions">
-         </action>
-      </objectContribution>
+         point="org.eclipse.ui.commands">
+      <command
+            description="Filter requirements file with regular expressions"
+            id="org.topcased.requirement.filter.requirementFilterCommand"
+            name="Filter upstream requirements">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.topcased.requirement.filter.handlers.RequirementsFilterHandler"
+            commandId="org.topcased.requirement.filter.requirementFilterCommand">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+         <command
+               commandId="org.topcased.requirement.filter.requirementFilterCommand"
+               label="&amp;Filter upstream requirements"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <and>
+                  <with
+                        variable="selection">
+                     <iterate
+                           ifEmpty="false">
+                        <and>
+                           <instanceof
+                                 value="org.eclipse.core.resources.IFile">
+                           </instanceof>
+                           <test
+                                 forcePluginActivation="true"
+                                 property="org.topcased.requirement.filter.isRequirementFile">
+                           </test>
+                        </and>
+                     </iterate>
+                  </with>
+                  <with
+                        variable="activePartId">
+                     <equals
+                           value="org.topcased.ui.navigator.view">
+                     </equals>
+                  </with>
+               </and>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="org.topcased.requirement.filter.testers.IsRequirementFilePropertyTester"
+            id="org.topcased.requirement.filter.testers.IsRequirementFilePropertyTester"
+            namespace="org.topcased.requirement.filter"
+            properties="isRequirementFile"
+            type="org.eclipse.core.resources.IFile">
+      </propertyTester>
    </extension>
   
 </plugin>

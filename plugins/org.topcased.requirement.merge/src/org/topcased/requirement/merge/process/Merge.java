@@ -9,9 +9,9 @@
  *
  * Contributors:
  *  Caroline Bourdeu d'Aguerre (ATOS ORIGIN INTEGRATION) caroline.bourdeudaguerre@atosorigin.com - Initial API and implementation
- *
+ *  Maxime AUDRAIN (CS) - maxime.audrain@c-s.fr 
  *****************************************************************************/
-package org.topcased.requirement.generic.merge.process;
+package org.topcased.requirement.merge.process;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -41,7 +41,6 @@ import org.eclipse.emf.edit.command.DeleteCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
-import org.topcased.modeler.di.model.Property;
 import org.topcased.modeler.diagrams.model.Diagrams;
 import org.topcased.modeler.editor.TopcasedAdapterFactoryEditingDomain;
 import org.topcased.requirement.Attribute;
@@ -59,8 +58,10 @@ import org.topcased.requirement.TrashChapter;
 import org.topcased.requirement.UntracedChapter;
 import org.topcased.requirement.UpstreamModel;
 import org.topcased.requirement.core.extensions.DefaultAttachmentPolicy;
+import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
+import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
 import org.topcased.requirement.core.utils.RequirementUtils;
-import org.topcased.requirement.generic.merge.utils.Triplet;
+import org.topcased.requirement.merge.utils.Triplet;
 
 public class Merge
 {
@@ -214,27 +215,36 @@ public class Merge
             URI uri = URI.createURI(file);
             EObject eobject = new ResourceSetImpl().getResource(uri, true).getContents().get(0);
 
-            // Get the associate requirement            
-            Property property = DefaultAttachmentPolicy.getInstance().getProperty(eobject);
-
             //Get the diagram editing domain
             EditingDomain domain = TopcasedAdapterFactoryEditingDomain.getEditingDomainFor(eobject);
-            
-            // If there is an associate requirement
-            if (property != null && domain != null)
-            {
-                RequirementProject r = RequirementUtils.getRequirementProject(domain);
-                if (r != null)
-                {
-                    if (eobject instanceof Diagrams)
-                    {
-                        // get the associate model
-                        URI uriModel = URI.createURI(file.substring(0, file.length() - 2));
-                        EObject eobjectModel = new ResourceSetImpl().getResource(uriModel, true).getContents().get(0);
 
-                        // Create a new Triplet
-                        Triplet t = new Triplet(eobjectModel, (Diagrams) eobject, r, inputs.get(file));
-                        models.add(t);
+            if (domain != null)
+            {
+                // Check if this diagram is attached to a requirement model           
+                boolean defaultAttached = DefaultAttachmentPolicy.getInstance().getLinkedTargetModel(domain.getResourceSet()) != null;
+                boolean attached = false;
+                IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(domain);
+                if (policy != null)
+                {
+                    attached = policy.getLinkedTargetModel(domain.getResourceSet()) != null;
+                }
+                
+                //If it is attached
+                if (defaultAttached || attached)
+                {
+                    RequirementProject r = RequirementUtils.getRequirementProject(domain);
+                    if (r != null)
+                    {
+                        if (eobject instanceof Diagrams)
+                        {
+                            // get the associate model
+                            URI uriModel = URI.createURI(file.substring(0, file.length() - 2));
+                            EObject eobjectModel = new ResourceSetImpl().getResource(uriModel, true).getContents().get(0);
+    
+                            // Create a new Triplet
+                            Triplet t = new Triplet(eobjectModel, (Diagrams) eobject, r, inputs.get(file));
+                            models.add(t);
+                        }
                     }
                 }
             }

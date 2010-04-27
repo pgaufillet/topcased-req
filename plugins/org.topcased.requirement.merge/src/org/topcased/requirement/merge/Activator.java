@@ -11,7 +11,7 @@
  *  Caroline Bourdeu d'Aguerre (ATOS ORIGIN INTEGRATION) caroline.bourdeudaguerre@atosorigin.com - Initial API and implementation
  *
  *****************************************************************************/
-package org.topcased.requirement.generic.merge;
+package org.topcased.requirement.merge;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -24,7 +24,7 @@ public class Activator extends AbstractUIPlugin
 {
 
     // The plug-in ID
-    public static final String PLUGIN_ID = "org.topcased.requirement.generic.merge";
+    public static final String PLUGIN_ID = "org.topcased.requirement.merge";
 
     // The shared instance
     private static Activator plugin;

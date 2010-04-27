@@ -3,20 +3,73 @@
 <plugin>
 
    <extension
-         point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            id="org.topcased.requirement.generic.merge"
-            nameFilter="*di"
-            objectClass="org.eclipse.core.resources.IFile">
-         <action
-               class="org.topcased.requirement.generic.merge.actions.SampleAction"
-               enablesFor="2+"
-               icon="icons/sample.gif"
-               id="org.topcased.requirement.generic.merge"
-               label="Merge requirement"
-               menubarPath="org.topcased.facilities.menu.topcased/org.topcased.facilities.menu.topcased.requirement/topcasedGroup">
-         </action>
-      </objectContribution>
+         point="org.eclipse.ui.commands">
+      <command
+            description="Merge two or more requirement model"
+            id="org.topcased.requirement.merge.mergeRequirement"
+            name="Merge requirement">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commandImages">
+      <image
+            commandId="org.topcased.requirement.merge.mergeRequirement"
+            icon="icons/sample.gif">
+      </image>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.topcased.requirement.merge.handlers.LaunchMergeWizardHandler"
+            commandId="org.topcased.requirement.merge.mergeRequirement">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+         <command
+               commandId="org.topcased.requirement.merge.mergeRequirement"
+               label="&amp;Merge requirement"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <and>
+                  <with
+                        variable="selection">
+                     <iterate
+                           ifEmpty="false">
+                        <and>
+                           <instanceof
+                                 value="org.eclipse.core.resources.IFile">
+                           </instanceof>
+                           <test
+                                 forcePluginActivation="true"
+                                 property="org.topcased.requirement.merge.isDiagramFile">
+                           </test>
+                        </and>
+                     </iterate>
+                  </with>
+                  <with
+                        variable="activePartId">
+                     <equals
+                           value="org.topcased.ui.navigator.view">
+                     </equals>
+                  </with>
+               </and>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="org.topcased.requirement.merge.testers.IsDiagramFilePropertyTester"
+            id="org.topcased.requirement.merge.testers.IsDiagramFilePropertyTester"
+            namespace="org.topcased.requirement.merge"
+            properties="isDiagramFile"
+            type="org.eclipse.core.resources.IFile">
+      </propertyTester>
    </extension>
 
 </plugin>

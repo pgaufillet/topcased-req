@@ -11,7 +11,7 @@
  *  Amine Bouchikhi (ATOS ORIGIN INTEGRATION) amine.bouchikhi@atosorigin.com - Initial API and implementation
  *
  *****************************************************************************/
-package org.topcased.requirement.generic.filter;
+package org.topcased.requirement.filter;
 
 import java.io.IOException;
 import java.util.Collections;
