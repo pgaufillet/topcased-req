@@ -1,0 +1,205 @@
+module Transformation;
+
+create OUT : OUTMETAMODEL  from IN : INMETAMODEL;
+
+-- Helper returning the position of a character or size+1 if the character is not found
+helper context INMETAMODEL!IdentifiedElement def : getShortDescription() : String =
+	if (not self.shortDescription.oclIsUndefined()) then
+		self.shortDescription
+	else
+		''
+	endif;
+
+-- Helper returning Document of a section
+helper context INMETAMODEL!Section def : getDocument() : INMETAMODEL!Document =
+	if (self.parent.oclIsTypeOf(INMETAMODEL!Document) ) then
+		self.parent
+	else
+		self.parent.getDocument()
+	endif;
+
+
+rule DocumentRule {
+	from invar : INMETAMODEL!Document (invar.oclIsTypeOf(INMETAMODEL!Document))
+	to Documentvar : OUTMETAMODEL!Document (
+		ident <- invar.ident,
+		shortDescription <- invar.getShortDescription(),
+		analyzerID <- invar.analyzerID,
+		lastModifiedDate <- invar.lastModifiedDate,
+		filename <- invar.filename,
+		coversItself <- invar.coversItself,
+		conversionMethodID <- invar.conversionMethodID,
+		analyzerArguments <- invar.analyzerArguments,
+		globalCoverageRatio <- invar.globalCoverageRatio,
+		editionMethodID <- invar.editionMethodID,
+		activatedRules <- Sequence{invar.activatedRules},
+		attributes <- Sequence{invar.attributes},
+		texts <- Sequence{invar.texts},
+		incomingNavigationLinks <- Sequence{invar.incomingNavigationLinks},
+		navigationLinks <- Sequence{invar.navigationLinks},
+		coverLinks <- Sequence{invar.coverLinks},
+		children <- Sequence{invar.children},
+		parent <- invar.parent,
+		project <- thisModule.resolveTemp(invar.project,'projectvar'),
+		coverPoints <- Sequence{invar.coverPoints},
+		incomingCoverPoints <- Sequence{invar.incomingCoverPoints}
+	 )
+}
+
+rule SectionRule {
+	from invar : INMETAMODEL!Section (invar.oclIsTypeOf(INMETAMODEL!Section))
+	to Sectionvar : OUTMETAMODEL!Section (
+		ident <- invar.ident.concat('. ').concat(invar.getShortDescription()).concat(' in Document : ').concat(invar.getDocument().ident),
+		shortDescription <- invar.shortDescription,
+		activatedRules <- Sequence{invar.activatedRules},
+		attributes <- Sequence{invar.attributes},
+		texts <- Sequence{invar.texts},
+		incomingNavigationLinks <- Sequence{invar.incomingNavigationLinks},
+		navigationLinks <- Sequence{invar.navigationLinks},
+		coverLinks <- Sequence{invar.coverLinks},
+		children <- Sequence{invar.children},
+		parent <- invar.parent
+	 )
+}
+
+rule TextRule {
+	from invar : INMETAMODEL!Text (invar.oclIsTypeOf(INMETAMODEL!Text))
+	to Textvar : OUTMETAMODEL!Text (
+		value <- invar.value,
+		activatedRules <- Sequence{invar.activatedRules},
+		parent <- invar.parent 
+	 )
+}
+
+rule AttributeRule {
+	from invar : INMETAMODEL!Attribute (invar.oclIsTypeOf(INMETAMODEL!Attribute))
+	to Attributevar : OUTMETAMODEL!Attribute (
+		name <- invar.name,
+		value <- invar.value,
+		activatedRules <- Sequence{invar.activatedRules},
+		parent <- invar.parent
+	 )
+}
+
+rule RequirementRule {
+	from invar : INMETAMODEL!Requirement (invar.oclIsTypeOf(INMETAMODEL!Requirement))
+	to Requirementvar : OUTMETAMODEL!Requirement (
+		ident <- invar.ident,
+		shortDescription <- invar.getShortDescription(),
+		subCoveringRequirementsRatio <- invar.subCoveringRequirementsRatio,
+		activatedRules <- Sequence{invar.activatedRules},
+		attributes <- Sequence{invar.attributes},
+		texts <- Sequence{invar.texts},
+		incomingNavigationLinks <- Sequence{invar.incomingNavigationLinks},
+		navigationLinks <- Sequence{invar.navigationLinks},
+		coverLinks <- Sequence{invar.coverLinks},
+		children <- Sequence{invar.children},
+		parent <- invar.parent,
+		incomingCoverLinks <- Sequence{invar.incomingCoverLinks}
+	 )
+}
+
+rule CoverLinkRule {
+	from invar : INMETAMODEL!CoverLink (invar.oclIsTypeOf(INMETAMODEL!CoverLink))
+	to CoverLinkvar : OUTMETAMODEL!CoverLink (
+		unresolved <- invar.unresolved,
+		referencedID <- invar.referencedID,
+		activatedRules <- Sequence{invar.activatedRules},
+		attributes <- Sequence{invar.attributes},
+		from <- invar.from,
+		to <- invar.to
+	 )
+}
+
+rule NavigationLinkRule {
+	from invar : INMETAMODEL!NavigationLink (invar.oclIsTypeOf(INMETAMODEL!NavigationLink))
+	to NavigationLinkvar : OUTMETAMODEL!NavigationLink (
+		unresolved <- invar.unresolved,
+		referencedID <- invar.referencedID,
+		activatedRules <- Sequence{invar.activatedRules},
+		attributes <- Sequence{invar.attributes},
+		to <- invar.to,
+		from <- invar.from
+	 )
+}
+
+rule ProjectRule {
+	from invar : INMETAMODEL!Project (invar.oclIsTypeOf(INMETAMODEL!Project))
+	to Requirement : OUTMETAMODEL!RequirementProject(
+		
+		chapter <- Set{}->union(Set{trashChapter})->union(Set{problemChapter})->union(Set{untracedChapter}),
+		upstreamModel <- projectvar,
+		attributeConfiguration <- attributeConf
+		),
+		
+	untracedChapter : OUTMETAMODEL!UntracedChapter(
+		),
+
+	problemChapter : OUTMETAMODEL!ProblemChapter(
+		),
+		
+	trashChapter : OUTMETAMODEL!TrashChapter(
+		),
+		
+	projectvar : OUTMETAMODEL!UpstreamModel(
+		ident <- invar.ident,
+		shortDescription <- invar.getShortDescription(),
+		anyDocumentCovered <- invar.anyDocumentCovered,
+		activatedRules <- Sequence{invar.activatedRules},
+		attributes <- Sequence{invar.attributes},
+		texts <- Sequence{invar.texts},
+		documents <- Sequence{invar.documents},
+		rules <- Sequence{invar.rules},
+		coverageResults <- Sequence{invar.coverageResults}
+	 ),
+	 
+	 attributeConf : OUTMETAMODEL!AttributeConfiguration(
+	)
+}
+
+rule RuleInstanceRule {
+	from invar : INMETAMODEL!RuleInstance (invar.oclIsTypeOf(INMETAMODEL!RuleInstance))
+	to RuleInstancevar : OUTMETAMODEL!RuleInstance (
+		displayMessage <- invar.displayMessage,
+		element <- invar.element,
+		baseRule <- invar.baseRule
+	 )
+}
+
+rule AttributeOwnerRule {
+	from invar : INMETAMODEL!AttributeOwner (invar.oclIsTypeOf(INMETAMODEL!AttributeOwner))
+	to AttributeOwnervar : OUTMETAMODEL!AttributeOwner (
+		activatedRules <- Sequence{invar.activatedRules},
+		attributes <- Sequence{invar.attributes}
+	 )
+}
+
+rule RuleRule {
+	from invar : INMETAMODEL!Rule (invar.oclIsTypeOf(INMETAMODEL!Rule))
+	to Rulevar : OUTMETAMODEL!Rule (
+		name <- invar.name,
+		level <- invar.level,
+		message <- invar.message,
+		ruleInstances <- Sequence{invar.ruleInstances}
+	 )
+}
+
+rule CoverageResultRule {
+	from invar : INMETAMODEL!CoverageResult (invar.oclIsTypeOf(INMETAMODEL!CoverageResult))
+	to CoverageResultvar : OUTMETAMODEL!CoverageResult (
+		coverage <- invar.coverage,
+		project <- thisModule.resolveTemp(invar.project,'projectvar'),
+		fromDocument <- invar.fromDocument,
+		toDocument <- invar.toDocument,
+		fromCoverPoint <- invar.fromCoverPoint
+	 )
+}
+
+rule CoverPointRule {
+	from invar : INMETAMODEL!CoverPoint (invar.oclIsTypeOf(INMETAMODEL!CoverPoint))
+	to CoverPointvar : OUTMETAMODEL!CoverPoint (
+		andCover <- invar.andCover,
+		coveredDocument <- invar.coveredDocument,
+		connectedDocuments <- Sequence{invar.connectedDocuments}
+	 )
+}
