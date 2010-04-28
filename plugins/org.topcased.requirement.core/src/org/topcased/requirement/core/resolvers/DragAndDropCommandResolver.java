@@ -14,8 +14,8 @@
 
 package org.topcased.requirement.core.resolvers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -122,7 +122,7 @@ public class DragAndDropCommandResolver extends AdditionalCommand<DragAndDropCom
     @Override
     protected List<Object> getSpecificCommands(Command command, Class< ? > clazz)
     {
-        List<Object> result = new LinkedList<Object>();
+        List<Object> result = new ArrayList<Object>();
 
         // deals with DragAndDropCommand (specific behaviour)
         if (command instanceof EMFtoGEFCommandWrapper)
@@ -141,6 +141,10 @@ public class DragAndDropCommandResolver extends AdditionalCommand<DragAndDropCom
                         result.add((DragAndDropCommand) o);
                     }
                 }
+            }
+            else if (emfCommand instanceof DragAndDropCommand)
+            {
+                result.add((DragAndDropCommand) emfCommand);
             }
             else
             {
