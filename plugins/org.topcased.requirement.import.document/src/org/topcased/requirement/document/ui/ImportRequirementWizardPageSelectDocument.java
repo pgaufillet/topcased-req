@@ -521,13 +521,24 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
         {
             modelType = Constants.SYSML_EXTENSION;
         }
-        if (outputModel != null && outputModel.length() > 0)
-        {
-            String[] splited = outputModel.split("\\.");
-            splited[0] += "."; 
-            outputModel = splited[0].concat(modelType);
-            outputModelComponent.setValueText(outputModel, true);
-        }
+		if (outputModel != null && outputModel.length() > 0) {
+			int lastIndexOfPoint = outputModel.lastIndexOf(".");
+			String type = outputModel.substring(lastIndexOfPoint + 1,
+					outputModel.length());
+
+			if (type.equals(Constants.REQUIREMENT_EXTENSION)
+					|| type.equals(Constants.UML_EXTENSION)
+					|| type.equals(Constants.SYSML_EXTENSION)) {
+				String splitedOutputModel = outputModel.substring(0,
+						lastIndexOfPoint);
+
+				outputModel = splitedOutputModel + "." + modelType;
+
+			} else {
+				outputModel = outputModel + "." + modelType;
+			}
+			outputModelComponent.setValueText(outputModel, true);
+		}
 
         return modelType;
 
