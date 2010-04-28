@@ -55,7 +55,6 @@ public class RequirementFilterWizard extends Wizard
     @Override
     public boolean canFinish()
     {
-        // TODO Auto-generated method stub
         return page.canFlipToNextPage();
     }
 

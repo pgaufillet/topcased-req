@@ -54,7 +54,6 @@ public abstract class AbstractRecognizedElement implements RecognizedElement
      */
     public boolean isSelected()
     {
-        // TODO Auto-generated method stub
         return selected;
     }
 

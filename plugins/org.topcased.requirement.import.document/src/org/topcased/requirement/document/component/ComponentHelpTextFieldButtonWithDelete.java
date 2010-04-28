@@ -49,7 +49,6 @@ public class ComponentHelpTextFieldButtonWithDelete extends ComponentHelpTextFie
     public ComponentHelpTextFieldButtonWithDelete(NotifyElement parentElement, Composite parent, FormToolkit toolkit, int style, String helpText)
     {
         super(parentElement, parent, toolkit, style, helpText, 2);
-        // TODO Auto-generated constructor stub
     }
 
     /*
