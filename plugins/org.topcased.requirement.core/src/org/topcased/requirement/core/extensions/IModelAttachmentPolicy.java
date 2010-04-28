@@ -13,10 +13,13 @@ package org.topcased.requirement.core.extensions;
 
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.topcased.modeler.diagrams.model.Diagrams;
+import org.topcased.requirement.RequirementProject;
 
 /**
  * This interface defines the behavior to implement for the "modelAttachmentPolicy" extension point Provide the way to
- * link and unlink your target model to a requirement model
+ * link and unlink your target model to a requirement model and to get your requirement model
+ * from your target model
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  */
@@ -45,5 +48,14 @@ public interface IModelAttachmentPolicy
      * @return the linked target model or null if no requirement model is attached.
      */
     Resource getLinkedTargetModel(ResourceSet resourceSet);
+    
+
+    /**
+     * Gets the Requirement project from the target diagram (usually a "di" diagram)
+     * 
+     * @param diagram the diagram attached to a requirement model
+     * @return the requirement project
+     */
+    RequirementProject getRequirementProjectFromTargetDiagram(Diagrams diagram);
 
 }

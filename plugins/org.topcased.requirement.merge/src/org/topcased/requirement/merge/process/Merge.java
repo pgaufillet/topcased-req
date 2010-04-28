@@ -39,10 +39,8 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.DeleteCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
-import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.topcased.modeler.diagrams.model.Diagrams;
-import org.topcased.modeler.editor.TopcasedAdapterFactoryEditingDomain;
 import org.topcased.requirement.Attribute;
 import org.topcased.requirement.AttributeConfiguration;
 import org.topcased.requirement.AttributeLink;
@@ -60,7 +58,6 @@ import org.topcased.requirement.UpstreamModel;
 import org.topcased.requirement.core.extensions.DefaultAttachmentPolicy;
 import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
 import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
-import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.merge.utils.Triplet;
 
 public class Merge
@@ -215,37 +212,31 @@ public class Merge
             URI uri = URI.createURI(file);
             EObject eobject = new ResourceSetImpl().getResource(uri, true).getContents().get(0);
 
-            //Get the diagram editing domain
-            EditingDomain domain = TopcasedAdapterFactoryEditingDomain.getEditingDomainFor(eobject);
-
-            if (domain != null)
+            if (eobject instanceof Diagrams)
             {
-                // Check if this diagram is attached to a requirement model           
-                boolean defaultAttached = DefaultAttachmentPolicy.getInstance().getLinkedTargetModel(domain.getResourceSet()) != null;
-                boolean attached = false;
-                IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(domain);
+                RequirementProject project = null;
+                Diagrams diagram = (Diagrams) eobject;
+                IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(uri.fileExtension());
+                
+                // Get the associated requirement model
                 if (policy != null)
                 {
-                    attached = policy.getLinkedTargetModel(domain.getResourceSet()) != null;
+                    project = policy.getRequirementProjectFromTargetDiagram(diagram);
+                }
+                else
+                {
+                    project = DefaultAttachmentPolicy.getInstance().getRequirementProjectFromTargetDiagram(diagram);
                 }
                 
-                //If it is attached
-                if (defaultAttached || attached)
+                if (project != null)
                 {
-                    RequirementProject r = RequirementUtils.getRequirementProject(domain);
-                    if (r != null)
-                    {
-                        if (eobject instanceof Diagrams)
-                        {
-                            // get the associate model
-                            URI uriModel = URI.createURI(file.substring(0, file.length() - 2));
-                            EObject eobjectModel = new ResourceSetImpl().getResource(uriModel, true).getContents().get(0);
-    
-                            // Create a new Triplet
-                            Triplet t = new Triplet(eobjectModel, (Diagrams) eobject, r, inputs.get(file));
-                            models.add(t);
-                        }
-                    }
+                    // get the associate model
+                    URI uriDiagram = URI.createURI(file.substring(0, file.length() - 2));
+                    EObject eobjectModel = new ResourceSetImpl().getResource(uriDiagram, true).getContents().get(0);
+
+                    // Create a new Triplet
+                    Triplet t = new Triplet(eobjectModel, (Diagrams) eobject, project, inputs.get(file));
+                    models.add(t);
                 }
             }
             subMonitor.worked(1);
@@ -476,12 +467,12 @@ public class Merge
                 if (current.eContainer() instanceof HierarchicalElement)
                 {
                     HierarchicalElement hier = (HierarchicalElement) current.eContainer();
-                    EObject samE = hier.getElement() ;
-                    if (samE.eIsProxy())
+                    EObject element = hier.getElement() ;
+                    if (element.eIsProxy())
                     {
-                        samE = (EObject) hier.eGet(RequirementPackage.Literals.HIERARCHICAL_ELEMENT__ELEMENT,true);
+                        element = (EObject) hier.eGet(RequirementPackage.Literals.HIERARCHICAL_ELEMENT__ELEMENT,true);
                     }
-                    if (samE != null && !samE.eIsProxy() && hier.getElement().eResource().getURI().equals(t.getModel().eResource().getURI()))
+                    if (element != null && !element.eIsProxy() && hier.getElement().eResource().getURI().equals(t.getModel().eResource().getURI()))
                     {
                         HierarchicalElement hierToAdd = get(hier.getElement());
                         if (hierToAdd != null)

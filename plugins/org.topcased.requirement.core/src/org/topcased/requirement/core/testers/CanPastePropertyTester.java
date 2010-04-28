@@ -12,7 +12,7 @@
 package org.topcased.requirement.core.testers;
 
 import org.eclipse.core.expressions.PropertyTester;
-import org.eclipse.emf.edit.domain.EditingDomain;
+import org.topcased.modeler.editor.Modeler;
 import org.topcased.modeler.utils.Utils;
 
 /**
@@ -30,11 +30,13 @@ public class CanPastePropertyTester extends PropertyTester
      */
     public boolean test(Object receiver, String property, Object[] args, Object expectedValue)
     {
-        EditingDomain domain = Utils.getCurrentModeler().getEditingDomain();
-        
-        if (domain.getClipboard() != null)
+        Modeler modeler = Utils.getCurrentModeler();
+        if (modeler != null)
         {
-            return true;
+            if (modeler.getEditingDomain().getClipboard() != null)
+            {
+                return true;
+            }
         }
         return false;
     }

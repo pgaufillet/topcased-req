@@ -165,4 +165,16 @@ public class SAMAttachmentPolicy implements IModelAttachmentPolicy
         return toReturn;
     }
 
+    /**
+     * @see org.topcased.requirement.core.extensions.IModelAttachmentPolicy#getRequirementProjectFromTargetDiagram(org.topcased.modeler.diagrams.model.Diagrams)
+     */
+    public RequirementProject getRequirementProjectFromTargetDiagram(Diagrams diagram)
+    {
+        if (diagram.getModel() instanceof Model)
+        {
+            return ((RequirementProject)((Model) diagram.getModel()).getRequirementModel());
+        }
+        return null;
+    }
+
 }

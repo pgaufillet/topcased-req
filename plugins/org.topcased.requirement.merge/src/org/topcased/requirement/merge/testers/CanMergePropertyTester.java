@@ -13,14 +13,16 @@ package org.topcased.requirement.merge.testers;
 
 import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.core.resources.IFile;
+import org.topcased.modeler.utils.Utils;
 
 /**
- * A simple property tester to check if the current IFile selected is a ".di" file.
+ * A simple property tester to check if the current IFile selected is a ".di" file,
+ * And also check that no currentModeler is opened (prevent problems when modifying requirement file while opened)
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  *
  */
-public class IsDiagramFilePropertyTester extends PropertyTester
+public class CanMergePropertyTester extends PropertyTester
 {
 
     /**
@@ -28,13 +30,16 @@ public class IsDiagramFilePropertyTester extends PropertyTester
      */
     public boolean test(Object receiver, String property, Object[] args, Object expectedValue)
     {
-        if (receiver instanceof IFile)
+        if (Utils.getCurrentModeler() == null)
         {
-            IFile file = (IFile) receiver;
-            
-            if (file.getFileExtension().endsWith("di")) //$NON-NLS-1$
+            if (receiver instanceof IFile)
             {
-                return true;
+                IFile file = (IFile) receiver;
+                
+                if (file.getFileExtension().endsWith("di")) //$NON-NLS-1$
+                {
+                    return true;
+                }
             }
         }
         return false;

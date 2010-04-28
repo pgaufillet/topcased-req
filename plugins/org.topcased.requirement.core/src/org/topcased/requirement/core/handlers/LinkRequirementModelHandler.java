@@ -62,7 +62,12 @@ public class LinkRequirementModelHandler extends AbstractHandler
                 wizard = new NewRequirementModelWizard();
             }
 
-            wizard.init(PlatformUI.getWorkbench(), new StructuredSelection(Modeler.getCurrentIFile()));
+            StructuredSelection selection = null;
+            if (Modeler.getCurrentIFile() != null)
+            {
+                selection = new StructuredSelection(Modeler.getCurrentIFile());
+            }
+            wizard.init(PlatformUI.getWorkbench(),selection) ;
 
             // launch the wizard allowing to perform the operations
             WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wizard)

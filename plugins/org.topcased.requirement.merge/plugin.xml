@@ -45,10 +45,13 @@
                            </instanceof>
                            <test
                                  forcePluginActivation="true"
-                                 property="org.topcased.requirement.merge.isDiagramFile">
+                                 property="org.topcased.requirement.merge.canMerge">
                            </test>
                         </and>
                      </iterate>
+                     <count
+                           value="(1-">
+                     </count>
                   </with>
                   <with
                         variable="activePartId">
@@ -64,10 +67,10 @@
    <extension
          point="org.eclipse.core.expressions.propertyTesters">
       <propertyTester
-            class="org.topcased.requirement.merge.testers.IsDiagramFilePropertyTester"
-            id="org.topcased.requirement.merge.testers.IsDiagramFilePropertyTester"
+            class="org.topcased.requirement.merge.testers.CanMergePropertyTester"
+            id="org.topcased.requirement.merge.testers.CanMergePropertyTester"
             namespace="org.topcased.requirement.merge"
-            properties="isDiagramFile"
+            properties="canMerge"
             type="org.eclipse.core.resources.IFile">
       </propertyTester>
    </extension>

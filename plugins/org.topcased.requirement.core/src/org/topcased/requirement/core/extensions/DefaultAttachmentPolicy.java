@@ -20,6 +20,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
 import org.eclipse.emf.edit.command.SetCommand;
@@ -31,6 +32,7 @@ import org.topcased.modeler.diagrams.model.Diagrams;
 import org.topcased.modeler.diagrams.model.util.DiagramsResourceImpl;
 import org.topcased.modeler.editor.Modeler;
 import org.topcased.modeler.utils.Utils;
+import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.current.CurrentRequirementView;
 import org.topcased.requirement.core.views.upstream.UpstreamRequirementView;
@@ -249,6 +251,21 @@ public class DefaultAttachmentPolicy implements IModelAttachmentPolicy
             }
             command.execute();
         }
+    }
+
+    /**
+     * @see org.topcased.requirement.core.extensions.IModelAttachmentPolicy#getRequirementProjectFromTargetDiagram(org.topcased.modeler.diagrams.model.Diagrams)
+     */
+    public RequirementProject getRequirementProjectFromTargetDiagram(Diagrams diagram)
+    {
+        Property property = getProperty(diagram);
+        
+        if (property != null)
+        {
+            String uriRequirementModel = URI.createURI(property.getValue()).trimFragment().resolve(property.eResource().getURI()).toString();
+            return (RequirementProject) new ResourceSetImpl().getResource(URI.createURI(uriRequirementModel), true).getContents().get(0);
+        }
+        return null;
     }
 
 }

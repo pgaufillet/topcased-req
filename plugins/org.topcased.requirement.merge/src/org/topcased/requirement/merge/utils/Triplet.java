@@ -45,7 +45,7 @@ public class Triplet
         return model;
     }
 
-    public Diagrams getUmldi()
+    public Diagrams getDiagram()
     {
         return di;
     }
