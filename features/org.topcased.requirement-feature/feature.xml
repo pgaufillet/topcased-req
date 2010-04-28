@@ -130,7 +130,14 @@ is permitted.
       <import plugin="org.eclipse.emf.search.ui"/>
       <import plugin="org.eclipse.emf.search.ecore.ui"/>
       <import plugin="org.eclipse.emf.ecore.editor"/>
+      <import plugin="org.eclipse.ui.forms"/>
+      <import plugin="org.topcased.document.parser"/>
+      <import plugin="org.topcased.doc2model.parser"/>
+      <import plugin="org.eclipse.uml2.uml"/>
+      <import plugin="org.topcased.sysml"/>
+      <import plugin="org.topcased.requirement.core" version="3.3.0" match="greaterOrEqual"/>
       <import feature="org.topcased.modeler.feature" version="3.4.0.qualifier"/>
+      <import plugin="org.topcased.traceability" version="2.5.2" match="greaterOrEqual"/>
    </requires>
 
    <plugin
@@ -212,6 +219,41 @@ is permitted.
 
    <plugin
          id="org.topcased.requirement.search.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.topcased.requirement.export"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.topcased.requirement.filter"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.topcased.requirement.merge"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.topcased.regexviewer"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.topcased.requirement.import.document"
          download-size="0"
          install-size="0"
          version="0.0.0"
