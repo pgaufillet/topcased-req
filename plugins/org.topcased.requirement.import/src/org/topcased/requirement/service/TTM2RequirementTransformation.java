@@ -24,8 +24,8 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.topcased.bus.core.IService;
 import org.topcased.bus.core.ServicesManager;
-import org.topcased.requirement.RequirementImportPlugin;
 import org.topcased.requirement.core.extensions.IRequirementTransformation;
+import org.topcased.requirement.internal.RequirementImportPlugin;
 
 /**
  * Processes the ATL transformation to create the requirement model from a TTM source model.

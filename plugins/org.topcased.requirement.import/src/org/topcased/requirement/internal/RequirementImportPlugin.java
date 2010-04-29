@@ -1,4 +1,14 @@
-package org.topcased.requirement;
+/***********************************************************************************************************************
+ * Copyright (c) 2008,2010 Communication & Systems.
+ * 
+ * All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse
+ * Public License v1.0 which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: Sebastien GABEL (CS) - initial API and implementation
+ * 
+ **********************************************************************************************************************/
+package org.topcased.requirement.internal;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -8,7 +18,8 @@ import org.osgi.framework.BundleContext;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class RequirementImportPlugin extends AbstractUIPlugin {
+public class RequirementImportPlugin extends AbstractUIPlugin
+{
 
     // The plug-in ID
     public static final String PLUGIN_ID = "org.topcased.requirement.import"; //$NON-NLS-1$

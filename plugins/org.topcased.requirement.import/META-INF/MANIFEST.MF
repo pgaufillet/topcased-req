@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.topcased.requirement.import;singleton:=true
 Bundle-Version: 3.3.0.qualifier
-Bundle-Activator: org.topcased.requirement.RequirementImportPlugin
+Bundle-Activator: org.topcased.requirement.internal.RequirementImportPlugin
 Bundle-Vendor: %providerName
 Require-Bundle: org.eclipse.core.runtime,
  org.topcased.bus.core,
@@ -12,7 +12,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.topcased.requirement.core
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
-Export-Package: org.topcased.requirement,
+Export-Package: org.topcased.requirement.internal;x-internal:=true,
  org.topcased.requirement.service
 Bundle-ClassPath: .
 Bundle-Localization: plugin
