@@ -145,7 +145,7 @@ public class SetCommandResolver extends AdditionalCommand<SetCommand>
                 }
                 // Special case for undo or redo to synchronize
                 // the enablement of the update model command and the update attribute conf command
-                else if (compound.getLabel() == Messages.getString("SetAsValidHandler.0")) //$NON-NLS-1$
+                else if (compound.getLabel().equals(Messages.getString("SetAsValidHandler.0"))) //$NON-NLS-1$
                 {
                     RequirementUtils.fireIsImpactedVariableChanged();
                 }
