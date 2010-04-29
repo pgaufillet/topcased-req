@@ -16,3 +16,9 @@ Require-Bundle: org.eclipse.ui,
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: %providerName
+Export-Package: org.topcased.requirement.sam.actions,
+ org.topcased.requirement.sam.commands,
+ org.topcased.requirement.sam.resolvers,
+ org.topcased.requirement.sam.views,
+ org.topcased.requirement.sam.views.preview,
+ org.topcased.requirement.sam.views.preview.template
