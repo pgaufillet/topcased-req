@@ -9,7 +9,6 @@
  * Contributors : Maxime AUDRAIN (CS) - initial API and implementation
  * 
  *****************************************************************************/
-
 package org.topcased.requirement.core.resolvers;
 
 import java.util.ArrayList;
@@ -29,13 +28,12 @@ import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
- * This Class handle specific behaviour for requirements when a SetCommand is executed.
- * This resolver allow hierarchical elements or requirements to rename themself 
- * if the graphical element corresponding has name change.
- * This resolver is also used to synchronize commands enablement from a "revert as non impacted" command
+ * This Class handles specific behavior for requirements when a SetCommand is executed. This resolver allow hierarchical
+ * elements or requirements to rename themself if the graphical element corresponding has name change. This resolver is
+ * also used to synchronize commands enablement from a "revert as non impacted" command.
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
- * 
+ * @since Topcased 3.4.0
  */
 public class SetCommandResolver extends AdditionalCommand<SetCommand>
 {
@@ -122,7 +120,7 @@ public class SetCommandResolver extends AdditionalCommand<SetCommand>
                 org.eclipse.emf.common.command.CompoundCommand compound = (org.eclipse.emf.common.command.CompoundCommand) cmd;
 
                 // specific compound command name from AbstractTabbedPropertySection to filter the setCommands
-                if (compound.getLabel() == "Property Change") //$NON-NLS-1$
+                if (compound.getLabel() == "Property Value Change") //$NON-NLS-1$
                 {
                     List< ? > commands = compound.getCommandList();
                     for (Object o : commands)
@@ -145,9 +143,9 @@ public class SetCommandResolver extends AdditionalCommand<SetCommand>
                         }
                     }
                 }
-                //Special case for undo or redo to synchronize 
-                //the enablement of the update model command and the update attribute conf command
-                else if(compound.getLabel() == Messages.getString("SetAsValidHandler.0")) //$NON-NLS-1$
+                // Special case for undo or redo to synchronize
+                // the enablement of the update model command and the update attribute conf command
+                else if (compound.getLabel() == Messages.getString("SetAsValidHandler.0")) //$NON-NLS-1$
                 {
                     RequirementUtils.fireIsImpactedVariableChanged();
                 }
