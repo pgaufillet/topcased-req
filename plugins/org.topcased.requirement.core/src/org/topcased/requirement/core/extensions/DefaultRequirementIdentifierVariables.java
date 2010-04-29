@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcorePackage;
@@ -63,7 +64,7 @@ public final class DefaultRequirementIdentifierVariables implements IRequirement
 
         // Default key word map
         alreadyCreatedMap.put(PROJECT_VAR, ((RequirementProject) requirement.getContents().get(0)).getIdentifier());
-        alreadyCreatedMap.put(RESOURCE_VAR, requirement.getURI().trimFileExtension().lastSegment());
+        alreadyCreatedMap.put(RESOURCE_VAR, URI.decode(requirement.getURI().trimFileExtension().lastSegment()));
         alreadyCreatedMap.put(HIERARCHICAL_ELEMENT_VAR, getHierarchicalElementIdentifier(ComputeRequirementIdentifier.INSTANCE.getIdentifierHierarchicalElement()));
         alreadyCreatedMap.put(UPSTREAM_REQUIREMENT_VAR, ComputeRequirementIdentifier.INSTANCE.getIdentifierUpstreamIdent());
         alreadyCreatedMap.put(INDEX_VAR, nf.format(ComputeRequirementIdentifier.INSTANCE.getIdentifierRequirementIndex()));

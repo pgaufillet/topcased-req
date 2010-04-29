@@ -29,7 +29,6 @@ import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.utils.RequirementHelper;
-import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
  * This handler allows to set a Current Requirement as valid after an update operation.<br>
@@ -83,8 +82,6 @@ public class SetAsValidHandler extends AbstractHandler
             {
                 editingDomain.getCommandStack().execute(compoundCmd);
             }
-
-            RequirementUtils.fireIsImpactedVariableChanged();
         }
         return null;
     }

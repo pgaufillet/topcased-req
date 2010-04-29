@@ -46,7 +46,7 @@ public class DefaultAttributeValuePropertySection extends AbstractBooleanPropert
         AttributeValue attributeValue = (AttributeValue) getEObject();
         ConfiguratedAttribute configurated = (ConfiguratedAttribute) attributeValue.eContainer();
         DefaultAttributeValue defaultValue = configurated.getDefaultValue();
-        if (defaultValue.getValue() != null)
+        if (defaultValue != null && defaultValue.getValue() != null)
         {
             return defaultValue.getValue().getValue().equals(attributeValue.getValue());
         }

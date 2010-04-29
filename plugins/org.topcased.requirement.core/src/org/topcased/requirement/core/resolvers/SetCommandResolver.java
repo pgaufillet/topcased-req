@@ -25,25 +25,30 @@ import org.topcased.modeler.commands.CommandStack;
 import org.topcased.modeler.commands.EMFtoGEFCommandWrapper;
 import org.topcased.modeler.editor.TopcasedAdapterFactoryEditingDomain.TopcasedAdapterFactoryLabeler;
 import org.topcased.requirement.core.commands.RenameRequirementCommand;
+import org.topcased.requirement.core.internal.Messages;
+import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
  * This Class handle specific behaviour for requirements when a SetCommand is executed.
+ * This resolver allow hierarchical elements or requirements to rename themself 
+ * if the graphical element corresponding has name change.
+ * This resolver is also used to synchronize commands enablement from a "revert as non impacted" command
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  * 
  */
-public class SetNameCommandResolver extends AdditionalCommand<SetCommand>
+public class SetCommandResolver extends AdditionalCommand<SetCommand>
 {
 
     private Map<SetCommand, EMFtoGEFCommandWrapper> commands;
 
-    public SetNameCommandResolver()
+    public SetCommandResolver()
     {
         this(SetCommand.class);
         commands = new HashMap<SetCommand, EMFtoGEFCommandWrapper>();
     }
 
-    public SetNameCommandResolver(Class< ? super SetCommand> clazz)
+    public SetCommandResolver(Class< ? super SetCommand> clazz)
     {
         super(clazz);
     }
@@ -116,7 +121,7 @@ public class SetNameCommandResolver extends AdditionalCommand<SetCommand>
             {
                 org.eclipse.emf.common.command.CompoundCommand compound = (org.eclipse.emf.common.command.CompoundCommand) cmd;
 
-                // specific compound name from AbstractTabbedPropertySection to filter the setCommands
+                // specific compound command name from AbstractTabbedPropertySection to filter the setCommands
                 if (compound.getLabel() == "Property Change") //$NON-NLS-1$
                 {
                     List< ? > commands = compound.getCommandList();
@@ -139,6 +144,12 @@ public class SetNameCommandResolver extends AdditionalCommand<SetCommand>
                             }
                         }
                     }
+                }
+                //Special case for undo or redo to synchronize 
+                //the enablement of the update model command and the update attribute conf command
+                else if(compound.getLabel() == Messages.getString("SetAsValidHandler.0")) //$NON-NLS-1$
+                {
+                    RequirementUtils.fireIsImpactedVariableChanged();
                 }
             }
         }

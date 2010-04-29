@@ -14,6 +14,7 @@ package org.topcased.requirement.core.handlers;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.emf.common.command.CommandStack;
 import org.topcased.modeler.editor.Modeler;
 import org.topcased.modeler.utils.Utils;
 
@@ -33,7 +34,11 @@ public class RedoHandler extends AbstractHandler
         Modeler modeler = Utils.getCurrentModeler();
         if (modeler != null)
         {
-            modeler.getEditingDomain().getCommandStack().redo();
+            CommandStack stack = modeler.getEditingDomain().getCommandStack();
+            if (stack.getRedoCommand() != null)
+            {
+                stack.redo();
+            }
         }
         return null;
     }

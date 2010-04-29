@@ -1313,7 +1313,7 @@
             commandId="org.topcased.requirement.core.updateAttribute"
             contextId="org.topcased.requirement.core.currentView"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="M2+A">
+            sequence="M1+M3+A">
       </key>
       <key
             commandId="org.topcased.requirement.core.updateAttributeConfiguration"
@@ -1325,43 +1325,43 @@
             commandId="org.topcased.requirement.core.unallocate"
             contextId="org.topcased.requirement.core.currentView"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="N">
+            sequence="M3+N">
       </key>
       <key
             commandId="org.topcased.requirement.core.setUnsetPartial"
             contextId="org.topcased.requirement.core.currentView"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="P">
+            sequence="M3+P">
       </key>
       <key
             commandId="org.topcased.requirement.core.setAsValid"
             contextId="org.topcased.requirement.core.currentView"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="CR">
+            sequence="M3+CR">
       </key>
       <key
             commandId="org.topcased.requirement.core.addAttribute"
             contextId="org.topcased.requirement.core.currentView"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="A">
+            sequence="M3+A">
       </key>
       <key
             commandId="org.topcased.requirement.core.createAnonymousRequirement"
             contextId="org.topcased.requirement.core.currentView"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="M2+F">
+            sequence="M3+F">
       </key>
       <key
             commandId="org.topcased.requirement.core.createCurrentRequirement"
             contextId="org.topcased.requirement.core.currentView"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="M2+C">
+            sequence="M3+C">
       </key>
       <key
             commandId="org.topcased.requirement.core.loadResource"
             contextId="org.topcased.requirement.core.currentView"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="L">
+            sequence="M3+L">
       </key>
       <key
             commandId="org.topcased.requirement.core.undo"
@@ -1391,13 +1391,13 @@
             commandId="org.topcased.requirement.core.createCurrentRequirement"
             contextId="org.eclipse.ui.contexts.window"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="M2+C">
+            sequence="M3+C">
       </key>
       <key
             commandId="org.topcased.requirement.core.createAnonymousRequirement"
             contextId="org.eclipse.ui.contexts.window"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="M2+F">
+            sequence="M3+F">
       </key>
    </extension>
    <extension
@@ -1676,7 +1676,7 @@
             commandStackListener="org.topcased.requirement.core.resolvers.DragAndDropCommandResolver">
       </command>
       <command
-            commandStackListener="org.topcased.requirement.core.resolvers.SetNameCommandResolver">
+            commandStackListener="org.topcased.requirement.core.resolvers.SetCommandResolver">
       </command>
       <command
             commandStackListener="org.topcased.requirement.core.resolvers.CreateCurrentReqCommandResolver">
