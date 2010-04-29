@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.gef.commands.Command;
@@ -115,12 +116,11 @@ public class SetCommandResolver extends AdditionalCommand<SetCommand>
         if (command instanceof EMFtoGEFCommandWrapper)
         {
             org.eclipse.emf.common.command.Command cmd = ((EMFtoGEFCommandWrapper) command).getEMFCommand();
-            if (cmd instanceof org.eclipse.emf.common.command.CompoundCommand)
+            if (cmd instanceof CompoundCommand)
             {
-                org.eclipse.emf.common.command.CompoundCommand compound = (org.eclipse.emf.common.command.CompoundCommand) cmd;
-
+                CompoundCommand compound = (CompoundCommand) cmd;
                 // specific compound command name from AbstractTabbedPropertySection to filter the setCommands
-                if (compound.getLabel() == "Property Value Change") //$NON-NLS-1$
+                if ("Property Value Change".equals(compound.getLabel())) //$NON-NLS-1$
                 {
                     List< ? > commands = compound.getCommandList();
                     for (Object o : commands)
