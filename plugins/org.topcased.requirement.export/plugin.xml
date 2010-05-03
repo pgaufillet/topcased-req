@@ -4,8 +4,8 @@
    <extension
          point="org.topcased.bus.core.transformation">
       <transformation
-            id="org.topcased.export.requirement.transformation"
-            name="Requirement to Tramway Transformation">
+            id="org.topcased.requirement.transformation.export"
+            name="Requirement to TRAMway Transformation">
          <ruleFile
                filename="transformation/req2ttm.asm">
          </ruleFile>
@@ -28,18 +28,18 @@
    <extension
          point="org.topcased.bus.core.service">
       <service
-            class="org.topcased.requirement.export.service.ReqToTtmExportService"
+            class="org.topcased.requirement.export.service.Requirement2TTMService"
             id="org.topcased.requirement.export.service1"
-            name="Requirement to Tramway Export Service">
+            name="Requirement to TRAMway Export Service">
          <serviceType
                category="Model Import/Export"
-               id="org.topcased.export.requirement.transformation"
-               name="Requirement to Tramway Transformation"
+               id="org.topcased.modelExport.requirements.type"
+               name="Requirement to TRAMway Transformation"
                parentId="org.topcased.service.export"/>
          <outputParam>
             <parameter
                   description="Output of the transformation."
-                  id="org.topcased.requirement.export.parameter1"
+                  id="org.topcased.requirement.export.model"
                   kind="EObject"
                   name="Model">
             </parameter>
@@ -47,9 +47,21 @@
          <listInputParam>
             <parameter
                   description="A Requirement Model"
-                  id="org.topcased.requirement.export.parameter2"
-                  kind="EObject"
+                  id="org.topcased.requirement.export.inParameter"
+                  kind="String"
                   name="IN">
+            </parameter>
+            <parameter
+                  description="Project path where the output model must be created."
+                  id="org.topcased.requirement.export.pathParameter"
+                  kind="IPath"
+                  name="Path">
+            </parameter>
+            <parameter
+                  description="Name of the output model file to create."
+                  id="org.topcased.requirement.export.outParameter"
+                  kind="String"
+                  name="OUT">
             </parameter></listInputParam>
       </service>
    </extension>
