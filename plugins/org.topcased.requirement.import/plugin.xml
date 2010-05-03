@@ -39,7 +39,7 @@
          <outputParam>
             <parameter
                   description="Output of the transformation."
-                  id="org.topcased.modelImport.requirements.parameter1"
+                  id="org.topcased.requirement.import.model"
                   kind="EObject"
                   name="Model">
             </parameter>
@@ -47,17 +47,17 @@
          <listInputParam>
          <parameter
                   description="Absolute path of the input model."
-                  id="org.topcased.import.ttm.inParameter"
+                  id="org.topcased.requirement.import.inParameter"
                   kind="String"
                   name="IN"/>
             <parameter
                   description="Name of the output model file to create."
-                  id="org.topcased.import.requirement.outParameter"
+                  id="org.topcased.requirement.import.outParameter"
                   kind="String"
                   name="OUT"/>
             <parameter
                   description="Project path where the output model must be created."
-                  id="org.topcased.import.req.pathParameter"
+                  id="org.topcased.requirement.import.pathParameter"
                   kind="IPath"
                   name="Path"/>
          </listInputParam>
