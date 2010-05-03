@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.topcased.requirement.feature"
+      id="org.topcased.requirement"
       label="Topcased Requirement"
       version="3.4.0.qualifier"
       provider-name="Topcased">
@@ -136,8 +136,8 @@ is permitted.
       <import plugin="org.topcased.doc2model.parser"/>
       <import plugin="org.eclipse.uml2.uml"/>
       <import plugin="org.topcased.sysml"/>
-      <import plugin="org.topcased.requirement.core" />
-      <import feature="org.topcased.modeler.feature" />
+      <import plugin="org.topcased.requirement.core"/>
+      <import feature="org.topcased.modeler.feature"/>
    </requires>
 
    <plugin
