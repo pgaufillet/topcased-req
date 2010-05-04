@@ -35,7 +35,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.topcased.facilities.preferences.AbstractTopcasedPreferencePage;
 import org.topcased.requirement.core.extensions.IRequirementIdentifierVariables;
 import org.topcased.requirement.core.extensions.RequirementCountingAlgorithmManager;
@@ -50,7 +49,7 @@ import org.topcased.requirement.core.internal.RequirementCorePlugin;
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  * @author <a href="mailto:sebastien.gabel@c-s.fr">Sebastien GABEL</a>
  */
-public class RequirementNamingPreferencePage extends AbstractTopcasedPreferencePage implements IWorkbenchPreferencePage
+public class RequirementNamingPreferencePage extends AbstractTopcasedPreferencePage
 {
     private Text formatText;
 
