@@ -130,14 +130,13 @@ is permitted.
       <import plugin="org.eclipse.emf.search.ui"/>
       <import plugin="org.eclipse.emf.search.ecore.ui"/>
       <import plugin="org.eclipse.emf.ecore.editor"/>
-      <import plugin="org.topcased.traceability"/>
       <import plugin="org.eclipse.ui.forms"/>
-      <import plugin="org.topcased.document.parser"/>
-      <import plugin="org.topcased.doc2model.parser"/>
-      <import plugin="org.eclipse.uml2.uml"/>
-      <import plugin="org.topcased.sysml"/>
-      <import plugin="org.topcased.requirement.core"/>
       <import feature="org.topcased.modeler.feature"/>
+      <import plugin="org.topcased.traceability" version="2.5.2" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.gmf.runtime.draw2d.ui.render.awt"/>
+      <import plugin="org.eclipse.gmf.runtime.draw2d.ui.render"/>
+      <import plugin="org.apache.batik.svggen"/>
+      <import plugin="org.apache.batik.ext.awt"/>
    </requires>
 
    <plugin
@@ -232,28 +231,7 @@ is permitted.
          unpack="false"/>
 
    <plugin
-         id="org.topcased.requirement.filter"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.topcased.requirement.merge"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.topcased.regexviewer"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.topcased.requirement.import.document"
          download-size="0"
          install-size="0"
          version="0.0.0"
