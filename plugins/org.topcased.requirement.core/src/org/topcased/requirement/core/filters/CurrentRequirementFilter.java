@@ -57,7 +57,8 @@ public class CurrentRequirementFilter extends ViewerFilter implements IRequireme
                     return false;
                 }
             }
-            else if (searched != null && searched.length() > 0)
+            
+            if (searched != null && searched.length() > 0)
             {
                 if (element instanceof HierarchicalElement)
                 {

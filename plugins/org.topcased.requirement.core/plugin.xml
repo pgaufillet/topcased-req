@@ -730,21 +730,89 @@
                      commandId="org.topcased.requirement.core.delete"
                      label="&amp;Delete"
                      style="push">
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="activeMenuSelection">
+                        <iterate
+                              ifEmpty="false">
+                           <or>
+                              <instanceof
+                                    value="org.topcased.requirement.Requirement">
+                              </instanceof>
+                              <instanceof
+                                    value="org.topcased.requirement.HierarchicalElement">
+                              </instanceof>
+                           </or>
+                        </iterate>
+                     </with>
+                  </visibleWhen>
                </command>
                <command
                      commandId="org.topcased.requirement.core.copy"
                      label="&amp;Copy"
                      style="push">
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="activeMenuSelection">
+                        <iterate
+                              ifEmpty="false">
+                           <or>
+                              <instanceof
+                                    value="org.topcased.requirement.Requirement">
+                              </instanceof>
+                              <instanceof
+                                    value="org.topcased.requirement.HierarchicalElement">
+                              </instanceof>
+                           </or>
+                        </iterate>
+                     </with>
+                  </visibleWhen>
                </command>
                <command
                      commandId="org.topcased.requirement.core.cut"
                      label="&amp;Cut"
                      style="push">
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="activeMenuSelection">
+                        <iterate
+                              ifEmpty="false">
+                           <or>
+                              <instanceof
+                                    value="org.topcased.requirement.Requirement">
+                              </instanceof>
+                              <instanceof
+                                    value="org.topcased.requirement.HierarchicalElement">
+                              </instanceof>
+                           </or>
+                        </iterate>
+                     </with>
+                  </visibleWhen>
                </command>
                <command
                      commandId="org.topcased.requirement.core.paste"
                      label="&amp;Paste"
                      style="push">
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="activeMenuSelection">
+                        <iterate
+                              ifEmpty="false">
+                           <or>
+                              <instanceof
+                                    value="org.topcased.requirement.Requirement">
+                              </instanceof>
+                              <instanceof
+                                    value="org.topcased.requirement.HierarchicalElement">
+                              </instanceof>
+                           </or>
+                        </iterate>
+                     </with>
+                  </visibleWhen>
                </command>
                <separator
                      name="SEPARATOR1"
