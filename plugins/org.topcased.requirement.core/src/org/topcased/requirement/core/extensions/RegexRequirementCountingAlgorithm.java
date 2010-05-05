@@ -36,6 +36,9 @@ public class RegexRequirementCountingAlgorithm implements IRequirementCountingAl
     /** The next index initialized for the first current requirement creation when the step is at zero */
     private static long nextIndex = ComputeRequirementIdentifier.getRequirementStep();
 
+    /** The Step saved every time it changes to be synchronize with the preference page */
+    private static long step = ComputeRequirementIdentifier.getRequirementStep();
+
     /**
      * @see org.topcased.requirement.core.extensions.IRequirementCountingAlgorithm#getCurrentIndex(org.topcased.requirement.Requirement)
      */
@@ -43,13 +46,15 @@ public class RegexRequirementCountingAlgorithm implements IRequirementCountingAl
     {
         long currentStep = ComputeRequirementIdentifier.getRequirementStep();
         long max = getMax();
-        if (max != 0)
+        if (currentStep != step)
         {
-            nextIndex = max + currentStep;
+            //We got to be synchronized with the user modifications in the preference page 
+            nextIndex = nextIndex - step + currentStep;
+            step = currentStep;
         }
-        else
+        else if (max != 0)
         {
-            nextIndex = currentStep;
+            nextIndex = max + ComputeRequirementIdentifier.getRequirementStep();
         }
         return nextIndex;
     }
@@ -100,7 +105,7 @@ public class RegexRequirementCountingAlgorithm implements IRequirementCountingAl
         {
             String format = RequirementCorePlugin.getDefault().getPreferenceStore().getString(RequirementNamingConstants.REQUIREMENT_NAMING_FORMAT);
             String regex = format.replace(DefaultRequirementIdentifierVariables.INDEX_VAR, "(\\d*)"); //$NON-NLS-1$
-            regex = regex.replaceAll("\\{[^\\{]*\\}", "[\\\\w ]*"); //$NON-NLS-1$ //$NON-NLS-2$
+            regex = regex.replaceAll("\\{[^\\{]*\\}", "[\\\\w\\\\p{Punct} ]*"); //$NON-NLS-1$ //$NON-NLS-2$
             Pattern pat = Pattern.compile(regex);
             Matcher m = pat.matcher(current.getIdentifier());
             if (m.matches())
@@ -120,7 +125,7 @@ public class RegexRequirementCountingAlgorithm implements IRequirementCountingAl
      */
     public void setFirstIndex(Requirement firstCreatedRequirement)
     {
-        //No need to implement this as the index is never stored
+        nextIndex = ComputeRequirementIdentifier.getRequirementStep();
     }
 
 }
