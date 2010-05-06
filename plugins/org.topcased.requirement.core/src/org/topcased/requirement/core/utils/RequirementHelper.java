@@ -20,8 +20,10 @@ import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.common.command.UnexecutableCommand;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.DragAndDropCommand;
 import org.eclipse.emf.edit.command.MoveCommand;
@@ -29,6 +31,7 @@ import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.dnd.DND;
+import org.topcased.modeler.diagrams.model.Diagrams;
 import org.topcased.requirement.AnonymousRequirement;
 import org.topcased.requirement.AttributeAllocate;
 import org.topcased.requirement.AttributeConfiguration;
@@ -43,7 +46,10 @@ import org.topcased.requirement.RequirementPackage;
 import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.SpecialChapter;
 import org.topcased.requirement.TextAttribute;
+import org.topcased.requirement.core.extensions.DefaultAttachmentPolicy;
+import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
 import org.topcased.requirement.core.extensions.IRequirementCountingAlgorithm;
+import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
 import org.topcased.requirement.core.extensions.RequirementCountingAlgorithmManager;
 import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.preferences.ComputeRequirementIdentifier;
@@ -71,6 +77,9 @@ public final class RequirementHelper
     /** Constant used to indicate that an anonymous requirement creation is expected */
     private static final boolean CREATE_ANONYMOUS = false;
 
+    /** Constant for requirement file extension */
+    private static final String REQUIREMENT_FILE_EXTENSION = "requirement";
+
     /** Most of operations offer by this factory are based on the editing domain */
     private EditingDomain editingDomain;
 
@@ -86,6 +95,84 @@ public final class RequirementHelper
     private RequirementHelper()
     {
         // prevent from instanciation
+    }
+
+    /**
+     * Get a requirement project from an eobject
+     * @param eobject, the starting eobject 
+     * @return the requirement project
+     */
+    public RequirementProject getRequirementProject(EObject eobject)
+    {
+        if (eobject != null)
+        {
+            Resource source = eobject.eResource();
+            return getRequirementProject(source);
+        }
+        return null;
+    }
+
+    /**
+     * Returns the requirement project linked to the current resource
+     * @param modelResource
+     * @return the requirement project
+     */
+    public RequirementProject getRequirementProject(Resource modelResource)
+    {
+        RequirementProject result = null ;
+        if (modelResource != null)
+        {
+            String extension = modelResource.getURI().fileExtension();
+            if (extension != null)
+            {
+                
+                if (REQUIREMENT_FILE_EXTENSION.equals(extension))
+                {
+                    if (!modelResource.getContents().isEmpty() && modelResource.getContents().get(0) instanceof RequirementProject)
+                    {
+                        result = (RequirementProject) modelResource.getContents().get(0);
+                    }
+                }
+                else if (extension.endsWith("di"))
+                {
+                    if (modelResource.getContents().get(0) instanceof Diagrams)
+                    {
+                        result = getRequirementProject((Diagrams)modelResource.getContents().get(0));
+                    }
+                }
+                else
+                {
+                    URI uri = URI.createURI(modelResource.getURI().toString() + "di"); 
+                    Resource diResource = modelResource.getResourceSet().getResource(uri, true);
+                    if (diResource != null && diResource.getContents().get(0) instanceof Diagrams)
+                    {
+                        result = getRequirementProject((Diagrams)diResource.getContents().get(0));
+                    }
+                }
+            }
+
+        }
+        return result ;
+    }
+    
+    /**
+     * Returns the requirement project linked to the current diagrams
+     * @param diagrams
+     * @return the requirement project
+     */
+    public RequirementProject getRequirementProject(Diagrams diagrams)
+    {
+        RequirementProject result = null ;
+        if (diagrams != null && diagrams.eResource() != null && diagrams.eResource().getResourceSet() != null)
+        {
+            IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(diagrams.eResource().getResourceSet());
+            if (policy == null)
+            {
+                policy = DefaultAttachmentPolicy.getInstance();
+                result = policy.getRequirementProjectFromTargetDiagram(diagrams);
+            }
+        }
+        return result ;
     }
 
     /**

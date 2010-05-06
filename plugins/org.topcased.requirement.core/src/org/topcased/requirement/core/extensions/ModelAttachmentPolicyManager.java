@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.topcased.facilities.extensions.AbstractExtensionManager;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
@@ -135,8 +136,20 @@ public class ModelAttachmentPolicyManager extends AbstractExtensionManager
      */
     public IModelAttachmentPolicy getModelPolicy(EditingDomain editingDomain)
     {
+        return getModelPolicy(editingDomain.getResourceSet());
+    }
+    
+    
+    /**
+     * This method return the model attachment policy for a given resource set
+     * 
+     * @param the resource set
+     * @return the model policy
+     */
+    public IModelAttachmentPolicy getModelPolicy (ResourceSet set)
+    {
         IModelAttachmentPolicy policy = null;
-        for (Resource resource : editingDomain.getResourceSet().getResources())
+        for (Resource resource : set.getResources())
         {
             String fileExtension = resource.getURI().fileExtension();
             IModelAttachmentPolicy tempPolicy = getModelPolicy(fileExtension);
