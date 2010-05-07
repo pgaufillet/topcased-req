@@ -130,12 +130,15 @@ is permitted.
       <import plugin="org.eclipse.emf.search.ui"/>
       <import plugin="org.eclipse.emf.search.ecore.ui"/>
       <import plugin="org.eclipse.emf.ecore.editor"/>
-      <import plugin="org.eclipse.ui.forms"/>
       <import plugin="org.topcased.traceability" version="2.5.2" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui.forms"/>
       <import plugin="org.eclipse.gmf.runtime.draw2d.ui.render.awt"/>
       <import plugin="org.eclipse.gmf.runtime.draw2d.ui.render"/>
       <import plugin="org.apache.batik.svggen"/>
       <import plugin="org.apache.batik.ext.awt"/>
+      <import plugin="org.eclipse.emf.mwe.core"/>
+      <import plugin="org.eclipse.xpand"/>
+      <import plugin="org.eclipse.uml2.uml"/>
    </requires>
 
    <plugin
@@ -238,6 +241,13 @@ is permitted.
 
    <plugin
          id="org.topcased.modeler.export"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.topcased.requirement.traceabilitymatrix"
          download-size="0"
          install-size="0"
          version="0.0.0"
