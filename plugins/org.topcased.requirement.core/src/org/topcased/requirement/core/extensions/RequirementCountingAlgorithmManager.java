@@ -9,7 +9,6 @@
  * Contributors : Maxime AUDRAIN (CS) - initial API and implementation
  * 
  *****************************************************************************/
-
 package org.topcased.requirement.core.extensions;
 
 import java.util.HashMap;
@@ -23,11 +22,10 @@ import org.topcased.facilities.extensions.AbstractExtensionManager;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
 
 /**
- * Define the manager of the extension point "requirementCountingAlgorithm" who provide the way to change the count
- * algorithm of current requirements
+ * DefineS the manager of the extension point "requirementCountingAlgorithm" which provides the way to change the
+ * counting algorithm of current requirements.<br>
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
- * 
  */
 public class RequirementCountingAlgorithmManager extends AbstractExtensionManager
 {
@@ -90,19 +88,16 @@ public class RequirementCountingAlgorithmManager extends AbstractExtensionManage
             String name = confElt.getAttribute(ATT_NAME);
             String description = confElt.getAttribute(ATT_DESCRIPTION);
             mapName.put(name, description);
-            IRequirementCountingAlgorithm algorithm;
             try
             {
-                algorithm = (IRequirementCountingAlgorithm) confElt.createExecutableExtension(ATT_CLASS);
+                IRequirementCountingAlgorithm algorithm = (IRequirementCountingAlgorithm) confElt.createExecutableExtension(ATT_CLASS);
                 mapClass.put(name, algorithm);
             }
             catch (CoreException e)
             {
                 RequirementCorePlugin.log(e);
             }
-
         }
-
     }
 
     /**
@@ -118,7 +113,6 @@ public class RequirementCountingAlgorithmManager extends AbstractExtensionManage
             mapClass.remove(elt);
             mapName.remove(elt);
         }
-
     }
 
     /**

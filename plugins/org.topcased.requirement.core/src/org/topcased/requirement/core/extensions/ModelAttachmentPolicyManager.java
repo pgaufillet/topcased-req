@@ -9,7 +9,6 @@
  * Contributors : Maxime AUDRAIN (CS) - initial API and implementation
  * 
  *****************************************************************************/
-
 package org.topcased.requirement.core.extensions;
 
 import java.util.HashMap;
@@ -25,11 +24,10 @@ import org.topcased.facilities.extensions.AbstractExtensionManager;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
 
 /**
- * Define the manager of the extension point "modelAttachmentPolicy" who provide the way to link, unlink, update a
- * metamodel to a requirement model
+ * Defines the manager of the extension point "modelAttachmentPolicy" which provides the way to link, unlink, update a
+ * requirement model to a semantic model.<br>
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
- * 
  */
 public class ModelAttachmentPolicyManager extends AbstractExtensionManager
 {
@@ -82,20 +80,17 @@ public class ModelAttachmentPolicyManager extends AbstractExtensionManager
         IConfigurationElement[] elements = extension.getConfigurationElements();
         for (IConfigurationElement confElt : elements)
         {
-            String model = confElt.getAttribute(ATT_EXTENSION);
-            IModelAttachmentPolicy policy;
             try
             {
-                policy = (IModelAttachmentPolicy) confElt.createExecutableExtension(ATT_CLASS);
+                String model = confElt.getAttribute(ATT_EXTENSION);
+                IModelAttachmentPolicy policy = (IModelAttachmentPolicy) confElt.createExecutableExtension(ATT_CLASS);
                 mapClass.put(model, policy);
             }
             catch (CoreException e)
             {
                 RequirementCorePlugin.log(e);
             }
-
         }
-
     }
 
     /**
@@ -110,7 +105,6 @@ public class ModelAttachmentPolicyManager extends AbstractExtensionManager
             String elt = confElt.getAttribute(ATT_EXTENSION);
             mapClass.remove(elt);
         }
-
     }
 
     /**
@@ -138,15 +132,14 @@ public class ModelAttachmentPolicyManager extends AbstractExtensionManager
     {
         return getModelPolicy(editingDomain.getResourceSet());
     }
-    
-    
+
     /**
      * This method return the model attachment policy for a given resource set
      * 
      * @param the resource set
      * @return the model policy
      */
-    public IModelAttachmentPolicy getModelPolicy (ResourceSet set)
+    public IModelAttachmentPolicy getModelPolicy(ResourceSet set)
     {
         IModelAttachmentPolicy policy = null;
         for (Resource resource : set.getResources())
@@ -174,7 +167,5 @@ public class ModelAttachmentPolicyManager extends AbstractExtensionManager
             return true;
         }
         return false;
-
     }
-
 }
