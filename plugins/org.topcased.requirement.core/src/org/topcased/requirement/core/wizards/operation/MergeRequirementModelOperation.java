@@ -118,7 +118,7 @@ public class MergeRequirementModelOperation extends AbstractRequirementModelOper
      */
     protected void mergeRequirementModel(IPath mergePath, IProgressMonitor monitor)
     {
-        monitor.beginTask(Messages.getString("MergeRequirementModelOperation.2"), 3); //$NON-NLS-1$
+        monitor.beginTask(Messages.getString("MergeRequirementModelOperation.2"), 3); //$NON-NLS-1$      
 
         // Get a resource of the destination file
         requirementResource = RequirementUtils.getResource(requirementModelFile.getFullPath().addFileExtension(MODEL_EXTENSION));

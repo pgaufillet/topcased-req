@@ -52,7 +52,7 @@ public class RequirementWizardPage extends WizardPage
 
     private static final String DEFAULT_MODEL_NAME = "My"; //$NON-NLS-1$
 
-    private static String ALREADY_ATTACHED_REQUIREMENT;
+    private static IPath ALREADY_ATTACHED_REQUIREMENT;
 
     private IStructuredSelection selection;
 
@@ -107,19 +107,31 @@ public class RequirementWizardPage extends WizardPage
      * 
      * @param pageName
      */
-    public RequirementWizardPage(IStructuredSelection selection, String alreadyAttachedRequirementPath)
+    public RequirementWizardPage(IStructuredSelection selection, IPath alreadyAttachedRequirementPath, boolean toMerge)
     {
         super("wizardPage"); //$NON-NLS-1$
-        setTitle(Messages.getString("RequirementWizardPage.4")); //$NON-NLS-1$
-        setDescription(Messages.getString("RequirementWizardPage.5")); //$NON-NLS-1$
         this.selection = selection;
+        
+        //Is this dialog an attach dialog or a merge dialog?
+        if (toMerge)
+        {
+            setTitle(Messages.getString("RequirementWizardPage.2")); //$NON-NLS-1$
+            setDescription(Messages.getString("RequirementWizardPage.3")); //$NON-NLS-1$
+        }
+        else
+        {
+            setTitle(Messages.getString("RequirementWizardPage.4")); //$NON-NLS-1$
+            setDescription(Messages.getString("RequirementWizardPage.5")); //$NON-NLS-1$
+        }
+        
+        //Is this diagram already attached?
         if (alreadyAttachedRequirementPath != null)
         {
             ALREADY_ATTACHED_REQUIREMENT = alreadyAttachedRequirementPath;
         }
         else
         {
-            ALREADY_ATTACHED_REQUIREMENT = ""; //$NON-NLS-1$
+            ALREADY_ATTACHED_REQUIREMENT = null; 
         }
     }
 
@@ -191,6 +203,10 @@ public class RequirementWizardPage extends WizardPage
 
         requirementNameFd = new Text(mainGroup, SWT.BORDER);
         requirementNameFd.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 2, 1));
+        if (ALREADY_ATTACHED_REQUIREMENT != null)
+        {
+            requirementNameFd.setEditable(false);
+        }
 
         /*
          * Project requirement name
@@ -312,11 +328,20 @@ public class RequirementWizardPage extends WizardPage
             Object obj = ssel.getFirstElement();
             if (obj instanceof IFile)
             {
-                name = ((IFile) obj).getLocation().removeFileExtension().lastSegment();
                 targetModelFd.setText(((IResource) obj).getFullPath().toString());
+                
+            }
+            
+            if (ALREADY_ATTACHED_REQUIREMENT == null)
+            {
+                name = ((IFile) obj).getLocation().removeFileExtension().lastSegment();
+            }
+            else
+            {
+                name = ALREADY_ATTACHED_REQUIREMENT.removeFileExtension().lastSegment();
+                importModelFd.setText(ALREADY_ATTACHED_REQUIREMENT.toString());
             }
         }
-        importModelFd.setText(ALREADY_ATTACHED_REQUIREMENT);
         requirementNameFd.setText(name);
         setPageComplete(false);
     }

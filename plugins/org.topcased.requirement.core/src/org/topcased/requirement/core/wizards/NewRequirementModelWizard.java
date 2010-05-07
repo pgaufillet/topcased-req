@@ -30,6 +30,7 @@ public class NewRequirementModelWizard extends AbstractRequirementModelWizard
     public NewRequirementModelWizard()
     {
         super();
+        toMerge = false;
     }
 
     /**

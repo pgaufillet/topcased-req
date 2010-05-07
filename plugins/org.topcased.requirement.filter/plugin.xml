@@ -27,29 +27,24 @@
                style="push">
             <visibleWhen
                   checkEnabled="false">
-               <and>
-                  <with
-                        variable="selection">
-                     <iterate
-                           ifEmpty="false">
-                        <and>
-                           <instanceof
-                                 value="org.eclipse.core.resources.IFile">
-                           </instanceof>
-                           <test
-                                 forcePluginActivation="true"
-                                 property="org.topcased.requirement.filter.isRequirementFile">
-                           </test>
-                        </and>
-                     </iterate>
-                  </with>
-                  <with
-                        variable="activePartId">
-                     <equals
-                           value="org.topcased.ui.navigator.view">
-                     </equals>
-                  </with>
-               </and>
+               <with
+                     variable="selection">
+                  <iterate
+                        ifEmpty="false">
+                     <and>
+                        <instanceof
+                              value="org.eclipse.core.resources.IFile">
+                        </instanceof>
+                        <test
+                              forcePluginActivation="true"
+                              property="org.topcased.requirement.filter.isRequirementFile">
+                        </test>
+                     </and>
+                  </iterate>
+                  <count
+                        value="-2)">
+                  </count>
+               </with>
             </visibleWhen>
          </command>
       </menuContribution>

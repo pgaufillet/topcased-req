@@ -16,6 +16,7 @@ package org.topcased.requirement.core.wizards;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -48,6 +49,8 @@ public abstract class AbstractRequirementModelWizard extends Wizard implements I
     protected String projectName;
 
     protected String projectDescription;
+    
+    protected boolean toMerge = false;
 
     /**
      * Constructor
@@ -66,7 +69,7 @@ public abstract class AbstractRequirementModelWizard extends Wizard implements I
     @Override
     public void addPages()
     {
-        String alreadyAttachedRequirementPath = null;
+        IPath alreadyAttachedRequirementPath = null;
         Modeler modeler = Utils.getCurrentModeler();
         if (modeler != null)
         {
@@ -74,10 +77,10 @@ public abstract class AbstractRequirementModelWizard extends Wizard implements I
             if (requirementResource != null)
             {
                 IFile requirementFile = RequirementUtils.getFile(requirementResource);
-                alreadyAttachedRequirementPath = requirementFile.getFullPath().toString();
+                alreadyAttachedRequirementPath = requirementFile.getFullPath();
             }
         }
-        page = new RequirementWizardPage(selection, alreadyAttachedRequirementPath);
+        page = new RequirementWizardPage(selection, alreadyAttachedRequirementPath, toMerge);
         addPage(page);
     }
 

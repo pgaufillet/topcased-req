@@ -31,6 +31,7 @@ public class MergeRequirementModelWizard extends AbstractRequirementModelWizard
     public MergeRequirementModelWizard()
     {
         super();
+        toMerge = true;
     }
 
     /**

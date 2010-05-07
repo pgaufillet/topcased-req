@@ -9,7 +9,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.topcased.bus.core,
  org.eclipse.emf.common.ui,
  org.eclipse.core.resources,
- org.topcased.traceability;bundle-version="2.5.2"
+ org.topcased.traceability
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ClassPath: .
