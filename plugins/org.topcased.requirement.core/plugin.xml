@@ -197,9 +197,6 @@
                      ifEmpty="false">
                   <or>
                      <instanceof
-                           value="org.topcased.requirement.Requirement">
-                     </instanceof>
-                     <instanceof
                            value="org.topcased.requirement.HierarchicalElement">
                      </instanceof>
                      <instanceof
@@ -212,6 +209,16 @@
                         <test
                               property="org.topcased.requirement.core.notLastAttribute">
                         </test>
+                     </and>
+                     <and>
+                        <instanceof
+                              value="org.topcased.requirement.Requirement">
+                        </instanceof>
+                        <not>
+                           <test
+                                 property="org.topcased.requirement.core.isImpacted">
+                           </test>
+                        </not>
                      </and>
                   </or>
                </iterate>
