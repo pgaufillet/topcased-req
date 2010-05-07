@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1"?> 
+<workflow>
+	<component class="org.eclipse.xtend.typesystem.emf.XmiReader"> 
+		<modelFile value="${model}" />
+		<outputSlot value="model" />
+	</component>
+	
+	<component id="generator" class="org.eclipse.xpand2.Generator"
+		skipOnErrors="true"> 
+		<metaModel class="org.eclipse.xtend.typesystem.emf.EmfMetaModel"> 
+			<metaModelPackage  value="org.eclipse.emf.ecore.EcorePackage"/> 
+		</metaModel> 
+		
+		<metaModel class="org.eclipse.xtend.typesystem.emf.EmfMetaModel"> 
+			<metaModelPackage  value="org.topcased.requirement.RequirementPackage"/> 
+		</metaModel> 	
+		
+		<metaModel class="org.eclipse.xtend.typesystem.emf.EmfMetaModel"> 
+			<metaModelPackage  value="ttm.TtmPackage"/> 
+		</metaModel>
+		
+		<expand value="org::topcased::requirement::traceabilitymatrix::generator::template::Root::Root('${fileName}') FOR model"/>
+		<outlet path="${target}">
+			<postprocessor class="org.eclipse.xpand2.output.JavaBeautifier"/> 
+		</outlet> 
+	</component>
+</workflow>

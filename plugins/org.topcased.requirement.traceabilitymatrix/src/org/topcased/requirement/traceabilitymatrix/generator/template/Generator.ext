@@ -1,0 +1,5 @@
+import requirement;
+
+String details(ttm::Requirement requirement):
+	JAVA org.topcased.requirement.traceabilitymatrix.generator.template.GeneratorHelper.details(ttm.Requirement);
+	

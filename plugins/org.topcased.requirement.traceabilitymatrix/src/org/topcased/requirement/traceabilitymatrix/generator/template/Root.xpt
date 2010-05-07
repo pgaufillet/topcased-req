@@ -1,0 +1,28 @@
+«EXTENSION org::topcased::requirement::traceabilitymatrix::generator::template::Generator»
+«DEFINE Root(String fileName) FOR requirement::RequirementProject-»
+«FILE fileName-»
+<html>
+	<body>
+		<table border="1">
+«EXPAND DocumentTemplate FOREACH this.upstreamModel.documents-»
+		</table>
+	</body>
+</html>
+
+«ENDFILE»
+«ENDDEFINE»
+
+«DEFINE DocumentTemplate FOR ttm::Document-»
+<tr>
+		<td rowspan="1" colspan="3">«ident-»</td>
+		<table border="1">
+			«EXPAND URTemplate FOREACH children-»
+		</table>
+</tr>
+«ENDDEFINE»
+
+«DEFINE URTemplate FOR ttm::Requirement-»
+<tr>
+	«this.details()-»
+</tr>
+«ENDDEFINE»

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.exportWizards">
+      <category
+            id="com.atosorigin.topcased.requirement.export.category"
+            name="Requirements">
+      </category>
+      <wizard
+            category="com.atosorigin.topcased.requirement.export.category"
+            class="org.topcased.requirement.traceabilitymatrix.wizard.ExportWizard"
+            icon="icons\bricks.ico"
+            id="com.atosorigin.topcased.requirement.export.wizard"
+            name="Requirement Traceability">
+         <description>
+            Export the selected requirements file in a requirement traceability excel file.
+         </description>
+      </wizard>
+   </extension>
+
+</plugin>
