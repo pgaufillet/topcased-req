@@ -13,6 +13,7 @@ package org.topcased.requirement.core.views;
 
 import org.eclipse.core.commands.AbstractHandlerWithState;
 import org.eclipse.core.commands.Command;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.Platform;
@@ -254,20 +255,24 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
      */
     public static IPreferenceStore getPreferenceStore()
     {
-        IProject project = Modeler.getCurrentIFile().getProject();
-        if (project != null)
+        IFile file = Modeler.getCurrentIFile();
+        if (file != null)
         {
-            Preferences root = Platform.getPreferencesService().getRootNode();
-            try
+            IProject project = file.getProject();
+            if (project != null)
             {
-                if (root.node(ProjectScope.SCOPE).node(project.getName()).nodeExists(RequirementCorePlugin.getId()))
+                Preferences root = Platform.getPreferencesService().getRootNode();
+                try
                 {
-                    return new ScopedPreferenceStore(new ProjectScope(project), RequirementCorePlugin.getId());
+                    if (root.node(ProjectScope.SCOPE).node(project.getName()).nodeExists(RequirementCorePlugin.getId()))
+                    {
+                        return new ScopedPreferenceStore(new ProjectScope(project), RequirementCorePlugin.getId());
+                    }
                 }
-            }
-            catch (BackingStoreException e)
-            {
-                RequirementCorePlugin.log(e);
+                catch (BackingStoreException e)
+                {
+                    RequirementCorePlugin.log(e);
+                }
             }
         }
         return RequirementCorePlugin.getDefault().getPreferenceStore();
