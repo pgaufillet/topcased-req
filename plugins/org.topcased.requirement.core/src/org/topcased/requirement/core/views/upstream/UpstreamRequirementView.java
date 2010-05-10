@@ -28,6 +28,7 @@ import org.eclipse.ui.handlers.RegistryToggleState;
 import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.part.IPageBookViewPage;
 import org.topcased.modeler.documentation.IDocPage;
+import org.topcased.modeler.editor.Modeler;
 import org.topcased.requirement.ObjectAttribute;
 import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.core.documentation.upstream.UpstreamDescPage;
@@ -141,15 +142,26 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
             //Update the IsImpacted variable as often as possible!
             RequirementUtils.fireIsImpactedVariableChanged();
         }
+        
+        // We need to constantly set the value of the hasRequirement variable to synchronize toolbar actions
+        // enablement with the requirement model state
+        RequirementUtils.fireHasRequirementVariableChanged();
+    }
 
-        if (bootstrapSelection != null)
+    @Override
+    public void partClosed(IWorkbenchPart part)
+    {
+        super.partClosed(part);
+        
+        if (part instanceof Modeler)
         {
             // We need to constantly set the value of the hasRequirement variable to synchronize toolbar actions
             // enablement with the requirement model state
             RequirementUtils.fireHasRequirementVariableChanged();
         }
     }
-
+    
+    
     /**
      * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
      */

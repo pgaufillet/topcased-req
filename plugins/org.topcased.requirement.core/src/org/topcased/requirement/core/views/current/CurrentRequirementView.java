@@ -25,6 +25,7 @@ import org.eclipse.ui.part.IPageBookViewPage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
 import org.topcased.modeler.documentation.IDocPage;
+import org.topcased.modeler.editor.Modeler;
 import org.topcased.requirement.core.documentation.current.CurrentDescPage;
 import org.topcased.requirement.core.handlers.ICommandConstants;
 import org.topcased.requirement.core.properties.RequirementPropertySheetPage;
@@ -164,6 +165,22 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
         RequirementUtils.fireHasRequirementVariableChanged();
     }
 
+    /**
+     * @see org.eclipse.ui.part.PageBookView#partClosed(org.eclipse.ui.IWorkbenchPart)
+     */
+    @Override
+    public void partClosed(IWorkbenchPart part)
+    {
+        super.partClosed(part);
+        
+        if (part instanceof Modeler)
+        {
+            // We need to constantly set the value of the hasRequirement variable to synchronize toolbar actions
+            // enablement with the requirement model state
+            RequirementUtils.fireHasRequirementVariableChanged();
+        }
+    }
+    
     /**
      * @see org.topcased.requirement.core.views.AbstractRequirementView#updatePage(org.eclipse.ui.part.Page)
      */

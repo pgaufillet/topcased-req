@@ -78,7 +78,7 @@ public final class RequirementHelper
     private static final boolean CREATE_ANONYMOUS = false;
 
     /** Constant for requirement file extension */
-    private static final String REQUIREMENT_FILE_EXTENSION = "requirement";
+    private static final String REQUIREMENT_FILE_EXTENSION = "requirement"; //$NON-NLS-1$
 
     /** Most of operations offer by this factory are based on the editing domain */
     private EditingDomain editingDomain;
@@ -133,7 +133,7 @@ public final class RequirementHelper
                         result = (RequirementProject) modelResource.getContents().get(0);
                     }
                 }
-                else if (extension.endsWith("di"))
+                else if (extension.endsWith("di")) //$NON-NLS-1$
                 {
                     if (modelResource.getContents().get(0) instanceof Diagrams)
                     {
@@ -142,7 +142,7 @@ public final class RequirementHelper
                 }
                 else
                 {
-                    URI uri = URI.createURI(modelResource.getURI().toString() + "di"); 
+                    URI uri = URI.createURI(modelResource.getURI().toString() + "di");  //$NON-NLS-1$
                     Resource diResource = modelResource.getResourceSet().getResource(uri, true);
                     if (diResource != null && diResource.getContents().get(0) instanceof Diagrams)
                     {

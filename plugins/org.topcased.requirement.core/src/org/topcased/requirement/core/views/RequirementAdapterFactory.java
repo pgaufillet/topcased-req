@@ -12,10 +12,15 @@
 
 package org.topcased.requirement.core.views;
 
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.topcased.modeler.di.model.Property;
+import org.topcased.modeler.di.model.Diagram;
+import org.topcased.modeler.di.model.util.DIUtils;
+import org.topcased.modeler.diagrams.model.Diagrams;
+import org.topcased.modeler.diagrams.model.util.DiagramsUtils;
 import org.topcased.modeler.editor.Modeler;
 import org.topcased.requirement.core.extensions.DefaultAttachmentPolicy;
 import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
@@ -71,12 +76,26 @@ public class RequirementAdapterFactory implements IAdapterFactory
      */
     private boolean loadRequirementModelWithDefaultPolicy (Modeler modeler)
     {
-        Property requirementProperty = DefaultAttachmentPolicy.getInstance().getProperty(modeler.getDiagrams());
-        if (requirementProperty != null)
+        EObject eobject = modeler.getResourceSet().getResources().get(0).getContents().get(0);
+        if (eobject instanceof Diagrams)
         {
-            URI uri = URI.createURI(requirementProperty.getValue()).trimFragment().resolve(requirementProperty.eResource().getURI());
-            RequirementUtils.loadRequirementModel(uri, modeler.getEditingDomain());
-            return true;
+            Diagram rootDiagram = DiagramsUtils.getRootDiagram((Diagrams) eobject);
+            String resourcePath = DIUtils.getPropertyValue(rootDiagram, DefaultAttachmentPolicy.REQUIREMENT_PROPERTY_KEY);
+            if (resourcePath != "") //$NON-NLS-1$
+            {
+                URI uri = URI.createURI(resourcePath);
+                
+                if (ResourcesPlugin.getWorkspace().getRoot().findMember(uri.toPlatformString(true)) != null) 
+                {
+                    RequirementUtils.loadRequirementModel(uri, modeler.getEditingDomain());
+                    return true;
+                }
+                else
+                {
+                    DefaultAttachmentPolicy.getInstance().setProperty(modeler, null);
+                }
+    
+            }
         }
         return false;
     }
@@ -90,10 +109,11 @@ public class RequirementAdapterFactory implements IAdapterFactory
      */
     private boolean loadRequirementModelWithSpecifiedPolicy (Modeler modeler, IModelAttachmentPolicy policy)
     {
-        Resource targetModel = policy.getLinkedTargetModel(modeler.getEditingDomain().getResourceSet());
+        Resource targetModel = policy.getLinkedTargetModel(modeler.getResourceSet());
         if (targetModel != null)
         {
-            RequirementUtils.loadRequirementModel(targetModel.getURI(), modeler.getEditingDomain());
+            URI uri = targetModel.getURI();
+            RequirementUtils.loadRequirementModel(uri, modeler.getEditingDomain());
             return true;
         }
         return false;

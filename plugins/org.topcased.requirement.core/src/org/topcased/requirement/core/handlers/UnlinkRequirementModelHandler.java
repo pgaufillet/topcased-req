@@ -14,6 +14,7 @@ package org.topcased.requirement.core.handlers;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.emf.common.command.Command;
 import org.eclipse.swt.widgets.Display;
 import org.topcased.modeler.editor.Modeler;
 import org.topcased.modeler.utils.Utils;
@@ -40,6 +41,7 @@ public class UnlinkRequirementModelHandler extends AbstractHandler
      */
     public Object execute(ExecutionEvent event) throws ExecutionException
     {
+        Command command = null;
         boolean deleteRequirementModel = false;
         Modeler modeler = Utils.getCurrentModeler();
 
@@ -62,13 +64,19 @@ public class UnlinkRequirementModelHandler extends AbstractHandler
 
                 if (policy != null)
                 {
-                    policy.unlinkRequirementModel(policy.getLinkedTargetModel(modeler.getEditingDomain().getResourceSet()), RequirementUtils.getRequirementModel(modeler.getEditingDomain()),
+                    command = policy.unlinkRequirementModel(policy.getLinkedTargetModel(modeler.getEditingDomain().getResourceSet()), RequirementUtils.getRequirementModel(modeler.getEditingDomain()),
                             deleteRequirementModel);
                 }
                 else
                 {
-                    DefaultAttachmentPolicy.getInstance().unlinkRequirementModel(Utils.getCurrentModeler().getResourceSet().getResources().get(0),
+                    command = DefaultAttachmentPolicy.getInstance().unlinkRequirementModel(Utils.getCurrentModeler().getResourceSet().getResources().get(0),
                             RequirementUtils.getRequirementModel(modeler.getEditingDomain()), deleteRequirementModel);
+                }
+                
+                //Execute the command
+                if (command != null && command.canExecute())
+                {
+                    modeler.getEditingDomain().getCommandStack().execute(command);
                 }
             }
         }

@@ -13,8 +13,10 @@ package org.topcased.requirement.core.wizards.operation;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
+import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.AttributeConfiguration;
 import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.core.internal.Messages;
@@ -81,6 +83,7 @@ public abstract class AbstractRequirementModelOperation extends WorkspaceModifyO
      */
     protected void updateRequirementReference(IProgressMonitor monitor)
     {
+        Command cmd = null;
         monitor.subTask(Messages.getString("AbstractRequirementModelOperation.0")); //$NON-NLS-1$
         IModelAttachmentPolicy policy = null;
         Resource targetModelResource = RequirementUtils.getResource(targetModelFile.getFullPath());
@@ -92,11 +95,17 @@ public abstract class AbstractRequirementModelOperation extends WorkspaceModifyO
         //Link the model to the requirement model
         if (policy != null)
         {            
-            policy.linkRequirementModel(targetModelResource, requirementResource);         
+            cmd = policy.linkRequirementModel(targetModelResource, requirementResource);         
         } 
         else
         {
-            DefaultAttachmentPolicy.getInstance().linkRequirementModel(targetModelResource, requirementResource);
+            cmd = DefaultAttachmentPolicy.getInstance().linkRequirementModel(targetModelResource, requirementResource);
+        }
+        
+        //Execute the command
+        if (cmd!= null && cmd.canExecute())
+        {
+            Utils.getCurrentModeler().getEditingDomain().getCommandStack().execute(cmd);
         }
         
         monitor.worked(1);

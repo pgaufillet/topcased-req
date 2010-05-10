@@ -11,6 +11,7 @@
  *****************************************************************************/
 package org.topcased.requirement.core.extensions;
 
+import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.topcased.modeler.diagrams.model.Diagrams;
@@ -30,16 +31,18 @@ public interface IModelAttachmentPolicy
      * 
      * @param targetModel the target model
      * @param requirementModel the requirement model
+     * @return Command, the emf command that will be executed in order to link the requirement model
      */
-    void linkRequirementModel(Resource targetModel, Resource requirementModel);
+    Command linkRequirementModel(Resource targetModel, Resource requirementModel);
 
     /**
      * Removes the link between a requirement model and a target model
      * 
      * @param targetModel the target model
      * @param requirementModel the requirement model
+     * @return Command, the emf command that will be executed in order to unlink the requirement model
      */
-    void unlinkRequirementModel(Resource targetModel, Resource requirementModel, boolean deleteRequirementModel);
+    Command unlinkRequirementModel(Resource targetModel, Resource requirementModel, boolean deleteRequirementModel);
 
     /**
      * Gets the target model linked with the requirement model from the resource set of your editing domain

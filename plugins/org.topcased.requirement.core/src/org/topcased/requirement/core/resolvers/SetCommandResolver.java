@@ -21,7 +21,6 @@ import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.gef.commands.Command;
-import org.topcased.modeler.commands.CommandStack;
 import org.topcased.modeler.commands.EMFtoGEFCommandWrapper;
 import org.topcased.modeler.editor.TopcasedAdapterFactoryEditingDomain.TopcasedAdapterFactoryLabeler;
 import org.topcased.requirement.core.commands.RenameRequirementCommand;
@@ -130,15 +129,6 @@ public class SetCommandResolver extends AdditionalCommand<SetCommand>
                             if (((SetCommand) o).getClass().equals(clazz))
                             {
                                 result.add((SetCommand) o);
-                            }
-                        }
-                        else
-                        {
-                            // same algorithm than CommandStack.getCommands
-                            List<Object> tmp = CommandStack.getCommands((Command) o, clazz);
-                            if (!(tmp.isEmpty()))
-                            {
-                                result.add(tmp);
                             }
                         }
                     }
