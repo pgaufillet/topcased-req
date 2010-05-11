@@ -73,7 +73,7 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
     private IStructuredSelection currSelection;
 
     private UpstreamRequirementContentProvider ctPvd;
-    
+
     static final String UPSTREAM_POPUP_ID = "org.topcased.requirement.core.views.upstream.popupMenu"; //$NON-NLS-1$
 
     /**
@@ -128,41 +128,41 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
     }
 
     /**
-     * Defines the default popup menu. It only contains undo & redo gef actions. 
-     * All others actions are defined via the extension point org.eclipse.ui.menus
+     * Defines the default popup menu. It only contains undo & redo gef actions. All others actions are defined via the
+     * extension point org.eclipse.ui.menus
      */
     protected void hookContextMenu()
     {
-        
-        //Create menu
+
+        // Create menu
         MenuManager menuManager = new MenuManager();
         menuManager.setRemoveAllWhenShown(true);
         menuManager.addMenuListener(new IMenuListener()
         {
             public void menuAboutToShow(IMenuManager manager)
-            {                
+            {
                 if (Utils.getCurrentModeler() != null)
                 {
-                    //add a first separator to surround undo & redo actions
+                    // add a first separator to surround undo & redo actions
                     Separator first = new Separator(firstPopupMenuSeparator);
                     first.setVisible(true);
-                    manager.add(first);  
-                    
-                    //using gef undo stack action because emf undo/redo got label problems.
+                    manager.add(first);
+
+                    // using gef undo stack action because emf undo/redo got label problems.
                     UndoAction undoAction = new UndoAction(Utils.getCurrentModeler().getSite().getPart());
                     undoAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_UNDO));
                     undoAction.update();
                     undoAction.setActionDefinitionId(ICommandConstants.UNDO_ID);
                     manager.add(undoAction);
-    
-                    //using gef redo stack actions because emf undo/redo got label problems.
+
+                    // using gef redo stack actions because emf undo/redo got label problems.
                     RedoAction redoAction = new RedoAction(Utils.getCurrentModeler().getSite().getPart());
                     redoAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_REDO));
                     redoAction.update();
                     redoAction.setActionDefinitionId(ICommandConstants.REDO_ID);
                     manager.add(redoAction);
-                    
-                    //add a last separator to surround undo & redo actions
+
+                    // add a last separator to surround undo & redo actions
                     Separator last = new Separator(lastPopupMenuSeparator);
                     last.setVisible(true);
                     manager.add(last);
@@ -173,7 +173,7 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
 
         Menu menu = menuManager.createContextMenu(viewer.getControl());
         viewer.getControl().setMenu(menu);
-        
+
         // Register menu for extension.
         getSite().registerContextMenu(UPSTREAM_POPUP_ID, menuManager, viewer);
     }
@@ -218,7 +218,7 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
     {
         return ctPvd;
     }
-    
+
     /**
      * @see org.topcased.requirement.core.views.AbstractRequirementPage#hookListeners()
      */
@@ -226,10 +226,10 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
     protected void hookListeners()
     {
         super.hookListeners();
-        
+
         hookUpstreamSelectionChangedListener();
     }
-    
+
     /**
      * @see org.topcased.requirement.core.views.AbstractRequirementPage#unhookListeners()
      */
@@ -237,20 +237,19 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
     protected void unhookListeners()
     {
         super.unhookListeners();
-        
+
         unhookUpstreamSelectionChangedListener();
     }
-    
-    
+
     /**
-     * hook the upstream selection change listener if the command is checked and the two pages are active
+     * Hook the upstream selection change listener if the command is checked and the two pages are active
      */
     public void hookUpstreamSelectionChangedListener()
     {
         // Get the commands who have a registered state
         ICommandService cs = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
         Command filterCmd = cs.getCommand(ICommandConstants.FILTER_CURRENT_REQ_ID);
-        
+
         // Handle cases when the command is toggled but the associated action isn't performed
         if (filterCmd.getState(RegistryToggleState.STATE_ID).getValue().equals(true))
         {
@@ -262,24 +261,23 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
             }
         }
     }
-    
 
     /**
-     * unhook the upstream selection change listener when the page is disposed and reset the current page tree
+     * Unhook the upstream selection change listener when the page is disposed and reset the current page tree
      */
     public void unhookUpstreamSelectionChangedListener()
     {
-        if (((CurrentRequirementView)CurrentRequirementView.getInstance()) != null)
+        if (((CurrentRequirementView) CurrentRequirementView.getInstance()) != null)
         {
-            IPage currentPage = ((CurrentRequirementView)CurrentRequirementView.getInstance()).getCurrentPage();
+            IPage currentPage = ((CurrentRequirementView) CurrentRequirementView.getInstance()).getCurrentPage();
             if (upstreamListener != null)
             {
                 this.getViewer().removeSelectionChangedListener(upstreamListener);
                 upstreamListener = null;
-                
+
                 if (currentPage instanceof CurrentPage)
                 {
-                    //reset the tree otherwise the filter would be still active
+                    // reset the tree otherwise the filter would be still active
                     CurrentViewFilterFromUpstreamSelection.getInstance().setSearchedRequirement(null);
                     ((CurrentPage) currentPage).getViewer().refresh();
                 }
