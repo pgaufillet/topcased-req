@@ -11,6 +11,8 @@
  *****************************************************************************/
 package org.topcased.requirement.core.commands;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.command.AbstractCommand;
@@ -113,9 +115,9 @@ public class UnlinkRequirementModelCommand extends AbstractCommand
     public boolean canUndo()
     {
         //Get the old requirement file (handle cases when a new requirement model is attached to a previously attached diagram)
-        IPath path = new Path(URI.decode(requirementResource.getURI().toString())).removeFileExtension().addFileExtension("old").addFileExtension("requirement"); //$NON-NLS-1$ //$NON-NLS-2$
-        Resource r = RequirementUtils.getResource(path);
+        IPath path = new Path(URI.decode(requirementResource.getURI().toPlatformString(true))).removeFileExtension().addFileExtension("old").addFileExtension("requirement"); //$NON-NLS-1$ //$NON-NLS-2$
+        IFile fileOld = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
         
-        return !deleteRequirementResource && r == null;
+        return !deleteRequirementResource && !fileOld.exists();
     }
 }

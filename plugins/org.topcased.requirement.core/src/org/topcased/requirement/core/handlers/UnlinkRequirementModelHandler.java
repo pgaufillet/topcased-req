@@ -49,7 +49,7 @@ public class UnlinkRequirementModelHandler extends AbstractHandler
         {
             // launch the unlink dialog
             UnlinkDialog dialog = new UnlinkDialog(Display.getCurrent().getActiveShell(), Messages.getString("UnlinkRequirementModelHandler.0"), Messages.getString("UnlinkRequirementModelHandler.1"));//$NON-NLS-1$ //$NON-NLS-2$
-            int dialogResult = dialog.open();
+            dialogResult = dialog.open();
 
             // If "delete file" is checked
             if (dialogResult == 2)
