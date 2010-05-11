@@ -195,7 +195,7 @@ public class RequirementDropListener extends AbstractTransferDropTargetListener
                 // this selection comes from the upstream view. It means that all requirements need to be extracted
                 if (obj instanceof Document || obj instanceof Section)
                 {
-                    Collection<Requirement> allRequirements = RequirementUtils.getUpstream((EObject) obj);
+                    Collection<Requirement> allRequirements = RequirementUtils.getUpstreams((EObject) obj);
                     for (Requirement requirement : allRequirements)
                     {
                         sortedSelection.add(requirement);

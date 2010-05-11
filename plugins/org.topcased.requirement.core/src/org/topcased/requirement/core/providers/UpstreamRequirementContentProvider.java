@@ -54,7 +54,7 @@ public class UpstreamRequirementContentProvider extends AdapterFactoryContentPro
             }
             if (object instanceof EObject)
             {
-                return RequirementUtils.getUpstream((EObject) object).toArray();
+                return RequirementUtils.getUpstreams((EObject) object).toArray();
             }
         }
         return super.getChildren(object);

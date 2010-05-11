@@ -304,7 +304,7 @@ public final class MergeRequirement
                 // a hierarchical element has been removed
                 else if (removedElement instanceof Document || removedElement instanceof Section)
                 {
-                    for (EObject o : RequirementUtils.getUpstream(removedElement))
+                    for (EObject o : RequirementUtils.getUpstreams(removedElement))
                     {
                         processImpact(diff, o);
                         addRequirementToDeleted((ttm.Requirement) o);

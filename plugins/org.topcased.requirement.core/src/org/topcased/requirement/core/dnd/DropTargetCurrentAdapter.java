@@ -203,7 +203,7 @@ public class DropTargetCurrentAdapter extends EditingDomainViewerDropAdapter
                 if (obj instanceof Document || obj instanceof Section)
                 {
                     // this selection comes from the upstream view. It means that all requirements need to be extracted.
-                    sortedSelection.addAll(RequirementUtils.getUpstream((EObject) obj));
+                    sortedSelection.addAll(RequirementUtils.getUpstreams((EObject) obj));
                 }
                 else
                 {

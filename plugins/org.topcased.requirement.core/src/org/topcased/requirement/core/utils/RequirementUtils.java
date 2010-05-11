@@ -171,7 +171,7 @@ public final class RequirementUtils
      * @param starting The model object representing the starting point.
      * @return A collection of Upstream Requirements found from the starting point.
      */
-    public static Collection<Requirement> getUpstream(EObject starting)
+    public static Collection<Requirement> getUpstreams(EObject starting)
     {
         Collection<Requirement> result = new ArrayList<Requirement>();
         for (Iterator<EObject> h = starting.eAllContents(); h.hasNext();)
@@ -186,7 +186,7 @@ public final class RequirementUtils
     }
 
     /**
-     * Gets all {@link org.topcased.sam.requirement.Requirement} starting from a starting point that should be of type
+     * Gets all {@link org.topcased.requirement.Requirement} starting from a starting point that should be of type
      * {@link HierarchicalElement}.
      * 
      * @param starting The model object representing the starting point.
@@ -234,7 +234,7 @@ public final class RequirementUtils
     {
         if (resource != null)
         {
-            return getUpstream(resource.getContents().get(0));
+            return getUpstreams(resource.getContents().get(0));
         }
         return Collections.emptyList();
     }
@@ -729,7 +729,7 @@ public final class RequirementUtils
         }
         return closed;
     }
-    
+
     /**
      * 
      * Notify commands that the isImpacted variable has changed. Handle the enablement/disablement of commands when no
@@ -761,52 +761,38 @@ public final class RequirementUtils
             }
         }
     }
-    
+
     /**
      * 
-     * Notify commands that the hasRequirement variable has changed. Handle the enablement/disablement of commands when there
-     * is a requirement model attached to the current modeler.
+     * Notify commands that the hasRequirement variable has changed. Handle the enablement/disablement of commands when
+     * there is a requirement model attached to the current modeler.
      */
     public static void fireHasRequirementVariableChanged()
     {
         boolean enable = false;
-        
+
         ISourceProviderService service = (ISourceProviderService) PlatformUI.getWorkbench().getService(ISourceProviderService.class);
         RequirementModelSourceProvider provider = (RequirementModelSourceProvider) service.getSourceProvider(RequirementModelSourceProvider.HAS_REQUIREMENT_MODEL);
 
         Modeler modeler = Utils.getCurrentModeler();
-        
+
         if (modeler != null)
         {
             IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(modeler.getEditingDomain());
             if (policy != null)
             {
-                if (policy.getLinkedTargetModel(modeler.getEditingDomain().getResourceSet()) != null)
-                {
-                    enable = true;
-                }
-                else
-                {
-                    enable = false;
-                }
+                enable = policy.getLinkedTargetModel(modeler.getEditingDomain().getResourceSet()) != null;
             }
             else
             {
-                if (DefaultAttachmentPolicy.getInstance().getLinkedTargetModel(modeler.getEditingDomain().getResourceSet()) != null)
-                {
-                    enable = true;
-                }
-                else
-                {
-                    enable = false;
-                }
+                enable = DefaultAttachmentPolicy.getInstance().getLinkedTargetModel(modeler.getEditingDomain().getResourceSet()) != null;
             }
         }
         else
         {
             enable = false;
         }
-        
+
         provider.setHasRequirementState(enable);
     }
 }
