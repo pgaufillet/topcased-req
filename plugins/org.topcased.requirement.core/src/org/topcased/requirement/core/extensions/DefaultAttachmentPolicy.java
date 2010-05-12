@@ -110,7 +110,7 @@ public class DefaultAttachmentPolicy implements IModelAttachmentPolicy
 
     /**
      * Set the requirement property of the di this property has always this format : key = requirements, value =
-     * the platform ressource path of the requirement model
+     * the platform resource path of the requirement model
      * 
      * @param modeler the modeler
      * @param requirements the requirements
@@ -123,7 +123,7 @@ public class DefaultAttachmentPolicy implements IModelAttachmentPolicy
             Diagram rootDiagram = DiagramsUtils.getRootDiagram((Diagrams)eobject);
             if (rootDiagram != null && requirementModel != null)
             {
-                DIUtils.setProperty(rootDiagram, REQUIREMENT_PROPERTY_KEY, requirementModel.getURI().toString());    
+                DIUtils.setProperty(rootDiagram, REQUIREMENT_PROPERTY_KEY, requirementModel.getURI().trimFragment().deresolve(eobject.eResource().getURI()).toString());    
             }
             else
             {
@@ -141,7 +141,9 @@ public class DefaultAttachmentPolicy implements IModelAttachmentPolicy
         String resourcePath = DIUtils.getPropertyValue(rootDiagram, REQUIREMENT_PROPERTY_KEY);
         if (resourcePath != null && diagram.eResource() != null && diagram.eResource().getResourceSet() != null)
         {
-            return (RequirementProject) diagram.eResource().getResourceSet().getResource(URI.createURI(resourcePath), true).getContents().get(0);
+            URI uri = URI.createURI(resourcePath).trimFragment().resolve(rootDiagram.eResource().getURI());
+
+            return (RequirementProject) diagram.eResource().getResourceSet().getResource(uri, true).getContents().get(0);
         }
         return null;
     }
