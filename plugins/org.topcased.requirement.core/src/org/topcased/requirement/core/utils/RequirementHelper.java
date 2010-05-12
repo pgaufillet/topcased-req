@@ -169,6 +169,9 @@ public final class RequirementHelper
             if (policy == null)
             {
                 policy = DefaultAttachmentPolicy.getInstance();
+            }
+            if (policy != null)
+            {
                 result = policy.getRequirementProjectFromTargetDiagram(diagrams);
             }
         }
