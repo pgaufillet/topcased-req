@@ -1756,6 +1756,9 @@
       <command
             commandStackListener="org.topcased.requirement.core.resolvers.CreateCurrentReqCommandResolver">
       </command>
+      <command
+            commandStackListener="org.topcased.requirement.core.resolvers.ReplaceNodeContainerCommandResolver">
+      </command>
    </extension>
    <extension
          point="org.topcased.requirement.core.requirementCountingAlgorithm">
