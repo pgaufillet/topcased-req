@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright (c) 2008 TOPCASED consortium.
+ * Copyright (c) 2008,2010 Communication & Systems.
  * 
  * All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse
  * Public License v1.0 which accompanies this distribution, and is available at
@@ -40,8 +40,6 @@ import org.topcased.requirement.core.extensions.SpecificDropActionDescriptor;
 import org.topcased.requirement.core.extensions.SpecificDropActionManager;
 import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.utils.RequirementUtils;
-import org.topcased.requirement.core.views.current.CurrentPage;
-import org.topcased.requirement.core.views.current.CurrentRequirementView;
 
 import ttm.Document;
 import ttm.Requirement;
@@ -98,42 +96,37 @@ public class RequirementDropListener extends AbstractTransferDropTargetListener
         if (currentPart != null)
         {
             EObject eobject = getEObject();
-
             if (eobject != null)
             {
-                CurrentRequirementView view = (CurrentRequirementView) CurrentRequirementView.getInstance();
-                if (view != null && view.getCurrentPage() instanceof CurrentPage)
+                // extract source objects
+                ISelection selection = ((RequirementTransfer) getTransfer()).getSelection();
+                Collection< ? > source = extractDragSource(selection);
+
+                // handle specific action on drop
+                Command dropCmd = null;
+                ISpecificDropAction action = null;
+                String uri = EcoreUtil.getURI(eobject.eClass().getEPackage()).trimFragment().toString();
+                SpecificDropActionDescriptor descriptor = SpecificDropActionManager.getInstance().find(uri);
+                if (descriptor != null)
                 {
-                    // extract source objects
-                    ISelection selection = ((RequirementTransfer) getTransfer()).getSelection();
-                    Collection< ? > source = extractDragSource(selection);
+                    action = descriptor.getActionFor((EObject) eobject);
+                }
+                if (action != null)
+                {
+                    dropCmd = action.createSpecificDropAction(source, eobject);
+                }
+                // default requirement creation
+                else if (eobject != null)
+                {
+                    dropCmd = new CreateCurrentReqCommand(Messages.getString("CreateCurrentRequirementHandler.0")); //$NON-NLS-1$
+                    ((CreateRequirementCommand) dropCmd).setRequirements(source);
+                    ((CreateRequirementCommand) dropCmd).setTarget(eobject);
+                }
 
-                    // handle specific action on drop
-                    Command dropCmd = null;
-                    ISpecificDropAction action = null;
-                    String uri = EcoreUtil.getURI(eobject.eClass().getEPackage()).trimFragment().toString();
-                    SpecificDropActionDescriptor descriptor = SpecificDropActionManager.getInstance().find(uri);
-                    if (descriptor != null)
-                    {
-                        action = descriptor.getActionFor((EObject) eobject);
-                    }
-                    if (action != null)
-                    {
-                        dropCmd = action.createSpecificDropAction(source, eobject);
-                    }
-                    // default requirement creation
-                    else if (eobject != null)
-                    {
-                        dropCmd = new CreateCurrentReqCommand(Messages.getString("CreateCurrentRequirementHandler.0")); //$NON-NLS-1$
-                        ((CreateRequirementCommand) dropCmd).setRequirements(source);
-                        ((CreateRequirementCommand) dropCmd).setTarget(eobject);
-                    }
-
-                    // execution of the command
-                    if (dropCmd != null && dropCmd.canExecute())
-                    {
-                        getViewer().getEditDomain().getCommandStack().execute(new EMFtoGEFCommandWrapper(dropCmd));
-                    }
+                // execution of the command
+                if (dropCmd != null && dropCmd.canExecute())
+                {
+                    getViewer().getEditDomain().getCommandStack().execute(new EMFtoGEFCommandWrapper(dropCmd));
                 }
             }
         }
