@@ -11,8 +11,6 @@
  **********************************************************************************************************************/
 package org.topcased.requirement.core.views;
 
-import org.eclipse.core.commands.AbstractHandlerWithState;
-import org.eclipse.core.commands.Command;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
@@ -25,9 +23,6 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.commands.ICommandService;
-import org.eclipse.ui.handlers.RegistryToggleState;
 import org.eclipse.ui.part.IContributedContentsView;
 import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.part.IPageBookViewPage;
@@ -40,10 +35,7 @@ import org.topcased.modeler.editor.Modeler;
 import org.topcased.requirement.core.extensions.DefaultAttachmentPolicy;
 import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
 import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
-import org.topcased.requirement.core.handlers.ICommandConstants;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
-import org.topcased.requirement.core.views.current.CurrentPage;
-import org.topcased.requirement.core.views.upstream.UpstreamPage;
 
 /**
  * Defines the abstract requirement view.<br>
@@ -59,6 +51,8 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
 {
     /** The initial selection when the view opens */
     protected ISelection bootstrapSelection;
+
+    protected static ISelectionChangedListener selectionListener = null;
 
     /**
      * Gets the default empty page for this view.
@@ -199,21 +193,14 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
                 IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(modeler.getEditingDomain());
                 if (policy != null && policy.getLinkedTargetModel(modeler.getEditingDomain().getResourceSet()) != null)
                 {
-                    initializePage(modeler, page);
+                    updatePage(page);
                 }
                 else if (DefaultAttachmentPolicy.getInstance().getLinkedTargetModel(modeler.getEditingDomain().getResourceSet()) != null)
                 {
-                    initializePage(modeler, page);
+                    updatePage(page);
                 }
             }
         }
-    }
-
-    protected void initializePage(Modeler modeler, IPage page)
-    {
-        updatePage(page);
-
-        restoreCommandsPreferencesFromLastSession(page);
     }
 
     /**
@@ -276,49 +263,5 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
             }
         }
         return RequirementCorePlugin.getDefault().getPreferenceStore();
-    }
-
-    /**
-     * Provide state action restoring from previous session. Check the saved state of commands and launch the
-     * corresponding action
-     * 
-     * @param page the page where there is commands
-     */
-    private void restoreCommandsPreferencesFromLastSession(IPage page)
-    {
-        // Get the commands who have a registered state
-        ICommandService cs = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
-        Command linkCmd = cs.getCommand(ICommandConstants.LINK_WITH_EDITOR_ID);
-        Command sortCmd = cs.getCommand(ICommandConstants.SORT_ID);
-        Command flatCmd = cs.getCommand(ICommandConstants.FLAT_ID);
-        Command hierarchicalCmd = cs.getCommand(ICommandConstants.HIERARCHICAL_ID);
-
-        // Handle cases when the command is toggled but the associated action isn't performed
-        if (((AbstractHandlerWithState) linkCmd.getHandler()) != null && page instanceof CurrentPage)
-        {
-            ((AbstractHandlerWithState) linkCmd.getHandler()).handleStateChange(linkCmd.getState(RegistryToggleState.STATE_ID), false);
-        }
-
-        // Handle cases when the command is toggled but the associated action isn't performed
-        if (((AbstractHandlerWithState) sortCmd.getHandler()) != null && page instanceof UpstreamPage)
-        {
-            ((AbstractHandlerWithState) sortCmd.getHandler()).handleStateChange(sortCmd.getState(RegistryToggleState.STATE_ID), false);
-        }
-
-        // Handle cases when the command is toggled but the associated action isn't performed
-        if (flatCmd.getState(RegistryToggleState.STATE_ID).getValue().equals(true))
-        {
-            if (((AbstractHandlerWithState) flatCmd.getHandler()) != null && page instanceof UpstreamPage)
-            {
-                ((AbstractHandlerWithState) flatCmd.getHandler()).handleStateChange(flatCmd.getState(RegistryToggleState.STATE_ID), false);
-            }
-        }
-        else if (hierarchicalCmd.getState(RegistryToggleState.STATE_ID).getValue().equals(true))
-        {
-            if (((AbstractHandlerWithState) hierarchicalCmd.getHandler()) != null && page instanceof UpstreamPage)
-            {
-                ((AbstractHandlerWithState) hierarchicalCmd.getHandler()).handleStateChange(hierarchicalCmd.getState(RegistryToggleState.STATE_ID), false);
-            }
-        }
     }
 }

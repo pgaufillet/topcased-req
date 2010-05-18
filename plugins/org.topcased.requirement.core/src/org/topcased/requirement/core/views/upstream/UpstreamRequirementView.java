@@ -20,6 +20,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
@@ -111,7 +112,12 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
     {
         if (PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage() != null)
         {
-            return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(UpstreamRequirementView.VIEW_ID);
+            IViewReference ref = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findViewReference(UpstreamRequirementView.VIEW_ID);
+            if (ref != null)
+            {
+                //We need to get the view without restoring it (prevent from the recursive view creation warning)
+                return ref.getView(false);
+            }
         }
         return null;
     }
@@ -138,7 +144,6 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
             else
             {
                 RequirementHelper.INSTANCE.setUpstreamPage(upstreamPage);
-
             }
 
             // Update the IsImpacted variable as often as possible!
@@ -234,9 +239,10 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
 
         if (linkCmd.getState(RegistryToggleState.STATE_ID).getValue().equals(true))
         {
-            if ((CurrentRequirementView) CurrentRequirementView.getInstance() != null)
+            if ((CurrentRequirementView) CurrentRequirementView.getInstance() != null && selectionListener == null)
             {
-                ((CurrentRequirementView) CurrentRequirementView.getInstance()).addSelectionChangedListener(this);
+                selectionListener = this;
+                ((CurrentRequirementView) CurrentRequirementView.getInstance()).addSelectionChangedListener(selectionListener);
             }
         }
     }
@@ -249,9 +255,10 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
     {
         super.unhookListener();
 
-        if ((CurrentRequirementView) CurrentRequirementView.getInstance() != null)
+        if ((CurrentRequirementView) CurrentRequirementView.getInstance() != null && selectionListener != null)
         {
-            ((CurrentRequirementView) CurrentRequirementView.getInstance()).removeSelectionChangedListener(this);
+            ((CurrentRequirementView) CurrentRequirementView.getInstance()).removeSelectionChangedListener(selectionListener);
+            selectionListener = null;
         }
     }
 }
