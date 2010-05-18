@@ -34,6 +34,7 @@ public class EmptyCurrentPage extends Page implements ICurrentRequirementPage
     /**
      * @see org.eclipse.ui.part.Page#createControl(org.eclipse.swt.widgets.Composite)
      */
+    @Override
     public void createControl(Composite parent)
     {
         composite = new Composite(parent, SWT.NONE);
@@ -48,6 +49,7 @@ public class EmptyCurrentPage extends Page implements ICurrentRequirementPage
     /**
      * @see org.eclipse.ui.part.Page#getControl()
      */
+    @Override
     public Control getControl()
     {
         return composite;
@@ -56,6 +58,7 @@ public class EmptyCurrentPage extends Page implements ICurrentRequirementPage
     /**
      * @see org.eclipse.ui.part.Page#setFocus()
      */
+    @Override
     public void setFocus()
     {
         // Do nothing

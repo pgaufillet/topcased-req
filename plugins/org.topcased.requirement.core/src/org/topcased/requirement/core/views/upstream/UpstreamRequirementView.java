@@ -64,11 +64,12 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
     public void createPartControl(Composite parent)
     {
         super.createPartControl(parent);
-        
-        //activate the view context for key binding
+
+        // activate the view context for key binding
         IContextService contextService = (IContextService) getSite().getService(IContextService.class);
         contextService.activateContext(VIEW_ID);
     }
+
     /**
      * @see org.eclipse.ui.part.PageBookView#getAdapter(java.lang.Class)
      */
@@ -118,6 +119,7 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
     /**
      * @see org.eclipse.ui.part.PageBookView#partActivated(org.eclipse.ui.IWorkbenchPart)
      */
+    @Override
     public void partActivated(IWorkbenchPart part)
     {
         super.partActivated(part);
@@ -138,21 +140,24 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
                 RequirementHelper.INSTANCE.setUpstreamPage(upstreamPage);
 
             }
-            
-            //Update the IsImpacted variable as often as possible!
+
+            // Update the IsImpacted variable as often as possible!
             RequirementUtils.fireIsImpactedVariableChanged();
         }
-        
+
         // We need to constantly set the value of the hasRequirement variable to synchronize toolbar actions
         // enablement with the requirement model state
         RequirementUtils.fireHasRequirementVariableChanged();
     }
 
+    /**
+     * @see org.eclipse.ui.part.PageBookView#partClosed(org.eclipse.ui.IWorkbenchPart)
+     */
     @Override
     public void partClosed(IWorkbenchPart part)
     {
         super.partClosed(part);
-        
+
         if (part instanceof Modeler)
         {
             // We need to constantly set the value of the hasRequirement variable to synchronize toolbar actions
@@ -160,8 +165,7 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
             RequirementUtils.fireHasRequirementVariableChanged();
         }
     }
-    
-    
+
     /**
      * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
      */
@@ -180,7 +184,8 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
                     if (value != null && value instanceof Requirement)
                     {
                         getSelectionProvider().setSelection(new StructuredSelection(value));
-                        this.setFocus();
+                        // the view takes the focus
+                        setFocus();
                     }
                 }
             }
@@ -190,6 +195,7 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
     /**
      * @see org.topcased.requirement.core.views.AbstractRequirementView#updatePage(org.eclipse.ui.part.IPage)
      */
+    @Override
     protected void updatePage(IPage page)
     {
         UpstreamPage thePage = (UpstreamPage) page;
@@ -210,10 +216,10 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
     public void dispose()
     {
         unhookListener();
-        
+
         super.dispose();
     }
-    
+
     /**
      * @see org.topcased.requirement.core.views.AbstractRequirementView#hookListener()
      */
@@ -225,16 +231,16 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
         // Get the commands who have a registered state
         ICommandService cs = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
         Command linkCmd = cs.getCommand(ICommandConstants.LINK_TO_UPSTREAM_ID);
-        
+
         if (linkCmd.getState(RegistryToggleState.STATE_ID).getValue().equals(true))
         {
-            if (((CurrentRequirementView)CurrentRequirementView.getInstance()) != null)
+            if ((CurrentRequirementView) CurrentRequirementView.getInstance() != null)
             {
-                ((CurrentRequirementView)CurrentRequirementView.getInstance()).addSelectionChangedListener(this);
+                ((CurrentRequirementView) CurrentRequirementView.getInstance()).addSelectionChangedListener(this);
             }
         }
     }
-    
+
     /**
      * @see org.topcased.requirement.core.views.AbstractRequirementView#unhookListener()
      */
@@ -242,10 +248,10 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
     public void unhookListener()
     {
         super.unhookListener();
-        
-        if (((CurrentRequirementView)CurrentRequirementView.getInstance()) != null)
+
+        if ((CurrentRequirementView) CurrentRequirementView.getInstance() != null)
         {
-            ((CurrentRequirementView)CurrentRequirementView.getInstance()).removeSelectionChangedListener(this);
+            ((CurrentRequirementView) CurrentRequirementView.getInstance()).removeSelectionChangedListener(this);
         }
     }
 }

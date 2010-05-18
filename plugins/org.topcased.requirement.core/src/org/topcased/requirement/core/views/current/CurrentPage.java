@@ -212,7 +212,7 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
             TreeIterator<EObject> allContents = CurrentPage.this.getModel().eAllContents();
             while (allContents.hasNext())
             {
-                EObject object = (EObject) allContents.next();
+                EObject object = allContents.next();
                 if (object.equals(eObjectToCheck))
                 {
                     return true;
@@ -265,6 +265,7 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
     /**
      * @see org.eclipse.ui.part.Page#createControl(org.eclipse.swt.widgets.Composite)
      */
+    @Override
     public void createControl(Composite parent)
     {
         final GridLayout mainLayout = new GridLayout();
@@ -448,7 +449,7 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
     {
         if (marker != null)
         {
-            int severity = (Integer) marker.getAttribute(IMarker.SEVERITY, 0);
+            int severity = marker.getAttribute(IMarker.SEVERITY, 0);
             if (EValidator.MARKER.equals(marker.getType()) && IMarker.SEVERITY_WARNING == severity)
             {
                 String emfURI = (String) marker.getAttribute(EValidator.URI_ATTRIBUTE);

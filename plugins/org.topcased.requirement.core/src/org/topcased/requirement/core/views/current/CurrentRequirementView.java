@@ -134,6 +134,7 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
     /**
      * @see org.eclipse.ui.part.PageBookView#partActivated(org.eclipse.ui.IWorkbenchPart)
      */
+    @Override
     public void partActivated(IWorkbenchPart part)
     {
         super.partActivated(part);
@@ -184,6 +185,7 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
     /**
      * @see org.topcased.requirement.core.views.AbstractRequirementView#updatePage(org.eclipse.ui.part.Page)
      */
+    @Override
     protected void updatePage(IPage page)
     {
         CurrentPage thePage = (CurrentPage) page;
@@ -222,9 +224,9 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
 
         if (linkCmd.getState(RegistryToggleState.STATE_ID).getValue().equals(true))
         {
-            if (((UpstreamRequirementView) UpstreamRequirementView.getInstance()) != null)
+            if ((UpstreamRequirementView) UpstreamRequirementView.getInstance() != null)
             {
-                this.addSelectionChangedListener(((UpstreamRequirementView) UpstreamRequirementView.getInstance()));
+                addSelectionChangedListener((UpstreamRequirementView) UpstreamRequirementView.getInstance());
             }
         }
     }
@@ -237,9 +239,9 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
     {
         super.unhookListener();
 
-        if (((UpstreamRequirementView) UpstreamRequirementView.getInstance()) != null)
+        if ((UpstreamRequirementView) UpstreamRequirementView.getInstance() != null)
         {
-            this.removeSelectionChangedListener(((UpstreamRequirementView) UpstreamRequirementView.getInstance()));
+            removeSelectionChangedListener((UpstreamRequirementView) UpstreamRequirementView.getInstance());
         }
     }
 
