@@ -11,8 +11,12 @@
  *****************************************************************************/
 package org.topcased.requirement.core.testers;
 
+import java.util.Iterator;
+
 import org.eclipse.core.expressions.PropertyTester;
+import org.eclipse.emf.ecore.EObject;
 import org.topcased.requirement.CurrentRequirement;
+import org.topcased.requirement.HierarchicalElement;
 
 /**
  * A Property tester who check if a selected current requirement is impacted
@@ -41,6 +45,22 @@ public class IsImpactedPropertyTester extends PropertyTester
             {
                 return false;
             }
+        }
+        else if (receiver instanceof HierarchicalElement)
+        {
+            for (Iterator<EObject> children = ((HierarchicalElement) receiver).eAllContents(); children.hasNext();)
+            {
+                EObject currEo = children.next();
+                
+                if (currEo instanceof CurrentRequirement)
+                { 
+                    if (((CurrentRequirement) currEo).isImpacted())
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
         return false;
     }

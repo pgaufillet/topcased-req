@@ -197,9 +197,6 @@
                      ifEmpty="false">
                   <or>
                      <instanceof
-                           value="org.topcased.requirement.HierarchicalElement">
-                     </instanceof>
-                     <instanceof
                            value="ttm.Document">
                      </instanceof>
                      <and>
@@ -213,6 +210,16 @@
                      <and>
                         <instanceof
                               value="org.topcased.requirement.Requirement">
+                        </instanceof>
+                        <not>
+                           <test
+                                 property="org.topcased.requirement.core.isImpacted">
+                           </test>
+                        </not>
+                     </and>
+                     <and>
+                        <instanceof
+                              value="org.topcased.requirement.HierarchicalElement">
                         </instanceof>
                         <not>
                            <test
@@ -1811,7 +1818,7 @@
             id="org.topcased.requirement.core.testers.IsImpactedPropertyTester"
             namespace="org.topcased.requirement.core"
             properties="isImpacted"
-            type="org.topcased.requirement.Requirement">
+            type="org.topcased.requirement.IdentifiedElement">
       </propertyTester>
    </extension>
 </plugin>
