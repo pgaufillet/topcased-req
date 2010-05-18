@@ -78,17 +78,20 @@ public class RegexRequirementCountingAlgorithm implements IRequirementCountingAl
         long max = 0;
         long result = 0;
         HierarchicalElement root = RequirementHelper.INSTANCE.getHierarchicalElementRoot();
-        Collection<Requirement> requirements = RequirementUtils.getAllCurrents(root.eResource());
-
-        for (Requirement req : requirements)
+        if (root != null)
         {
-            int value = getNumberOfCurrent(req);
-            if (value > max)
+            Collection<Requirement> requirements = RequirementUtils.getAllCurrents(root.eResource());
+    
+            for (Requirement req : requirements)
             {
-                max = value;
+                int value = getNumberOfCurrent(req);
+                if (value > max)
+                {
+                    max = value;
+                }
             }
+            result = max;
         }
-        result = max;
         return result;
     }
 

@@ -45,31 +45,34 @@ public class NotLastAttributePropertyTester extends PropertyTester
         {
             ObjectAttribute attribute = (ObjectAttribute) receiver;
             Requirement parent = (Requirement) attribute.eContainer();
-            EList<Attribute> allAttributes = parent.getAttribute();
-    
-            if (attribute instanceof AttributeLink)
+            if (parent != null)
             {
-                int numberAtt = 0;
-                for (Attribute current : allAttributes)
+                EList<Attribute> allAttributes = parent.getAttribute();
+        
+                if (attribute instanceof AttributeLink)
                 {
-                    if (current instanceof AttributeLink)
+                    int numberAtt = 0;
+                    for (Attribute current : allAttributes)
                     {
-                        numberAtt++;
+                        if (current instanceof AttributeLink)
+                        {
+                            numberAtt++;
+                        }
                     }
+                    return numberAtt > 1 ? true : false;
                 }
-                return numberAtt > 1 ? true : false;
-            }
-            else
-            {
-                int numberAtt = 0;
-                for (Attribute current : allAttributes)
+                else
                 {
-                    if (current instanceof ObjectAttribute && !(current instanceof AttributeAllocate || current instanceof AttributeLink))
+                    int numberAtt = 0;
+                    for (Attribute current : allAttributes)
                     {
-                        numberAtt++;
+                        if (current instanceof ObjectAttribute && !(current instanceof AttributeAllocate || current instanceof AttributeLink))
+                        {
+                            numberAtt++;
+                        }
                     }
+                    return numberAtt > 1 ? true : false;
                 }
-                return numberAtt > 1 ? true : false;
             }
         }
         return false;

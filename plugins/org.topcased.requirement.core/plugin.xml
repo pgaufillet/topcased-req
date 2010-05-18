@@ -750,6 +750,9 @@
                               <instanceof
                                     value="org.topcased.requirement.HierarchicalElement">
                               </instanceof>
+                              <instanceof
+                                    value="org.topcased.requirement.AttributeLink">
+                              </instanceof>
                            </or>
                         </iterate>
                      </with>
