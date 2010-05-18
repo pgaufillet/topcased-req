@@ -43,7 +43,6 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.RegistryToggleState;
-import org.eclipse.ui.part.IPage;
 import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.Attribute;
 import org.topcased.requirement.AttributeLink;
@@ -67,7 +66,6 @@ import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.AbstractRequirementPage;
 import org.topcased.requirement.core.views.SearchComposite;
 import org.topcased.requirement.core.views.current.CurrentPage;
-import org.topcased.requirement.core.views.current.CurrentRequirementView;
 
 import ttm.Document;
 
@@ -265,11 +263,11 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
         // Handle cases when the command is toggled but the associated action isn't performed
         if (filterCmd.getState(RegistryToggleState.STATE_ID).getValue().equals(true))
         {
-            IPage currentPage = RequirementHelper.INSTANCE.getCurrentPage();
-            if (currentPage instanceof CurrentPage && upstreamListener == null)
+            CurrentPage currentPage = RequirementHelper.INSTANCE.getCurrentPage();
+            if (currentPage != null && upstreamListener == null)
             {
-                upstreamListener = new UpstreamSelectionChangedListener((CurrentPage) currentPage);
-                this.getViewer().addSelectionChangedListener(upstreamListener);
+                upstreamListener = new UpstreamSelectionChangedListener(currentPage);
+                viewer.addSelectionChangedListener(upstreamListener);
             }
         }
     }
@@ -279,21 +277,15 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
      */
     public void unhookUpstreamSelectionChangedListener()
     {
-        if ((CurrentRequirementView) CurrentRequirementView.getInstance() != null)
+        CurrentPage currentPage = RequirementHelper.INSTANCE.getCurrentPage();
+        if (currentPage != null && upstreamListener != null)
         {
-            IPage currentPage = ((CurrentRequirementView) CurrentRequirementView.getInstance()).getCurrentPage();
-            if (upstreamListener != null)
-            {
-                this.getViewer().removeSelectionChangedListener(upstreamListener);
-                upstreamListener = null;
+            viewer.removeSelectionChangedListener(upstreamListener);
+            upstreamListener = null;
 
-                if (currentPage instanceof CurrentPage)
-                {
-                    // reset the tree otherwise the filter would be still active
-                    CurrentViewFilterFromUpstreamSelection.getInstance().setSearchedRequirement(null);
-                    ((CurrentPage) currentPage).getViewer().refresh();
-                }
-            }
+            // reset the tree otherwise the filter would be still active
+            CurrentViewFilterFromUpstreamSelection.getInstance().setSearchedRequirement(null);
+            currentPage.getViewer().refresh();
         }
     }
 
@@ -328,6 +320,7 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
                         }
                         case RequirementPackage.ATTRIBUTE_LINK__PARTIAL: {
                             internalRefresh(msg.getNotifier());
+                            break;
                         }
                     }
                 }
