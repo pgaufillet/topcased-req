@@ -11,7 +11,12 @@
  **********************************************************************************************************************/
 package org.topcased.requirement.core.views.upstream;
 
+import java.util.Collection;
+
 import org.eclipse.core.commands.Command;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.gef.ui.actions.RedoAction;
 import org.eclipse.gef.ui.actions.UndoAction;
 import org.eclipse.jface.action.IMenuListener;
@@ -40,6 +45,11 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.RegistryToggleState;
 import org.eclipse.ui.part.IPage;
 import org.topcased.modeler.utils.Utils;
+import org.topcased.requirement.Attribute;
+import org.topcased.requirement.AttributeLink;
+import org.topcased.requirement.HierarchicalElement;
+import org.topcased.requirement.Requirement;
+import org.topcased.requirement.RequirementPackage;
 import org.topcased.requirement.core.dnd.DragSourceUpstreamAdapter;
 import org.topcased.requirement.core.dnd.RequirementTransfer;
 import org.topcased.requirement.core.filters.CurrentViewFilterFromUpstreamSelection;
@@ -124,7 +134,6 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
         hookListeners();
 
         getSite().setSelectionProvider(viewer);
-        refreshViewer(true);
     }
 
     /**
@@ -133,7 +142,6 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
      */
     protected void hookContextMenu()
     {
-
         // Create menu
         MenuManager menuManager = new MenuManager();
         menuManager.setRemoveAllWhenShown(true);
@@ -227,6 +235,8 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
     {
         super.hookListeners();
 
+        RequirementUtils.getAdapterFactory().addListener(changeListener);
+
         hookUpstreamSelectionChangedListener();
     }
 
@@ -238,11 +248,13 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
     {
         super.unhookListeners();
 
+        RequirementUtils.getAdapterFactory().removeListener(changeListener);
+
         unhookUpstreamSelectionChangedListener();
     }
 
     /**
-     * Hook the upstream selection change listener if the command is checked and the two pages are active
+     * Hooks the upstream selection change listener if the command is checked and the two pages are active
      */
     public void hookUpstreamSelectionChangedListener()
     {
@@ -263,11 +275,11 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
     }
 
     /**
-     * Unhook the upstream selection change listener when the page is disposed and reset the current page tree
+     * Unhooks the upstream selection change listener when the page is disposed and reset the current page tree
      */
     public void unhookUpstreamSelectionChangedListener()
     {
-        if (((CurrentRequirementView) CurrentRequirementView.getInstance()) != null)
+        if ((CurrentRequirementView) CurrentRequirementView.getInstance() != null)
         {
             IPage currentPage = ((CurrentRequirementView) CurrentRequirementView.getInstance()).getCurrentPage();
             if (upstreamListener != null)
@@ -284,4 +296,83 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
             }
         }
     }
+
+    /**
+     * Internal listener to refresh the upstream viewer when modifications are done on the current page.
+     */
+    private INotifyChangedListener changeListener = new INotifyChangedListener()
+    {
+        /**
+         * @see org.eclipse.emf.edit.provider.INotifyChangedListener#notifyChanged(org.eclipse.emf.common.notify.Notification)
+         */
+        public void notifyChanged(Notification msg)
+        {
+            if (!getControl().isDisposed())
+            {
+                if (msg.getEventType() == Notification.ADD)
+                {
+                    internalRefresh(msg.getNewValue());
+                }
+                else if (msg.getEventType() == Notification.REMOVE)
+                {
+                    internalRefresh(msg.getOldValue());
+                }
+                else if (msg.getEventType() == Notification.SET)
+                {
+                    switch (msg.getFeatureID(AttributeLink.class))
+                    {
+                        case RequirementPackage.ATTRIBUTE_LINK__VALUE: {
+                            internalRefresh(msg.getOldValue());
+                            internalRefresh(msg.getNewValue());
+                            break;
+                        }
+                        case RequirementPackage.ATTRIBUTE_LINK__PARTIAL: {
+                            internalRefresh(msg.getNotifier());
+                        }
+                    }
+                }
+            }
+        }
+
+        private void internalRefresh(Object object)
+        {
+            if (object instanceof AttributeLink)
+            {
+                Object value = ((AttributeLink) object).getValue();
+                internalRefresh(value);
+            }
+            else if (object instanceof ttm.Requirement)
+            {
+                viewer.update(object, null);
+            }
+            else if (object instanceof Requirement)
+            {
+                updateReferencedUpstream((Requirement) object);
+            }
+            else if (object instanceof HierarchicalElement)
+            {
+                Collection<Requirement> reqs = RequirementUtils.getCurrents((HierarchicalElement) object);
+                for (Requirement aReq : reqs)
+                {
+                    updateReferencedUpstream(aReq);
+                }
+            }
+        }
+
+        private void updateReferencedUpstream(Requirement currReq)
+        {
+            for (Attribute attribute : currReq.getAttribute())
+            {
+                if (attribute instanceof AttributeLink)
+                {
+                    EObject value = ((AttributeLink) attribute).getValue();
+                    if (value != null)
+                    {
+                        viewer.update(value, null);
+                    }
+                }
+            }
+        }
+
+    };
 }

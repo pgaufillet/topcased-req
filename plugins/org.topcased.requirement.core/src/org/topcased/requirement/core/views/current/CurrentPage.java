@@ -15,10 +15,12 @@ package org.topcased.requirement.core.views.current;
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EValidator;
+import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.gef.ui.actions.RedoAction;
 import org.eclipse.gef.ui.actions.UndoAction;
 import org.eclipse.jface.action.IMenuListener;
@@ -86,9 +88,9 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
     private IStructuredSelection selection;
 
     private MenuManager menuManager;
-    
+
     static final String CURRENT_POPUP_ID = "org.topcased.requirement.core.views.current.popupMenu"; //$NON-NLS-1$
-    
+
     /**
      * FIXME : find a better way to adapt the focus when an element is deleted
      * 
@@ -175,7 +177,8 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
             {
                 if (previousRequirementDeleted && parentToFocusAvailableAfterRequirementDeletion)
                 {
-                    // New selection will not produce another re-selection since it is not empty (Infinite loop avoided).
+                    // New selection will not produce another re-selection since it is not empty (Infinite loop
+                    // avoided).
                     if (!(hierarchicalElementToFocusAfterRequirementDeletion.getRequirement().isEmpty()))
                     {
                         // When a requirement is deleted from this page, we set focus on its container.
@@ -185,7 +188,8 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
                 }
                 else if (previousHierarchicalElementDeleted && parentToFocusAvailableAfterHierarchicalElementDeletion)
                 {
-                    // New selection will not produce another re-selection since it is not empty (Infinite loop avoided).
+                    // New selection will not produce another re-selection since it is not empty (Infinite loop
+                    // avoided).
                     if (!(hierarchicalElementToFocusAfterHierarchicalElementDeletion.getRequirement().isEmpty()))
                     {
                         // When a hierarchical element is deleted from this page, we set focus on its container.
@@ -231,26 +235,26 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
             if (model != null && Utils.getCurrentModeler() != null)
             {
 
-                //add a first separator to surround undo & redo actions
+                // add a first separator to surround undo & redo actions
                 Separator first = new Separator(firstPopupMenuSeparator);
                 first.setVisible(true);
                 manager.add(first);
-                
-                //using gef undo stack action because emf undo/redo got label problems.
+
+                // using gef undo stack action because emf undo/redo got label problems.
                 UndoAction undoAction = new UndoAction(Utils.getCurrentModeler().getSite().getPart());
                 undoAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_UNDO));
                 undoAction.update();
                 undoAction.setActionDefinitionId(ICommandConstants.UNDO_ID);
                 manager.add(undoAction);
 
-                //using gef redo stack actions because emf undo/redo got label problems.
+                // using gef redo stack actions because emf undo/redo got label problems.
                 RedoAction redoAction = new RedoAction(Utils.getCurrentModeler().getSite().getPart());
                 redoAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_REDO));
                 redoAction.update();
                 redoAction.setActionDefinitionId(ICommandConstants.REDO_ID);
                 manager.add(redoAction);
-                
-                //add a last separator to surround undo & redo actions
+
+                // add a last separator to surround undo & redo actions
                 Separator last = new Separator(lastPopupMenuSeparator);
                 last.setVisible(true);
                 manager.add(last);
@@ -299,7 +303,7 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
         getSite().setSelectionProvider(viewer);
 
     }
-    
+
     /**
      * @see org.topcased.requirement.core.views.AbstractRequirementPage#hookListeners()
      */
@@ -307,13 +311,15 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
     protected void hookListeners()
     {
         super.hookListeners();
-        
+
+        RequirementUtils.getAdapterFactory().addListener(changeListener);
+
         // Allow to receive only selection change coming From Property View
         getSite().getPage().addSelectionListener(IPageLayout.ID_PROBLEM_VIEW, this);
-        
+
         hookUpstreamSelectionChangedListener();
     }
-    
+
     /**
      * @see org.topcased.requirement.core.views.AbstractRequirementPage#unhookListeners()
      */
@@ -321,27 +327,28 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
     protected void unhookListeners()
     {
         super.unhookListeners();
-        
+
+        RequirementUtils.getAdapterFactory().removeListener(changeListener);
+
         // Fix [#3087] remove the listener set on the Problem view
         getSite().getPage().removeSelectionListener(IPageLayout.ID_PROBLEM_VIEW, this);
-        
+
         unhookUpstreamSelectionChangedListener();
     }
-    
-    
+
     /**
-     * hook the upstream selection change listener if the command is checked and the two pages are active
+     * Hooks the upstream selection change listener if the command is checked and the two pages are active
      */
     public void hookUpstreamSelectionChangedListener()
     {
         // Get the commands who have a registered state
         ICommandService cs = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
         Command filterCmd = cs.getCommand(ICommandConstants.FILTER_CURRENT_REQ_ID);
-        
+
         // Handle cases when the command is toggled but the associated action isn't performed
         if (filterCmd.getState(RegistryToggleState.STATE_ID).getValue().equals(true))
         {
-            IPage upstreamPage =RequirementHelper.INSTANCE.getUpstreamPage();
+            IPage upstreamPage = RequirementHelper.INSTANCE.getUpstreamPage();
             if (upstreamPage instanceof UpstreamPage && upstreamListener == null)
             {
                 upstreamListener = new UpstreamSelectionChangedListener(this);
@@ -349,22 +356,21 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
             }
         }
     }
-    
 
     /**
-     * unhook the upstream selection change listener when the page is disposed and reset the current page tree
+     * Unhooks the upstream selection change listener when the page is disposed and reset the current page tree
      */
     public void unhookUpstreamSelectionChangedListener()
     {
-        if (((UpstreamRequirementView)UpstreamRequirementView.getInstance()) != null)
+        if ((UpstreamRequirementView) UpstreamRequirementView.getInstance() != null)
         {
-            IPage upstreamPage = ((UpstreamRequirementView)UpstreamRequirementView.getInstance()).getCurrentPage();
+            IPage upstreamPage = ((UpstreamRequirementView) UpstreamRequirementView.getInstance()).getCurrentPage();
             if (upstreamPage instanceof UpstreamPage && upstreamListener != null)
             {
                 ((UpstreamPage) upstreamPage).getViewer().removeSelectionChangedListener(upstreamListener);
                 upstreamListener = null;
-                
-                //reset the tree otherwise the filter would be still active
+
+                // reset the tree otherwise the filter would be still active
                 CurrentViewFilterFromUpstreamSelection.getInstance().setSearchedRequirement(null);
                 if (!this.getViewer().getControl().isDisposed())
                 {
@@ -373,19 +379,20 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
             }
         }
     }
+
     /**
      * Defines the default content of the popup menu.
      */
     private void hookContextMenu()
     {
-        //Create menu
+        // Create menu
         menuManager = new MenuManager();
         menuManager.setRemoveAllWhenShown(true);
         menuManager.addMenuListener(new CurrentMenuManager());
 
         Menu menu = menuManager.createContextMenu(viewer.getControl());
         viewer.getTree().setMenu(menu);
-        
+
         // Register menu for extension.
         getSite().registerContextMenu(CURRENT_POPUP_ID, menuManager, viewer);
     }
@@ -460,4 +467,25 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
     {
         return model;
     }
+
+    /**
+     * Internal listener to refresh the viewer when the name of a semantic model is changed.
+     */
+    private INotifyChangedListener changeListener = new INotifyChangedListener()
+    {
+        public void notifyChanged(Notification msg)
+        {
+            if (!getControl().isDisposed())
+            {
+                if (msg.getEventType() == Notification.SET)
+                {
+                    EObject hierarchicalElt = RequirementUtils.getHierarchicalElementFor(msg.getNotifier());
+                    if (hierarchicalElt != null)
+                    {
+                        viewer.update(hierarchicalElt, null);
+                    }
+                }
+            }
+        }
+    };
 }

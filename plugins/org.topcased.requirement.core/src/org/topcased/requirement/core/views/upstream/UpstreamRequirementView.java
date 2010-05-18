@@ -200,7 +200,6 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
             thePage.getViewer().setInput(project.getUpstreamModel());
             RequirementHelper.INSTANCE.setUpstreamPage(thePage);
             RequirementCoverageComputer.INSTANCE.refreshCoverageRateDisplay();
-            thePage.refreshViewer(true);
         }
     }
 

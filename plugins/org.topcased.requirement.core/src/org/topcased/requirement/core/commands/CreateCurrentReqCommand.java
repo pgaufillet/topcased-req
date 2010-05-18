@@ -40,5 +40,6 @@ public class CreateCurrentReqCommand extends CreateRequirementCommand
     public void execute()
     {
         globalCmd = RequirementHelper.INSTANCE.createCurrentRequirements(getRequirements(), getTarget());
+        
     }
 }

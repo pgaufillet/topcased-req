@@ -11,9 +11,7 @@ import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EStructuralFeature;
-
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemColorProvider;
@@ -27,7 +25,6 @@ import org.eclipse.emf.edit.provider.ViewerNotification;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.RequirementFactory;
 import org.topcased.requirement.RequirementPackage;
-
 
 /**
  * This is the item provider adapter for a {@link org.topcased.requirement.HierarchicalElement} object.
@@ -78,7 +75,7 @@ public class HierarchicalElementItemProvider extends IdentifiedElementItemProvid
     {
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
                 getString("_UI_HierarchicalElement_element_feature"), getString("_UI_PropertyDescriptor_description", "_UI_HierarchicalElement_element_feature", "_UI_HierarchicalElement_type"),
-                RequirementPackage.Literals.HIERARCHICAL_ELEMENT__ELEMENT, true, false, true, null, null, null));
+                RequirementPackage.Literals.HIERARCHICAL_ELEMENT__ELEMENT, false, false, true, null, null, null));
     }
 
     /**

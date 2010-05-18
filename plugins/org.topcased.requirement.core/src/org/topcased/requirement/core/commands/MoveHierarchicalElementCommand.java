@@ -129,14 +129,13 @@ public class MoveHierarchicalElementCommand extends CompoundCommand
     }
 
     /**
-     * Refreshes the current page viewer
+     * Sets the focus on the moved elements presented on the current page.
      */
-    private void refreshViewer()
+    private void setFocusOnSelection()
     {
         CurrentPage page = RequirementHelper.INSTANCE.getCurrentPage();
         if (page != null)
         {
-            page.refreshViewer(true);
             page.getViewer().setSelection(new StructuredSelection(toSelect), true);
         }
     }
@@ -148,7 +147,7 @@ public class MoveHierarchicalElementCommand extends CompoundCommand
     public void execute()
     {
         super.execute();
-        refreshViewer();
+        setFocusOnSelection();
     }
 
     /**
@@ -158,7 +157,7 @@ public class MoveHierarchicalElementCommand extends CompoundCommand
     public void undo()
     {
         super.undo();
-        refreshViewer();
+        setFocusOnSelection();
     }
 
     /**
@@ -167,7 +166,7 @@ public class MoveHierarchicalElementCommand extends CompoundCommand
     public void redo()
     {
         super.redo();
-        refreshViewer();
+        setFocusOnSelection();
     }
 
     /**

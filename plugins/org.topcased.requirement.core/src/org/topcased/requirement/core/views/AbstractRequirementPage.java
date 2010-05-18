@@ -10,23 +10,19 @@
  **********************************************************************************************************************/
 package org.topcased.requirement.core.views;
 
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.ui.viewer.IViewerProvider;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.domain.IEditingDomainProvider;
-import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.jface.util.TransferDropTargetListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.part.Page;
 import org.topcased.modeler.editor.Modeler;
 import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.core.dnd.RequirementDropListener;
-import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
  * Defines an abstract page common to Upstream and Current pages.
@@ -36,10 +32,10 @@ import org.topcased.requirement.core.utils.RequirementUtils;
  */
 public abstract class AbstractRequirementPage extends Page implements IViewerProvider, IEditingDomainProvider
 {
-    protected static String firstPopupMenuSeparator = "firstSeparator";  //$NON-NLS-1$
-    
-    protected static String lastPopupMenuSeparator = "lastSeparator";  //$NON-NLS-1$
-    
+    protected static String firstPopupMenuSeparator = "firstSeparator"; //$NON-NLS-1$
+
+    protected static String lastPopupMenuSeparator = "lastSeparator"; //$NON-NLS-1$
+
     protected TreeViewer viewer;
 
     protected EditingDomain editingDomain;
@@ -71,7 +67,6 @@ public abstract class AbstractRequirementPage extends Page implements IViewerPro
             listener = new RequirementDropListener(modeler.getGraphicalViewer());
             modeler.getGraphicalViewer().addDropTargetListener(listener);
         }
-        RequirementUtils.getAdapterFactory().addListener(modelListener);
     }
 
     /**
@@ -79,28 +74,12 @@ public abstract class AbstractRequirementPage extends Page implements IViewerPro
      */
     protected void unhookListeners()
     {
-
         Modeler modeler = Utils.getCurrentModeler();
         if (modeler != null)
         {
             modeler.getGraphicalViewer().removeDropTargetListener(listener);
         }
-        RequirementUtils.getAdapterFactory().removeListener(modelListener);
     }
-
-    /**
-     * Listener to refresh the viewer when the model is modified from the current requirement view
-     */
-    private INotifyChangedListener modelListener = new INotifyChangedListener()
-    {
-        public void notifyChanged(Notification msg)
-        {
-            if (!getControl().isDisposed())
-            {
-                refreshViewer(true);
-            }
-        }
-    };
 
     /**
      * @see org.eclipse.ui.part.Page#getControl()
@@ -136,41 +115,6 @@ public abstract class AbstractRequirementPage extends Page implements IViewerPro
     public Viewer getViewer()
     {
         return viewer;
-    }
-
-    /**
-     * Refreshes this viewer with information freshly obtained from this viewer's model. If <code>updateLabels</code> is
-     * <code>true</code> then labels for otherwise unaffected elements are updated as well. Otherwise, it assumes labels
-     * for existing elements are unchanged, and labels are only obtained as needed (for example, for new elements).
-     * 
-     * @param updateLabel : true if the label is update
-     */
-    public final void refreshViewer(final boolean updateLabel)
-    {
-        if (Display.getCurrent() != Display.getDefault())
-        {
-            syncRefreshViewer(updateLabel);
-        }
-        else
-        {
-            viewer.refresh(updateLabel);
-        }
-    }
-
-    /**
-     * Refreshes the viewer
-     * 
-     * @param updateLabel : true if the label is update
-     */
-    private void syncRefreshViewer(final boolean updateLabel)
-    {
-        viewer.getControl().getDisplay().syncExec(new Runnable()
-        {
-            public void run()
-            {
-                viewer.refresh(updateLabel);
-            }
-        });
     }
 
     /**

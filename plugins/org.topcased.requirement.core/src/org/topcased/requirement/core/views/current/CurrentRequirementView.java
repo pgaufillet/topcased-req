@@ -58,14 +58,14 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
      */
     @Override
     public void createPartControl(Composite parent)
-    {        
+    {
         super.createPartControl(parent);
-        
-        //activate the view context for key binding
+
+        // activate the view context for key binding
         IContextService contextService = (IContextService) getSite().getService(IContextService.class);
         contextService.activateContext(VIEW_ID);
     }
-    
+
     /**
      * @see org.eclipse.ui.part.PageBookView#getAdapter(java.lang.Class)
      */
@@ -145,9 +145,9 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
             // When the view is first opened, pass the selection to the page
             if (bootstrapSelection != null)
             {
-                //ATTENTION : here, there is no need to call the hookListener method: 
-                //Now the selection listener is installed in the linkToUpstreamHandler
-                //This listener is no more a default listener, it is installed/uninstalled by the user via a command
+                // ATTENTION : here, there is no need to call the hookListener method:
+                // Now the selection listener is installed in the linkToUpstreamHandler
+                // This listener is no more a default listener, it is installed/uninstalled by the user via a command
                 bootstrapSelection = null;
                 loadPage(part, currentPage);
             }
@@ -156,7 +156,7 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
                 RequirementHelper.INSTANCE.setCurrentPage(currentPage);
             }
 
-            //Update the IsImpacted variable as often as possible!
+            // Update the IsImpacted variable as often as possible!
             RequirementUtils.fireIsImpactedVariableChanged();
         }
 
@@ -172,7 +172,7 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
     public void partClosed(IWorkbenchPart part)
     {
         super.partClosed(part);
-        
+
         if (part instanceof Modeler)
         {
             // We need to constantly set the value of the hasRequirement variable to synchronize toolbar actions
@@ -180,7 +180,7 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
             RequirementUtils.fireHasRequirementVariableChanged();
         }
     }
-    
+
     /**
      * @see org.topcased.requirement.core.views.AbstractRequirementView#updatePage(org.eclipse.ui.part.Page)
      */
@@ -194,7 +194,6 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
             thePage.setModel(model);
             thePage.getViewer().setInput(model);
             RequirementHelper.INSTANCE.setCurrentPage(thePage);
-            thePage.refreshViewer(true);
         }
     }
 
@@ -205,7 +204,7 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
     public void dispose()
     {
         unhookListener();
-        
+
         super.dispose();
     }
 
@@ -220,16 +219,16 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
         // Get the commands who have a registered state
         ICommandService cs = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
         Command linkCmd = cs.getCommand(ICommandConstants.LINK_TO_UPSTREAM_ID);
-        
+
         if (linkCmd.getState(RegistryToggleState.STATE_ID).getValue().equals(true))
         {
-            if (((UpstreamRequirementView)UpstreamRequirementView.getInstance()) != null)
+            if (((UpstreamRequirementView) UpstreamRequirementView.getInstance()) != null)
             {
-                this.addSelectionChangedListener(((UpstreamRequirementView)UpstreamRequirementView.getInstance()));
+                this.addSelectionChangedListener(((UpstreamRequirementView) UpstreamRequirementView.getInstance()));
             }
         }
     }
-    
+
     /**
      * @see org.topcased.requirement.core.views.AbstractRequirementView#unhookListener()
      */
@@ -237,10 +236,10 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
     public void unhookListener()
     {
         super.unhookListener();
-        
-        if (((UpstreamRequirementView)UpstreamRequirementView.getInstance()) != null)
+
+        if (((UpstreamRequirementView) UpstreamRequirementView.getInstance()) != null)
         {
-            this.removeSelectionChangedListener(((UpstreamRequirementView)UpstreamRequirementView.getInstance()));
+            this.removeSelectionChangedListener(((UpstreamRequirementView) UpstreamRequirementView.getInstance()));
         }
     }
 

@@ -99,7 +99,8 @@ public final class RequirementHelper
 
     /**
      * Get a requirement project from an eobject
-     * @param eobject, the starting eobject 
+     * 
+     * @param eobject, the starting eobject
      * @return the requirement project
      */
     public RequirementProject getRequirementProject(EObject eobject)
@@ -114,18 +115,19 @@ public final class RequirementHelper
 
     /**
      * Returns the requirement project linked to the current resource
+     * 
      * @param modelResource
      * @return the requirement project
      */
     public RequirementProject getRequirementProject(Resource modelResource)
     {
-        RequirementProject result = null ;
+        RequirementProject result = null;
         if (modelResource != null)
         {
             String extension = modelResource.getURI().fileExtension();
             if (extension != null)
             {
-                
+
                 if (REQUIREMENT_FILE_EXTENSION.equals(extension))
                 {
                     if (!modelResource.getContents().isEmpty() && modelResource.getContents().get(0) instanceof RequirementProject)
@@ -137,32 +139,33 @@ public final class RequirementHelper
                 {
                     if (modelResource.getContents().get(0) instanceof Diagrams)
                     {
-                        result = getRequirementProject((Diagrams)modelResource.getContents().get(0));
+                        result = getRequirementProject((Diagrams) modelResource.getContents().get(0));
                     }
                 }
                 else
                 {
-                    URI uri = URI.createURI(modelResource.getURI().toString() + "di");  //$NON-NLS-1$
+                    URI uri = URI.createURI(modelResource.getURI().toString() + "di"); //$NON-NLS-1$
                     Resource diResource = modelResource.getResourceSet().getResource(uri, true);
                     if (diResource != null && diResource.getContents().get(0) instanceof Diagrams)
                     {
-                        result = getRequirementProject((Diagrams)diResource.getContents().get(0));
+                        result = getRequirementProject((Diagrams) diResource.getContents().get(0));
                     }
                 }
             }
 
         }
-        return result ;
+        return result;
     }
-    
+
     /**
      * Returns the requirement project linked to the current diagrams
+     * 
      * @param diagrams
      * @return the requirement project
      */
     public RequirementProject getRequirementProject(Diagrams diagrams)
     {
-        RequirementProject result = null ;
+        RequirementProject result = null;
         if (diagrams != null && diagrams.eResource() != null && diagrams.eResource().getResourceSet() != null)
         {
             IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(diagrams.eResource().getResourceSet());
@@ -175,7 +178,7 @@ public final class RequirementHelper
                 result = policy.getRequirementProjectFromTargetDiagram(diagrams);
             }
         }
-        return result ;
+        return result;
     }
 
     /**
@@ -245,7 +248,6 @@ public final class RequirementHelper
             }
 
             // then the selection is done on the new inserted element(s).
-            currentPage.refreshViewer(true);
             currentPage.getViewer().setSelection(new StructuredSelection(createdRequirements), true);
 
             return globalCmd.unwrap();

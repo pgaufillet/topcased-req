@@ -84,7 +84,7 @@ public class HierarchicalElementImpl extends IdentifiedElementImpl implements Hi
      * @generated
      * @ordered
      */
-    protected static final long NEXT_REQ_INDEX_EDEFAULT = 0L;
+    protected static final long NEXT_REQ_INDEX_EDEFAULT = 10L;
 
     /**
      * The cached value of the '{@link #getNextReqIndex() <em>Next Req Index</em>}' attribute.
