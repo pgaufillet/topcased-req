@@ -79,10 +79,7 @@ public class PasteHierarchicalElementCommand extends CompoundCommand
     private void refreshViewer()
     {
         CurrentPage page = RequirementHelper.INSTANCE.getCurrentPage();
-        if (page != null)
-        {
-            page.getViewer().setSelection(new StructuredSelection(toCopy), true);
-        }
+        page.setSelection(new StructuredSelection(toCopy));
     }
 
     /**

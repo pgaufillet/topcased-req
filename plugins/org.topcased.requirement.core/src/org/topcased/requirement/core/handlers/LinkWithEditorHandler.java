@@ -142,7 +142,7 @@ public class LinkWithEditorHandler extends AbstractHandlerWithState implements I
             }
             if (!toSelect.isEmpty())
             {
-                page.getViewer().setSelection(new StructuredSelection(toSelect), true);
+                page.setSelection(new StructuredSelection(toSelect));
             }
         }
         isDispatching = false;

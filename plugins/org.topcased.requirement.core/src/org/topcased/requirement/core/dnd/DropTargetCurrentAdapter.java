@@ -55,7 +55,6 @@ import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.current.CurrentPage;
-import org.topcased.requirement.core.views.current.CurrentRequirementView;
 
 import ttm.Document;
 import ttm.Requirement;
@@ -338,7 +337,7 @@ public class DropTargetCurrentAdapter extends EditingDomainViewerDropAdapter
         }
 
         // Give the focus on the current requirement view
-        CurrentRequirementView.getInstance().setFocus();
+        // CurrentRequirementView.getInstance().setFocus();
 
         // Execute the compound command
         monitor.subTask(Messages.getString("DropTargetCurrentAdapter.3")); //$NON-NLS-1$
@@ -356,7 +355,7 @@ public class DropTargetCurrentAdapter extends EditingDomainViewerDropAdapter
         {
             domain.getCommandStack().execute(getCommand());
             CurrentPage page = RequirementHelper.INSTANCE.getCurrentPage();
-            page.getViewer().setSelection(new StructuredSelection(toSelect));
+            page.setSelection(new StructuredSelection(toSelect));
         }
 
         // Clean up the state.

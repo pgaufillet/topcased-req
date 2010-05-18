@@ -248,7 +248,7 @@ public final class RequirementHelper
             }
 
             // then the selection is done on the new inserted element(s).
-            currentPage.getViewer().setSelection(new StructuredSelection(createdRequirements), true);
+            currentPage.setSelection(new StructuredSelection(createdRequirements));
 
             return globalCmd.unwrap();
         }

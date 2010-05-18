@@ -86,7 +86,7 @@ public class AddAttributeHandler extends AbstractHandler
             if (!compoundCmd.isEmpty() && compoundCmd.canExecute())
             {
                 editingDomain.getCommandStack().execute(compoundCmd);
-                page.getViewer().setSelection(new StructuredSelection(toSelect), true);
+                page.setSelection(new StructuredSelection(toSelect));
             }
         }
         return null;

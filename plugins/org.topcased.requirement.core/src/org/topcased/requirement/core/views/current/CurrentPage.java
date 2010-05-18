@@ -398,6 +398,23 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
     }
 
     /**
+     * Sets the selection onto newly created objects presented into the current requirement viewer. This operation is
+     * performed in a asynchronous way.
+     * 
+     * @param selection The selection of newly created objects
+     */
+    public void setSelection(final ISelection selection)
+    {
+        viewer.getControl().getDisplay().asyncExec(new Runnable()
+        {
+            public void run()
+            {
+                viewer.setSelection(selection, true);
+            }
+        });
+    }
+
+    /**
      * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart,
      *      org.eclipse.jface.viewers.ISelection)
      */

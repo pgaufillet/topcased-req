@@ -104,7 +104,7 @@ public class PasteCommandResolver extends AdditionalCommand<PasteFromClipboardCo
         
         if (currentPage != null && !compound.getAffectedObjects().isEmpty())
         {
-            currentPage.getViewer().setSelection(new StructuredSelection((List< ? >) compound.getAffectedObjects()), true);
+            currentPage.setSelection(new StructuredSelection((List< ? >) compound.getAffectedObjects()));
         }
     }
 
