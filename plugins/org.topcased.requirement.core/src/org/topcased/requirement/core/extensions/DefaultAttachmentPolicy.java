@@ -148,4 +148,19 @@ public class DefaultAttachmentPolicy implements IModelAttachmentPolicy
         return null;
     }
 
+    /**
+     * @see org.topcased.requirement.core.extensions.IModelAttachmentPolicy#isHierarchicalElementRoot(org.eclipse.emf.ecore.EObject)
+     */
+    public boolean isRootContainer(EObject parentElt)
+    {
+        if (parentElt == null)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }   
+    }
+
 }

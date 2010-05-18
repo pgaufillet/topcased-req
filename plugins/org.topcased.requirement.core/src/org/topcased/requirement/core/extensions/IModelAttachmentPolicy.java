@@ -12,6 +12,7 @@
 package org.topcased.requirement.core.extensions;
 
 import org.eclipse.emf.common.command.Command;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.topcased.modeler.diagrams.model.Diagrams;
@@ -60,5 +61,14 @@ public interface IModelAttachmentPolicy
      * @return the requirement project
      */
     RequirementProject getRequirementProjectFromTargetDiagram(Diagrams diagram);
+    
+    
+    /**
+     * Check if the current parent element is the root of the requirement model
+     * 
+     * @param parentElt the current parent element
+     * @return true if the current parent element is the root else false
+     */
+    boolean isRootContainer(EObject parentElt);
 
 }

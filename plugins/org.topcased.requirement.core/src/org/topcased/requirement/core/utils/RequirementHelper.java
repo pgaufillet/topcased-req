@@ -32,6 +32,8 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.dnd.DND;
 import org.topcased.modeler.diagrams.model.Diagrams;
+import org.topcased.modeler.editor.Modeler;
+import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.AnonymousRequirement;
 import org.topcased.requirement.AttributeAllocate;
 import org.topcased.requirement.AttributeConfiguration;
@@ -290,7 +292,7 @@ public final class RequirementHelper
      */
     private HierarchicalElement attach(EObject parent, EObject child, CompoundCommand cmd)
     {
-        if (parent.eContainer() == null)
+        if (isElementRoot(parent))
         {
             // Add child to the model as a hierarchical element
             EObject project = RequirementUtils.getRequirementProject(editingDomain);
@@ -303,6 +305,32 @@ public final class RequirementHelper
             cmd.appendIfCanExecute(AddCommand.create(editingDomain, element, RequirementPackage.eINSTANCE.getHierarchicalElement_Children(), child));
             return element;
         }
+    }
+
+    /**
+     * A simple method to get the policy and check if the current element is the root
+     * 
+     * @param parent the current element
+     * @return true if this is the root else false
+     */
+    private boolean isElementRoot(EObject parent)
+    {
+        Modeler modeler = Utils.getCurrentModeler();
+
+        if (modeler != null)
+        {
+            IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(modeler.getEditingDomain());
+
+            if (policy != null)
+            {
+                return policy.isRootContainer(parent);
+            }
+            else
+            {
+                return DefaultAttachmentPolicy.getInstance().isRootContainer(parent);
+            }
+        }
+        return false;
     }
 
     /**
