@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2008,2009 Communication & Systems.
+ * Copyright (c) 2008,2010 Communication & Systems.
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -769,6 +769,7 @@ public final class RequirementHelper
         }
         currentPage = page;
     }
+
 
     /**
      * Gets the Upstream Page

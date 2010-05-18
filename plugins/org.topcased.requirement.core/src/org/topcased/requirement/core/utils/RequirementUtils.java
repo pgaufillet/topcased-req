@@ -51,6 +51,7 @@ import org.eclipse.ui.services.ISourceProviderService;
 import org.topcased.facilities.util.EditorUtil;
 import org.topcased.modeler.diagrams.model.Diagrams;
 import org.topcased.modeler.editor.Modeler;
+import org.topcased.modeler.editor.TopcasedAdapterFactoryEditingDomain;
 import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.AttributeAllocate;
 import org.topcased.requirement.AttributeConfiguration;
@@ -458,8 +459,17 @@ public final class RequirementUtils
     {
         // Gets the requirement model from the editing domain or loads it if it's the first time
         domain.getResourceSet().getResource(uri, true);
+        if (domain instanceof TopcasedAdapterFactoryEditingDomain)
+        {
+            TopcasedAdapterFactoryEditingDomain topcasedDomain = (TopcasedAdapterFactoryEditingDomain) domain;
+            if (topcasedDomain.getAdapterFactory() instanceof ComposedAdapterFactory)
+            {
+                ComposedAdapterFactory factory = (ComposedAdapterFactory) topcasedDomain.getAdapterFactory();
+                factory.addAdapterFactory(RequirementUtils.getAdapterFactory());
+            }
+        }
     }
-
+    
     /**
      * Unloads the requirement model from the editing domain
      * 
@@ -468,6 +478,16 @@ public final class RequirementUtils
      */
     public static boolean unloadRequirementModel(EditingDomain domain)
     {
+        if (domain instanceof TopcasedAdapterFactoryEditingDomain)
+        {
+            TopcasedAdapterFactoryEditingDomain topcasedDomain = (TopcasedAdapterFactoryEditingDomain) domain;
+            if (topcasedDomain.getAdapterFactory() instanceof ComposedAdapterFactory)
+            {
+                ComposedAdapterFactory factory = (ComposedAdapterFactory) topcasedDomain.getAdapterFactory();
+                factory.removeAdapterFactory(RequirementUtils.getAdapterFactory());
+            }
+        }
+
         Resource requirementRsc = getRequirementModel(domain);
 
         // Unload the requirement resource and notify commands that the hasRequirement variable has changed
