@@ -20,7 +20,6 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.topcased.modeler.di.model.Diagram;
 import org.topcased.modeler.di.model.util.DIUtils;
 import org.topcased.modeler.diagrams.model.Diagrams;
-import org.topcased.modeler.diagrams.model.util.DiagramsResourceImpl;
 import org.topcased.modeler.diagrams.model.util.DiagramsUtils;
 import org.topcased.modeler.editor.Modeler;
 import org.topcased.requirement.RequirementProject;
@@ -38,7 +37,7 @@ public class DefaultAttachmentPolicy implements IModelAttachmentPolicy
 {
 
     public static final String REQUIREMENT_PROPERTY_KEY = "requirements"; //$NON-NLS-1$
-    
+
     /** the shared instance */
     private static DefaultAttachmentPolicy policy;
 
@@ -89,19 +88,22 @@ public class DefaultAttachmentPolicy implements IModelAttachmentPolicy
     }
 
     /**
+     * FIXME: The resource is tested on resource contents in order to get the diagrams because of AUI diagrams. It would
+     * be better to avoid the "getContents().get(0)" to prevent from NPE.
+     * 
      * @see org.topcased.requirement.core.extensions.IModelAttachmentPolicy#getLinkedTargetModel(org.eclipse.emf.edit.domain.EditingDomain)
      */
     public Resource getLinkedTargetModel(ResourceSet resourceSet)
     {
         for (Resource resource : resourceSet.getResources())
         {
-            if (resource instanceof DiagramsResourceImpl)
+            if (resource.getContents().get(0) instanceof Diagrams)
             {
-                DiagramsResourceImpl res = (DiagramsResourceImpl) resource;
-                Diagram root = DiagramsUtils.getRootDiagram((Diagrams) (res.getContents().get(0)));
+                Diagrams res = (Diagrams) resource.getContents().get(0);
+                Diagram root = DiagramsUtils.getRootDiagram(res);
                 if (DIUtils.getProperty(root, REQUIREMENT_PROPERTY_KEY) != null)
                 {
-                    return res;
+                    return resource;
                 }
             }
         }
@@ -109,8 +111,8 @@ public class DefaultAttachmentPolicy implements IModelAttachmentPolicy
     }
 
     /**
-     * Set the requirement property of the di this property has always this format : key = requirements, value =
-     * the platform resource path of the requirement model
+     * Set the requirement property of the di this property has always this format : key = requirements, value = the
+     * platform resource path of the requirement model
      * 
      * @param modeler the modeler
      * @param requirements the requirements
@@ -120,14 +122,14 @@ public class DefaultAttachmentPolicy implements IModelAttachmentPolicy
         EObject eobject = targetModeler.getResourceSet().getResources().get(0).getContents().get(0);
         if (eobject instanceof Diagrams)
         {
-            Diagram rootDiagram = DiagramsUtils.getRootDiagram((Diagrams)eobject);
+            Diagram rootDiagram = DiagramsUtils.getRootDiagram((Diagrams) eobject);
             if (rootDiagram != null && requirementModel != null)
             {
-                DIUtils.setProperty(rootDiagram, REQUIREMENT_PROPERTY_KEY, requirementModel.getURI().trimFragment().deresolve(eobject.eResource().getURI()).toString());    
+                DIUtils.setProperty(rootDiagram, REQUIREMENT_PROPERTY_KEY, requirementModel.getURI().trimFragment().deresolve(eobject.eResource().getURI()).toString());
             }
             else
             {
-                DIUtils.setProperty(rootDiagram, REQUIREMENT_PROPERTY_KEY,null);
+                DIUtils.setProperty(rootDiagram, REQUIREMENT_PROPERTY_KEY, null);
             }
         }
     }
@@ -153,14 +155,7 @@ public class DefaultAttachmentPolicy implements IModelAttachmentPolicy
      */
     public boolean isRootContainer(EObject parentElt)
     {
-        if (parentElt == null)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }   
+        return parentElt == null;
     }
 
 }
