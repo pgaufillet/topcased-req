@@ -139,7 +139,7 @@ public class DefaultAttachmentPolicy implements IModelAttachmentPolicy
     {
         Diagram rootDiagram = DiagramsUtils.getRootDiagram(diagram);
         String resourcePath = DIUtils.getPropertyValue(rootDiagram, REQUIREMENT_PROPERTY_KEY);
-        if (resourcePath != null && diagram.eResource() != null && diagram.eResource().getResourceSet() != null)
+        if (!"".equals(resourcePath) && diagram.eResource() != null && diagram.eResource().getResourceSet() != null)
         {
             URI uri = URI.createURI(resourcePath).trimFragment().resolve(rootDiagram.eResource().getURI());
 
