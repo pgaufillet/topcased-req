@@ -81,7 +81,7 @@ public class DefaultAttachmentPolicy implements IModelAttachmentPolicy
     {
         Diagram rootDiagram = DiagramsUtils.getRootDiagram((Diagrams) (targetModel.getContents().get(0)));
         String resourcePath = DIUtils.getPropertyValue(rootDiagram, REQUIREMENT_PROPERTY_KEY);
-        if (resourcePath != null)
+        if (!"".equals(resourcePath))
         {
             return new UnlinkRequirementModelCommand(targetModel, requirementModel, deleteRequirementModel);
         }

@@ -47,10 +47,10 @@ public class RequirementAdapterFactory implements IAdapterFactory
     {
         if (adaptableObject instanceof Modeler)
         {
-            //Get the current modeler
+            // Get the current modeler
             Modeler modeler = (Modeler) adaptableObject;
-            
-            //Get the policy for it
+
+            // Get the policy for it
             IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(modeler.getEditingDomain());
 
             if (policy != null)
@@ -67,25 +67,25 @@ public class RequirementAdapterFactory implements IAdapterFactory
         }
         return null;
     }
-    
+
     /**
      * This method get the linked target model for the default policy and load the requirement model
      * 
      * @param modeler the current modeler
      * @return true if there is a target model linked to a requirement model
      */
-    private boolean loadRequirementModelWithDefaultPolicy (Modeler modeler)
+    private boolean loadRequirementModelWithDefaultPolicy(Modeler modeler)
     {
         EObject eobject = modeler.getResourceSet().getResources().get(0).getContents().get(0);
         if (eobject instanceof Diagrams)
         {
             Diagram rootDiagram = DiagramsUtils.getRootDiagram((Diagrams) eobject);
             String resourcePath = DIUtils.getPropertyValue(rootDiagram, DefaultAttachmentPolicy.REQUIREMENT_PROPERTY_KEY);
-            if (resourcePath != "") //$NON-NLS-1$
+            if (!"".equals(resourcePath)) //$NON-NLS-1$
             {
                 URI uri = URI.createURI(resourcePath).trimFragment().resolve(rootDiagram.eResource().getURI());
-                
-                if (ResourcesPlugin.getWorkspace().getRoot().findMember(uri.toPlatformString(true)) != null) 
+
+                if (ResourcesPlugin.getWorkspace().getRoot().findMember(uri.toPlatformString(true)) != null)
                 {
                     RequirementUtils.loadRequirementModel(uri, modeler.getEditingDomain());
                     return true;
@@ -94,7 +94,7 @@ public class RequirementAdapterFactory implements IAdapterFactory
                 {
                     DefaultAttachmentPolicy.getInstance().setProperty(modeler, null);
                 }
-    
+
             }
         }
         return false;
@@ -107,7 +107,7 @@ public class RequirementAdapterFactory implements IAdapterFactory
      * @param policy the specified policy
      * @return true if there is a target model linked to a requirement model
      */
-    private boolean loadRequirementModelWithSpecifiedPolicy (Modeler modeler, IModelAttachmentPolicy policy)
+    private boolean loadRequirementModelWithSpecifiedPolicy(Modeler modeler, IModelAttachmentPolicy policy)
     {
         EObject eobject = modeler.getResourceSet().getResources().get(0).getContents().get(0);
         if (eobject instanceof Diagrams)
@@ -117,19 +117,19 @@ public class RequirementAdapterFactory implements IAdapterFactory
             {
                 URI uri = project.eResource().getURI();
                 RequirementUtils.loadRequirementModel(uri, modeler.getEditingDomain());
-                return true;                
-            }            
+                return true;
+            }
         }
         return false;
     }
-    
+
     /**
      * Get the page from the adapter type
      * 
      * @param type the type to adapt
      * @return the abstract requirement page to load
      */
-    private AbstractRequirementPage getPage (Class<?> type)
+    private AbstractRequirementPage getPage(Class< ? > type)
     {
         if (type == IUpstreamRequirementPage.class)
         {
@@ -141,7 +141,7 @@ public class RequirementAdapterFactory implements IAdapterFactory
         }
         return null;
     }
-    
+
     /**
      * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
      */
