@@ -1565,6 +1565,7 @@
                afterTab="org.topcased.requirement.core.advancedTab"
                category="requirement"
                id="org.topcased.requirement.core.requirementTab"
+               image="icons/current.gif"
                label="Requirement">
          </propertyTab>
       </propertyTabs>
