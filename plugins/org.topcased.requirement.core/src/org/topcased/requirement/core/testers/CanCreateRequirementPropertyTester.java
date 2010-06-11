@@ -7,23 +7,27 @@
  * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors : Maxime AUDRAIN (CS) - initial API and implementation
+ *                Sebastien GABEL (CS) - Bug fix when context are changing.
  * 
  *****************************************************************************/
 package org.topcased.requirement.core.testers;
 
 import org.eclipse.core.expressions.PropertyTester;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.gef.EditPart;
+import org.eclipse.ui.IFileEditorInput;
 import org.topcased.modeler.edit.IModelElementEditPart;
 import org.topcased.modeler.editor.Modeler;
-import org.topcased.modeler.utils.Utils;
+import org.topcased.modeler.editor.ModelerGraphicalViewer;
 import org.topcased.requirement.core.extensions.DropRestrictionManager;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
- * A Property tester who check if a IModelElementEditPart of a modeler can have requirement creation This property
- * This tester is used in the popup menu of a modeler to enable or disable requirement creation commands
+ * A Property tester who check if a IModelElementEditPart of a modeler can have requirement creation This property This
+ * tester is used in the popup menu of a modeler to enable or disable requirement creation commands
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
- * 
+ * @author <a href="mailto:sebastien.gabel@c-s.fr">Sebastien GABEL</a>
  */
 public class CanCreateRequirementPropertyTester extends PropertyTester
 {
@@ -34,23 +38,18 @@ public class CanCreateRequirementPropertyTester extends PropertyTester
      */
     public boolean test(Object receiver, String property, Object[] args, Object expectedValue)
     {
-        // Check if the modeler is linked to requirements
-        if (RequirementUtils.getRequirementModel(Utils.getCurrentModeler().getEditingDomain()) != null)
+        if (receiver instanceof IModelElementEditPart)
         {
-            String fileExtension = Modeler.getCurrentIFile().getFileExtension();
-
-            if (receiver instanceof IModelElementEditPart)
+            ModelerGraphicalViewer graphicalEditor = (ModelerGraphicalViewer) ((EditPart) receiver).getViewer();
+            Modeler modeler = graphicalEditor.getModelerEditor();
+            // Check if the modeler is linked to requirements
+            if (RequirementUtils.getRequirementModel(modeler.getEditingDomain()) != null)
             {
-                // Check if the selected element has drop allowed for it
+                IFile file = ((IFileEditorInput) modeler.getEditorInput()).getFile();
                 IModelElementEditPart editPart = (IModelElementEditPart) receiver;
-                return DropRestrictionManager.getInstance().isDropAllowed(fileExtension, editPart.getEObject());
-            }
-            else
-            {
-                return false;
+                return DropRestrictionManager.getInstance().isDropAllowed(file.getFileExtension(), editPart.getEObject());
             }
         }
         return false;
-
     }
 }
