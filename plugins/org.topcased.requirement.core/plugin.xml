@@ -471,20 +471,28 @@
                style="push">
             <visibleWhen
                   checkEnabled="false">
-               <with
-                     variable="activeMenuSelection">
-                  <iterate
-                        ifEmpty="false">
-                     <and>
-                        <instanceof
-                              value="org.topcased.modeler.edit.IModelElementEditPart">
-                        </instanceof>
-                        <test
-                              property="org.topcased.requirement.core.canCreateRequirement">
-                        </test>
-                     </and>
-                  </iterate>
-               </with>
+               <and>
+                  <with
+                        variable="activeWorkbenchWindow.activePerspective">
+                     <equals
+                           value="org.topcased.requirement.core.perspective">
+                     </equals>
+                  </with>
+                  <with
+                        variable="activeMenuSelection">
+                     <iterate
+                           ifEmpty="false">
+                        <and>
+                           <instanceof
+                                 value="org.topcased.modeler.edit.IModelElementEditPart">
+                           </instanceof>
+                           <test
+                                 property="org.topcased.requirement.core.canCreateRequirement">
+                           </test>
+                        </and>
+                     </iterate>
+                  </with>
+               </and>
             </visibleWhen>
          </command>
          <command
@@ -493,20 +501,28 @@
                style="push">
             <visibleWhen
                   checkEnabled="false">
-               <with
-                     variable="activeMenuSelection">
-                  <iterate
-                        ifEmpty="false">
-                     <and>
-                        <instanceof
-                              value="org.topcased.modeler.edit.IModelElementEditPart">
-                        </instanceof>
-                        <test
-                              property="org.topcased.requirement.core.canCreateRequirement">
-                        </test>
-                     </and>
-                  </iterate>
-               </with>
+               <and>
+                  <with
+                        variable="activeWorkbenchWindow.activePerspective">
+                     <equals
+                           value="org.topcased.requirement.core.perspective">
+                     </equals>
+                  </with>
+                  <with
+                        variable="activeMenuSelection">
+                     <iterate
+                           ifEmpty="false">
+                        <and>
+                           <instanceof
+                                 value="org.topcased.modeler.edit.IModelElementEditPart">
+                           </instanceof>
+                           <test
+                                 property="org.topcased.requirement.core.canCreateRequirement">
+                           </test>
+                        </and>
+                     </iterate>
+                  </with>
+               </and>
             </visibleWhen>
          </command>
       </menuContribution>
@@ -525,6 +541,22 @@
                      <equals
                            value="org.topcased.requirement.core.perspective">
                      </equals>
+                     <and>
+                        <with
+                              variable="activeMenuSelection">
+                           <iterate
+                                 ifEmpty="false">
+                              <and>
+                                 <instanceof
+                                       value="org.topcased.modeler.edit.IModelElementEditPart">
+                                 </instanceof>
+                                 <test
+                                       property="org.topcased.requirement.core.canCreateRequirement">
+                                 </test>
+                              </and>
+                           </iterate>
+                        </with>
+                     </and>
                   </with>
                </visibleWhen>
             </command>

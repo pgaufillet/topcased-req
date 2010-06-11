@@ -40,6 +40,8 @@ import org.topcased.requirement.core.extensions.SpecificDropActionDescriptor;
 import org.topcased.requirement.core.extensions.SpecificDropActionManager;
 import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.utils.RequirementUtils;
+import org.topcased.requirement.core.views.current.CurrentRequirementView;
+import org.topcased.requirement.core.views.upstream.UpstreamRequirementView;
 
 import ttm.Document;
 import ttm.Requirement;
@@ -144,25 +146,33 @@ public class RequirementDropListener extends AbstractTransferDropTargetListener
 
         event.detail = DND.DROP_COPY;
 
-        if (currentPart instanceof IModelElementEditPart)
+        if (CurrentRequirementView.getInstance() == null || UpstreamRequirementView.getInstance() == null)
         {
-            EObject eobject = getEObject();
-            URI graphicalModelName = URI.createURI(Utils.getCurrentModeler().getPartName());
-            String fileExtension = graphicalModelName.fileExtension();
-
-            // if the target is restricted by the extension point dropRestriction
-            if (!(DropRestrictionManager.getInstance().isDropAllowed(fileExtension, eobject)))
-            {
-                event.operations = DND.DROP_NONE;
-                event.detail = DND.DROP_NONE;
-            }
+            event.operations = DND.DROP_NONE;
+            event.detail = DND.DROP_NONE;
         }
-        for (Object s : source)
+        else
         {
-            if (!(s instanceof Requirement) && !(s instanceof org.topcased.requirement.Requirement))
+            if (currentPart instanceof IModelElementEditPart)
             {
-                event.operations = DND.DROP_NONE;
-                event.detail = DND.DROP_NONE;
+                EObject eobject = getEObject();
+                URI graphicalModelName = URI.createURI(Utils.getCurrentModeler().getPartName());
+                String fileExtension = graphicalModelName.fileExtension();
+    
+                // if the target is restricted by the extension point dropRestriction
+                if (!(DropRestrictionManager.getInstance().isDropAllowed(fileExtension, eobject)))
+                {
+                    event.operations = DND.DROP_NONE;
+                    event.detail = DND.DROP_NONE;
+                }
+            }
+            for (Object s : source)
+            {
+                if (!(s instanceof Requirement) && !(s instanceof org.topcased.requirement.Requirement))
+                {
+                    event.operations = DND.DROP_NONE;
+                    event.detail = DND.DROP_NONE;
+                }
             }
         }
         super.dragOver(event);
