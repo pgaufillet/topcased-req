@@ -73,7 +73,7 @@ rule TextRule {
 
 rule AttributeRule {
 	from invar : INMETAMODEL!Attribute (invar.oclIsTypeOf(INMETAMODEL!Attribute))
-	to Attributevar : OUTMETAMODEL!Attribute (
+	to Attributevar : OUTMETAMODEL!"ttm::Attribute" (
 		name <- invar.name,
 		value <- invar.value,
 		activatedRules <- Sequence{invar.activatedRules},
@@ -83,7 +83,7 @@ rule AttributeRule {
 
 rule RequirementRule {
 	from invar : INMETAMODEL!Requirement (invar.oclIsTypeOf(INMETAMODEL!Requirement))
-	to Requirementvar : OUTMETAMODEL!Requirement (
+	to Requirementvar : OUTMETAMODEL!"ttm::Requirement" (
 		ident <- invar.ident,
 		shortDescription <- invar.getShortDescription(),
 		subCoveringRequirementsRatio <- invar.subCoveringRequirementsRatio,
