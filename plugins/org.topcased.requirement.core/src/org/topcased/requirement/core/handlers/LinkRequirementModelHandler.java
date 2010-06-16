@@ -49,12 +49,11 @@ public class LinkRequirementModelHandler extends AbstractHandler
             Modeler modeler = (Modeler) part;
             Resource requirementResource = RequirementUtils.getRequirementModel(modeler.getEditingDomain());
 
-            if (requirementResource != null)
-            {
+            if (requirementResource != null && !requirementResource.getContents().isEmpty())
+            {                             
                 RequirementProject requirementProject = (RequirementProject) requirementResource.getContents().get(0);
                 // Create a new requirement wizard with already attached requirement model informations
                 wizard = new NewRequirementModelWizard(requirementProject.getIdentifier(), requirementProject.getShortDescription());
-
             }
             else
             {
