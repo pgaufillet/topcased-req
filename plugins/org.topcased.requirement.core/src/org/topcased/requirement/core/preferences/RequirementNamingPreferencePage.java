@@ -197,8 +197,9 @@ public class RequirementNamingPreferencePage extends AbstractTopcasedPreferenceP
         descriptionGroup.setText(Messages.getString("RequirementNamingPreferencePage.7")); //$NON-NLS-1$
 
         // description Text
-        descriptionText = new Text(descriptionGroup, SWT.READ_ONLY | SWT.WRAP);
-        descriptionText.setEnabled(false);
+        descriptionText = new Text(descriptionGroup, SWT.WRAP);
+        descriptionText.setEnabled(true);
+        descriptionText.setEditable(false);
     }
 
     /**
