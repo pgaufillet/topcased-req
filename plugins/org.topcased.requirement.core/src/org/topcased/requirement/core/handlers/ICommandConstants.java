@@ -35,4 +35,8 @@ public interface ICommandConstants
     static final String UNDO_ID = "org.topcased.requirement.core.undo"; //$NON-NLS-1$
     
     static final String REDO_ID = "org.topcased.requirement.core.redo"; //$NON-NLS-1$
+    
+    static final String TABLE_ID = "org.topcased.requirement.core.table"; //$NON-NLS-1$
+
+    static final String TREE_ID = "org.topcased.requirement.core.tree"; //$NON-NLS-1$
 }

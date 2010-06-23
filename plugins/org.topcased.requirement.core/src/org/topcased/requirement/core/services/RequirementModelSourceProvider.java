@@ -29,6 +29,8 @@ public class RequirementModelSourceProvider extends AbstractSourceProvider
     public final static String HAS_REQUIREMENT_MODEL = "requirementActionsEnablement.hasRequirementModel"; //$NON-NLS-1$
 
     public final static String IS_IMPACTED = "requirementActionsEnablement.isImpacted"; //$NON-NLS-1$
+    
+    public final static String IS_SECTION_ENABLED = "requirementActionsEnablement.isSectionEnabled"; //$NON-NLS-1$
 
     private static Map<String, Boolean> currentState;
 
@@ -53,6 +55,10 @@ public class RequirementModelSourceProvider extends AbstractSourceProvider
         {
             currentState.put(IS_IMPACTED, true);
         }
+        if (!currentState.containsKey(IS_SECTION_ENABLED))
+        {
+            currentState.put(IS_SECTION_ENABLED, true);
+        }
         return currentState;
 
     }
@@ -62,7 +68,7 @@ public class RequirementModelSourceProvider extends AbstractSourceProvider
      */
     public String[] getProvidedSourceNames()
     {
-        return new String[] {HAS_REQUIREMENT_MODEL, IS_IMPACTED};
+        return new String[] {HAS_REQUIREMENT_MODEL, IS_IMPACTED, IS_SECTION_ENABLED};
     }
 
     /**
@@ -92,5 +98,15 @@ public class RequirementModelSourceProvider extends AbstractSourceProvider
     public void setIsImpactedState(Boolean enablement)
     {
         fireSourceChanged(0, IS_IMPACTED, enablement);
+    }
+    
+    /**
+     * Provide way to notify the commands about a changing state of the isSectionEnabled variable
+     * 
+     * @param boolean enablement
+     */
+    public void setIsSectionEnabledState(Boolean enablement)
+    {
+        fireSourceChanged(0, IS_SECTION_ENABLED, enablement);
     }
 }

@@ -460,6 +460,14 @@
             class="org.topcased.requirement.core.handlers.RedoHandler"
             commandId="org.topcased.requirement.core.redo">
       </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.TreeHandler"
+            commandId="org.topcased.requirement.core.tree">
+      </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.TableHandler"
+            commandId="org.topcased.requirement.core.table">
+      </handler>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -1050,6 +1058,37 @@
                      visible="true">
                </separator>
             </menuContribution>
+            <menuContribution
+                  locationURI="toolbar:org.eclipse.ui.views.PropertySheet?after=additions">
+               <command
+                     commandId="org.topcased.requirement.core.tree"
+                     label="&amp;Tree"
+                     style="toggle">
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="requirementActionsEnablement.isSectionEnabled">
+                        <equals
+                              value="true">
+                        </equals>
+                     </with>
+                  </visibleWhen>
+               </command>
+               <command
+                     commandId="org.topcased.requirement.core.table"
+                     label="&amp;Table"
+                     style="toggle">
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="requirementActionsEnablement.isSectionEnabled">
+                        <equals
+                              value="true">
+                        </equals>
+                     </with>
+                  </visibleWhen>
+               </command>
+            </menuContribution>
      </extension>
    <extension
          point="org.eclipse.ui.services">
@@ -1061,6 +1100,10 @@
          </variable>
          <variable
                name="requirementActionsEnablement.isImpacted"
+               priorityLevel="workbench">
+         </variable>
+         <variable
+               name="requirementActionsEnablement.isSectionEnabled"
                priorityLevel="workbench">
          </variable>
       </sourceProvider>
@@ -1153,6 +1196,14 @@
       <image
             commandId="org.topcased.requirement.core.updateAttributeConfiguration"
             icon="icons/update.gif">
+      </image>
+      <image
+            commandId="org.topcased.requirement.core.tree"
+            icon="icons/tree-mode.gif">
+      </image>
+      <image
+            commandId="org.topcased.requirement.core.table"
+            icon="icons/flat-mode.gif">
       </image>
    </extension>
    <extension
@@ -1346,6 +1397,24 @@
             description="Redo last executed command"
             id="org.topcased.requirement.core.redo"
             name="Redo">
+      </command>
+      <command
+            description="Display a requirement tree"
+            id="org.topcased.requirement.core.tree"
+            name="Tree">
+         <state
+               class="org.eclipse.ui.handlers.RegistryToggleState"
+               id="org.eclipse.ui.commands.toggleState">
+         </state>
+      </command>
+      <command
+            description="Display a requirement table"
+            id="org.topcased.requirement.core.table"
+            name="Table">
+         <state
+               class="org.eclipse.ui.handlers.RegistryToggleState"
+               id="org.eclipse.ui.commands.toggleState">
+         </state>
       </command>
    </extension>
    <extension

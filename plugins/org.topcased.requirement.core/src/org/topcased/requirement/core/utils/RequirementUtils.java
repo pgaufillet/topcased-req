@@ -815,4 +815,17 @@ public final class RequirementUtils
 
         provider.setHasRequirementState(enable);
     }
+    
+    /**
+     * 
+     * Notify commands that the IsSectionEnabled variable has changed. Handle the enablement/disablement of commands when
+     * the requirement property section is shown/hidden.
+     */
+    public static void fireIsSectionEnabledVariableChanged(boolean enable)
+    {
+        ISourceProviderService service = (ISourceProviderService) PlatformUI.getWorkbench().getService(ISourceProviderService.class);
+        RequirementModelSourceProvider provider = (RequirementModelSourceProvider) service.getSourceProvider(RequirementModelSourceProvider.IS_SECTION_ENABLED);
+
+        provider.setIsSectionEnabledState(enable);
+    }
 }
