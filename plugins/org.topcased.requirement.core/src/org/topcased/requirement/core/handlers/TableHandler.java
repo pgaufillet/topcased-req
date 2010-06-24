@@ -16,7 +16,9 @@ import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.State;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -80,13 +82,20 @@ public class TableHandler extends AbstractHandlerWithState
                         
                         //Get the parent composite
                         Composite parent = section.getParentCompo();
+                        IWorkbenchPart part = section.getPart();
+                        ISelection selection = section.getSelection();
                         
                         //Dispose the current viewer
                         section.disposeViewer();
                         
-                        //Create the new viewer and refresh it
+                        //Create the new viewer
                         section.createTable(parent);
-                        section.getViewer().refresh(true);                    
+                        section.setInput(part, selection);  
+                        
+                        //Repack, resize and refresh it
+                        parent.pack(false);
+                        parent.setSize(1000, 500);
+                        section.getViewer().refresh(true);  
                     }
                 }
             }

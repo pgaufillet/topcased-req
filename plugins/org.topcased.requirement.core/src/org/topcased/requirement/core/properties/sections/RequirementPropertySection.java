@@ -31,11 +31,12 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
@@ -126,10 +127,10 @@ public class RequirementPropertySection extends AbstractPropertySection
      */
     public void createControls(Composite parent, TabbedPropertySheetPage aTabbedPropertySheetPage)
     {
-        parentCompo = parent;
-        
         super.createControls(parent, aTabbedPropertySheetPage);
-                
+        parent.setLayout(new FillLayout());
+        parentCompo = parent;     
+
         // Get the commands who have a registered state
         ICommandService cs = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
         Command tableCmd = cs.getCommand(ICommandConstants.TABLE_ID);
@@ -154,25 +155,22 @@ public class RequirementPropertySection extends AbstractPropertySection
      * @param parent the parent composite
      */
     public void createTable(Composite parent)
-    {
+    {           
         
-        Composite composite = getWidgetFactory().createFlatFormComposite(parent);
-        composite.setLayout(new GridLayout());
-        
-        final Table requirementTable = getWidgetFactory().createTable(composite, SWT.MULTI | SWT.BORDER);
-        requirementTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        final Table requirementTable = getWidgetFactory().createTable(parent, SWT.MULTI | SWT.BORDER);
+        requirementTable.setLayout(new FillLayout());
         requirementTable.setHeaderVisible(true);
         requirementTable.setLinesVisible(true);
-        
+                
         currentViewer = new TableViewer(requirementTable);
         
         final TableViewerColumn upstreamCol = new TableViewerColumn((TableViewer) currentViewer, SWT.FILL);
         upstreamCol.getColumn().setText(Messages.getString("RequirementPropertySection.0")); //$NON-NLS-1$
-        upstreamCol.getColumn().setWidth(230);
+        upstreamCol.getColumn().setWidth(300);
 
         final TableViewerColumn currentCol = new TableViewerColumn((TableViewer) currentViewer, SWT.FILL);
         currentCol.getColumn().setText(Messages.getString("RequirementPropertySection.1")); //$NON-NLS-1$
-        currentCol.getColumn().setWidth(230);
+        currentCol.getColumn().setWidth(500);     
         
         hookListeners();
     }
@@ -183,13 +181,13 @@ public class RequirementPropertySection extends AbstractPropertySection
      * @param parent the parent composite
      */
     public void createTree(Composite parent)
-    {        
-        Composite composite = getWidgetFactory().createFlatFormComposite(parent);
-        composite.setLayout(new GridLayout());
-        
-        currentViewer = new TreeViewer(composite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
-        ((TreeViewer) currentViewer).getTree().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true)); 
-        
+    {          
+        parent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true)); 
+        final Tree tree = getWidgetFactory().createTree(parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
+        tree.setLayout(new FillLayout());
+
+        currentViewer = new TreeViewer(tree, SWT.FILL);
+       
         hookListeners();
     }
     
@@ -476,7 +474,7 @@ public class RequirementPropertySection extends AbstractPropertySection
             }
             else
             {
-                return null;
+                return new Object[0];
             }
         }
     }

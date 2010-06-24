@@ -16,7 +16,9 @@ import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.State;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -38,7 +40,7 @@ public class TreeHandler extends AbstractHandlerWithState
      * the property view
      */
     PropertySheet sheet;
-    
+
     /**
      * FIXME : for now there is two RegisteryTOGGLEState for each commands who should be RADIO styled!! Tried to put the
      * RegisteryRadioState for each but having bugs with this state
@@ -75,22 +77,29 @@ public class TreeHandler extends AbstractHandlerWithState
                     ModelerPropertySheetPage page = (ModelerPropertySheetPage) sheet.getCurrentPage();
                     if (page.getCurrentTab().getSectionAtIndex(0) instanceof RequirementPropertySection)
                     {
-                        //Get the requirement property section
+                        // Get the requirement property section
                         RequirementPropertySection section = (RequirementPropertySection) page.getCurrentTab().getSectionAtIndex(0);
-                        
-                        //Get the parent composite
+
+                        // Get the parent composite
                         Composite parent = section.getParentCompo();
-                        
-                        //Dispose the current viewer
+                        IWorkbenchPart part = section.getPart();
+                        ISelection selection = section.getSelection();
+
+                        // Dispose the current viewer
                         section.disposeViewer();
-                        
-                        //Create the new viewer and refresh it
+
+                        // Create the new viewer and refresh it
                         section.createTree(parent);
-                        section.getViewer().refresh(true);
+                        section.setInput(part, selection);   
+                        
+                        //Repack, resize and refresh it
+                        parent.pack(false);
+                        parent.setSize(1000, 500);
+                        section.getViewer().refresh(true);                        
                     }
                 }
             }
-           
+
         }
     }
 }
