@@ -74,7 +74,6 @@ public class TableHandler extends AbstractHandlerWithState
                 if (sheet.getCurrentPage() instanceof ModelerPropertySheetPage)
                 {
                     ModelerPropertySheetPage page = (ModelerPropertySheetPage) sheet.getCurrentPage();
-                    page.getCurrentTab();
                     if (page.getCurrentTab().getSectionAtIndex(0) instanceof RequirementPropertySection)
                     {
                         //Get the requirement property section

@@ -10,19 +10,12 @@
  **********************************************************************************************************************/
 package org.topcased.requirement.core.properties.sections;
 
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.List;
-
 import org.eclipse.core.commands.Command;
-import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
-import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
-import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -30,7 +23,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -44,17 +36,15 @@ import org.eclipse.ui.handlers.RegistryToggleState;
 import org.eclipse.ui.views.properties.tabbed.AbstractPropertySection;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.topcased.modeler.editor.TopcasedAdapterFactoryEditingDomain;
-import org.topcased.requirement.Attribute;
-import org.topcased.requirement.AttributeLink;
-import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.core.handlers.ICommandConstants;
 import org.topcased.requirement.core.internal.Messages;
+import org.topcased.requirement.core.providers.RequirementPropertyTableContentProvider;
+import org.topcased.requirement.core.providers.RequirementPropertyTableLabelProvider;
+import org.topcased.requirement.core.providers.RequirementPropertyTreeContentProvider;
+import org.topcased.requirement.core.providers.RequirementPropertyTreeLabelProvider;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.tabbedproperties.utils.ObjectAdapter;
-
-import ttm.Requirement;
-import ttm.TtmFactory;
 
 /**
  * Section that displays a single table or a tree containing associated upstream and current requirements.
@@ -80,12 +70,6 @@ public class RequirementPropertySection extends AbstractPropertySection
      */
     private Composite parentCompo;
     
-    
-    /**
-     *  The list of current requirements associated with the selected diagram element
-     */
-    List<org.topcased.requirement.Requirement> listCurrent;
-
     /**
      * @see org.eclipse.ui.part.Page#dispose()
      */
@@ -317,305 +301,6 @@ public class RequirementPropertySection extends AbstractPropertySection
         return true;
     }
 
-    /**
-     * Label provider for Tree labels and icons display
-     * 
-     * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
-     */
-    private class RequirementPropertyTreeLabelProvider extends AdapterFactoryLabelProvider
-    {
-
-        /**
-         * @param adapterFactory
-         */
-        public RequirementPropertyTreeLabelProvider(AdapterFactory adapterFactory)
-        {
-            super(adapterFactory);
-        }
-        
-        /**
-         * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider#getImage(java.lang.Object)
-         */
-        @Override
-        public Image getImage(Object object)
-        {
-            if (object instanceof Requirement)
-            {
-                return super.getImage((Requirement)object);
-            }
-            else if (object instanceof org.topcased.requirement.Requirement)
-            {
-                return super.getImage((org.topcased.requirement.Requirement)object);
-            }
-            return super.getImage(object);
-        }
-        
-        /**
-         * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider#getText(java.lang.Object)
-         */
-        @Override
-        public String getText(Object object)
-        {
-            if (object instanceof Requirement)
-            {
-                return ((Requirement)object).getIdent();
-            }
-            else if (object instanceof org.topcased.requirement.Requirement)
-            {
-                return ((org.topcased.requirement.Requirement)object).getIdentifier();
-            }
-            return super.getText(object);
-        }
-        
-    }
-    
-    /**
-     * Content provider for Tree content to display.
-     * 
-     * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
-     */
-    private class RequirementPropertyTreeContentProvider extends AdapterFactoryContentProvider
-    {
-        /**
-         * @param adapterFactory
-         */
-        public RequirementPropertyTreeContentProvider(AdapterFactory adapterFactory)
-        {
-            super(adapterFactory);
-        }
-        
-        /**
-         * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider#getElements(java.lang.Object)
-         */
-        @SuppressWarnings("unchecked")
-        @Override
-        public Object[] getElements(Object object)
-        {
-            listCurrent = (List<org.topcased.requirement.Requirement>) object;
-            Collection<Requirement> result = new LinkedHashSet<Requirement>();
-            Boolean atLeastOneUntraced = false;
-            
-            for (org.topcased.requirement.Requirement requirement : listCurrent)
-            {
-                // Selects only the current requirements not the anonymous requirements
-                if (requirement instanceof CurrentRequirement)
-                {
-                    for (Attribute attribute : requirement.getAttribute())
-                    {
-                        if (attribute instanceof AttributeLink)
-                        {
-                            if (((AttributeLink) attribute).getValue() instanceof Requirement)
-                            {
-                                Requirement upstream = (Requirement) ((AttributeLink) attribute).getValue();
-                                result.add(upstream);                            
-                            }
-                            else
-                            {
-                                atLeastOneUntraced = true;
-                            }
-                        }
-                    }
-                }
-            }
-            // If there is some untraced current requirement, create a container for those untraced requirements
-            if (atLeastOneUntraced)
-            {
-                Requirement req = TtmFactory.eINSTANCE.createRequirement();
-                req.setIdent(Messages.getString("RequirementPropertySection.2")); //$NON-NLS-1$
-                ttm.Attribute att = TtmFactory.eINSTANCE.createAttribute();
-                att.setParent(req);
-                result.add(req);
-            }
-            return result.toArray();
-        }
-        
-        /**
-         * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider#getChildren(java.lang.Object)
-         */
-        @Override
-        public Object[] getChildren(Object object)
-        {
-            if (object instanceof Requirement)
-            {
-                Collection<org.topcased.requirement.Requirement> result = new LinkedHashSet<org.topcased.requirement.Requirement>();
-                if (!listCurrent.isEmpty())
-                {
-                    for (org.topcased.requirement.Requirement requirement : listCurrent)
-                    {
-                        // Selects only the current requirements not the anonymous requirements
-                        if (requirement instanceof CurrentRequirement)
-                        {
-                            for (Attribute attribute : requirement.getAttribute())
-                            {
-                                if (attribute instanceof AttributeLink )
-                                {
-                                    if (((AttributeLink) attribute).getValue() instanceof Requirement)
-                                    {
-                                        Requirement upstream = (Requirement) ((AttributeLink) attribute).getValue();
-                                        
-                                        if (upstream.equals((Requirement)object))
-                                        {
-                                            result.add(requirement); 
-                                        }    
-                                    }
-                                    else
-                                    {   //add the untraced requirements to the fake upstream requirement container
-                                        if (((Requirement)object).getIdent() == Messages.getString("RequirementPropertySection.2")) //$NON-NLS-1$
-                                        {
-                                            result.add(requirement);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                return result.toArray();
-            }
-            else
-            {
-                return new Object[0];
-            }
-        }
-    }
-    
-    
-    /**
-     * Label provider for Table labels and icons display
-     * 
-     * @author <a href="mailto:sebastien.gabel@c-s.fr">Sebastien GABEL</a>
-     */
-    private class RequirementPropertyTableLabelProvider extends AdapterFactoryLabelProvider
-    {
-        public RequirementPropertyTableLabelProvider(AdapterFactory adapterFactory)
-        {
-            super(adapterFactory);
-        }
-
-        /**
-         * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider#getColumnImage(java.lang.Object, int)
-         */
-        @Override
-        public Image getColumnImage(Object element, int columnIndex)
-        {
-            if (element instanceof CRegistry)
-            {
-                CRegistry tuple = (CRegistry) element;
-                if (columnIndex == 0)
-                {
-                    return super.getImage(tuple.getCurrent());
-                }
-                if (columnIndex == 1)
-                {
-                    if (tuple.getUpstream() != null)
-                    {
-                        return super.getImage(tuple.getUpstream());
-                    }
-                }
-            }
-            return super.getColumnImage(element, columnIndex);
-        }
-
-        /**
-         * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider#getColumnText(java.lang.Object, int)
-         */
-        public String getColumnText(Object element, int columnIndex)
-        {
-            if (element instanceof CRegistry)
-            {
-                CRegistry tuple = (CRegistry) element;
-                if (columnIndex == 0)
-                {
-                    return tuple.getCurrent().getIdentifier();
-                }
-                if (columnIndex == 1)
-                {
-                    if (tuple.getUpstream() != null)
-                    {
-                        return tuple.getUpstream().getIdent();
-                    }
-                }
-            }
-            return Messages.getString("RequirementPropertySection.2"); //$NON-NLS-1$
-        }
-    }
-
-    /**
-     * Content provider for Table content to display.
-     * 
-     * @author <a href="mailto:sebastien.gabel@c-s.fr">Sebastien GABEL</a>
-     */
-    private class RequirementPropertyTableContentProvider extends AdapterFactoryContentProvider
-    {
-        public RequirementPropertyTableContentProvider(AdapterFactory adapterFactory)
-        {
-            super(adapterFactory);
-        }
-
-        /**
-         * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider#getElements(java.lang.Object)
-         */
-        @SuppressWarnings("unchecked")
-        public Object[] getElements(Object object)
-        {
-            Collection<CRegistry> result = new LinkedHashSet<CRegistry>();
-            for (org.topcased.requirement.Requirement requirement : (List<org.topcased.requirement.Requirement>) object)
-            {
-                // Selects only the current requirements not the anonymous requirements
-                Boolean atLeastOne = false;
-                if (requirement instanceof CurrentRequirement)
-                {
-                    for (Attribute attribute : requirement.getAttribute())
-                    {
-                        if (attribute instanceof AttributeLink && ((AttributeLink) attribute).getValue() instanceof Requirement)
-                        {
-                            Requirement upstream = (Requirement) ((AttributeLink) attribute).getValue();
-                            result.add(new CRegistry(requirement, upstream));
-                            atLeastOne = true;
-                        }
-                    }
-
-                    // If any link attribute, add the requirement without attribute
-                    if (!atLeastOne)
-                    {
-                        result.add(new CRegistry(requirement, null));
-                    }
-                }
-            }            
-            return result.toArray();
-        }
-    }
-
-    /**
-     * Internal class used to store the line to display in the property table.
-     * 
-     * @author <a href="mailto:christophe.mertz@c-s.fr">Christophe Mertz</a>
-     */
-    private class CRegistry
-    {
-        // current requirement
-        private org.topcased.requirement.Requirement cr;
-
-        // upstream requirement
-        private Requirement up;
-
-        public CRegistry(org.topcased.requirement.Requirement current, Requirement upstream)
-        {
-            up = upstream;
-            cr = current;
-        }
-
-        public org.topcased.requirement.Requirement getCurrent()
-        {
-            return cr;
-        }
-
-        public Requirement getUpstream()
-        {
-            return up;
-        }
-    }
-    
     /**
      * @return the current viewer
      */
