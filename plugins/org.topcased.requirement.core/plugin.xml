@@ -464,24 +464,40 @@
             class="org.topcased.requirement.core.handlers.TreeHandler"
             commandId="org.topcased.requirement.core.tree">
          <activeWhen>
-            <with
-                  variable="requirementActionsEnablement.hasRequirementModel">
-               <equals
-                     value="true">
-               </equals>
-            </with>
+            <and>
+               <with
+                     variable="activeWorkbenchWindow.activePerspective">
+                  <equals
+                        value="org.topcased.requirement.core.perspective">
+                  </equals>
+               </with>
+               <with
+                     variable="requirementActionsEnablement.hasRequirementModel">
+                  <equals
+                        value="true">
+                  </equals>
+               </with>
+            </and>
          </activeWhen>
       </handler>
       <handler
             class="org.topcased.requirement.core.handlers.TableHandler"
             commandId="org.topcased.requirement.core.table">
          <activeWhen>
-            <with
-                  variable="requirementActionsEnablement.hasRequirementModel">
-               <equals
-                     value="true">
-               </equals>
-            </with>
+            <and>
+               <with
+                     variable="activeWorkbenchWindow.activePerspective">
+                  <equals
+                        value="org.topcased.requirement.core.perspective">
+                  </equals>
+               </with>
+               <with
+                     variable="requirementActionsEnablement.hasRequirementModel">
+                  <equals
+                        value="true">
+                  </equals>
+               </with>
+            </and>
          </activeWhen>
       </handler>
    </extension>
