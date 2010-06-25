@@ -53,10 +53,6 @@ import org.topcased.tabbedproperties.utils.ObjectAdapter;
  * @author <a href="mailto:sebastien.gabel@c-s.fr">Sebastien GABEL</a>
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  */
-/**
- * @author maudrain
- *
- */
 public class RequirementPropertySection extends AbstractPropertySection
 {
     /**
@@ -129,7 +125,14 @@ public class RequirementPropertySection extends AbstractPropertySection
         else if (treeCmd.getState(RegistryToggleState.STATE_ID).getValue().equals(true))
         {
             createTree(parent);
-        }      
+        }
+        else
+        {
+            //default case when no button is already persisted
+            tableCmd.getState(RegistryToggleState.STATE_ID).setValue(true);
+            treeCmd.getState(RegistryToggleState.STATE_ID).setValue(false);
+            createTable(parent);
+        }
     }
 
     
