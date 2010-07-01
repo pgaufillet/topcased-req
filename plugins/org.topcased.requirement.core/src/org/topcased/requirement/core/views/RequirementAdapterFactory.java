@@ -42,7 +42,7 @@ public class RequirementAdapterFactory implements IAdapterFactory
     /**
      * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public Object getAdapter(Object adaptableObject, Class adapterType)
     {
         if (adaptableObject instanceof Modeler)
@@ -145,7 +145,7 @@ public class RequirementAdapterFactory implements IAdapterFactory
     /**
      * @see org.eclipse.core.runtime.IAdapterFactory#getAdapterList()
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public Class[] getAdapterList()
     {
         return new Class[] {ICurrentRequirementPage.class, IUpstreamRequirementPage.class};

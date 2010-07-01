@@ -74,7 +74,7 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
     /**
      * @see org.eclipse.ui.part.PageBookView#getAdapter(java.lang.Class)
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     @Override
     public Object getAdapter(Class type)
     {
