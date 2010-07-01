@@ -16,7 +16,7 @@ import org.topcased.requirement.util.migration.RequirementMigrationHelper;
 /**
  * <!-- begin-user-doc --> The <b>Resource </b> associated with the package. <!-- end-user-doc -->
  * 
- * @see org.topcased.sam.requirement.util.RequirementResourceFactoryImpl
+ * @see org.topcased.requirement.util.RequirementResourceFactoryImpl
  * @generated
  */
 public class RequirementResourceImpl extends XMIResourceImpl

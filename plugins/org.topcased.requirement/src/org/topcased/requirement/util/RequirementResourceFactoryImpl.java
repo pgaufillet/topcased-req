@@ -13,7 +13,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceFactoryImpl;
 /**
  * <!-- begin-user-doc --> The <b>Resource Factory</b> associated with the package. <!-- end-user-doc -->
  * 
- * @see org.topcased.sam.requirement.util.RequirementResourceImpl
+ * @see org.topcased.requirement.util.RequirementResourceImpl
  * @generated
  */
 public class RequirementResourceFactoryImpl extends ResourceFactoryImpl
