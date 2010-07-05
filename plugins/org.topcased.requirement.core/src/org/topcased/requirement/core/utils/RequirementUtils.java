@@ -33,8 +33,8 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
+import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -69,6 +69,7 @@ import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.services.RequirementModelSourceProvider;
 import org.topcased.requirement.util.RequirementCacheAdapter;
+import org.topcased.requirement.util.RequirementResourceImpl;
 
 import ttm.Requirement;
 
@@ -248,7 +249,6 @@ public final class RequirementUtils
      */
     public static Boolean isLinked(Requirement req)
     {
-        // EObject reqRoot = EcoreUtil.getRootContainer(req);
         for (Setting setting : getCrossReferences(req))
         {
             if (setting.getEObject() instanceof AttributeLink)
@@ -469,7 +469,7 @@ public final class RequirementUtils
             }
         }
     }
-    
+
     /**
      * Unloads the requirement model from the editing domain
      * 
@@ -499,21 +499,34 @@ public final class RequirementUtils
     /**
      * Gets the requirement model as an EMF resource.
      * 
+     * @param domain the editing domain of the active modeler
      * @return the requirement model as a resource
      */
-    public static Resource getRequirementModel(EditingDomain editingDomain)
+    public static Resource getRequirementModel(EditingDomain domain)
     {
-        if (editingDomain != null)
+        if (domain != null)
         {
-            for (Resource resource : editingDomain.getResourceSet().getResources())
+            for (Resource resource : domain.getResourceSet().getResources())
             {
-                if ("requirement".equals(resource.getURI().fileExtension())) //$NON-NLS-1$
+                if (resource instanceof RequirementResourceImpl)
                 {
                     return resource;
                 }
             }
         }
         return null;
+    }
+
+    /**
+     * Determines if the given editing domain contains a loaded requirement model related to other resources.
+     * 
+     * @param domain the editing domain of the active modeler
+     * @return true if the requirement model is found inside the editing domain, false otherwise.
+     */
+    public static boolean hasRequirementModel(EditingDomain domain)
+    {
+        Resource rsc = getRequirementModel(domain);
+        return rsc != null && rsc.isLoaded();
     }
 
     /**
@@ -815,11 +828,11 @@ public final class RequirementUtils
 
         provider.setHasRequirementState(enable);
     }
-    
+
     /**
      * 
-     * Notify commands that the IsSectionEnabled variable has changed. Handle the enablement/disablement of commands when
-     * the requirement property section is shown/hidden.
+     * Notify commands that the IsSectionEnabled variable has changed. Handle the enablement/disablement of commands
+     * when the requirement property section is shown/hidden.
      */
     public static void fireIsSectionEnabledVariableChanged(boolean enable)
     {

@@ -12,7 +12,6 @@ package org.topcased.requirement.core.views.current;
 
 import org.eclipse.core.commands.Command;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
@@ -193,10 +192,9 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
     protected void updatePage(IPage page)
     {
         CurrentPage thePage = (CurrentPage) page;
-        Resource resource = RequirementUtils.getRequirementModel(thePage.getEditingDomain());
-        if (resource != null && resource.isLoaded())
+        if (RequirementUtils.hasRequirementModel(thePage.getEditingDomain()))
         {
-            EObject model = resource.getContents().get(0);
+            EObject model = RequirementUtils.getRequirementProject(thePage.getEditingDomain());
             thePage.setModel(model);
             thePage.getViewer().setInput(model);
             RequirementHelper.INSTANCE.setCurrentPage(thePage);

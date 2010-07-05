@@ -57,8 +57,11 @@ public class RenameCommandResolver extends AdditionalCommand<ChangeLabelTextComm
             if (!renameCommand.equals(UnexecutableCommand.INSTANCE))
             {
                 EMFtoGEFCommandWrapper cmd = new EMFtoGEFCommandWrapper(new RenameRequirementCommand(renameCommand.getEObject(), renameCommand.getOldName(), renameCommand.getName()));
-                cmd.execute();
-                commands.put(renameCommand, cmd);
+                if (cmd.canExecute())
+                {
+                    cmd.execute();
+                    commands.put(renameCommand, cmd);
+                }
             }
         }
     }

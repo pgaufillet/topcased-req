@@ -12,7 +12,6 @@ package org.topcased.requirement.core.views.upstream;
 
 import org.eclipse.core.commands.Command;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -204,10 +203,9 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
     protected void updatePage(IPage page)
     {
         UpstreamPage thePage = (UpstreamPage) page;
-        Resource resource = RequirementUtils.getRequirementModel(thePage.getEditingDomain());
-        if (resource != null && resource.isLoaded())
+        if (RequirementUtils.hasRequirementModel(thePage.getEditingDomain()))
         {
-            RequirementProject project = (RequirementProject) RequirementUtils.getRoot(resource, RequirementProject.class);
+            RequirementProject project = RequirementUtils.getRequirementProject(thePage.getEditingDomain());
             thePage.getViewer().setInput(project.getUpstreamModel());
             RequirementHelper.INSTANCE.setUpstreamPage(thePage);
             RequirementCoverageComputer.INSTANCE.refreshCoverageRateDisplay();
