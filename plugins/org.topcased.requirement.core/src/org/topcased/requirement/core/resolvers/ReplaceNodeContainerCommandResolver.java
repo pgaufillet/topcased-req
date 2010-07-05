@@ -60,8 +60,11 @@ public class ReplaceNodeContainerCommandResolver extends AdditionalCommand<Repla
             ArrayList<EObject> children = new ArrayList<EObject>();
             children.add(cmd.getChild());
             EMFtoGEFCommandWrapper commandWrapper = new EMFtoGEFCommandWrapper(new MoveHierarchicalElementCommand(cmd.getHost(), children));
-            commandWrapper.execute();
-            commands.put(cmd, commandWrapper);
+            if (commandWrapper.canExecute())
+            {
+                commandWrapper.execute();
+                commands.put(cmd, commandWrapper);
+            }
         }
 
     }

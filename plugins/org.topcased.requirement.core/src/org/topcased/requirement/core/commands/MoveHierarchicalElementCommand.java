@@ -172,6 +172,7 @@ public class MoveHierarchicalElementCommand extends CompoundCommand
     @Override
     public boolean canExecute()
     {
-        return super.canExecute() && elements != null && !elements.isEmpty() && container != null;
+        boolean result = RequirementUtils.hasRequirementModel(TopcasedAdapterFactoryEditingDomain.getEditingDomainFor(container));
+        return super.canExecute() && elements != null && !elements.isEmpty() && container != null && result;
     }
 }
