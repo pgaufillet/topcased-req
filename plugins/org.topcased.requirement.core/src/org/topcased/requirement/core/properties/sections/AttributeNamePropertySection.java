@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Text;
 import org.topcased.requirement.RequirementPackage;
 import org.topcased.requirement.core.internal.Messages;
 import org.topcased.tabbedproperties.sections.AbstractStringPropertySection;
+import org.topcased.tabbedproperties.sections.widgets.IText;
 
 /**
  * The section for the identifier property of a <b>IdentifiedElement</b> model object.
@@ -38,9 +39,9 @@ public class AttributeNamePropertySection extends AbstractStringPropertySection
      * @see org.topcased.tabbedproperties.sections.AbstractTextPropertySection#getText()
      */
     @Override
-    protected Text getText()
+    protected IText getText()
     {
-        Text textWidget = super.getText();
+        IText textWidget = super.getText();
         textWidget.setEditable(false);
         return textWidget;
     }

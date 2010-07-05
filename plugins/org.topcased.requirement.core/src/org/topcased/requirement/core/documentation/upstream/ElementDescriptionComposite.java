@@ -15,6 +15,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.topcased.modeler.documentation.AbstractCommentsComposite;
+
 import ttm.Attribute;
 import ttm.Requirement;
 import ttm.Text;
@@ -73,7 +74,7 @@ public class ElementDescriptionComposite extends AbstractCommentsComposite
         // in all the cases, the text can not be edited !
         if (getPlainTextComposite() != null && !getPlainTextComposite().isDisposed())
         {
-            getPlainTextComposite().getText().setEditable(false);
+            getPlainTextComposite().setEditable(false);
         }
     }
 

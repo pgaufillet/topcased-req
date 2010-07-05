@@ -16,6 +16,7 @@ import org.topcased.requirement.ConfiguratedAttribute;
 import org.topcased.requirement.RequirementPackage;
 import org.topcased.requirement.core.internal.Messages;
 import org.topcased.tabbedproperties.sections.AbstractStringPropertySection;
+import org.topcased.tabbedproperties.sections.widgets.IText;
 
 /**
  * The section for the name property of a <b>AttributeConfiguration</b> model object.
@@ -39,9 +40,9 @@ public class ConfiguratedAttributeTypePropertySection extends AbstractStringProp
      * @see org.topcased.tabbedproperties.sections.AbstractTextPropertySection#getText()
      */
     @Override
-    protected Text getText()
+    protected IText getText()
     {
-        Text textWidget = super.getText();
+    	IText textWidget = super.getText();
         textWidget.setEditable(false);
         return textWidget;
     }
