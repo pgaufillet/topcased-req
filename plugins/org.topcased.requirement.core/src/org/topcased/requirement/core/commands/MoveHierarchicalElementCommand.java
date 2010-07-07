@@ -134,7 +134,10 @@ public class MoveHierarchicalElementCommand extends CompoundCommand
     private void setFocusOnSelection()
     {
         CurrentPage page = RequirementHelper.INSTANCE.getCurrentPage();
-        page.setSelection(new StructuredSelection(toSelect));
+        if (page != null)
+        {
+            page.setSelection(new StructuredSelection(toSelect));
+        }
     }
 
     /**
