@@ -29,6 +29,7 @@ import org.topcased.modeler.editor.Modeler;
 import org.topcased.requirement.core.documentation.current.CurrentDescPage;
 import org.topcased.requirement.core.handlers.ICommandConstants;
 import org.topcased.requirement.core.properties.RequirementPropertySheetPage;
+import org.topcased.requirement.core.utils.RequirementCoverageComputer;
 import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.AbstractRequirementView;
@@ -129,7 +130,7 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
             IViewReference ref = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findViewReference(CurrentRequirementView.VIEW_ID);
             if (ref != null)
             {
-                //We need to get the view without restoring it (prevent from the recursive view creation warning)
+                // We need to get the view without restoring it (prevent from the recursive view creation warning)
                 return ref.getView(false);
             }
         }
@@ -198,6 +199,7 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
             thePage.setModel(model);
             thePage.getViewer().setInput(model);
             RequirementHelper.INSTANCE.setCurrentPage(thePage);
+            RequirementCoverageComputer.INSTANCE.refreshNumberOfCurrentRequirementsDisplay();
         }
     }
 

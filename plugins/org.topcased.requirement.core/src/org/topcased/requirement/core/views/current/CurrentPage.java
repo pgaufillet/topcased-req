@@ -67,6 +67,7 @@ import org.topcased.requirement.core.listeners.RequirementDoubleClickListener;
 import org.topcased.requirement.core.listeners.UpstreamSelectionChangedListener;
 import org.topcased.requirement.core.providers.CurrentRequirementContentProvider;
 import org.topcased.requirement.core.providers.CurrentRequirementLabelProvider;
+import org.topcased.requirement.core.utils.RequirementCoverageComputer;
 import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.AbstractRequirementPage;
@@ -293,6 +294,17 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
         viewer.addDragSupport(dndOperations, transfers, new DragSourceCurrentAdapter(editingDomain, viewer));
         viewer.addDropSupport(dndOperations, transfers, new DropTargetCurrentAdapter(editingDomain, viewer));
         viewer.setUseHashlookup(true);
+        viewer.addSelectionChangedListener(new ISelectionChangedListener()
+        {
+            public void selectionChanged(SelectionChangedEvent event)
+            {
+                if (!event.getSelection().isEmpty() && event.getSelection() instanceof IStructuredSelection)
+                {
+                    // update number of current requirement display
+                    RequirementCoverageComputer.INSTANCE.refreshNumberOfCurrentRequirementsDisplay();
+                }
+            }
+        });
 
         // Text filter
         final SearchComposite findIt = new SearchComposite(mainComposite, SWT.NONE);

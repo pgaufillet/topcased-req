@@ -30,13 +30,16 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
+import org.topcased.requirement.Attribute;
 import org.topcased.requirement.AttributeLink;
 import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.RequirementPackage;
 import org.topcased.requirement.RequirementProject;
+import org.topcased.requirement.SpecialChapter;
 import org.topcased.requirement.UpstreamModel;
 import org.topcased.requirement.core.internal.Messages;
+import org.topcased.requirement.core.views.current.CurrentPage;
 import org.topcased.requirement.core.views.upstream.UpstreamPage;
 
 import ttm.Document;
@@ -48,15 +51,69 @@ import ttm.TtmPackage;
  * requirements in the project's Upstream model, the number among them which are covered in Hierarchical Elements, and
  * the ratio between the two as a percentage.
  * 
+ * It has also been enhanced to compute the number of current requirements, the number among them which are linked to an
+ * upstream requirement and the number among these latest which are partial (number of not linked can be computed by
+ * difference).
+ * 
  * @author Vincent Hemery
  */
 public final class RequirementCoverageComputer
 {
+    /**
+     * Enumerate class indicating how a current requirement is linked to an upstream requirement.
+     */
+    private enum LinkType {
+        /** linked to at least one upstream requirement, and no partial link */
+        COMPLETE_LINK,
+        /** linked to at least one upstream requirement with partial */
+        PARTIAL_LINK,
+        /** not linked to any upstream requirement */
+        NO_LINK;
+
+        /**
+         * Get how a current requirement is linked to upstream requirements
+         * 
+         * @param currentRequirement current requirement
+         * @return link state (linked with no partial, linked with partial or no link)
+         */
+        public static LinkType getLinkage(CurrentRequirement currentRequirement)
+        {
+            boolean linked = false;
+            for (Attribute att : currentRequirement.getAttribute())
+            {
+                if (att instanceof AttributeLink)
+                {
+                    if (((AttributeLink) att).getValue() instanceof Requirement)
+                    {
+                        // there is at least one requirement linked
+                        linked = true;
+                        if (((AttributeLink) att).getPartial())
+                        {
+                            // there is at least one requirement linked with partial
+                            return LinkType.PARTIAL_LINK;
+                        }
+                    }
+                }
+            }
+            if (linked)
+            {
+                return LinkType.COMPLETE_LINK;
+            }
+            else
+            {
+                return LinkType.NO_LINK;
+            }
+        }
+    }
+
     /** The singleton */
     public static final RequirementCoverageComputer INSTANCE = new RequirementCoverageComputer();
 
     /** The format for displaying a percentage. */
     private static final DecimalFormat PERCENT_FORMAT = new DecimalFormat("#0.##%"); //$NON-NLS-1$
+
+    /** The message entry for displaying number of current requirements in the status bar */
+    private static final String CURRENT_PAGE_STATUS_MESSAGE0 = "CurrentPage.0"; //$NON-NLS-1$
 
     /** The editing domain in which coverage rate is computed */
     private EditingDomain editingDomain = null;
@@ -64,8 +121,20 @@ public final class RequirementCoverageComputer
     /** The number of requirements */
     private int totalNumberOfRequirements = 0;
 
+    /** The number of current requirements */
+    private int numberOfCurrentRequirements = 0;
+
+    /** The number of linked current requirements */
+    private int numberOfLinkedCurrentRequirements = 0;
+
+    /** The number of linked current requirements with partial */
+    private int numberOfPartialLinkedCurrentRequirements = 0;
+
     /** whether the totalNumberOfRequirements attribute is correct */
     private boolean totalNumberOfRequirementsSet = false;
+
+    /** The current requirements in Hierarchical elements and their linkage type */
+    private Map<CurrentRequirement, LinkType> currentRequirementsLinks = new HashMap<CurrentRequirement, LinkType>();
 
     /** The requirements covered by Current requirements in Hierarchical elements */
     private Map<EObject, List<CurrentRequirement>> coveredRequirements = new HashMap<EObject, List<CurrentRequirement>>();
@@ -76,8 +145,14 @@ public final class RequirementCoverageComputer
     /** The adapter to listen at model modifications to update requirements coverage */
     private Adapter requirementsUpdaterAdapter = null;
 
+    /** The adapter to listen at model modifications to update current requirements number */
+    private Adapter currentRequirementsUpdaterAdapter = null;
+
     /** The model elements which modifications are listened at */
     private Collection<EObject> listenedModelElements = new ArrayList<EObject>();
+
+    /** The model elements which modifications are listened at for current requirements number */
+    private Collection<EObject> listenedModelElementsForCurrentOnly = new ArrayList<EObject>();
 
     /**
      * This class provides a switch over Notification event types. It allows to launch an addition or a removal
@@ -146,7 +221,7 @@ public final class RequirementCoverageComputer
                 @Override
                 public void notifyChanged(Notification msg)
                 {
-                    modelHasChanged(msg);
+                    modelHasChanged(msg, false);
                 }
             };
         }
@@ -154,11 +229,33 @@ public final class RequirementCoverageComputer
     }
 
     /**
+     * Get the listener that updates the number of current requirements when model is modified.
+     * 
+     * @return the adapter listener
+     */
+    public Adapter getCurrentRequirementsUpdaterAdapter()
+    {
+        if (currentRequirementsUpdaterAdapter == null)
+        {
+            currentRequirementsUpdaterAdapter = new AdapterImpl()
+            {
+                @Override
+                public void notifyChanged(Notification msg)
+                {
+                    modelHasChanged(msg, true);
+                }
+            };
+        }
+        return currentRequirementsUpdaterAdapter;
+    }
+
+    /**
      * Update coverage information when a model element has changed.
      * 
      * @param msg the notification message
+     * @param ignoreForCoverage true if the coverage rate must not be changed
      */
-    protected void modelHasChanged(Notification msg)
+    protected void modelHasChanged(final Notification msg, final boolean ignoreForCoverage)
     {
         Object modifiedFeature = msg.getFeature();
         final Object removed = msg.getOldValue();
@@ -167,39 +264,47 @@ public final class RequirementCoverageComputer
         if (RequirementPackage.Literals.REQUIREMENT_PROJECT__UPSTREAM_MODEL.equals(modifiedFeature) || TtmPackage.Literals.PROJECT__DOCUMENTS.equals(modifiedFeature)
                 || TtmPackage.Literals.HIERARCHICAL_ELEMENT__CHILDREN.equals(modifiedFeature))
         {
-            new NotificationEventTypeSwitcher(msg.getEventType())
+            if (!ignoreForCoverage)
             {
-                protected void add()
+                new NotificationEventTypeSwitcher(msg.getEventType())
                 {
-                    requirementsAdded(added);
-                }
+                    protected void add()
+                    {
+                        requirementsAdded(added);
+                    }
 
-                protected void remove()
-                {
-                    requirementsRemoved(removed);
-                }
-            };
-            // refresh coverage rate printing
-            refreshCoverageRateDisplay();
+                    protected void remove()
+                    {
+                        requirementsRemoved(removed);
+                    }
+                };
+                // refresh coverage rate printing
+                refreshCoverageRateDisplay();
+            }
         }
         // features which may contain Link_to attribute for requirements coverage
-        else if (RequirementPackage.Literals.REQUIREMENT_PROJECT__HIERARCHICAL_ELEMENT.equals(modifiedFeature) || RequirementPackage.Literals.HIERARCHICAL_ELEMENT__CHILDREN.equals(modifiedFeature)
+        else if (RequirementPackage.Literals.SPECIAL_CHAPTER__HIERARCHICAL_ELEMENT.equals(modifiedFeature) || RequirementPackage.Literals.SPECIAL_CHAPTER__REQUIREMENT.equals(modifiedFeature)
+                || RequirementPackage.Literals.REQUIREMENT_PROJECT__HIERARCHICAL_ELEMENT.equals(modifiedFeature) || RequirementPackage.Literals.HIERARCHICAL_ELEMENT__CHILDREN.equals(modifiedFeature)
                 || RequirementPackage.Literals.HIERARCHICAL_ELEMENT__REQUIREMENT.equals(modifiedFeature) || RequirementPackage.Literals.REQUIREMENT__ATTRIBUTE.equals(modifiedFeature))
         {
             new NotificationEventTypeSwitcher(msg.getEventType())
             {
                 protected void add()
                 {
-                    addCoverage(added);
+                    addCoverage(added, ignoreForCoverage);
                 }
 
                 protected void remove()
                 {
-                    removeCoverage(removed);
+                    removeCoverage(removed, msg.getNotifier(), ignoreForCoverage);
                 }
             };
-            // refresh coverage rate printing
-            refreshCoverageRateDisplay();
+            if (!ignoreForCoverage)
+            {// refresh coverage rate printing
+                refreshCoverageRateDisplay();
+            }
+            // refresh number of current requirements printing
+            refreshNumberOfCurrentRequirementsDisplay();
         }
         else if (RequirementPackage.Literals.OBJECT_ATTRIBUTE__VALUE.equals(modifiedFeature))
         {
@@ -213,7 +318,12 @@ public final class RequirementCoverageComputer
                     {
                         if (added instanceof EObject)
                         {
-                            addToCoveredRequirementsAttribute(coveringRequirement, (EObject) added);
+                            if (!ignoreForCoverage)
+                            {
+                                addToCoveredRequirementsAttribute(coveringRequirement, (EObject) added);
+                            }
+                            // update number of current
+                            updateCurrentRequirementNumbers(coveringRequirement, false);
                         }
                     }
 
@@ -221,14 +331,47 @@ public final class RequirementCoverageComputer
                     {
                         if (removed instanceof EObject)
                         {
-                            removeFromCoveredRequirementsAttribute(coveringRequirement, (EObject) removed);
+                            if (!ignoreForCoverage)
+                            {
+                                removeFromCoveredRequirementsAttribute(coveringRequirement, (EObject) removed);
+                            }
+                            // update number of current
+                            updateCurrentRequirementNumbers(coveringRequirement, false);
                         }
                     }
                 };
 
             }
-            // refresh coverage rate printing
-            refreshCoverageRateDisplay();
+            if (!ignoreForCoverage)
+            {// refresh coverage rate printing
+                refreshCoverageRateDisplay();
+            }
+            // refresh number of current requirements printing
+            refreshNumberOfCurrentRequirementsDisplay();
+        }
+        // features which may contain Link_to attribute for partial links
+        else if (RequirementPackage.Literals.ATTRIBUTE_LINK__PARTIAL.equals(modifiedFeature))
+        {
+            Object attribute = msg.getNotifier();
+            if (attribute instanceof AttributeLink)
+            {
+                final CurrentRequirement coveringRequirement = (CurrentRequirement) ((AttributeLink) attribute).eContainer();
+                new NotificationEventTypeSwitcher(msg.getEventType())
+                {
+                    protected void add()
+                    {
+                        updateCurrentRequirementNumbers(coveringRequirement, false);
+                    }
+
+                    protected void remove()
+                    {
+                        // do nothing
+                    }
+                };
+
+            }
+            // refresh number of current requirements printing
+            refreshNumberOfCurrentRequirementsDisplay();
         }
     }
 
@@ -269,11 +412,62 @@ public final class RequirementCoverageComputer
     }
 
     /**
+     * Indicate that a change occurred concerning a current requirement
+     * 
+     * @param updatedRequirement the current requirement which has been updated
+     * @param removing true if updatedRequirement is being removed (false if it is being updated or added)
+     */
+    private void updateCurrentRequirementNumbers(CurrentRequirement updatedRequirement, boolean removing)
+    {
+        LinkType linkage = LinkType.getLinkage(updatedRequirement);
+        if (currentRequirementsLinks.containsKey(updatedRequirement))
+        {
+            // remove current requirement from count (updating or removing)
+            LinkType oldLinkage = currentRequirementsLinks.get(updatedRequirement);
+            if (linkage != null && linkage.equals(oldLinkage) && !removing)
+            {
+                // no significant change, no need to go further
+                return;
+            }
+            switch (oldLinkage)
+            {
+                case PARTIAL_LINK:
+                    numberOfPartialLinkedCurrentRequirements--;
+                case COMPLETE_LINK:
+                    numberOfLinkedCurrentRequirements--;
+                case NO_LINK:
+                default:
+                    numberOfCurrentRequirements--;
+            }
+        }
+        if (removing)
+        {
+            currentRequirementsLinks.remove(updatedRequirement);
+        }
+        else
+        {
+            // add current requirement to count
+            switch (linkage)
+            {
+                case PARTIAL_LINK:
+                    numberOfPartialLinkedCurrentRequirements++;
+                case COMPLETE_LINK:
+                    numberOfLinkedCurrentRequirements++;
+                case NO_LINK:
+                default:
+                    numberOfCurrentRequirements++;
+            }
+            currentRequirementsLinks.put(updatedRequirement, linkage);
+        }
+    }
+
+    /**
      * Indicate coverage requirements have been added
      * 
      * @param added the added model object (or list of objects) containing Attribute Links for requirement coverage.
+     * @param ignoreForCoverage true if the coverage rate must not be changed
      */
-    protected void addCoverage(Object added)
+    protected void addCoverage(Object added, boolean ignoreForCoverage)
     {
         if (added == null)
         {
@@ -281,20 +475,45 @@ public final class RequirementCoverageComputer
         }
         else if (added instanceof AttributeLink)
         {
-            specifiedAddCoverage((AttributeLink) added);
+            if (!ignoreForCoverage)
+            {
+                specifiedAddCoverage((AttributeLink) added);
+            }
+            else
+            {
+                listenForCurrentOnly((AttributeLink) added);
+            }
+            EObject curr = ((AttributeLink) added).eContainer();
+            if (curr instanceof CurrentRequirement)
+            {
+                // update number of current
+                updateCurrentRequirementNumbers((CurrentRequirement) curr, false);
+            }
         }
         else if (added instanceof List< ? >)
         {
             for (Object listElement : (List< ? >) added)
             {
-                addCoverage(listElement);
+                addCoverage(listElement, ignoreForCoverage);
             }
         }
         else if (added instanceof EObject)
         {
-            listen((EObject) added);
+            if (ignoreForCoverage)
+            {
+                listenForCurrentOnly((EObject) added);
+            }
+            else
+            {
+                listen((EObject) added);
+            }
             // check in object's content
-            iterateForAddingCoverage(((EObject) added).eAllContents());
+            iterateForAddingCoverage(((EObject) added).eAllContents(), ignoreForCoverage);
+            if (added instanceof CurrentRequirement)
+            {
+                // update number of current
+                updateCurrentRequirementNumbers((CurrentRequirement) added, false);
+            }
         }
     }
 
@@ -319,23 +538,43 @@ public final class RequirementCoverageComputer
      * Iterate other elements to add covering requirements.
      * 
      * @param iterator the iterator other EObjects.
+     * @param ignoreForCoverage true if the coverage rate must not be changed
      */
-    private void iterateForAddingCoverage(TreeIterator<EObject> iterator)
+    private void iterateForAddingCoverage(TreeIterator<EObject> iterator, boolean ignoreForCoverage)
     {
         while (iterator.hasNext())
         {
             EObject nextElement = iterator.next();
             if (nextElement instanceof AttributeLink)
             {
-                specifiedAddCoverage((AttributeLink) nextElement);
+                if (!ignoreForCoverage)
+                {
+                    specifiedAddCoverage((AttributeLink) nextElement);
+                }
+                else
+                {
+                    listenForCurrentOnly((AttributeLink) nextElement);
+                }
             }
             else
             {
+                if (nextElement instanceof CurrentRequirement)
+                {
+                    // update number of current
+                    updateCurrentRequirementNumbers((CurrentRequirement) nextElement, false);
+                }
                 // check if can contain covered requirements
                 boolean canContain = nextElement instanceof HierarchicalElement || nextElement instanceof CurrentRequirement;
                 if (canContain)
                 {
-                    listen(nextElement);
+                    if (ignoreForCoverage)
+                    {
+                        listenForCurrentOnly(nextElement);
+                    }
+                    else
+                    {
+                        listen(nextElement);
+                    }
                 }
                 else
                 {
@@ -350,8 +589,10 @@ public final class RequirementCoverageComputer
      * Indicate coverage requirements have been removed. The parameter object must be removed from the model.
      * 
      * @param removed the removed model object (or list of objects) containing Attribute Links for requirement coverage.
+     * @param container the object which used to contain or still contains 'removed' parameter
+     * @param ignoreForCoverage true if the coverage rate must not be changed
      */
-    protected void removeCoverage(Object removed)
+    protected void removeCoverage(Object removed, Object container, boolean ignoreForCoverage)
     {
         if (removed == null)
         {
@@ -359,20 +600,38 @@ public final class RequirementCoverageComputer
         }
         else if (removed instanceof AttributeLink)
         {
-            specifiedRemoveCoverage((AttributeLink) removed);
+            if (!ignoreForCoverage)
+            {
+                specifiedRemoveCoverage((AttributeLink) removed, container);
+            }
+            else
+            {
+                stopListening((AttributeLink) removed);
+            }
+            if (container instanceof CurrentRequirement)
+            {
+                // update number of current, current is deleted, except if only its contained attribute is
+                boolean attributeOnlyIsDeleted = ((AttributeLink) removed).eContainer() == null;
+                updateCurrentRequirementNumbers((CurrentRequirement) container, !attributeOnlyIsDeleted);
+            }
         }
         else if (removed instanceof List< ? >)
         {
             for (Object listElement : (List< ? >) removed)
             {
-                removeCoverage(listElement);
+                removeCoverage(listElement, container, ignoreForCoverage);
             }
         }
         else if (removed instanceof EObject)
         {
             stopListening((EObject) removed);
             // check in object's content
-            iterateForRemovingCoverage(((EObject) removed).eAllContents());
+            iterateForRemovingCoverage(((EObject) removed).eAllContents(), ignoreForCoverage);
+            if (removed instanceof CurrentRequirement)
+            {
+                // update number of current
+                updateCurrentRequirementNumbers((CurrentRequirement) removed, true);
+            }
         }
     }
 
@@ -380,18 +639,18 @@ public final class RequirementCoverageComputer
      * Indicate coverage requirements have been removed. The parameter object must be removed from the model.
      * 
      * @param removedRequirementCoverage the added requirement covering Attribute Link object.
+     * @param container the object which used to contain or still contains 'removedRequirementCoverage' parameter
      */
-    private void specifiedRemoveCoverage(AttributeLink removedRequirementCoverage)
+    private void specifiedRemoveCoverage(AttributeLink removedRequirementCoverage, Object container)
     {
         if (removedRequirementCoverage != null)
         {
             stopListening((AttributeLink) removedRequirementCoverage);
             // remove (partial) coverage of attribute's value requirement
-            EObject covering = ((AttributeLink) removedRequirementCoverage).eContainer();
-            if (covering instanceof CurrentRequirement)
+            if (container instanceof CurrentRequirement)
             {
                 EObject coveredRequirement = ((AttributeLink) removedRequirementCoverage).getValue();
-                removeFromCoveredRequirementsAttribute((CurrentRequirement) covering, coveredRequirement);
+                removeFromCoveredRequirementsAttribute((CurrentRequirement) container, coveredRequirement);
             }
         }
     }
@@ -400,18 +659,31 @@ public final class RequirementCoverageComputer
      * Iterate other elements to remove coverage requirements.
      * 
      * @param iterator the iterator other EObjects.
+     * @param ignoreForCoverage true if the coverage rate must not be changed
      */
-    private void iterateForRemovingCoverage(TreeIterator<EObject> iterator)
+    private void iterateForRemovingCoverage(TreeIterator<EObject> iterator, boolean ignoreForCoverage)
     {
         while (iterator.hasNext())
         {
             EObject nextElement = iterator.next();
             if (nextElement instanceof AttributeLink)
             {
-                specifiedRemoveCoverage((AttributeLink) nextElement);
+                if (!ignoreForCoverage)
+                {
+                    specifiedRemoveCoverage((AttributeLink) nextElement, nextElement.eContainer());
+                }
+                else
+                {
+                    stopListening((AttributeLink) nextElement);
+                }
             }
             else
             {
+                if (nextElement instanceof CurrentRequirement)
+                {
+                    // update number of current
+                    updateCurrentRequirementNumbers((CurrentRequirement) nextElement, true);
+                }
                 // check if can contain covered requirements
                 boolean canContain = nextElement instanceof HierarchicalElement || nextElement instanceof CurrentRequirement;
                 if (canContain)
@@ -540,6 +812,11 @@ public final class RequirementCoverageComputer
         if (removedRequirement != null)
         {
             totalNumberOfRequirements--;
+            // update number of current
+            for (CurrentRequirement current : coveredRequirements.get(removedRequirement))
+            {
+                updateCurrentRequirementNumbers(current, false);
+            }
             // remove all coverage for this requirement
             coveredRequirements.remove(removedRequirement);
         }
@@ -594,6 +871,21 @@ public final class RequirementCoverageComputer
     }
 
     /**
+     * Start listening at modifications of a model element (for current requirements view only, not for upstream
+     * coverage).
+     * 
+     * @param model the model element to listen.
+     */
+    private void listenForCurrentOnly(EObject model)
+    {
+        if (!listenedModelElementsForCurrentOnly.contains(model))
+        {
+            model.eAdapters().add(getCurrentRequirementsUpdaterAdapter());
+            listenedModelElementsForCurrentOnly.add(model);
+        }
+    }
+
+    /**
      * Unregister from all listened model elements.
      */
     private void stopListening()
@@ -602,6 +894,11 @@ public final class RequirementCoverageComputer
         {
             model.eAdapters().remove(getRequirementsUpdaterAdapter());
         }
+        for (EObject model : listenedModelElementsForCurrentOnly)
+        {
+            model.eAdapters().remove(getCurrentRequirementsUpdaterAdapter());
+        }
+        listenedModelElementsForCurrentOnly.clear();
         listenedModelElements.clear();
     }
 
@@ -614,6 +911,113 @@ public final class RequirementCoverageComputer
     {
         model.eAdapters().remove(getRequirementsUpdaterAdapter());
         listenedModelElements.remove(model);
+        model.eAdapters().remove(getCurrentRequirementsUpdaterAdapter());
+        listenedModelElementsForCurrentOnly.remove(model);
+    }
+
+    /**
+     * Get the total number of current requirements in the Current Requirements view.
+     * 
+     * @return the number of current requirements or 0 if editing domain has not been initialized.
+     * @see RequirementCoverageComputer#reset(EditingDomain)
+     */
+    public int getNumberOfCurrentRequirements()
+    {
+        if (editingDomain == null)
+        {
+            return 0;
+        }
+        if (!coveredRequirementsSet)
+        {
+            // recompute the number of current requirements.
+            getNumberOfCoveredRequirements();
+        }
+        return numberOfCurrentRequirements;
+    }
+
+    /**
+     * Get the number of current requirements linked to an upstream requirement in the Current Requirements view.
+     * 
+     * @return the number of linked current requirements or 0 if editing domain has not been initialized.
+     * @see RequirementCoverageComputer#reset(EditingDomain)
+     */
+    public int getNumberOfLinkedCurrentRequirements()
+    {
+        if (editingDomain == null)
+        {
+            return 0;
+        }
+        if (!coveredRequirementsSet)
+        {
+            // recompute the number of current requirements.
+            getNumberOfCoveredRequirements();
+        }
+        return numberOfLinkedCurrentRequirements;
+    }
+
+    /**
+     * Get the number of current requirements linked to an upstream requirement with partial attribute at true in the
+     * Current Requirements view.
+     * 
+     * @return the number of partial linked current requirements or 0 if editing domain has not been initialized.
+     * @see RequirementCoverageComputer#reset(EditingDomain)
+     */
+    public int getNumberOfPartialLinkedCurrentRequirements()
+    {
+        if (editingDomain == null)
+        {
+            return 0;
+        }
+        if (!coveredRequirementsSet)
+        {
+            // recompute the number of current requirements.
+            getNumberOfCoveredRequirements();
+        }
+        return numberOfPartialLinkedCurrentRequirements;
+    }
+
+    /**
+     * Get the number of requirements covered by a Current requirement in Hierarchical elements.
+     * 
+     * @return the number of covered requirements or 0 if editing domain has not been initialized.
+     * @see RequirementCoverageComputer#reset(EditingDomain)
+     */
+    public int getNumberOfCoveredRequirements()
+    {
+        if (editingDomain == null)
+        {
+            return 0;
+        }
+        if (!coveredRequirementsSet)
+        {
+            // recompute the numbers of covered requirements and of current requirements.
+            numberOfCurrentRequirements = 0;
+            numberOfLinkedCurrentRequirements = 0;
+            numberOfPartialLinkedCurrentRequirements = 0;
+            currentRequirementsLinks.clear();
+            coveredRequirements.clear();
+            RequirementProject project = RequirementUtils.getRequirementProject(editingDomain);
+            if (project != null)
+            {
+                listen(project);
+                // check recursively for covered requirements in Hierarchical elements
+                for (HierarchicalElement hierarchicalElement : project.getHierarchicalElement())
+                {
+                    listen(hierarchicalElement);
+                    TreeIterator<EObject> iterator = hierarchicalElement.eAllContents();
+                    iterateForAddingCoverage(iterator, false);
+                }
+                // check for other requirements in current requirements view
+                for (SpecialChapter chapter : project.getChapter())
+                {
+                    listenForCurrentOnly(chapter);
+                    TreeIterator<EObject> iterator = chapter.eAllContents();
+                    iterateForAddingCoverage(iterator, true);
+                }
+            }
+            coveredRequirementsSet = true;
+        }
+        return coveredRequirements.size();
     }
 
     /**
@@ -655,39 +1059,6 @@ public final class RequirementCoverageComputer
     }
 
     /**
-     * Get the number of requirements covered by a Current requirement in Hierarchical elements.
-     * 
-     * @return the number of covered requirements or 0 if editing domain has not been initialized.
-     * @see RequirementCoverageComputer#reset(EditingDomain)
-     */
-    public int getNumberOfCoveredRequirements()
-    {
-        if (editingDomain == null)
-        {
-            return 0;
-        }
-        if (!coveredRequirementsSet)
-        {
-            // recompute the number of covered requirements.
-            coveredRequirements = new HashMap<EObject, List<CurrentRequirement>>();
-            RequirementProject project = RequirementUtils.getRequirementProject(editingDomain);
-            if (project != null)
-            {
-                listen(project);
-                // check recursively for covered requirements in Hierarchical elements
-                for (HierarchicalElement hierarchicalElement : project.getHierarchicalElement())
-                {
-                    listen(hierarchicalElement);
-                    TreeIterator<EObject> iterator = hierarchicalElement.eAllContents();
-                    iterateForAddingCoverage(iterator);
-                }
-            }
-            coveredRequirementsSet = true;
-        }
-        return coveredRequirements.size();
-    }
-
-    /**
      * Get the percentage rate of covered requirements.
      * 
      * @return the string representation of the coverage rate (100% if editing domain has not been initialized).
@@ -710,8 +1081,8 @@ public final class RequirementCoverageComputer
     }
 
     /**
-     * Reset the coverage information (recomputing is not performed immediately, which allow to reset while
-     * {@link RequirementHelper} is not fully updated).
+     * Reset the coverage and number of current requirements information (recomputing is not performed immediately,
+     * which allows to reset while {@link RequirementHelper} is not fully updated).
      * 
      * @param newEditingDomain the new editing domain, or null if this class must not be used again (until next call).
      */
@@ -748,6 +1119,46 @@ public final class RequirementCoverageComputer
                     String coverageRate = getCoverageRate();
                     // Construct message with coverage rate
                     final String message = String.format(Messages.getString("UpstreamPage.1"), numberOfcoveredRequirements, numberOfRequirements, coverageRate); //$NON-NLS-1$
+
+                    // status line must be updated in a particular thread to avoid thread access violation.
+                    Display.getDefault().syncExec(new Runnable()
+                    {
+                        /**
+                         * Update status line message
+                         */
+                        public void run()
+                        {
+                            statusLineManager.setMessage(message);
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    /**
+     * Handles the display of the numbers of current requirements.
+     * 
+     * Numbers of current requirements printing is linked to Current Requirement view. Theses numbers are computed on
+     * requirements which are contained in this view only.
+     */
+    public void refreshNumberOfCurrentRequirementsDisplay()
+    {
+        CurrentPage page = RequirementHelper.INSTANCE.getCurrentPage();
+        if (page != null)
+        {
+            IActionBars actionBars = page.getSite().getActionBars();
+            if (actionBars != null)
+            {
+                final IStatusLineManager statusLineManager = actionBars.getStatusLineManager();
+                if (statusLineManager != null)
+                {
+                    // get elements for numbers of current requirements
+                    int current = getNumberOfCurrentRequirements();
+                    int linkto = getNumberOfLinkedCurrentRequirements();
+                    int partial = getNumberOfPartialLinkedCurrentRequirements();
+                    // Construct message with numbers of current requirements
+                    final String message = String.format(Messages.getString(CURRENT_PAGE_STATUS_MESSAGE0), current, linkto, partial, current - linkto);
 
                     // status line must be updated in a particular thread to avoid thread access violation.
                     Display.getDefault().syncExec(new Runnable()
