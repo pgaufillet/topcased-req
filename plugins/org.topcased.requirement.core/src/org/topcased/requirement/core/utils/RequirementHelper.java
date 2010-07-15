@@ -684,7 +684,7 @@ public final class RequirementHelper
      */
     public HierarchicalElement getHierarchicalElementRoot()
     {
-        if (currentPage.getModel() instanceof RequirementProject)
+        if (currentPage != null && currentPage.getModel() instanceof RequirementProject)
         {
             RequirementProject reqRoot = (RequirementProject) currentPage.getModel();
             if (!reqRoot.getHierarchicalElement().isEmpty())

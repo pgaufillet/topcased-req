@@ -538,25 +538,27 @@ public final class RequirementUtils
     {
         Set<Resource> toReturn = new HashSet<Resource>();
         Modeler modeler = Utils.getCurrentModeler();
-        EditingDomain editingDomain = modeler.getEditingDomain();
-        for (Resource resource : editingDomain.getResourceSet().getResources())
-        {
-            if (resource.getURI().fileExtension().endsWith("di")) //$NON-NLS-1$
-            {
-                String uri = null;
-                EObject root = resource.getContents().get(0);
-                if (root instanceof Diagrams)
-                {
-                    Diagrams di = (Diagrams) root;
-                    uri = EcoreUtil.getURI(di.getModel()).trimFragment().toString();
-                }
-                ResourceSet resourceSet = new ResourceSetImpl();
-                Resource targetModel = resourceSet.getResource(URI.createURI(uri), true);
-                if (targetModel != null)
-                {
-                    toReturn.add(targetModel);
-                }
-            }
+        if (modeler != null) {
+	        EditingDomain editingDomain = modeler.getEditingDomain();
+	        for (Resource resource : editingDomain.getResourceSet().getResources())
+	        {
+	            if (resource.getURI().fileExtension().endsWith("di")) //$NON-NLS-1$
+	            {
+	                String uri = null;
+	                EObject root = resource.getContents().get(0);
+	                if (root instanceof Diagrams)
+	                {
+	                    Diagrams di = (Diagrams) root;
+	                    uri = EcoreUtil.getURI(di.getModel()).trimFragment().toString();
+	                }
+	                ResourceSet resourceSet = new ResourceSetImpl();
+	                Resource targetModel = resourceSet.getResource(URI.createURI(uri), true);
+	                if (targetModel != null)
+	                {
+	                    toReturn.add(targetModel);
+	                }
+	            }
+	        }
         }
         return toReturn;
     }
