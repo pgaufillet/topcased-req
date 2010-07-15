@@ -418,13 +418,17 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
      */
     public void setSelection(final ISelection selection)
     {
-        viewer.getControl().getDisplay().asyncExec(new Runnable()
+        // update viewer selection, except if viewer has just been disposed
+        if (!viewer.getControl().isDisposed())
         {
-            public void run()
+            viewer.getControl().getDisplay().asyncExec(new Runnable()
             {
-                viewer.setSelection(selection, true);
-            }
-        });
+                public void run()
+                {
+                    viewer.setSelection(selection, true);
+                }
+            });
+        }
     }
 
     /**

@@ -12,6 +12,7 @@ package org.topcased.requirement.core.documentation.current;
 
 import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.domain.IEditingDomainProvider;
 import org.eclipse.swt.widgets.Composite;
 import org.topcased.modeler.documentation.AbstractCommentsComposite;
 import org.topcased.requirement.HierarchicalElement;
@@ -24,7 +25,8 @@ import org.topcased.requirement.TextAttribute;
  * <li>the <b>shortDescription</b> feature of a {@link Requirement}</li>
  * <li>the <b>shortDescription</b> feature of a {@link HierarchicalElement}</li>
  * <li><b>value</b> feature of a {@link TextAttribute}.</li>
- * </ul><br>
+ * </ul>
+ * <br>
  * 
  * Updated : 11 Aug. 2009 (Completely refactor that class into an abstract class {@link AbstractCommentsComposite} and a
  * default implementation one<br>
@@ -40,10 +42,23 @@ public class RequirementDescriptionComposite extends AbstractCommentsComposite
      * @param parent the parent composite
      * @param style the composite style
      * @param commandStack the command stack to use to execute commands
+     * @deprecated use {@link #RequirementDescriptionComposite(Composite, int, IEditingDomainProvider)} instead
      */
     public RequirementDescriptionComposite(Composite parent, int style, CommandStack commandStack)
     {
         super(parent, style, commandStack);
+    }
+
+    /**
+     * Constructor.
+     * 
+     * @param parent the parent composite
+     * @param style the composite style
+     * @param editingDomainProvider the provider of editing domain to execute commands
+     */
+    public RequirementDescriptionComposite(Composite parent, int style, IEditingDomainProvider editingDomainProvider)
+    {
+        super(parent, style, editingDomainProvider);
     }
 
     /**

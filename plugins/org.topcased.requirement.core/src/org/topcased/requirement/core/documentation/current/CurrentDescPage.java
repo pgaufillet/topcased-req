@@ -43,10 +43,19 @@ public class CurrentDescPage extends AbstractDocPage
      * Builds the page with the editor command stack : used to execute commands.
      * 
      * @param stack the editor command stack
+     * @deprecated use {@link #CurrentDescPage()} instead
      */
     public CurrentDescPage(CommandStack stack)
     {
-        super(stack);
+        this();
+    }
+
+    /**
+     * Builds the page.
+     */
+    public CurrentDescPage()
+    {
+        super();
     }
 
     /**
@@ -55,7 +64,7 @@ public class CurrentDescPage extends AbstractDocPage
     @Override
     protected AbstractCommentsComposite createCommentsComposite(Composite parent)
     {
-        return new RequirementDescriptionComposite(parent, SWT.NONE, getCommandStack());
+        return new RequirementDescriptionComposite(parent, SWT.NONE, this);
     }
 
     /**

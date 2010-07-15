@@ -76,7 +76,7 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
     {
         if (currentPage != null && key == IDocPage.class)
         {
-            return new CurrentDescPage(currentPage.getEditingDomain().getCommandStack());
+            return new CurrentDescPage();
         }
         else if (key.equals(IPropertySheetPage.class))
         {

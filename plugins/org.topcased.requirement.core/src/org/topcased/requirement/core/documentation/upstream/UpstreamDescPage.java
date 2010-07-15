@@ -45,10 +45,19 @@ public class UpstreamDescPage extends AbstractDocPage
      * Builds the page with the editor command stack : used to execute commands.
      * 
      * @param stack the editor command stack
+     * @deprecated use {@link #UpstreamDescPage()} instead
      */
     public UpstreamDescPage(CommandStack stack)
     {
-        super(stack);
+        this();
+    }
+
+    /**
+     * Builds the page with the editor command stack : used to execute commands.
+     */
+    public UpstreamDescPage()
+    {
+        super();
     }
 
     /**
@@ -57,7 +66,7 @@ public class UpstreamDescPage extends AbstractDocPage
     @Override
     protected AbstractCommentsComposite createCommentsComposite(Composite parent)
     {
-        return new ElementDescriptionComposite(parent, SWT.NONE, getCommandStack());
+        return new ElementDescriptionComposite(parent, SWT.NONE, this);
     }
 
     /**

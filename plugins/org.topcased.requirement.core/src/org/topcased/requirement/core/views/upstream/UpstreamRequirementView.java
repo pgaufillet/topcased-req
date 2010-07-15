@@ -79,7 +79,7 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
     {
         if (upstreamPage != null && type == IDocPage.class)
         {
-            return new UpstreamDescPage(upstreamPage.getEditingDomain().getCommandStack());
+            return new UpstreamDescPage();
         }
         return super.getAdapter(type);
     }

@@ -11,6 +11,7 @@
 package org.topcased.requirement.core.documentation.upstream;
 
 import org.eclipse.emf.common.command.CommandStack;
+import org.eclipse.emf.edit.domain.IEditingDomainProvider;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
@@ -38,10 +39,23 @@ public class ElementDescriptionComposite extends AbstractCommentsComposite
      * @param parent the parent composite
      * @param style the composite style
      * @param commandStack the command stack to use to execute commands
+     * @deprecated use {@link #ElementDescriptionComposite(Composite, int, IEditingDomainProvider)} instead
      */
     public ElementDescriptionComposite(Composite parent, int style, CommandStack commandStack)
     {
         super(parent, style, commandStack);
+    }
+
+    /**
+     * Constructor.
+     * 
+     * @param parent the parent composite
+     * @param style the composite style
+     * @param editingDomainProvider the provider of editing domain to execute commands
+     */
+    public ElementDescriptionComposite(Composite parent, int style, IEditingDomainProvider editingDomainProvider)
+    {
+        super(parent, style, editingDomainProvider);
     }
 
     /**
