@@ -24,6 +24,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.mwe.core.WorkflowRunner;
 import org.eclipse.emf.mwe.core.issues.Issues;
 import org.eclipse.emf.mwe.core.issues.IssuesImpl;
@@ -110,7 +111,7 @@ public class CSVFileGenerator {
 	private Map<String, String> getProperties() {
 		final Map<String, String> properties = new HashMap<String, String>();
 		properties.put("target", outputFolder);
-		properties.put("model", "file:/" + modelPath.replaceAll("\\\\", "/"));
+		properties.put("model", URI.createFileURI(modelPath).toString());
 
 		// ////////////////////
 		// compute fileName //

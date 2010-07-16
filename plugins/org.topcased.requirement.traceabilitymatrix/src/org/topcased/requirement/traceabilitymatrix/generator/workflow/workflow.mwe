@@ -19,6 +19,7 @@
 			<metaModelPackage  value="ttm.TtmPackage"/> 
 		</metaModel>
 		
+		<fileEncoding value="ISO-8859-1"/>
 		<expand value="org::topcased::requirement::traceabilitymatrix::generator::template::Root::Root('${fileName}') FOR model"/>
 		<outlet path="${target}">
 			<postprocessor class="org.eclipse.xpand2.output.JavaBeautifier"/> 
