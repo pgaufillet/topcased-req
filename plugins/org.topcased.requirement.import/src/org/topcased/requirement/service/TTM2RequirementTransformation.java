@@ -15,12 +15,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.topcased.bus.core.IService;
 import org.topcased.bus.core.ServicesManager;
@@ -45,34 +41,29 @@ public class TTM2RequirementTransformation implements IRequirementTransformation
 
         Map<String, Object> parameters = new HashMap<String, Object>();
 
-        // The absolute path to the ttm model
+        // The absolute path to the TRAMway model
         String inPath = source.getLocation().toOSString();
 
         // The requirement destination model
         String outPath = dest.getName();
 
-        // The workspace destination
-        IPath path = dest.getParent().getFullPath();
+        // The target destination path
+        IResource targetContainer = dest.getParent();
 
         parameters.put("IN", inPath); //$NON-NLS-1$
         parameters.put("OUT", outPath); //$NON-NLS-1$
-        parameters.put("Path", path); //$NON-NLS-1$
+        parameters.put("Path", targetContainer.getFullPath()); //$NON-NLS-1$
 
         IService service = ServicesManager.getInstance().getService(TTM2RequirementService.ID);
         service.serviceRun(parameters);
 
-        IWorkspaceRoot wsRoot = ResourcesPlugin.getWorkspace().getRoot();
-        IFolder folder = wsRoot.getFolder(path);
-        if (folder != null && folder.exists())
+        try
         {
-            try
-            {
-                folder.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
-            }
-            catch (CoreException e)
-            {
-                RequirementImportPlugin.log(e);
-            }
+            targetContainer.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
+        }
+        catch (CoreException e)
+        {
+            RequirementImportPlugin.log(e);
         }
     }
 
