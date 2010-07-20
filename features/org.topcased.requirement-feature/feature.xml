@@ -3,7 +3,8 @@
       id="org.topcased.requirement"
       label="Topcased Requirement"
       version="4.0.0.qualifier"
-      provider-name="Topcased">
+      provider-name="Topcased"
+      plugin="org.topcased.requirement.core">
 
    <description url="http://www.topcased.org">
       Topcased Requirement Feature. This feature brings capabilities to make possible traceability links between textual requirement and model elements represented onto diagrams.
