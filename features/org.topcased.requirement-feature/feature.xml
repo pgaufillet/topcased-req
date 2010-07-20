@@ -2,7 +2,7 @@
 <feature
       id="org.topcased.requirement"
       label="Topcased Requirement"
-      version="3.4.1.qualifier"
+      version="4.0.0.qualifier"
       provider-name="Topcased">
 
    <description url="http://www.topcased.org">
