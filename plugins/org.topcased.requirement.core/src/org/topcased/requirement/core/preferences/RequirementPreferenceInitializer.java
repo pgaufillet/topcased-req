@@ -33,6 +33,8 @@ public class RequirementPreferenceInitializer extends AbstractPreferenceInitiali
     {
         IPreferenceStore store = RequirementCorePlugin.getDefault().getPreferenceStore();
 
+        store.setDefault(RequirementPreferenceConstants.DELETE_MODEL_WITHOUT_CONFIRM, false);
+
         if (store.getString(CurrentPreferenceHelper.CURRENT_ATTRIBUTES_STORE).length() == 0)
         {
             store.setValue(CurrentPreferenceHelper.CURRENT_ATTRIBUTES_STORE, CurrentPreferenceHelper.serialize(CurrentPreferenceHelper.getDefaultValues()));

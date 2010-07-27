@@ -1939,4 +1939,17 @@
             type="org.topcased.requirement.IdentifiedElement">
       </propertyTester>
    </extension>
+   <extension
+         point="org.topcased.modeler.actionPrecondition">
+      <precondition
+            action="Delete"
+            checker="org.topcased.requirement.core.actions.preconditions.DeleteConfirmationChecker"
+            priority="Low">
+      </precondition>
+      <precondition
+            action="DeleteModel"
+            checker="org.topcased.requirement.core.actions.preconditions.DeleteConfirmationChecker"
+            priority="Low">
+      </precondition>
+   </extension>
 </plugin>

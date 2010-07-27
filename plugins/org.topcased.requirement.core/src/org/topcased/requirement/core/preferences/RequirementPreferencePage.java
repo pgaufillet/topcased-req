@@ -12,14 +12,19 @@
  ******************************************************************************/
 package org.topcased.requirement.core.preferences;
 
+import org.eclipse.jface.preference.BooleanFieldEditor;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.topcased.requirement.core.internal.Messages;
+import org.topcased.requirement.core.internal.RequirementCorePlugin;
 
 /**
  * The requirement preferences page.
@@ -31,6 +36,12 @@ public class RequirementPreferencePage extends PreferencePage implements IWorkbe
 {
     /** The parent composite */
     private Composite parentComposite;
+
+    /** the preference store */
+    private IPreferenceStore preferenceStore = RequirementCorePlugin.getDefault().getPreferenceStore();
+
+    /** the field to edit whether a deleting a model element with requirements need confirmation */
+    private BooleanFieldEditor deleteModelElements;
 
     /**
      * Constructor
@@ -54,7 +65,45 @@ public class RequirementPreferencePage extends PreferencePage implements IWorkbe
         parentComposite.setLayout(layout);
         parentComposite.setFont(parent.getFont());
 
+        Group group = new Group(parentComposite, SWT.SHADOW_ETCHED_OUT);
+        group.setLayout(new GridLayout());
+        group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        group.setText("Delete actions");
+
+        Composite fieldsContainer = new Composite(group, SWT.NONE);
+        fieldsContainer.setLayout(new GridLayout());
+        fieldsContainer.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+        deleteModelElements = new BooleanFieldEditor(RequirementPreferenceConstants.DELETE_MODEL_WITHOUT_CONFIRM, "Do not ask for confirmation before deleting elements with current requirements.",
+                fieldsContainer);
+        deleteModelElements.setPreferenceStore(preferenceStore);
+
+        // load preferences to fields
+        deleteModelElements.load();
+
         return parentComposite;
+    }
+
+    /**
+     * Restore the default values
+     * 
+     * @see org.eclipse.jface.preference.PreferencePage#performDefaults()
+     */
+    protected void performDefaults()
+    {
+        deleteModelElements.loadDefault();
+        super.performDefaults();
+    }
+
+    /**
+     * Store the values in the PreferenceStore
+     * 
+     * @see org.eclipse.jface.preference.IPreferencePage#performOk()
+     */
+    public boolean performOk()
+    {
+        deleteModelElements.store();
+        return super.performOk();
     }
 
     /**
