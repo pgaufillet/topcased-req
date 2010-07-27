@@ -10,7 +10,6 @@
  **********************************************************************************************************************/
 package org.topcased.requirement.core.views;
 
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -30,12 +29,10 @@ import org.topcased.requirement.core.internal.Messages;
  * @author <a href="mailto:sebastien.gabel@c-s.fr">Sebastien GABEL</a>
  * @since Topcased 2.2.0
  */
-public class SearchComposite extends Composite
+public abstract class SearchComposite extends Composite
 {
 
     private IRequirementFilter filter;
-
-    private Viewer viewer;
 
     /**
      * Constructor
@@ -70,21 +67,31 @@ public class SearchComposite extends Composite
             {
                 String text = textFilter.getText();
                 filter.setSearched(text);
-                viewer.refresh();
+
+                if (text != null && text.length() != 0)
+                {
+                    doAfterSearch();
+                }
+                else
+                {
+                    doAfterEmptySearch();
+                }
             }
         });
     }
 
     /**
-     * Sets the filter applied on a given viewer
+     * Sets the filter applied
      * 
-     * @param theViewer The {@link Viewer} on which the filter is applied.
-     * @param theFilter The {@link IRequirementFilterviewer} filter
+     * @param filter The {@link IRequirementFilterviewer} filter
      */
-    public void setFilter(Viewer theViewer, IRequirementFilter theFilter)
+    public void setFilter(IRequirementFilter filter)
     {
-        viewer = theViewer;
-        filter = theFilter;
+        this.filter = filter;
     }
+
+    protected abstract void doAfterSearch();
+
+    protected abstract void doAfterEmptySearch();
 
 }

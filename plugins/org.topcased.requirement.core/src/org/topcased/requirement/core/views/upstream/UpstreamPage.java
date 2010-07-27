@@ -52,7 +52,7 @@ import org.topcased.requirement.RequirementPackage;
 import org.topcased.requirement.core.dnd.DragSourceUpstreamAdapter;
 import org.topcased.requirement.core.dnd.RequirementTransfer;
 import org.topcased.requirement.core.filters.CurrentViewFilterFromUpstreamSelection;
-import org.topcased.requirement.core.filters.UpstreamRequirementFilter;
+import org.topcased.requirement.core.filters.RequirementFilter;
 import org.topcased.requirement.core.handlers.ICommandConstants;
 import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
@@ -121,12 +121,25 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
         int dndOperations = DND.DROP_COPY | DND.DROP_MOVE;
         Transfer[] transfers = new Transfer[] {RequirementTransfer.getInstance()};
         viewer.addDragSupport(dndOperations, transfers, new DragSourceUpstreamAdapter(viewer));
-        UpstreamRequirementFilter upstreamRequirementFilter = new UpstreamRequirementFilter();
+        RequirementFilter upstreamRequirementFilter = new RequirementFilter(false, true);
         viewer.addFilter(upstreamRequirementFilter);
 
         // Text filter
-        final SearchComposite findIt = new SearchComposite(mainComposite, SWT.NONE);
-        findIt.setFilter(viewer, upstreamRequirementFilter);
+        final SearchComposite findIt = new SearchComposite(mainComposite, SWT.NONE)
+        {
+            @Override
+            protected void doAfterSearch()
+            {
+                viewer.refresh();
+            }
+
+            @Override
+            protected void doAfterEmptySearch()
+            {
+                viewer.refresh();
+            }
+        };
+        findIt.setFilter(upstreamRequirementFilter);
 
         hookContextMenu();
         hookListeners();

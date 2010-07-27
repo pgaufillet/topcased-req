@@ -131,7 +131,6 @@ is permitted.
       <import plugin="org.eclipse.emf.search.ui"/>
       <import plugin="org.eclipse.emf.search.ecore.ui"/>
       <import plugin="org.eclipse.emf.ecore.editor"/>
-      <import plugin="org.topcased.traceability" version="2.5.2" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.forms"/>
       <import plugin="org.eclipse.gmf.runtime.draw2d.ui.render.awt"/>
       <import plugin="org.eclipse.gmf.runtime.draw2d.ui.render"/>
@@ -140,6 +139,8 @@ is permitted.
       <import plugin="org.eclipse.emf.mwe.core"/>
       <import plugin="org.eclipse.xpand"/>
       <import plugin="org.eclipse.uml2.uml"/>
+      <import plugin="org.apache.xerces"/>
+      <import plugin="org.eclipse.emf.edit.ui"/>
    </requires>
 
    <plugin
@@ -249,6 +250,13 @@ is permitted.
 
    <plugin
          id="org.topcased.requirement.traceabilitymatrix"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.topcased.requirement.editor"
          download-size="0"
          install-size="0"
          version="0.0.0"

@@ -59,7 +59,7 @@ import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.core.dnd.DragSourceCurrentAdapter;
 import org.topcased.requirement.core.dnd.DropTargetCurrentAdapter;
 import org.topcased.requirement.core.dnd.RequirementTransfer;
-import org.topcased.requirement.core.filters.CurrentRequirementFilter;
+import org.topcased.requirement.core.filters.RequirementFilter;
 import org.topcased.requirement.core.filters.CurrentViewFilterFromUpstreamSelection;
 import org.topcased.requirement.core.handlers.ICommandConstants;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
@@ -287,7 +287,7 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
         viewer.addDoubleClickListener(new RequirementDoubleClickListener());
         viewer.addSelectionChangedListener(new CurrentSelectionChangeListener());
 
-        final CurrentRequirementFilter currentFilter = new CurrentRequirementFilter();
+        final RequirementFilter currentFilter = new RequirementFilter(true, false);
         viewer.setFilters(new ViewerFilter[] {currentFilter});
 
         int dndOperations = DND.DROP_COPY | DND.DROP_MOVE;
@@ -308,8 +308,21 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
         });
 
         // Text filter
-        final SearchComposite findIt = new SearchComposite(mainComposite, SWT.NONE);
-        findIt.setFilter(viewer, currentFilter);
+        final SearchComposite findIt = new SearchComposite(mainComposite, SWT.NONE)
+        {
+            @Override
+            protected void doAfterSearch()
+            {
+                viewer.refresh();
+            }
+
+            @Override
+            protected void doAfterEmptySearch()
+            {
+                viewer.refresh();
+            }
+        };
+        findIt.setFilter(currentFilter);
 
         hookContextMenu();
         hookListeners();
