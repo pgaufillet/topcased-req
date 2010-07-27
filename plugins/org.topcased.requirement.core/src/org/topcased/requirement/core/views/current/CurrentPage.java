@@ -279,7 +279,8 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
         viewer = new TreeViewer(mainComposite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
         viewer.getTree().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         viewer.setContentProvider(new CurrentRequirementContentProvider(RequirementUtils.getAdapterFactory()));
-        CurrentRequirementLabelProvider labelProvider = new CurrentRequirementLabelProvider(RequirementUtils.getAdapterFactory());
+
+        CurrentRequirementLabelProvider labelProvider = new CurrentRequirementLabelProvider(RequirementUtils.getAdapterFactory(getEditingDomain()));
         ILabelDecorator labelDecorator = RequirementCorePlugin.getDefault().getWorkbench().getDecoratorManager().getLabelDecorator();
         ILabelProvider fullLabelProvider = new DecoratingLabelProvider(labelProvider, labelDecorator);
         viewer.setLabelProvider(fullLabelProvider);

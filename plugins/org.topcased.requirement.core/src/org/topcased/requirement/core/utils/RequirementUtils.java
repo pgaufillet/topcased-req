@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -110,6 +111,27 @@ public final class RequirementUtils
     public static ComposedAdapterFactory getAdapterFactory()
     {
         return adapterFactory;
+    }
+
+    /**
+     * Gets the adapter factory from the editing domain (mainly used for label providers)
+     * 
+     * @param editingDomain the modeler's editing domain
+     * @return the editing domain's adapter factory or default adapter factory if unavailable
+     * @see #getAdapterFactory()
+     */
+    public static AdapterFactory getAdapterFactory(EditingDomain editingDomain)
+    {
+        if (editingDomain instanceof TopcasedAdapterFactoryEditingDomain)
+        {
+            TopcasedAdapterFactoryEditingDomain topcasedDomain = (TopcasedAdapterFactoryEditingDomain) editingDomain;
+            if (topcasedDomain.getAdapterFactory() instanceof ComposedAdapterFactory)
+            {
+                ComposedAdapterFactory factory = (ComposedAdapterFactory) topcasedDomain.getAdapterFactory();
+                return factory;
+            }
+        }
+        return getAdapterFactory();
     }
 
     /**
@@ -538,27 +560,28 @@ public final class RequirementUtils
     {
         Set<Resource> toReturn = new HashSet<Resource>();
         Modeler modeler = Utils.getCurrentModeler();
-        if (modeler != null) {
-	        EditingDomain editingDomain = modeler.getEditingDomain();
-	        for (Resource resource : editingDomain.getResourceSet().getResources())
-	        {
-	            if (resource.getURI().fileExtension().endsWith("di")) //$NON-NLS-1$
-	            {
-	                String uri = null;
-	                EObject root = resource.getContents().get(0);
-	                if (root instanceof Diagrams)
-	                {
-	                    Diagrams di = (Diagrams) root;
-	                    uri = EcoreUtil.getURI(di.getModel()).trimFragment().toString();
-	                }
-	                ResourceSet resourceSet = new ResourceSetImpl();
-	                Resource targetModel = resourceSet.getResource(URI.createURI(uri), true);
-	                if (targetModel != null)
-	                {
-	                    toReturn.add(targetModel);
-	                }
-	            }
-	        }
+        if (modeler != null)
+        {
+            EditingDomain editingDomain = modeler.getEditingDomain();
+            for (Resource resource : editingDomain.getResourceSet().getResources())
+            {
+                if (resource.getURI().fileExtension().endsWith("di")) //$NON-NLS-1$
+                {
+                    String uri = null;
+                    EObject root = resource.getContents().get(0);
+                    if (root instanceof Diagrams)
+                    {
+                        Diagrams di = (Diagrams) root;
+                        uri = EcoreUtil.getURI(di.getModel()).trimFragment().toString();
+                    }
+                    ResourceSet resourceSet = new ResourceSetImpl();
+                    Resource targetModel = resourceSet.getResource(URI.createURI(uri), true);
+                    if (targetModel != null)
+                    {
+                        toReturn.add(targetModel);
+                    }
+                }
+            }
         }
         return toReturn;
     }

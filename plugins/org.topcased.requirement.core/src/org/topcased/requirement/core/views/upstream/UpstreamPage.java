@@ -101,7 +101,7 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
         viewer.getTree().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         viewer.setContentProvider(ctPvd = new UpstreamRequirementContentProvider(RequirementUtils.getAdapterFactory()));
 
-        UpstreamRequirementLabelProvider labelProvider = new UpstreamRequirementLabelProvider(RequirementUtils.getAdapterFactory());
+        UpstreamRequirementLabelProvider labelProvider = new UpstreamRequirementLabelProvider(RequirementUtils.getAdapterFactory(getEditingDomain()));
         ILabelDecorator labelDecorator = RequirementCorePlugin.getDefault().getWorkbench().getDecoratorManager().getLabelDecorator();
         ILabelProvider fullLabelProvider = new DecoratingLabelProvider(labelProvider, labelDecorator);
         viewer.setLabelProvider(fullLabelProvider);
