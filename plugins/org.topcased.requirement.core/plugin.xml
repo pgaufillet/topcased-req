@@ -53,6 +53,14 @@
          </activeWhen>
       </handler>
       <handler
+            class="org.topcased.requirement.core.handlers.ExpandHandler"
+            commandId="org.topcased.requirement.core.expand">
+      </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.CollapseHandler"
+            commandId="org.topcased.requirement.core.collapse">
+      </handler>
+      <handler
             class="org.topcased.requirement.core.handlers.MoveUpHandler"
             commandId="org.topcased.requirement.core.moveUp">
          <activeWhen>
@@ -607,6 +615,16 @@
                      visible="true">
                </separator>
                <command
+                     commandId="org.topcased.requirement.core.expand"
+                     label="&amp;Expand"
+                     style="push">
+               </command>
+               <command
+                     commandId="org.topcased.requirement.core.collapse"
+                     label="&amp;Collapse"
+                     style="push">
+               </command>
+               <command
                      commandId="org.topcased.requirement.core.moveUp"
                      label="&amp;Move Up"
                      style="push">
@@ -1143,6 +1161,14 @@
    <extension
          point="org.eclipse.ui.commandImages">
       <image
+            commandId="org.topcased.requirement.core.expand"
+            icon="icons/expand.gif">
+      </image>
+      <image
+            commandId="org.topcased.requirement.core.collapse"
+            icon="icons/collapse.gif">
+      </image>
+      <image
             commandId="org.topcased.requirement.core.moveUp"
             icon="icons/up.gif">
       </image>
@@ -1321,6 +1347,16 @@
          </state>
       </command>
       <command
+            description="Expand all children of selected node"
+            id="org.topcased.requirement.core.expand"
+            name="Expand Branch">
+      </command>
+      <command
+            description="Collapse all children of selected node"
+            id="org.topcased.requirement.core.collapse"
+            name="Collapse Branch">
+      </command>
+      <command
             description="Move up one or several requirements or hierachical elements"
             id="org.topcased.requirement.core.moveUp"
             name="Move Up">
@@ -1481,6 +1517,18 @@
    </extension>
    <extension
          point="org.eclipse.ui.bindings">
+      <key
+            commandId="org.topcased.requirement.core.expand"
+            contextId="org.topcased.requirement.core.currentView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M2+NUMPAD_MULTIPLY">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.collapse"
+            contextId="org.topcased.requirement.core.currentView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M2+NUMPAD_DIVIDE">
+      </key>
       <key
             commandId="org.topcased.requirement.core.delete"
             contextId="org.topcased.requirement.core.currentView"
