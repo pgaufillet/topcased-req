@@ -618,11 +618,29 @@
                      commandId="org.topcased.requirement.core.expand"
                      label="&amp;Expand"
                      style="push">
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="requirementActionsEnablement.hasRequirementModel">
+                        <equals
+                              value="true">
+                        </equals>
+                     </with>
+                  </visibleWhen>
                </command>
                <command
                      commandId="org.topcased.requirement.core.collapse"
                      label="&amp;Collapse"
                      style="push">
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="requirementActionsEnablement.hasRequirementModel">
+                        <equals
+                              value="true">
+                        </equals>
+                     </with>
+                  </visibleWhen>
                </command>
                <command
                      commandId="org.topcased.requirement.core.moveUp"
