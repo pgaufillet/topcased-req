@@ -33,7 +33,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.dnd.DND;
 import org.topcased.modeler.diagrams.model.Diagrams;
 import org.topcased.modeler.editor.Modeler;
-import org.topcased.modeler.exceptions.EditingDomainReadOnly;
+import org.topcased.modeler.exceptions.EditingDomainReadOnlyException;
 import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.AnonymousRequirement;
 import org.topcased.requirement.AttributeAllocate;
@@ -245,7 +245,7 @@ public final class RequirementHelper {
 			} else {
 				AnonymousRequirement anonymmous = createAnonymousRequirement(hierarchicalElement);
 				createdRequirements.add(anonymmous);
-				EditingDomainReadOnly.appendIfCanExecute(globalCmd, hierarchicalElement.eResource(),editingDomain,
+				EditingDomainReadOnlyException.appendIfCanExecute(globalCmd, hierarchicalElement.eResource(),editingDomain,
 						AddCommand.create(editingDomain, hierarchicalElement,
 								RequirementPackage.eINSTANCE
 										.getHierarchicalElement_Requirement(),
@@ -278,7 +278,7 @@ public final class RequirementHelper {
 		if (!globalCmd.appendIfCanExecute(com)) {
 			if (toCheck != null && domain != null
 					&& domain.isReadOnly(toCheck)) {
-				throw new EditingDomainReadOnly();
+				throw new EditingDomainReadOnlyException();
 			}
 		}
 	}
@@ -332,7 +332,7 @@ public final class RequirementHelper {
 			// Add child to the model as a hierarchical element
 			EObject project = RequirementUtils
 					.getRequirementProject(editingDomain);
-			EditingDomainReadOnly.appendIfCanExecute(cmd,project.eResource(),editingDomain,AddCommand
+			EditingDomainReadOnlyException.appendIfCanExecute(cmd,project.eResource(),editingDomain,AddCommand
 					.create(editingDomain,
 							project,
 							RequirementPackage.eINSTANCE
@@ -341,7 +341,7 @@ public final class RequirementHelper {
 			return null;
 		} else {
 			HierarchicalElement element = getHierarchicalElement(parent, cmd);
-			EditingDomainReadOnly.appendIfCanExecute(cmd,element.eResource(),editingDomain,AddCommand.create(editingDomain, element,
+			EditingDomainReadOnlyException.appendIfCanExecute(cmd,element.eResource(),editingDomain,AddCommand.create(editingDomain, element,
 					RequirementPackage.eINSTANCE
 							.getHierarchicalElement_Children(), child));
 			return element;
@@ -429,7 +429,7 @@ public final class RequirementHelper {
 									editingDomain, target, pos, DND.DROP_MOVE,
 									DND.DROP_MOVE,
 									Collections.singleton(requirement));
-							EditingDomainReadOnly.appendIfCanExecute(compoundCmd,target.eResource(),editingDomain,dndCmd);
+							EditingDomainReadOnlyException.appendIfCanExecute(compoundCmd,target.eResource(),editingDomain,dndCmd);
 						}
 						toSelect.add(requirement);
 					}
@@ -492,7 +492,7 @@ public final class RequirementHelper {
 						.getHierarchicalElement_Requirement(), newCurrentReq,
 				pos)))
 		{
-			throw new EditingDomainReadOnly(target.eResource());
+			throw new EditingDomainReadOnlyException(target.eResource());
 		}
 
 		// Handle the case when this created requirement is the first
