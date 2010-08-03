@@ -10,6 +10,9 @@
  **********************************************************************************************************************/
 package org.topcased.requirement.core.documentation.current;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import org.eclipse.emf.common.command.AbstractCommand;
 import org.eclipse.emf.ecore.EModelElement;
 import org.eclipse.emf.ecore.EObject;
@@ -19,7 +22,7 @@ import org.topcased.requirement.TextAttribute;
 import org.topcased.requirement.core.internal.Messages;
 
 /**
- * An EMF {@link AbstractCommand} use to update value of : 
+ * An EMF {@link AbstractCommand} use to update value of :
  * <ul>
  * <li>the <b>shortDescription</b> feature of a {@link Requirement}</li>
  * <li>the <b>shortDescription</b> feature of a {@link HierarchicalElement}</li>
@@ -51,6 +54,15 @@ public class ChangeRequirementElementCommand extends AbstractCommand
 
         this.element = element;
         this.newDocumentation = documentation;
+    }
+
+    /**
+     * Return the affected element
+     */
+    @Override
+    public Collection< ? > getAffectedObjects()
+    {
+        return Collections.singleton(element);
     }
 
     /**

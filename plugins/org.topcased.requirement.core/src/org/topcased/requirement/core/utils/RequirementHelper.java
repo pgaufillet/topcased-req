@@ -96,6 +96,9 @@ public final class RequirementHelper
     /** A single reference to the current page */
     private CurrentPage currentPage;
 
+    /** The default value of Partial for {@link AttributeLink} objects */
+    private static Boolean partialDefaultValue = false;
+
     /**
      * Constructor
      */
@@ -614,8 +617,28 @@ public final class RequirementHelper
         AttributeLink att = RequirementFactory.eINSTANCE.createAttributeLink();
         att.setName(name);
         att.setValue(reqSource);
-        att.setPartial(false);
+        att.setPartial(getDefaultPartialValue());
         return att;
+    }
+
+    /**
+     * Get the default Partial value for an <b>{@link AttributeLink}</b> object
+     * 
+     * @return default value of Partial
+     */
+    private static Boolean getDefaultPartialValue()
+    {
+        return partialDefaultValue;
+    }
+
+    /**
+     * Set the default Partial value for an <b>{@link AttributeLink}</b> object
+     * 
+     * @param newDefaultValue the new default value for Partial
+     */
+    public static void setDefaultPartialValue(boolean newDefaultValue)
+    {
+        partialDefaultValue = newDefaultValue;
     }
 
     /**

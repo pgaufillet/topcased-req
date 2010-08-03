@@ -24,6 +24,8 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.ILabelDecorator;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -58,12 +60,14 @@ import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.listeners.RequirementDoubleClickListener;
 import org.topcased.requirement.core.listeners.UpstreamSelectionChangedListener;
+import org.topcased.requirement.core.preferences.UpstreamStylesPreferenceHelper;
 import org.topcased.requirement.core.providers.UpstreamRequirementContentProvider;
 import org.topcased.requirement.core.providers.UpstreamRequirementLabelProvider;
 import org.topcased.requirement.core.utils.RequirementCoverageComputer;
 import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.AbstractRequirementPage;
+import org.topcased.requirement.core.views.AbstractRequirementView;
 import org.topcased.requirement.core.views.SearchComposite;
 import org.topcased.requirement.core.views.current.CurrentPage;
 
@@ -247,6 +251,7 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
         super.hookListeners();
 
         RequirementUtils.getAdapterFactory().addListener(changeListener);
+        AbstractRequirementView.getPreferenceStore().addPropertyChangeListener(prefListener);
 
         hookUpstreamSelectionChangedListener();
     }
@@ -260,6 +265,7 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
         super.unhookListeners();
 
         RequirementUtils.getAdapterFactory().removeListener(changeListener);
+        AbstractRequirementView.getPreferenceStore().removePropertyChangeListener(prefListener);
 
         unhookUpstreamSelectionChangedListener();
     }
@@ -301,6 +307,28 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
             currentPage.getViewer().refresh();
         }
     }
+
+    /**
+     * Internal listener to refresh the upstream viewer when style preference is updated.
+     */
+    private IPropertyChangeListener prefListener = new IPropertyChangeListener()
+    {
+        /**
+         * Update display if preference style has changed
+         * 
+         * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(PropertyChangeEvent)
+         */
+        public void propertyChange(PropertyChangeEvent event)
+        {
+            if (UpstreamStylesPreferenceHelper.UPSTREAM_STYLES_PREFERENCE.equals(event.getProperty()))
+            {
+                if (!viewer.getControl().isDisposed())
+                {
+                    viewer.refresh(true);
+                }
+            }
+        }
+    };
 
     /**
      * Internal listener to refresh the upstream viewer when modifications are done on the current page.

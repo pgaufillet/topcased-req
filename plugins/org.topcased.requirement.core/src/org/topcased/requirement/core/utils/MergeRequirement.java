@@ -16,13 +16,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.diff.merge.service.MergeService;
@@ -49,6 +54,7 @@ import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.ObjectAttribute;
 import org.topcased.requirement.Requirement;
 import org.topcased.requirement.UpstreamModel;
+import org.topcased.requirement.core.extensions.IMergeRequirementProcessor;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
 
 import ttm.Document;
@@ -70,6 +76,12 @@ public final class MergeRequirement
 {
     public static final MergeRequirement INSTANCE = new MergeRequirement();
 
+    private static final String MERGE_PROCESSORS_EXTENSION_POINT = "org.topcased.requirement.core.mergeRequirementProcessor";
+
+    private static final String MERGE_PROCESSOR_ELEMENT_NAME = "mergeProcessor";
+
+    private static final String CLASS_ATTRIBUTE_NAME = "class";
+
     private EList<DiffElement> deletions;
 
     private EList<DiffElement> changes;
@@ -82,6 +94,9 @@ public final class MergeRequirement
 
     private Document deletedDoc;
 
+    /** The extra processors from extensions to execute on requirement merge */
+    private List<IMergeRequirementProcessor> processors;
+
     /**
      * Constructor
      */
@@ -92,6 +107,31 @@ public final class MergeRequirement
         additions = new BasicEList<DiffElement>();
         moves = new BasicEList<DiffElement>();
         impact = new HashMap<EObject, List<EObject>>();
+
+        // Initialize extra processors from extension point
+        processors = new LinkedList<IMergeRequirementProcessor>();
+        IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(MERGE_PROCESSORS_EXTENSION_POINT);
+        for (IExtension extension : extensionPoint.getExtensions())
+        {
+            for (IConfigurationElement cfg : extension.getConfigurationElements())
+            {
+                if (MERGE_PROCESSOR_ELEMENT_NAME.equals(cfg.getName()))
+                {
+                    try
+                    {
+                        Object processor = cfg.createExecutableExtension(CLASS_ATTRIBUTE_NAME);
+                        if (processor instanceof IMergeRequirementProcessor)
+                        {
+                            processors.add((IMergeRequirementProcessor) processor);
+                        }
+                    }
+                    catch (CoreException e)
+                    {
+                        RequirementCorePlugin.log(e);
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -261,6 +301,11 @@ public final class MergeRequirement
                     MergeService.merge(diff, true);
                 }
             }
+            // process from extensions
+            for (IMergeRequirementProcessor processor : processors)
+            {
+                processor.processMoved(diff);
+            }
         }
     }
 
@@ -281,6 +326,11 @@ public final class MergeRequirement
                     // the hierarchical element is marked as added
                     MergeService.merge(diff, true);
                 }
+            }
+            // process from extensions
+            for (IMergeRequirementProcessor processor : processors)
+            {
+                processor.processAdded(diff);
             }
         }
     }
@@ -318,6 +368,11 @@ public final class MergeRequirement
                     addRequirementToDeleted((ttm.Requirement) removedElement);
                 }
             }
+            // process from extensions
+            for (IMergeRequirementProcessor processor : processors)
+            {
+                processor.processDeleted(diff);
+            }
         }
     }
 
@@ -342,6 +397,11 @@ public final class MergeRequirement
                     processImpact(diff, modifiedObject);
                     MergeService.merge(diff, true);
                 }
+            }
+            // process from extensions
+            for (IMergeRequirementProcessor processor : processors)
+            {
+                processor.processModified(diff);
             }
         }
     }

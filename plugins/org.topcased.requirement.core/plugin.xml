@@ -7,6 +7,8 @@
    <extension-point id="requirementIdentifierVariables" name="Provide ways to add Variables to the requirement naming pattern" schema="schema/requirementIdentifierVariables.exsd"/>
    <extension-point id="requirementTransformation" name="Extension point to implement transformation from file to requirement" schema="schema/requirementTransformation.exsd"/>
    <extension-point id="requirementCountingAlgorithm" name="Extension point to implement the counting algorithm of requirements" schema="schema/requirementCountingAlgorithm.exsd"/>
+   <extension-point id="upstreamstyles" name="Upstream Requirement Styles" schema="schema/upstreamstyles.exsd"/>
+   <extension-point id="mergeRequirementProcessor" name="Merge Requirement Processor" schema="schema/mergeRequirementProcessor.exsd"/>
    <extension
          point="org.eclipse.core.runtime.adapters">
       <factory
@@ -1306,6 +1308,12 @@
             name="Upstream Settings">
       </page>
       <page
+            category="org.topcased.requirement.preferences.upstream"
+            class="org.topcased.requirement.core.preferences.UpstreamStylesPreferencePage"
+            id="org.topcased.requirement.preferences.upstream.styles"
+            name="Upstream Styles">
+      </page>
+      <page
             category="org.topcased.requirement.preferences"
             class="org.topcased.requirement.core.preferences.CurrentPreferencePage"
             id="org.topcased.requirement.preferences.current"
@@ -1521,6 +1529,17 @@
    </extension>
    <extension
          point="org.eclipse.ui.propertyPages">
+      <page
+            category="org.topcased.facilities.preferences.property.TopcasedPreferencePage"
+            class="org.topcased.requirement.core.preferences.UpstreamStylesPreferencePage"
+            id="org.topcased.requirement.preferences.upstream.styles"
+            name="Upstream Styles">
+         <enabledWhen>
+            <adapt
+                  type="org.eclipse.core.resources.IProject">
+            </adapt>
+         </enabledWhen>
+      </page>
       <page
             category="org.topcased.facilities.preferences.property.TopcasedPreferencePage"
             class="org.topcased.requirement.core.preferences.RequirementNamingPreferencePage"
@@ -2017,5 +2036,13 @@
             checker="org.topcased.requirement.core.actions.preconditions.DeleteConfirmationChecker"
             priority="Low">
       </precondition>
+   </extension>
+   <extension
+         point="org.topcased.requirement.core.upstreamstyles">
+      <styleEvaluator
+            class="org.topcased.requirement.core.views.upstream.styles.LinkedUpstreamRequirementStyle"
+            name="Linked"
+            priority="Low">
+      </styleEvaluator>
    </extension>
 </plugin>
