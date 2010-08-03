@@ -136,11 +136,15 @@ is permitted.
       <import plugin="org.eclipse.gmf.runtime.draw2d.ui.render"/>
       <import plugin="org.apache.batik.svggen"/>
       <import plugin="org.apache.batik.ext.awt"/>
+      <import plugin="org.apache.xerces"/>
       <import plugin="org.eclipse.emf.mwe.core"/>
       <import plugin="org.eclipse.xpand"/>
       <import plugin="org.eclipse.uml2.uml"/>
-      <import plugin="org.apache.xerces"/>
-      <import plugin="org.eclipse.emf.edit.ui"/>
+      <import plugin="org.topcased.utils.log4j"/>
+      <import plugin="org.eclipse.swt"/>
+      <import plugin="org.eclipse.emf.common"/>
+      <import plugin="org.eclipse.ui.workbench"/>
+      <import plugin="org.eclipse.core.commands"/>
    </requires>
 
    <plugin
@@ -257,6 +261,13 @@ is permitted.
 
    <plugin
          id="org.topcased.requirement.editor"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.topcased.requirement.traceabilitymatrix.batch"
          download-size="0"
          install-size="0"
          version="0.0.0"
