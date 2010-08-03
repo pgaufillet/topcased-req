@@ -42,6 +42,8 @@ public class CSVFileGenerator {
 
 	// generation output folder
 	private final String outputFolder;
+	
+    private String outputFileName;
 
 	/**
 	 * Constructor
@@ -51,9 +53,10 @@ public class CSVFileGenerator {
 	 * @param modelPath
 	 *            generation source model
 	 */
-	public CSVFileGenerator(final String outputFolder, final String modelPath) {
+	public CSVFileGenerator(final String outputFolder, final String modelPath, final String outputFileName) {
 		this.outputFolder = outputFolder;
 		this.modelPath = modelPath;
+		this.outputFileName = outputFileName;
 	}
 
 	/**
@@ -66,7 +69,7 @@ public class CSVFileGenerator {
 
 		// launch the workflow
 		final WorkflowRunner wf = new WorkflowRunner();
-		final boolean ok1 = wf.prepare(workflowFile, null, getProperties());
+		wf.prepare(workflowFile, null, getProperties());
 		final Issues issues = new IssuesImpl();
 		final boolean ok = wf.executeWorkflow(null, issues);
 		if (!ok) {
@@ -120,26 +123,29 @@ public class CSVFileGenerator {
 		final File outputFolderFile = new File(outputFolder);
 		final File modelPathFile = new File(modelPath);
 
-		final String root = modelPathFile.getName().substring(0,
-				modelPathFile.getName().length() - 12);
-		int index = 0;
-		boolean indexOk = false;
+		if (outputFileName == null || outputFileName.equals("")) {
+		    final String root = modelPathFile.getName().substring(0,
+		            modelPathFile.getName().length() - 12);
+		    int index = 0;
+		    boolean indexOk = false;
 
-		// getting existing ifpug exports
-		final List<String> existingFiles = Arrays.asList(outputFolderFile
-				.list());
+		    // getting existing ifpug exports
+		    final List<String> existingFiles = Arrays.asList(outputFolderFile
+		            .list());
 
-		// computing the index
-		while (!indexOk) {
-			if (existingFiles
-					.contains(generateIfpugExportFileName(root, index))) {
-				index++;
-			} else {
-				indexOk = true;
-			}
+		    // computing the index
+		    while (!indexOk) {
+		        if (existingFiles
+		                .contains(generateIfpugExportFileName(root, index))) {
+		            index++;
+		        } else {
+		            indexOk = true;
+		        }
+		    }
+		    outputFileName = generateIfpugExportFileName(root, index);
 		}
 
-		properties.put("fileName", generateIfpugExportFileName(root, index));
+		properties.put("fileName", outputFileName);
 
 		return properties;
 	}

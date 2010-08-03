@@ -64,7 +64,7 @@ public class ExportJob extends Job {
 
 			// OAW generation
 			final CSVFileGenerator generator = new CSVFileGenerator(outputPath,
-					modelPath);
+					modelPath, null);
 			generator.generate();
 		} catch (final Exception e) {
 			final Status lStatus = new Status(IStatus.ERROR,
