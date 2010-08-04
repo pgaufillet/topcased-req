@@ -26,3 +26,11 @@
 	«this.details()-»
 </tr>
 «ENDDEFINE»
+
+«DEFINE URTemplate FOR ttm::Section-»
+	«EXPAND URTemplate FOREACH children-»
+«ENDDEFINE»
+
+«DEFINE URTemplate FOR ttm::HierarchicalElement-»
+	«EXPAND URTemplate FOREACH children-»
+«ENDDEFINE»

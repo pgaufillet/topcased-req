@@ -123,7 +123,7 @@ public class CSVFileGenerator {
 		final File outputFolderFile = new File(outputFolder);
 		final File modelPathFile = new File(modelPath);
 
-		if (outputFileName == null || outputFileName.equals("")) {
+		if (getOutputFileName() == null || getOutputFileName().equals("")) {
 		    final String root = modelPathFile.getName().substring(0,
 		            modelPathFile.getName().length() - 12);
 		    int index = 0;
@@ -142,12 +142,22 @@ public class CSVFileGenerator {
 		            indexOk = true;
 		        }
 		    }
-		    outputFileName = generateIfpugExportFileName(root, index);
+		    setOutputFileName(generateIfpugExportFileName(root, index));
 		}
 
-		properties.put("fileName", outputFileName);
+		properties.put("fileName", getOutputFileName());
 
 		return properties;
 	}
+
+    protected void setOutputFileName(String outputFileName)
+    {
+        this.outputFileName = outputFileName;
+    }
+
+    public String getOutputFileName()
+    {
+        return outputFileName;
+    }
 
 }

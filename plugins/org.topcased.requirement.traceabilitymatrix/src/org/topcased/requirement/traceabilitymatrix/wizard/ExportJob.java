@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.xpand2.Generator;
 import org.topcased.requirement.traceabilitymatrix.Activator;
 import org.topcased.requirement.traceabilitymatrix.generator.CSVFileGenerator;
 
@@ -66,6 +67,13 @@ public class ExportJob extends Job {
 			final CSVFileGenerator generator = new CSVFileGenerator(outputPath,
 					modelPath, null);
 			generator.generate();
+			Display.getDefault().syncExec(new Runnable() {
+			    public void run() {
+			        MessageDialog
+			        .openInformation(null, "Traceability export",
+			                "Requirement traceability has been exported successfully.\n" + outputPath + File.separatorChar + generator.getOutputFileName());
+			    }
+			});
 		} catch (final Exception e) {
 			final Status lStatus = new Status(IStatus.ERROR,
 					Activator.PLUGIN_ID,
@@ -74,13 +82,6 @@ public class ExportJob extends Job {
 			return lStatus;
 		}
 
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				MessageDialog
-						.openInformation(null, "Traceability export",
-								"Requirement traceability has been exported successfully.");
-			}
-		});
 
 		return new Status(IStatus.OK, Activator.PLUGIN_ID,
 				"Requirement traceability has been exported.");

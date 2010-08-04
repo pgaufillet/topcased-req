@@ -15,14 +15,11 @@ package org.topcased.requirement.traceabilitymatrix.generator.template;
 
 import java.util.List;
 
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.uml2.uml.NamedElement;
 import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.HierarchicalElement;
-import org.topcased.requirement.traceabilitymatrix.Activator;
 
 import ttm.Requirement;
 
@@ -42,8 +39,6 @@ public class GeneratorHelper {
 	 * @return the html details
 	 */
 	public static String details(final Requirement requirement) {
-		info("");
-		warn("");
 		final StringBuilder result = new StringBuilder();
 
 		final List<CurrentRequirement> cReqs = RequirementsUtils
@@ -82,15 +77,5 @@ public class GeneratorHelper {
 		}
 
 		return "&lt;" + result + "&gt; ";
-	}
-
-	private static void info(final String pMessage) {
-		Activator.getDefault().getLog().log(
-				new Status(IStatus.INFO, Activator.PLUGIN_ID, pMessage));
-	}
-
-	private static void warn(final String pMessage) {
-		Activator.getDefault().getLog().log(
-				new Status(IStatus.WARNING, Activator.PLUGIN_ID, pMessage));
 	}
 }

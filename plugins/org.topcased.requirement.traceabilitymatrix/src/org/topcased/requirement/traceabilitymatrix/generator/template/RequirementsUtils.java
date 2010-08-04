@@ -22,6 +22,7 @@ import org.topcased.requirement.AttributeLink;
 import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.RequirementProject;
+import org.topcased.requirement.core.utils.RequirementUtils;
 
 import ttm.Requirement;
 
@@ -76,18 +77,17 @@ public class RequirementsUtils {
 	public static List<CurrentRequirement> getLinkedCurrentRequirements(
 			final Requirement requirement) {
 		final List<CurrentRequirement> links = new ArrayList<CurrentRequirement>();
-		for (final CurrentRequirement cReq : getCurrentRequirements((RequirementProject) requirement
-				.eContainer().eContainer().eContainer())) {
-			for (final Attribute att : cReq.getAttribute()) {
-				if (att instanceof AttributeLink) {
-					final EObject value = ((AttributeLink) att).getValue();
-					if (value.equals(requirement)) {
-						links.add(cReq);
-					}
-				}
-			}
-		}
-		return links;
+		for (final CurrentRequirement cReq : getCurrentRequirements(RequirementUtils.getRequirementProject(requirement.eResource()))) {
+            for (final Attribute att : cReq.getAttribute()) {
+                if (att instanceof AttributeLink) {
+                    final EObject value = ((AttributeLink) att).getValue();
+                    if (value.equals(requirement)) {
+                        links.add(cReq);
+                    }
+                }
+            }
+        }
+        return links;
 	}
 
 }
