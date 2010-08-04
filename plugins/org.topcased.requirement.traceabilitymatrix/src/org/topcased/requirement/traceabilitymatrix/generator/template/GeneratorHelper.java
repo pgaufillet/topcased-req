@@ -15,9 +15,9 @@ package org.topcased.requirement.traceabilitymatrix.generator.template;
 
 import java.util.List;
 
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.uml2.uml.NamedElement;
+import org.eclipse.emf.edit.provider.ReflectiveItemProvider;
+import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.HierarchicalElement;
 
@@ -55,27 +55,20 @@ public class GeneratorHelper {
 					+ cReq.getIdentifier() + "</td>");
 			final EObject object = ((HierarchicalElement) cReq.eContainer())
 					.getElement();
-			result.append("<td rowspan=\"1\" colspan=\"1\">"
-					+ getDisplayableName(object.eClass())
-					+ ((NamedElement) object).getName() + "</td>");
+			result.append("<td rowspan=\"1\" colspan=\"1\">");
+			if (object != null)
+			{
+			    result.append(getDisplayableName(object));
+			}
+			result.append("</td>");
 			lSep = "<tr>";
 		}
 		result.append("</td>");
 		return result.toString();
 	}
 
-	private static String getDisplayableName(final EClass eClass) {
-		final String name = eClass.getName();
-		final StringBuilder result = new StringBuilder();
-		String sep = "";
-		for (final char c : name.toCharArray()) {
-			if (Character.isUpperCase(c)) {
-				result.append(sep);
-			}
-			result.append(c);
-			sep = " ";
-		}
-
-		return "&lt;" + result + "&gt; ";
+	private static String getDisplayableName(final EObject object) {
+	    String string = new ReflectiveItemProvider(new ReflectiveItemProviderAdapterFactory()).getText(object);
+	    return string ;
 	}
 }

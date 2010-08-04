@@ -10,13 +10,14 @@
  * Contributors:
  *  Nicolas SAMSON (ATOS ORIGIN INTEGRATION) nicolas.samson@atosorigin.com - Initial API and implementation
  *
-  *****************************************************************************/
+ *****************************************************************************/
 package org.topcased.requirement.traceabilitymatrix.generator.template;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.topcased.requirement.Attribute;
 import org.topcased.requirement.AttributeLink;
 import org.topcased.requirement.CurrentRequirement;
@@ -27,67 +28,90 @@ import org.topcased.requirement.core.utils.RequirementUtils;
 import ttm.Requirement;
 
 /**
- * Class that manages objects of the requirement metamodel.
- * (org.topcased.sam.requirement)
+ * Class that manages objects of the requirement metamodel. (org.topcased.sam.requirement)
  * 
  * @author nsamson
  * 
  */
-public class RequirementsUtils {
+public class RequirementsUtils
+{
 
-	private static List<CurrentRequirement> getCReq(final EObject object) {
-		final List<CurrentRequirement> cReqs = new ArrayList<CurrentRequirement>();
-		if (object instanceof HierarchicalElement) {
-			final HierarchicalElement element = (HierarchicalElement) object;
-			for (final org.topcased.requirement.Requirement req : element.getRequirement()) {
-				if (req instanceof CurrentRequirement) {
-					cReqs.add((CurrentRequirement) req);
-				}
-			}
-			for (final HierarchicalElement child : element.getChildren()) {
-				if (child instanceof CurrentRequirement) {
-					cReqs.add((CurrentRequirement) child);
-				} else {
-					cReqs.addAll(getCReq(child));
-				}
-			}
+    private static List<CurrentRequirement> getCReq(final EObject object)
+    {
+        final List<CurrentRequirement> cReqs = new ArrayList<CurrentRequirement>();
+        if (object instanceof HierarchicalElement)
+        {
+            final HierarchicalElement element = (HierarchicalElement) object;
+            for (final org.topcased.requirement.Requirement req : element.getRequirement())
+            {
+                if (req instanceof CurrentRequirement)
+                {
+                    cReqs.add((CurrentRequirement) req);
+                }
+            }
+            for (final HierarchicalElement child : element.getChildren())
+            {
+                if (child instanceof CurrentRequirement)
+                {
+                    cReqs.add((CurrentRequirement) child);
+                }
+                else
+                {
+                    cReqs.addAll(getCReq(child));
+                }
+            }
 
-		}
-		return cReqs;
-	}
+        }
+        return cReqs;
+    }
 
-	private static List<CurrentRequirement> getCurrentRequirements(
-			final RequirementProject project) {
-		final List<CurrentRequirement> cReqs = new ArrayList<CurrentRequirement>();
+    private static List<CurrentRequirement> getCurrentRequirements(final RequirementProject project)
+    {
+        final List<CurrentRequirement> cReqs = new ArrayList<CurrentRequirement>();
 
-		for (final EObject element : project.eContents()) {
-			cReqs.addAll(getCReq(element));
-		}
+        for (final EObject element : project.eContents())
+        {
+            cReqs.addAll(getCReq(element));
+        }
 
-		return cReqs;
-	}
+        return cReqs;
+    }
 
-	/**
-	 * Returns current requirements linked to the given upstream requirement.
-	 * 
-	 * @param requirement
-	 *            upstream requirement
-	 * @return the current requirements
-	 */
-	public static List<CurrentRequirement> getLinkedCurrentRequirements(
-			final Requirement requirement) {
-		final List<CurrentRequirement> links = new ArrayList<CurrentRequirement>();
-		for (final CurrentRequirement cReq : getCurrentRequirements(RequirementUtils.getRequirementProject(requirement.eResource()))) {
-            for (final Attribute att : cReq.getAttribute()) {
-                if (att instanceof AttributeLink) {
-                    final EObject value = ((AttributeLink) att).getValue();
-                    if (value.equals(requirement)) {
-                        links.add(cReq);
+    /**
+     * Returns current requirements linked to the given upstream requirement.
+     * 
+     * @param requirement upstream requirement
+     * @return the current requirements
+     */
+    public static List<CurrentRequirement> getLinkedCurrentRequirements(final Requirement requirement)
+    {
+        final List<CurrentRequirement> links = new ArrayList<CurrentRequirement>();
+        if (requirement != null)
+        {
+            Resource eResource = requirement.eResource();
+            if (eResource != null)
+            {
+                RequirementProject requirementProject = RequirementUtils.getRequirementProject(eResource);
+                if (requirementProject != null)
+                {
+                    for (final CurrentRequirement cReq : getCurrentRequirements(requirementProject))
+                    {
+                        for (final Attribute att : cReq.getAttribute())
+                        {
+                            if (att instanceof AttributeLink)
+                            {
+                                final EObject value = ((AttributeLink) att).getValue();
+                                if (requirement.equals(value))
+                                {
+                                    links.add(cReq);
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
         return links;
-	}
+    }
 
 }
