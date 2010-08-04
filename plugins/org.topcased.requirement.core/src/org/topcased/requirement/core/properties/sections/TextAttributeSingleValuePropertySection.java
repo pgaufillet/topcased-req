@@ -46,7 +46,7 @@ public class TextAttributeSingleValuePropertySection extends AbstractStringPrope
      */
     protected int getStyle()
     {
-        return SWT.MULTI | SWT.WRAP;
+        return SWT.MULTI | SWT.WRAP | SWT.V_SCROLL;
     }
     
     /**
