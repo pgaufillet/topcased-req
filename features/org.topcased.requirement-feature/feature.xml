@@ -1,108 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.topcased.requirement"
-      label="Topcased Requirement"
-      version="4.0.0.qualifier"
-      provider-name="Topcased"
+      label="%featureName"
+      version="4.1.0.qualifier"
+      provider-name="%providerName"
       plugin="org.topcased.requirement.core">
 
-   <description url="http://www.topcased.org">
-      Topcased Requirement Feature. This feature brings capabilities to make possible traceability links between textual requirement and model elements represented onto diagrams.
+   <description url="%descriptionURL">
+      %description
    </description>
 
    <copyright>
-      Copyright (c) 2008, 2010 Topcased contributors. All rights reserved.
+      %copyright
    </copyright>
 
-   <license url="license_agreement.html">
-      TOPCASED Software User Agreement
-September 23, 2005
-Usage Of Content
-THE TOPCASED PROJECT MAKES AVAILABLE SOFTWARE, DOCUMENTATION,
-INFORMATION AND/OR OTHER MATERIALS FOR OPEN SOURCE PROJECTS (COLLECTIVELY
-&quot;CONTENT&quot;). USE OF THE CONTENT IS GOVERNED BY THE TERMS AND CONDITIONS
-OF THIS AGREEMENT AND/OR THE TERMS AND CONDITIONS OF LICENSE
-AGREEMENTS OR NOTICES INDICATED OR REFERENCED BELOW. BY USING
-THE CONTENT, YOU AGREE THAT YOUR USE OF THE CONTENT IS GOVERNED
-BY THIS AGREEMENT AND/OR THE TERMS AND CONDITIONS OF ANY APPLICABLE
-LICENSE AGREEMENTS OR NOTICES INDICATED OR REFERENCED BELOW.
-IF YOU DO NOT AGREE TO THE TERMS AND CONDITIONS OF THIS AGREEMENT
-AND THE TERMS AND CONDITIONS OF ANY APPLICABLE LICENSE AGREEMENTS
-OR NOTICES INDICATED OR REFERENCED BELOW, THEN YOU MAY NOT USE
-THE CONTENT.
-Applicable Licenses
-Unless otherwise indicated, all Content made available by the
-TOPCASED project is provided to you under the terms and conditions
-of the Eclipse Public License Version 1.0 (&quot;EPL&quot;). A copy of
-the EPL is provided with this Content and is also available at
-http://www.eclipse.org/legal/epl-v10.html. For purposes of the
-EPL, &quot;Program&quot; will mean the Content.
-Content includes, but is not limited to, source code, object
-code, documentation and other files maintained in the TOPCASED
-CVS repository (&quot;Repository&quot;) in CVS modules (&quot;Modules&quot;) and
-made available as downloadable archives (&quot;Downloads&quot;).
-* Content may be structured and packaged into modules to facilitate
-delivering, extending, and upgrading the Content. Typical modules
-may include plug-ins (&quot;Plug-ins&quot;), plug-in fragments (&quot;Fragments&quot;),
-and features (&quot;Features&quot;).
-* Each Plug-in or Fragment may be packaged as a sub-directory
-or
-JAR (Java™ ARchive) in a directory named &quot;plugins&quot;.
-* A Feature is a bundle of one or more Plug-ins and/or Fragments
-and associated material. Each Feature may be packaged as a sub-directory
-in a directory named &quot;features&quot;. Within a Feature, files named
-&quot;feature.xml&quot; may contain a list of the names and version numbers
-of the Plug-ins and/or Fragments associated with that Feature.
-* Features may also include other Features (&quot;Included Features&quot;).
-Within a Feature, files named &quot;feature.xml&quot; may contain a list
-of the names and version numbers of Included Features.
-The terms and conditions governing Plug-ins and Fragments should
-be contained in files named &quot;about.html&quot; (&quot;Abouts&quot;). The terms
-and conditions governing Features and Included Features should
-be contained in files named &quot;license.html&quot; (&quot;Feature Licenses&quot;).
-Abouts and Feature Licenses may be located in any directory of
-a Download or Module including, but not limited to the following
-locations:
-* The top-level (root) directory
-* Plug-in and Fragment directories
-* Inside Plug-ins and Fragments packaged as JARs
-* Sub-directories of the directory named &quot;src&quot; of certain Plug-ins
-* Feature directories
-Note: if a Feature made available by the TOPCASED project is
-installed using the Eclipse Update Manager, you must agree to
-a license (&quot;Feature Update License&quot;) during the installation
-process. If the Feature contains Included Features, the Feature
-Update License should either provide you with the terms and conditions
-governing the Included Features or inform you where you can locate
-them. Feature Update Licenses may be found in the &quot;license&quot; property
-of files named &quot;feature.properties&quot; found within a Feature. Such
-Abouts, Feature Licenses, and Feature Update Licenses contain
-the terms and conditions (or references to such terms and conditions)
-that govern your use of the associated Content in that directory.
-THE ABOUTS, FEATURE LICENSES, AND FEATURE UPDATE LICENSES MAY
-REFER TO THE EPL OR OTHER LICENSE AGREEMENTS, NOTICES OR TERMS
-AND CONDITIONS. SOME OF THESE OTHER LICENSE AGREEMENTS MAY INCLUDE
-(BUT ARE NOT LIMITED TO):
-* Common Public License Version 1.0 (available at http://www.eclipse.org/legal/cpl-v10.html)
-* Apache Software License 1.1 (available at http://www.apache.org/licenses/LICENSE)
-* Apache Software License 2.0 (available at http://www.apache.org/licenses/LICENSE-2.0)
-IT IS YOUR OBLIGATION TO READ AND ACCEPT ALL SUCH TERMS AND CONDITIONS
-PRIOR TO USE OF THE CONTENT. If no About, Feature License, or
-Feature Update License is provided, please contact the TOPCASED
-project to determine what terms and conditions govern that particular
-Content.
-Cryptography
-Content may contain encryption software. The country in which
-you are currently may have restrictions on the import, possession,
-and use, and/or re-export to another country, of encryption software.
-BEFORE using any encryption software, please check the country&apos;s
-laws, regulations and policies concerning the import, possession,
-or use, and re-export of encryption software, to see if this
-is permitted.
+   <license url="%licenseURL">
+      %license
    </license>
 
    <url>
-      <update label="Topcased" url="http://topcased-mm.gforge.enseeiht.fr/release/update-site3.5/site.xml"/>
+      <update label="%updateSiteName" url="http://topcased-mm.gforge.enseeiht.fr/release/update-site3.6/site.xml"/>
+      <discovery label="%updateSiteName" url="http://topcased-mm.gforge.enseeiht.fr/release/update-site3.6/site.xml"/>
    </url>
 
    <requires>
@@ -112,6 +30,7 @@ is permitted.
       <import plugin="org.eclipse.emf.compare.diff"/>
       <import plugin="org.eclipse.emf.compare.match"/>
       <import plugin="org.eclipse.core.expressions"/>
+      <import plugin="org.topcased.bus.core"/>
       <import plugin="org.eclipse.emf.common.ui"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.emf.ecore"/>
@@ -119,12 +38,6 @@ is permitted.
       <import plugin="org.eclipse.emf.ecore.edit"/>
       <import plugin="org.eclipse.emf.ecore.xmi"/>
       <import plugin="org.eclipse.ui.editors"/>
-      <import plugin="org.topcased.facilities"/>
-      <import plugin="org.eclipse.debug.core"/>
-      <import plugin="org.eclipse.m2m.atl.engine.emfvm"/>
-      <import plugin="org.eclipse.m2m.atl.drivers.emf4atl"/>
-      <import plugin="org.topcased.modeler.diagrams"/>
-      <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.eclipse.emf.search"/>
       <import plugin="org.eclipse.emf.search.common"/>
       <import plugin="org.eclipse.emf.search.ecore"/>
@@ -132,19 +45,23 @@ is permitted.
       <import plugin="org.eclipse.emf.search.ecore.ui"/>
       <import plugin="org.eclipse.emf.ecore.editor"/>
       <import plugin="org.eclipse.ui.forms"/>
+      <import plugin="org.eclipse.emf.mwe.core"/>
+      <import plugin="org.eclipse.xpand"/>
+      <import plugin="org.eclipse.uml2.uml"/>
       <import plugin="org.eclipse.gmf.runtime.draw2d.ui.render.awt"/>
       <import plugin="org.eclipse.gmf.runtime.draw2d.ui.render"/>
       <import plugin="org.apache.batik.svggen"/>
       <import plugin="org.apache.batik.ext.awt"/>
       <import plugin="org.apache.xerces"/>
-      <import plugin="org.eclipse.emf.mwe.core"/>
-      <import plugin="org.eclipse.xpand"/>
-      <import plugin="org.eclipse.uml2.uml"/>
       <import plugin="org.topcased.utils.log4j"/>
       <import plugin="org.eclipse.swt"/>
       <import plugin="org.eclipse.emf.common"/>
       <import plugin="org.eclipse.ui.workbench"/>
       <import plugin="org.eclipse.core.commands"/>
+      <import feature="org.topcased.bus" version="4.1.0"/>
+      <import plugin="org.eclipse.emf.edit.ui"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.topcased.facilities"/>
    </requires>
 
    <plugin
@@ -183,41 +100,6 @@ is permitted.
          unpack="false"/>
 
    <plugin
-         id="org.topcased.service.transformation"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.topcased.service.readxmiemf"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.topcased.bus.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.topcased.service.writeemfxmi"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.topcased.service.changeuri"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.topcased.requirement.search"
          download-size="0"
          install-size="0"
@@ -246,14 +128,14 @@ is permitted.
          unpack="false"/>
 
    <plugin
-         id="org.topcased.modeler.export"
+         id="org.topcased.requirement.traceabilitymatrix"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.topcased.requirement.traceabilitymatrix"
+         id="org.topcased.modeler.export"
          download-size="0"
          install-size="0"
          version="0.0.0"
