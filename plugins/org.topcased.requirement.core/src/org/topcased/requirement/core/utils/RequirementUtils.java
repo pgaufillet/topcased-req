@@ -565,20 +565,24 @@ public final class RequirementUtils
             EditingDomain editingDomain = modeler.getEditingDomain();
             for (Resource resource : editingDomain.getResourceSet().getResources())
             {
-                if (resource.getURI().fileExtension().endsWith("di")) //$NON-NLS-1$
+                URI uriResource = resource.getURI();
+                if (uriResource != null && uriResource.fileExtension() != null)
                 {
-                    String uri = null;
-                    EObject root = resource.getContents().get(0);
-                    if (root instanceof Diagrams)
+                    if (uriResource.fileExtension().endsWith("di")) //$NON-NLS-1$
                     {
-                        Diagrams di = (Diagrams) root;
-                        uri = EcoreUtil.getURI(di.getModel()).trimFragment().toString();
-                    }
-                    ResourceSet resourceSet = new ResourceSetImpl();
-                    Resource targetModel = resourceSet.getResource(URI.createURI(uri), true);
-                    if (targetModel != null)
-                    {
-                        toReturn.add(targetModel);
+                        String uri = null;
+                        EObject root = resource.getContents().get(0);
+                        if (root instanceof Diagrams)
+                        {
+                            Diagrams di = (Diagrams) root;
+                            uri = EcoreUtil.getURI(di.getModel()).trimFragment().toString();
+                        }
+                        ResourceSet resourceSet = new ResourceSetImpl();
+                        Resource targetModel = resourceSet.getResource(URI.createURI(uri), true);
+                        if (targetModel != null)
+                        {
+                            toReturn.add(targetModel);
+                        }
                     }
                 }
             }
