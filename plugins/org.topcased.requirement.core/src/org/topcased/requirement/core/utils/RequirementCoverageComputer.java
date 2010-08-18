@@ -26,8 +26,10 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.action.IStatusLineManager;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
 import org.topcased.requirement.Attribute;
@@ -59,6 +61,40 @@ import ttm.TtmPackage;
  */
 public final class RequirementCoverageComputer
 {
+    /**
+     * Enumerate class indicating how an upstream requirement is covered by current requirements.
+     */
+    private enum CoverageType {
+        /** covered by at least one current requirement, and no partial link */
+        FULLY_COVERED,
+        /** covered by at least one current requirement with partial */
+        COVERED_WITH_PARTIAL,
+        /** not covered by any current requirement */
+        NOT_COVERED;
+
+        /**
+         * Get how an upstream requirement is covered by current requirements
+         * 
+         * @param upstreamRequirement upstream requirement
+         * @return coverage state (covered with no partial, covered with partial or not covered)
+         */
+        public static CoverageType getCoverage(Requirement upstreamRequirement)
+        {
+            if (!RequirementUtils.isLinked(upstreamRequirement))
+            {
+                return CoverageType.NOT_COVERED;
+            }
+            else if (RequirementUtils.isPartial(upstreamRequirement))
+            {
+                return CoverageType.COVERED_WITH_PARTIAL;
+            }
+            else
+            {
+                return CoverageType.FULLY_COVERED;
+            }
+        }
+    }
+
     /**
      * Enumerate class indicating how a current requirement is linked to an upstream requirement.
      */
@@ -115,14 +151,23 @@ public final class RequirementCoverageComputer
     /** The message entry for displaying number of current requirements in the status bar */
     private static final String CURRENT_PAGE_STATUS_MESSAGE0 = "CurrentPage.0"; //$NON-NLS-1$
 
+    /** The message entry for displaying coverage of upstream requirements in the status bar */
+    private static final String UPSTREAM_PAGE_STATUS_MESSAGE = "UpstreamPage.2"; //$NON-NLS-1$
+
     /** The editing domain in which coverage rate is computed */
     private EditingDomain editingDomain = null;
 
-    /** The number of requirements */
-    private int totalNumberOfRequirements = 0;
+    /** The number of upstream requirements */
+    private int totalNumberOfUpstreamRequirements = 0;
+
+    /** The number of upstream requirements covered with or without partial */
+    private int numberOfCoveredUpstreamRequirements = 0;
+
+    /** The number of upstream requirements covered with at least one partial */
+    private int numberOfCoveredWithPartialUpstreamRequirements = 0;
 
     /** The number of current requirements */
-    private int numberOfCurrentRequirements = 0;
+    private int totalNumberOfCurrentRequirements = 0;
 
     /** The number of linked current requirements */
     private int numberOfLinkedCurrentRequirements = 0;
@@ -130,17 +175,14 @@ public final class RequirementCoverageComputer
     /** The number of linked current requirements with partial */
     private int numberOfPartialLinkedCurrentRequirements = 0;
 
-    /** whether the totalNumberOfRequirements attribute is correct */
-    private boolean totalNumberOfRequirementsSet = false;
+    /** whether the metrics about current and upstream requirements are correct */
+    private boolean requirementMetricsSet = false;
 
     /** The current requirements in Hierarchical elements and their linkage type */
     private Map<CurrentRequirement, LinkType> currentRequirementsLinks = new HashMap<CurrentRequirement, LinkType>();
 
-    /** The requirements covered by Current requirements in Hierarchical elements */
-    private Map<EObject, List<CurrentRequirement>> coveredRequirements = new HashMap<EObject, List<CurrentRequirement>>();
-
-    /** whether the coveredRequirements attribute is correct */
-    private boolean coveredRequirementsSet = false;
+    /** The upstream requirements and their coverage type */
+    private Map<Requirement, CoverageType> upstreamRequirementsCoverage = new HashMap<Requirement, CoverageType>();
 
     /** The adapter to listen at model modifications to update requirements coverage */
     private Adapter requirementsUpdaterAdapter = null;
@@ -232,6 +274,7 @@ public final class RequirementCoverageComputer
      * Get the listener that updates the number of current requirements when model is modified.
      * 
      * @return the adapter listener
+     * @deprecated use {@link #getRequirementsUpdaterAdapter()} instead
      */
     public Adapter getCurrentRequirementsUpdaterAdapter()
     {
@@ -316,11 +359,12 @@ public final class RequirementCoverageComputer
                 {
                     protected void add()
                     {
-                        if (added instanceof EObject)
+                        if (added instanceof Requirement)
                         {
                             if (!ignoreForCoverage)
                             {
-                                addToCoveredRequirementsAttribute(coveringRequirement, (EObject) added);
+                                // update coverage metrics
+                                updateUpstreamRequirementCoverage((Requirement) added, false);
                             }
                             // update number of current
                             updateCurrentRequirementNumbers(coveringRequirement, false);
@@ -329,11 +373,12 @@ public final class RequirementCoverageComputer
 
                     protected void remove()
                     {
-                        if (removed instanceof EObject)
+                        if (removed instanceof Requirement)
                         {
-                            if (!ignoreForCoverage)
+                            // update upstream coverage metrics, only if upstream is not being removed
+                            if (!ignoreForCoverage && upstreamRequirementsCoverage.containsKey(removed))
                             {
-                                removeFromCoveredRequirementsAttribute(coveringRequirement, (EObject) removed);
+                                updateUpstreamRequirementCoverage((Requirement) removed, false);
                             }
                             // update number of current
                             updateCurrentRequirementNumbers(coveringRequirement, false);
@@ -343,7 +388,8 @@ public final class RequirementCoverageComputer
 
             }
             if (!ignoreForCoverage)
-            {// refresh coverage rate printing
+            {
+                // refresh coverage rate printing
                 refreshCoverageRateDisplay();
             }
             // refresh number of current requirements printing
@@ -360,7 +406,8 @@ public final class RequirementCoverageComputer
                 {
                     protected void add()
                     {
-                        updateCurrentRequirementNumbers(coveringRequirement, false);
+                        // update number of current and upstream coverage metrics
+                        addCoverage(coveringRequirement, ignoreForCoverage);
                     }
 
                     protected void remove()
@@ -370,44 +417,12 @@ public final class RequirementCoverageComputer
                 };
 
             }
+            if (!ignoreForCoverage)
+            {// refresh coverage rate printing
+                refreshCoverageRateDisplay();
+            }
             // refresh number of current requirements printing
             refreshNumberOfCurrentRequirementsDisplay();
-        }
-    }
-
-    /**
-     * Update the coveredRequirements attribute, by adding a requirement coverage.
-     * 
-     * @param coveringRequirementToAdd the current requirement to add at coverage
-     * @param coveredRequirement the requirement newly covered by the this current requirement
-     */
-    private void addToCoveredRequirementsAttribute(CurrentRequirement coveringRequirementToAdd, EObject coveredRequirement)
-    {
-        if (coveredRequirement != null)
-        {
-            if (!coveredRequirements.containsKey(coveredRequirement))
-            {
-                coveredRequirements.put((EObject) coveredRequirement, new ArrayList<CurrentRequirement>());
-            }
-            coveredRequirements.get(coveredRequirement).add(coveringRequirementToAdd);
-        }
-    }
-
-    /**
-     * Update the coveredRequirements attribute, by removing a requirement coverage.
-     * 
-     * @param coveringRequirementToRemove the current requirement to remove from coverage
-     * @param coveredRequirement the requirement no longer covered by the this current requirement
-     */
-    private void removeFromCoveredRequirementsAttribute(CurrentRequirement coveringRequirementToRemove, EObject coveredRequirement)
-    {
-        if (coveredRequirements.containsKey(coveredRequirement))
-        {
-            coveredRequirements.get(coveredRequirement).remove(coveringRequirementToRemove);
-            if (coveredRequirements.get(coveredRequirement).isEmpty())
-            {
-                coveredRequirements.remove(coveredRequirement);
-            }
         }
     }
 
@@ -437,7 +452,7 @@ public final class RequirementCoverageComputer
                     numberOfLinkedCurrentRequirements--;
                 case NO_LINK:
                 default:
-                    numberOfCurrentRequirements--;
+                    totalNumberOfCurrentRequirements--;
             }
         }
         if (removing)
@@ -455,9 +470,59 @@ public final class RequirementCoverageComputer
                     numberOfLinkedCurrentRequirements++;
                 case NO_LINK:
                 default:
-                    numberOfCurrentRequirements++;
+                    totalNumberOfCurrentRequirements++;
             }
             currentRequirementsLinks.put(updatedRequirement, linkage);
+        }
+    }
+
+    /**
+     * Indicate that a change occurred concerning an upstream requirement
+     * 
+     * @param updatedRequirement the upstream requirement which has been updated
+     * @param removing true if updatedRequirement is being removed (false if it is being updated or added)
+     */
+    private void updateUpstreamRequirementCoverage(Requirement updatedRequirement, boolean removing)
+    {
+        CoverageType coverage = CoverageType.getCoverage(updatedRequirement);
+        if (upstreamRequirementsCoverage.containsKey(updatedRequirement))
+        {
+            // remove upstream requirement from count (updating or removing)
+            CoverageType oldCoverage = upstreamRequirementsCoverage.get(updatedRequirement);
+            if (coverage != null && coverage.equals(oldCoverage) && !removing)
+            {
+                // no significant change, no need to go further
+                return;
+            }
+            switch (oldCoverage)
+            {
+                case COVERED_WITH_PARTIAL:
+                    numberOfCoveredWithPartialUpstreamRequirements--;
+                case FULLY_COVERED:
+                    numberOfCoveredUpstreamRequirements--;
+                case NOT_COVERED:
+                default:
+                    totalNumberOfUpstreamRequirements--;
+            }
+        }
+        if (removing)
+        {
+            upstreamRequirementsCoverage.remove(updatedRequirement);
+        }
+        else
+        {
+            // add current requirement to count
+            switch (coverage)
+            {
+                case COVERED_WITH_PARTIAL:
+                    numberOfCoveredWithPartialUpstreamRequirements++;
+                case FULLY_COVERED:
+                    numberOfCoveredUpstreamRequirements++;
+                case NOT_COVERED:
+                default:
+                    totalNumberOfUpstreamRequirements++;
+            }
+            upstreamRequirementsCoverage.put(updatedRequirement, coverage);
         }
     }
 
@@ -527,10 +592,12 @@ public final class RequirementCoverageComputer
         if (addedRequirementCoverage != null)
         {
             listen(addedRequirementCoverage);
-            // add (partial) coverage of attribute's value requirement
-            CurrentRequirement coveringCurrentRequirement = (CurrentRequirement) addedRequirementCoverage.eContainer();
+            // update upstream coverage metrics
             EObject coveredRequirement = addedRequirementCoverage.getValue();
-            addToCoveredRequirementsAttribute(coveringCurrentRequirement, coveredRequirement);
+            if (coveredRequirement instanceof Requirement)
+            {
+                updateUpstreamRequirementCoverage((Requirement) coveredRequirement, false);
+            }
         }
     }
 
@@ -649,8 +716,13 @@ public final class RequirementCoverageComputer
             // remove (partial) coverage of attribute's value requirement
             if (container instanceof CurrentRequirement)
             {
+
+                // update upstream coverage metrics
                 EObject coveredRequirement = ((AttributeLink) removedRequirementCoverage).getValue();
-                removeFromCoveredRequirementsAttribute((CurrentRequirement) container, coveredRequirement);
+                if (coveredRequirement instanceof Requirement)
+                {
+                    updateUpstreamRequirementCoverage((Requirement) coveredRequirement, false);
+                }
             }
         }
     }
@@ -736,10 +808,8 @@ public final class RequirementCoverageComputer
      */
     private void specifiedAddRequirement(Requirement addedRequirement)
     {
-        if (addedRequirement != null)
-        {
-            totalNumberOfRequirements++;
-        }
+        // update upstream coverage metrics
+        updateUpstreamRequirementCoverage(addedRequirement, false);
     }
 
     /**
@@ -811,14 +881,21 @@ public final class RequirementCoverageComputer
     {
         if (removedRequirement != null)
         {
-            totalNumberOfRequirements--;
+            // update upstream coverage metrics
+            updateUpstreamRequirementCoverage(removedRequirement, true);
+
             // update number of current
-            for (CurrentRequirement current : coveredRequirements.get(removedRequirement))
+            for (Setting setting : RequirementUtils.getCrossReferences(removedRequirement))
             {
-                updateCurrentRequirementNumbers(current, false);
+                if (setting.getEObject() instanceof AttributeLink)
+                {
+                    EObject current = setting.getEObject().eContainer();
+                    if (current instanceof CurrentRequirement)
+                    {
+                        updateCurrentRequirementNumbers((CurrentRequirement) current, false);
+                    }
+                }
             }
-            // remove all coverage for this requirement
-            coveredRequirements.remove(removedRequirement);
         }
     }
 
@@ -875,6 +952,7 @@ public final class RequirementCoverageComputer
      * coverage).
      * 
      * @param model the model element to listen.
+     * @deprecated use {@link #listen(EObject)} instead
      */
     private void listenForCurrentOnly(EObject model)
     {
@@ -916,6 +994,59 @@ public final class RequirementCoverageComputer
     }
 
     /**
+     * Recompute all the metrics about number of current requirements and upstream requirements coverage
+     */
+    private void recomputeAllMetrics()
+    {
+        // reset number of current
+        totalNumberOfCurrentRequirements = 0;
+        numberOfLinkedCurrentRequirements = 0;
+        numberOfPartialLinkedCurrentRequirements = 0;
+        currentRequirementsLinks.clear();
+        // reset coverage of upstream
+        totalNumberOfUpstreamRequirements = 0;
+        numberOfCoveredUpstreamRequirements = 0;
+        numberOfCoveredWithPartialUpstreamRequirements = 0;
+        upstreamRequirementsCoverage.clear();
+        // compute from requirement project
+        RequirementProject project = RequirementUtils.getRequirementProject(editingDomain);
+        if (project != null)
+        {
+            listen(project);
+            // check in upstream model
+            UpstreamModel upstreamModel = project.getUpstreamModel();
+            if (upstreamModel != null)
+            {
+                listen(upstreamModel);
+                // check recursively for requirements in documents
+                for (Document doc : project.getUpstreamModel().getDocuments())
+                {
+                    listen(doc);
+                    TreeIterator<EObject> iterator = doc.eAllContents();
+                    iterateForAddingRequirementsDefinitions(iterator);
+                }
+            }
+            // check recursively for covered requirements in Hierarchical elements
+            for (HierarchicalElement hierarchicalElement : project.getHierarchicalElement())
+            {
+                listen(hierarchicalElement);
+                TreeIterator<EObject> iterator = hierarchicalElement.eAllContents();
+                iterateForAddingCoverage(iterator, false);
+            }
+            // check for other requirements in current requirements view
+            for (SpecialChapter chapter : project.getChapter())
+            {
+                // take special chapters in account for all modifications
+                listen(chapter);
+                // listenForCurrentOnly(chapter);
+                TreeIterator<EObject> iterator = chapter.eAllContents();
+                iterateForAddingCoverage(iterator, true);
+            }
+        }
+        requirementMetricsSet = true;
+    }
+
+    /**
      * Get the total number of current requirements in the Current Requirements view.
      * 
      * @return the number of current requirements or 0 if editing domain has not been initialized.
@@ -927,12 +1058,12 @@ public final class RequirementCoverageComputer
         {
             return 0;
         }
-        if (!coveredRequirementsSet)
+        if (!requirementMetricsSet)
         {
-            // recompute the number of current requirements.
-            getNumberOfCoveredRequirements();
+            // recompute the metrics about upstream and current requirements.
+            recomputeAllMetrics();
         }
-        return numberOfCurrentRequirements;
+        return totalNumberOfCurrentRequirements;
     }
 
     /**
@@ -947,10 +1078,10 @@ public final class RequirementCoverageComputer
         {
             return 0;
         }
-        if (!coveredRequirementsSet)
+        if (!requirementMetricsSet)
         {
-            // recompute the number of current requirements.
-            getNumberOfCoveredRequirements();
+            // recompute the metrics about upstream and current requirements.
+            recomputeAllMetrics();
         }
         return numberOfLinkedCurrentRequirements;
     }
@@ -968,12 +1099,53 @@ public final class RequirementCoverageComputer
         {
             return 0;
         }
-        if (!coveredRequirementsSet)
+        if (!requirementMetricsSet)
         {
-            // recompute the number of current requirements.
-            getNumberOfCoveredRequirements();
+            // recompute the metrics about upstream and current requirements.
+            recomputeAllMetrics();
         }
         return numberOfPartialLinkedCurrentRequirements;
+    }
+
+    /**
+     * Get the string to display a rate in percent.
+     * 
+     * @param numerator the integer to use as numerator
+     * @param denominator the integer to use as denominator
+     * @return the string representation of the rate numerator/denominator.
+     */
+    private String getRateDisplay(int numerator, int denominator)
+    {
+        String coverageRate;
+        if (denominator > 0)
+        {
+            coverageRate = PERCENT_FORMAT.format(new Float(numerator) / new Float(denominator));
+        }
+        else
+        {
+            coverageRate = PERCENT_FORMAT.format(1);
+        }
+        return coverageRate;
+    }
+
+    /**
+     * Get the total number of upstream requirements in the project's Upstream model.
+     * 
+     * @return the number of upstream requirements or 0 if editing domain has not been initialized.
+     * @see RequirementCoverageComputer#reset(EditingDomain)
+     */
+    public int getNumberOfRequirements()
+    {
+        if (editingDomain == null)
+        {
+            return 0;
+        }
+        if (!requirementMetricsSet)
+        {
+            // recompute the metrics about upstream and current requirements.
+            recomputeAllMetrics();
+        }
+        return totalNumberOfUpstreamRequirements;
     }
 
     /**
@@ -988,78 +1160,16 @@ public final class RequirementCoverageComputer
         {
             return 0;
         }
-        if (!coveredRequirementsSet)
+        if (!requirementMetricsSet)
         {
-            // recompute the numbers of covered requirements and of current requirements.
-            numberOfCurrentRequirements = 0;
-            numberOfLinkedCurrentRequirements = 0;
-            numberOfPartialLinkedCurrentRequirements = 0;
-            currentRequirementsLinks.clear();
-            coveredRequirements.clear();
-            RequirementProject project = RequirementUtils.getRequirementProject(editingDomain);
-            if (project != null)
-            {
-                listen(project);
-                // check recursively for covered requirements in Hierarchical elements
-                for (HierarchicalElement hierarchicalElement : project.getHierarchicalElement())
-                {
-                    listen(hierarchicalElement);
-                    TreeIterator<EObject> iterator = hierarchicalElement.eAllContents();
-                    iterateForAddingCoverage(iterator, false);
-                }
-                // check for other requirements in current requirements view
-                for (SpecialChapter chapter : project.getChapter())
-                {
-                    listenForCurrentOnly(chapter);
-                    TreeIterator<EObject> iterator = chapter.eAllContents();
-                    iterateForAddingCoverage(iterator, true);
-                }
-            }
-            coveredRequirementsSet = true;
+            // recompute the metrics about upstream and current requirements.
+            recomputeAllMetrics();
         }
-        return coveredRequirements.size();
+        return numberOfCoveredUpstreamRequirements;
     }
 
     /**
-     * Get the total number of requirements in the project's Upstream model.
-     * 
-     * @return the number of requirements or 0 if editing domain has not been initialized.
-     * @see RequirementCoverageComputer#reset(EditingDomain)
-     */
-    public int getNumberOfRequirements()
-    {
-        if (editingDomain == null)
-        {
-            return 0;
-        }
-        if (!totalNumberOfRequirementsSet)
-        {
-            // recompute the number of requirements.
-            totalNumberOfRequirements = 0;
-            RequirementProject project = RequirementUtils.getRequirementProject(editingDomain);
-            if (project != null)
-            {
-                listen(project);
-                UpstreamModel upstreamModel = project.getUpstreamModel();
-                if (upstreamModel != null)
-                {
-                    listen(upstreamModel);
-                    // check recursively for requirements in documents
-                    for (Document doc : project.getUpstreamModel().getDocuments())
-                    {
-                        listen(doc);
-                        TreeIterator<EObject> iterator = doc.eAllContents();
-                        iterateForAddingRequirementsDefinitions(iterator);
-                    }
-                }
-            }
-            totalNumberOfRequirementsSet = true;
-        }
-        return totalNumberOfRequirements;
-    }
-
-    /**
-     * Get the percentage rate of covered requirements.
+     * Get the percentage rate of covered upstream requirements.
      * 
      * @return the string representation of the coverage rate (100% if editing domain has not been initialized).
      * @see RequirementCoverageComputer#reset(EditingDomain)
@@ -1068,16 +1178,106 @@ public final class RequirementCoverageComputer
     {
         int numberOfRequirements = getNumberOfRequirements();
         int numberOfCoveredRequirements = getNumberOfCoveredRequirements();
-        String coverageRate;
-        if (numberOfRequirements > 0)
+        return getRateDisplay(numberOfCoveredRequirements, numberOfRequirements);
+    }
+
+    /**
+     * Get the number of upstream requirements which are covered by current requirements with at least one partial link.
+     * 
+     * @return the number of upstream requirements or 0 if editing domain has not been initialized.
+     * @see RequirementCoverageComputer#reset(EditingDomain)
+     */
+    public int getNumberOfCoveredWithPartialUpstreamRequirements()
+    {
+        if (editingDomain == null)
         {
-            coverageRate = PERCENT_FORMAT.format(new Float(numberOfCoveredRequirements) / new Float(numberOfRequirements));
+            return 0;
         }
-        else
+        if (!requirementMetricsSet)
         {
-            coverageRate = PERCENT_FORMAT.format(1);
+            // recompute the metrics about upstream and current requirements.
+            recomputeAllMetrics();
         }
-        return coverageRate;
+        return numberOfCoveredWithPartialUpstreamRequirements;
+    }
+
+    /**
+     * Get the percentage rate of upstream requirements covered by current requirements with at least one partial link.
+     * 
+     * @return the string representation of the coverage rate (100% if editing domain has not been initialized).
+     * @see RequirementCoverageComputer#reset(EditingDomain)
+     */
+    public String getCoveredWithPartialUpstreamRate()
+    {
+        int numberOfRequirements = getNumberOfRequirements();
+        int numberOfCoveredRequirements = getNumberOfCoveredWithPartialUpstreamRequirements();
+        return getRateDisplay(numberOfCoveredRequirements, numberOfRequirements);
+    }
+
+    /**
+     * Get the number of upstream requirements which are covered by current requirements with no partial link.
+     * 
+     * @return the number of upstream requirements or 0 if editing domain has not been initialized.
+     * @see RequirementCoverageComputer#reset(EditingDomain)
+     */
+    public int getNumberOfFullyCoveredUpstreamRequirements()
+    {
+        if (editingDomain == null)
+        {
+            return 0;
+        }
+        if (!requirementMetricsSet)
+        {
+            // recompute the metrics about upstream and current requirements.
+            recomputeAllMetrics();
+        }
+        return numberOfCoveredUpstreamRequirements - numberOfCoveredWithPartialUpstreamRequirements;
+    }
+
+    /**
+     * Get the percentage rate of upstream requirements covered by current requirements with no partial link.
+     * 
+     * @return the string representation of the coverage rate (100% if editing domain has not been initialized).
+     * @see RequirementCoverageComputer#reset(EditingDomain)
+     */
+    public String getFullyCoveredUpstreamRate()
+    {
+        int numberOfRequirements = getNumberOfRequirements();
+        int numberOfCoveredRequirements = getNumberOfFullyCoveredUpstreamRequirements();
+        return getRateDisplay(numberOfCoveredRequirements, numberOfRequirements);
+    }
+
+    /**
+     * Get the number of upstream requirements which are not covered by any current requirement.
+     * 
+     * @return the number of upstream requirements or 0 if editing domain has not been initialized.
+     * @see RequirementCoverageComputer#reset(EditingDomain)
+     */
+    public int getNumberOfNotCoveredUpstreamRequirements()
+    {
+        if (editingDomain == null)
+        {
+            return 0;
+        }
+        if (!requirementMetricsSet)
+        {
+            // recompute the metrics about upstream and current requirements.
+            recomputeAllMetrics();
+        }
+        return totalNumberOfUpstreamRequirements - numberOfCoveredUpstreamRequirements;
+    }
+
+    /**
+     * Get the percentage rate of upstream requirements covered by current requirements with no partial link.
+     * 
+     * @return the string representation of the coverage rate (100% if editing domain has not been initialized).
+     * @see RequirementCoverageComputer#reset(EditingDomain)
+     */
+    public String getNotCoveredUpstreamRate()
+    {
+        int numberOfRequirements = getNumberOfRequirements();
+        int numberOfNotCoveredRequirements = getNumberOfNotCoveredUpstreamRequirements();
+        return getRateDisplay(numberOfNotCoveredRequirements, numberOfRequirements);
     }
 
     /**
@@ -1090,8 +1290,7 @@ public final class RequirementCoverageComputer
     {
         editingDomain = newEditingDomain;
         stopListening();
-        coveredRequirementsSet = false;
-        totalNumberOfRequirementsSet = false;
+        requirementMetricsSet = false;
     }
 
     /**
@@ -1113,12 +1312,17 @@ public final class RequirementCoverageComputer
                 final IStatusLineManager statusLineManager = actionBars.getStatusLineManager();
                 if (statusLineManager != null)
                 {
-                    // get elements for coverage rate
+                    // get elements for coverage metrics
                     int numberOfRequirements = getNumberOfRequirements();
-                    int numberOfcoveredRequirements = getNumberOfCoveredRequirements();
-                    String coverageRate = getCoverageRate();
-                    // Construct message with coverage rate
-                    final String message = String.format(Messages.getString("UpstreamPage.1"), numberOfcoveredRequirements, numberOfRequirements, coverageRate); //$NON-NLS-1$
+                    int numberOfCovered = getNumberOfFullyCoveredUpstreamRequirements();
+                    String coveredRate = getFullyCoveredUpstreamRate();
+                    int numberOfTraced = getNumberOfCoveredWithPartialUpstreamRequirements();
+                    String tracedRate = getCoveredWithPartialUpstreamRate();
+                    int numberOfNotCovered = getNumberOfNotCoveredUpstreamRequirements();
+                    String notCoveredRate = getNotCoveredUpstreamRate();
+                    // Construct message with coverage metrics
+                    Object[] params = new Object[] {numberOfRequirements, numberOfCovered, coveredRate, numberOfTraced, tracedRate, numberOfNotCovered, notCoveredRate};
+                    final String message = NLS.bind(Messages.getString(UPSTREAM_PAGE_STATUS_MESSAGE), params);
 
                     // status line must be updated in a particular thread to avoid thread access violation.
                     Display.getDefault().syncExec(new Runnable()
@@ -1158,7 +1362,7 @@ public final class RequirementCoverageComputer
                     int linkto = getNumberOfLinkedCurrentRequirements();
                     int partial = getNumberOfPartialLinkedCurrentRequirements();
                     // Construct message with numbers of current requirements
-                    final String message = String.format(Messages.getString(CURRENT_PAGE_STATUS_MESSAGE0), current, linkto, partial, current - linkto);
+                    final String message = NLS.bind(Messages.getString(CURRENT_PAGE_STATUS_MESSAGE0), new Object[] {current, linkto, partial, current - linkto});
 
                     // status line must be updated in a particular thread to avoid thread access violation.
                     Display.getDefault().syncExec(new Runnable()

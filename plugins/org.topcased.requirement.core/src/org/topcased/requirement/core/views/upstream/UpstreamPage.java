@@ -33,6 +33,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
@@ -87,6 +88,9 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
     private UpstreamRequirementContentProvider ctPvd;
 
     static final String UPSTREAM_POPUP_ID = "org.topcased.requirement.core.views.upstream.popupMenu"; //$NON-NLS-1$
+
+    /** The message entry for displaying coverage of upstream requirements in the status bar */
+    private static final String UPSTREAM_PAGE_STATUS_MESSAGE = "UpstreamPage.2"; //$NON-NLS-1$
 
     /**
      * @see org.eclipse.ui.part.Page#createControl(org.eclipse.swt.widgets.Composite)
@@ -217,14 +221,19 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
                 {
                     Document currentDoc = (Document) currSelection.getFirstElement();
                     // add message about document which requirement were extracted from
-                    message.append(String.format(Messages.getString("UpstreamPage.0"), currentDoc.getIdent())); //$NON-NLS-1$
+                    message.append(NLS.bind(Messages.getString("UpstreamPage.0"), currentDoc.getIdent())); //$NON-NLS-1$
                 }
-                // get elements for coverage rate
+                // get elements for coverage metrics
                 int numberOfRequirements = RequirementCoverageComputer.INSTANCE.getNumberOfRequirements();
-                int coveredRequirements = RequirementCoverageComputer.INSTANCE.getNumberOfCoveredRequirements();
-                String coverageRate = RequirementCoverageComputer.INSTANCE.getCoverageRate();
-                // add message with coverage rate
-                message.append(String.format(Messages.getString("UpstreamPage.1"), coveredRequirements, numberOfRequirements, coverageRate)); //$NON-NLS-1$
+                int numberOfCovered = RequirementCoverageComputer.INSTANCE.getNumberOfFullyCoveredUpstreamRequirements();
+                String coveredRate = RequirementCoverageComputer.INSTANCE.getFullyCoveredUpstreamRate();
+                int numberOfTraced = RequirementCoverageComputer.INSTANCE.getNumberOfCoveredWithPartialUpstreamRequirements();
+                String tracedRate = RequirementCoverageComputer.INSTANCE.getCoveredWithPartialUpstreamRate();
+                int numberOfNotCovered = RequirementCoverageComputer.INSTANCE.getNumberOfNotCoveredUpstreamRequirements();
+                String notCoveredRate = RequirementCoverageComputer.INSTANCE.getNotCoveredUpstreamRate();
+                // add message with coverage metrics
+                Object[] params = new Object[] {numberOfRequirements, numberOfCovered, coveredRate, numberOfTraced, tracedRate, numberOfNotCovered, notCoveredRate};
+                message.append(NLS.bind(Messages.getString(UPSTREAM_PAGE_STATUS_MESSAGE), params));
 
                 statusLineManager.setMessage(message.toString());
             }
@@ -304,7 +313,10 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
 
             // reset the tree otherwise the filter would be still active
             CurrentViewFilterFromUpstreamSelection.getInstance().setSearchedRequirement(null);
-            currentPage.getViewer().refresh();
+            if (!currentPage.getViewer().getControl().isDisposed())
+            {
+                currentPage.getViewer().refresh();
+            }
         }
     }
 
