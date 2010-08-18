@@ -152,7 +152,7 @@ public class UpstreamRequirementLabelProvider extends AdapterFactoryLabelProvide
      */
     private IPreferenceStore getPreferenceStore(Object element)
     {
-        if (element instanceof EObject)
+        if (element instanceof EObject && ((EObject) element).eResource() != null)
         {
             // get IProject from element
             URI finalUri = ((EObject) element).eResource().getURI();
