@@ -27,4 +27,6 @@ public interface IRequirementFilter
      */
     void setSearched(String request);
 
+    void setCaseSensitive(boolean selection);
+
 }

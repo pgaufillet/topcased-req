@@ -11,6 +11,8 @@
 package org.topcased.requirement.core.views;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -43,7 +45,7 @@ public abstract class SearchComposite extends Composite
     public SearchComposite(Composite parent, int style)
     {
         super(parent, style);
-        final GridLayout layout = new GridLayout(3, false);
+        final GridLayout layout = new GridLayout(4, false);
         // layout.marginHeight = 0;
         // layout.marginWidth = 0;
 
@@ -56,6 +58,18 @@ public abstract class SearchComposite extends Composite
 
         final Text textFilter = new Text(this, SWT.BORDER | SWT.FILL);
         textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+        textFilter.addKeyListener(new KeyAdapter()
+        {
+            @Override
+            public void keyReleased(KeyEvent ke)
+            {
+                if (ke.character == SWT.CR || ke.character == SWT.KEYPAD_CR)
+                {
+                    doFilter(textFilter);
+                }
+            }
+
+        });
 
         final Button btn = new Button(this, SWT.PUSH);
         btn.setLayoutData(new GridData(SWT.NONE, SWT.CENTER, false, false));
@@ -65,19 +79,40 @@ public abstract class SearchComposite extends Composite
             @Override
             public void widgetSelected(SelectionEvent e)
             {
-                String text = textFilter.getText();
-                filter.setSearched(text);
-
-                if (text != null && text.length() != 0)
-                {
-                    doAfterSearch();
-                }
-                else
-                {
-                    doAfterEmptySearch();
-                }
+                doFilter(textFilter);
             }
         });
+
+        final Button caseSensitive = new Button(this, SWT.CHECK);
+        caseSensitive.setText(Messages.getString("SearchComposite.2"));
+        caseSensitive.addSelectionListener(new SelectionAdapter()
+        {
+            public void widgetSelected(SelectionEvent e)
+            {
+                filter.setCaseSensitive(caseSensitive.getSelection());
+                doFilter(textFilter);
+            }
+        });
+    }
+
+    /**
+     * Do filter
+     * 
+     * @param textFilter the text top filter
+     */
+    private void doFilter(final Text textFilter)
+    {
+        String text = textFilter.getText();
+        filter.setSearched(text);
+
+        if (text != null && text.length() != 0)
+        {
+            doAfterSearch();
+        }
+        else
+        {
+            doAfterEmptySearch();
+        }
     }
 
     /**

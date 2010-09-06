@@ -49,6 +49,8 @@ public class RequirementFilter extends ViewerFilter implements IRequirementFilte
 
     private IPreferenceStore preferenceStore = RequirementCorePlugin.getDefault().getPreferenceStore();
 
+    private boolean caseSensitive = false;
+
     public RequirementFilter(boolean displayCurrent, boolean displayUpstream)
     {
         this.displayCurrent = displayCurrent;
@@ -150,7 +152,14 @@ public class RequirementFilter extends ViewerFilter implements IRequirementFilte
         }
         else
         {
-            if (s.contains(searched))
+            String sCase = s;
+            String searchedCase = searched;
+            if (!caseSensitive)
+            {
+                sCase = sCase.toLowerCase();
+                searchedCase = searchedCase.toLowerCase();
+            }
+            if (sCase.contains(searchedCase))
             {
                 return true;
             }
@@ -329,6 +338,11 @@ public class RequirementFilter extends ViewerFilter implements IRequirementFilte
         }
 
         return false;
+    }
+
+    public void setCaseSensitive(boolean selection)
+    {
+        this.caseSensitive = selection;
     }
 
 }
