@@ -54,25 +54,28 @@ public class CreateCurrentReqCommandResolver extends AdditionalCommand<CreateCur
     @Override
     protected void post_execute(List<CreateCurrentReqCommand> dndCommands)
     {
-        CompoundCommand compound = new CompoundCommand();
-
-        for (CreateCurrentReqCommand createCommand : dndCommands)
-        {
-            if (!(createCommand.getGlobalCmd() instanceof UnexecutableCommand))
-            {
-                for (Object req : createCommand.getRequirements())
-                {
-                    if (req instanceof CurrentRequirement)
-                    {
-                        // Handle case of current view requirements drag'n'drop
-                        org.topcased.requirement.CurrentRequirement requirement = (org.topcased.requirement.CurrentRequirement) req;
-                        compound.appendAndExecute(RequirementHelper.INSTANCE.renameRequirement(requirement));
-                    }
-                }
-                compound.execute();
-                mapCommand.put(createCommand, compound);
-            }
-        }
+        /*
+         * We disable automatic renaming the current requirement. The ident is final.
+         */
+        // CompoundCommand compound = new CompoundCommand();
+        //
+        // for (CreateCurrentReqCommand createCommand : dndCommands)
+        // {
+        // if (!(createCommand.getGlobalCmd() instanceof UnexecutableCommand))
+        // {
+        // for (Object req : createCommand.getRequirements())
+        // {
+        // if (req instanceof CurrentRequirement)
+        // {
+        // // Handle case of current view requirements drag'n'drop
+        // org.topcased.requirement.CurrentRequirement requirement = (org.topcased.requirement.CurrentRequirement) req;
+        // compound.appendAndExecute(RequirementHelper.INSTANCE.renameRequirement(requirement));
+        // }
+        // }
+        // compound.execute();
+        // mapCommand.put(createCommand, compound);
+        // }
+        // }
 
     }
 

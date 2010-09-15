@@ -66,16 +66,19 @@ public class DragAndDropCommandResolver extends AdditionalCommand<DragAndDropCom
         {
             MoveHierarchicalElementCommand cmd = new MoveHierarchicalElementCommand((EObject) dndCommand.getOwner(), dndCommand.getCollection());
             compound.appendIfCanExecute(cmd);
-
-            for (Object currSrc : dndCommand.getCollection())
-            {
-                if (currSrc instanceof CurrentRequirement)
-                {
-                    // Handle case of current view requirements drag'n'drop
-                    org.topcased.requirement.CurrentRequirement requirement = (org.topcased.requirement.CurrentRequirement) currSrc;
-                    compound.appendAndExecute(RequirementHelper.INSTANCE.renameRequirement(requirement));
-                }
-            }
+            /*
+             * We disable automatic renaming the current requirement. The ident is final.
+             */
+            // for (Object currSrc : dndCommand.getCollection())
+            // {
+            // if (currSrc instanceof CurrentRequirement)
+            // {
+            // // Handle case of current view requirements drag'n'drop
+            // org.topcased.requirement.CurrentRequirement requirement = (org.topcased.requirement.CurrentRequirement)
+            // currSrc;
+            // compound.appendAndExecute(RequirementHelper.INSTANCE.renameRequirement(requirement));
+            // }
+            // }
             compound.execute();
             mapCommand.put(dndCommand, compound);
         }

@@ -44,6 +44,7 @@ public class PasteCommandResolver extends AdditionalCommand<PasteFromClipboardCo
 {
 
     private Map<PasteFromClipboardCommand, EMFtoGEFCommandWrapper> commands;
+
     private Map<PasteFromClipboardCommand, org.eclipse.emf.common.command.Command> emfCommands;
 
     public PasteCommandResolver()
@@ -66,34 +67,37 @@ public class PasteCommandResolver extends AdditionalCommand<PasteFromClipboardCo
     {
         CompoundCommand compound = new CompoundCommand(Messages.getString("PasteCommandResolver.0")); //$NON-NLS-1$
         CurrentPage currentPage = RequirementHelper.INSTANCE.getCurrentPage();
-        
+
         for (PasteFromClipboardCommand pasteCommand : pasteCommands)
         {
             Object target = pasteCommand.getOwner();
             Collection< ? > toDuplicate = HierarchicalElementTransfer.INSTANCE.getResult();
-            Collection<?> sources = pasteCommand.getAffectedObjects();
-            
-            //Handle cases of copy/cut then paste on the current requirement view
+            Collection< ? > sources = pasteCommand.getAffectedObjects();
+
+            // Handle cases of copy/cut then paste on the current requirement view
             if (target instanceof HierarchicalElement)
             {
-                for (Object source : sources)
-                {
-                    if(source instanceof CurrentRequirement)
-                      {
-                          // rename the current requirement
-                          CurrentRequirement requirement = (CurrentRequirement) source;
-                          compound.appendAndExecute(RequirementHelper.INSTANCE.renameRequirement(requirement));
-                      }
-                }
-                
-                if (!compound.isEmpty() && compound.canExecute())
-                {
-                    // Execute the renaming commands
-                    compound.execute();
-                    emfCommands.put(pasteCommand, compound);
-                }
+                /*
+                 * We disable automatic renaming the current requirement. The ident is final.
+                 */
+                // for (Object source : sources)
+                // {
+                // if(source instanceof CurrentRequirement)
+                // {
+                // // rename the current requirement
+                // CurrentRequirement requirement = (CurrentRequirement) source;
+                // compound.appendAndExecute(RequirementHelper.INSTANCE.renameRequirement(requirement));
+                // }
+                // }
+                //
+                // if (!compound.isEmpty() && compound.canExecute())
+                // {
+                // // Execute the renaming commands
+                // compound.execute();
+                // emfCommands.put(pasteCommand, compound);
+                // }
             }
-            //Handle cases of copy/cut then paste on the modeler
+            // Handle cases of copy/cut then paste on the modeler
             else if (!toDuplicate.isEmpty())
             {
                 EMFtoGEFCommandWrapper com = new EMFtoGEFCommandWrapper(new PasteHierarchicalElementCommand(AdapterFactoryEditingDomain.getEditingDomainFor(target), (EObject) target, toDuplicate));
@@ -101,7 +105,7 @@ public class PasteCommandResolver extends AdditionalCommand<PasteFromClipboardCo
                 commands.put(pasteCommand, com);
             }
         }
-        
+
         if (currentPage != null && !compound.getAffectedObjects().isEmpty())
         {
             currentPage.setSelection(new StructuredSelection((List< ? >) compound.getAffectedObjects()));
@@ -170,7 +174,8 @@ public class PasteCommandResolver extends AdditionalCommand<PasteFromClipboardCo
                 List< ? > commands = ((CompoundCommand) emfCommand).getCommandList();
                 for (Object o : commands)
                 {
-                    // if we got a compound command with one or more PasteFromClipboardCommand, we add the command to the
+                    // if we got a compound command with one or more PasteFromClipboardCommand, we add the command to
+                    // the
                     // result
                     if (o instanceof PasteFromClipboardCommand)
                     {
