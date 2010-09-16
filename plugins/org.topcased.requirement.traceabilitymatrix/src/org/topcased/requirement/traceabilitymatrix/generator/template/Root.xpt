@@ -4,6 +4,7 @@
 <html>
 	<body>
 		<table border="1">
+			<tr><th>Upstream Req Id</th><th>Partial Coverage</th><th>Current Req Id</th><th>Associated Element</th><th>Description</th>«this.configuration()-»</tr>
 «EXPAND DocumentTemplate FOREACH this.upstreamModel.documents-»
 		</table>
 	</body>
@@ -13,12 +14,8 @@
 «ENDDEFINE»
 
 «DEFINE DocumentTemplate FOR ttm::Document-»
-<tr>
-		<td rowspan="1" colspan="3">«ident-»</td>
-		<table border="1">
-			«EXPAND URTemplate FOREACH children-»
-		</table>
-</tr>
+		<tr><td border="0" rowspan="1" colspan="1"><b>Document</b>: «ident-»</td></tr>
+		«EXPAND URTemplate FOREACH children-»
 «ENDDEFINE»
 
 «DEFINE URTemplate FOR ttm::Requirement-»

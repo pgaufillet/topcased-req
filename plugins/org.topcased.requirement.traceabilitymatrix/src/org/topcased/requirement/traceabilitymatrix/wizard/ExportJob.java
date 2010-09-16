@@ -22,7 +22,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.xpand2.Generator;
 import org.topcased.requirement.traceabilitymatrix.Activator;
 import org.topcased.requirement.traceabilitymatrix.generator.CSVFileGenerator;
 
