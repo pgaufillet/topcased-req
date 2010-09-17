@@ -135,7 +135,7 @@ public class DeleteCommandResolver extends AdditionalCommand<DeleteModelCommand>
                     List<Object> tmp = CommandStack.getCommands((Command) o, clazz);
                     if (!(tmp.isEmpty()))
                     {
-                        result.add(tmp);
+                        result.addAll(tmp);
                     }
                 }
             }
@@ -146,7 +146,7 @@ public class DeleteCommandResolver extends AdditionalCommand<DeleteModelCommand>
             List<Object> tmp = CommandStack.getCommands(command, clazz);
             if (!(tmp.isEmpty()))
             {
-                result.add(tmp);
+                result.addAll(tmp);
             }
         }
         return result;
