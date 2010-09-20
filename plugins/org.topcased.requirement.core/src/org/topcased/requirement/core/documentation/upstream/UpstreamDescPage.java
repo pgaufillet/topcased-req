@@ -17,6 +17,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IWorkbenchPart;
 import org.topcased.modeler.documentation.AbstractCommentsComposite;
 import org.topcased.modeler.documentation.AbstractDocPage;
 import org.topcased.requirement.AttributeLink;
@@ -98,4 +100,17 @@ public class UpstreamDescPage extends AbstractDocPage
         }
         return null;
     }
+
+    @Override
+    public void selectionChanged(IWorkbenchPart part, ISelection selection)
+    {
+        manageDocumentatedElement(part, selection, false);
+        resourcesComposite.setReadOnly(true);
+        commentsComposite.setReadOnly(true);
+        // in this case we want black color for visibility
+        commentsComposite.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
+    }
+    
+    
+
 }
