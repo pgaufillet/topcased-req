@@ -17,8 +17,8 @@ import java.util.List;
 
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CommandStackEvent;
-import org.eclipse.gef.commands.CommandStackEventListener;
 import org.topcased.modeler.commands.CommandStack;
+import org.topcased.modeler.commands.IDisposableCommandStackEventListener;
 import org.topcased.modeler.editor.Modeler;
 import org.topcased.modeler.utils.Utils;
 
@@ -28,7 +28,7 @@ import org.topcased.modeler.utils.Utils;
  * @author <a href="tristan.faure@atosorigin.com">Tristan FAURE</a>
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  */
-public abstract class AdditionalCommand<T> implements CommandStackEventListener
+public abstract class AdditionalCommand<T> implements IDisposableCommandStackEventListener
 {
     private Class< ? super T> theClass = null;
 
@@ -84,6 +84,11 @@ public abstract class AdditionalCommand<T> implements CommandStackEventListener
      * @return List<Object>
      */
     protected abstract List<Object> getSpecificCommands(Command command, Class< ? > clazz);
+
+    public void dipose()
+    {
+        // override this method if you want to add behavior
+    }
 
     protected void post_undo(List<T> command)
     {
