@@ -72,9 +72,10 @@ public class CurrentRequirementLabelProvider extends AdapterFactoryLabelProvider
 
         defaultFont = Utils.getFont(Display.getCurrent().getSystemFont().getFontData()[0], SWT.NONE);
         italicFont = Utils.getFont(Display.getCurrent().getSystemFont().getFontData()[0], SWT.ITALIC);
-
+        setDefaultFont(defaultFont);
         defaultColor = Utils.getColor("0,0,0"); //$NON-NLS-1$
         italicColor = Utils.getColor("255,0,0"); //$NON-NLS-1$
+        setDefaultForeground(defaultColor);
     }
 
     /**
