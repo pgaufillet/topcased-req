@@ -27,7 +27,6 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.topcased.modeler.commands.CommandStack;
 import org.topcased.modeler.commands.EMFtoGEFCommandWrapper;
-import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.core.commands.PasteHierarchicalElementCommand;
 import org.topcased.requirement.core.internal.Messages;
@@ -199,4 +198,15 @@ public class PasteCommandResolver extends AdditionalCommand<PasteFromClipboardCo
         }
         return result;
     }
+    
+    @Override
+    public void dipose()
+    {
+        super.dipose();
+        if (commands != null)
+        {
+            commands.clear();
+        }
+    }
+    
 }

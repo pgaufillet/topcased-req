@@ -19,12 +19,9 @@ import java.util.ListIterator;
 import java.util.Map;
 
 import org.eclipse.emf.common.command.CompoundCommand;
-import org.eclipse.emf.common.command.UnexecutableCommand;
 import org.eclipse.gef.commands.Command;
 import org.topcased.modeler.commands.CommandStack;
-import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.core.commands.CreateCurrentReqCommand;
-import org.topcased.requirement.core.utils.RequirementHelper;
 
 /**
  * This Class handle specific behaviour for requirements when a CreateCurrentReqCommand is executed.
@@ -120,5 +117,15 @@ public class CreateCurrentReqCommandResolver extends AdditionalCommand<CreateCur
     protected List<Object> getSpecificCommands(Command command, Class< ? > clazz)
     {
         return CommandStack.getCommands(command, clazz);
+    }
+    
+    @Override
+    public void dipose()
+    {
+        super.dipose();
+        if (mapCommand != null)
+        {
+            mapCommand.clear();
+        }
     }
 }

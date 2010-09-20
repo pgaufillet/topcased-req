@@ -151,4 +151,15 @@ public class DeleteCommandResolver extends AdditionalCommand<DeleteModelCommand>
         }
         return result;
     }
+    
+    @Override
+    public void dipose()
+    {
+        super.dipose();
+        if (commands != null)
+        {
+            commands.clear();
+        }
+    }
+    
 }

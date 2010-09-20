@@ -111,4 +111,15 @@ public class ReplaceNodeContainerCommandResolver extends AdditionalCommand<Repla
     {
         return CommandStack.getCommands(command, clazz);
     }
+    
+    @Override
+    public void dipose()
+    {
+        super.dipose();
+        if (commands != null)
+        {
+            commands.clear();
+        }
+    }
+    
 }

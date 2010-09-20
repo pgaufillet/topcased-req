@@ -119,4 +119,16 @@ public class CutCommandResolver extends AdditionalCommand<CutToClipboardCommand>
     {
         return CommandStack.getCommands(command, clazz);
     }
+    
+    @Override
+    public void dipose()
+    {
+        super.dipose();
+        if (commands != null)
+        {
+            commands.clear();
+        }
+    }
+    
+    
 }

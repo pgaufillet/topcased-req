@@ -109,4 +109,15 @@ public class RenameCommandResolver extends AdditionalCommand<ChangeLabelTextComm
         // nothing special to handle
         return CommandStack.getCommands(command, clazz);
     }
+    
+    @Override
+    public void dipose()
+    {
+        super.dipose();
+        if (commands != null)
+        {
+            commands.clear();
+        }
+    }
+    
 }

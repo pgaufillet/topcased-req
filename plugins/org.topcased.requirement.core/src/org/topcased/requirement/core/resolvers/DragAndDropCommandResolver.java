@@ -26,9 +26,7 @@ import org.eclipse.emf.edit.command.DragAndDropCommand;
 import org.eclipse.gef.commands.Command;
 import org.topcased.modeler.commands.CommandStack;
 import org.topcased.modeler.commands.EMFtoGEFCommandWrapper;
-import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.core.commands.MoveHierarchicalElementCommand;
-import org.topcased.requirement.core.utils.RequirementHelper;
 
 /**
  * 
@@ -161,4 +159,15 @@ public class DragAndDropCommandResolver extends AdditionalCommand<DragAndDropCom
         }
         return result;
     }
+    
+    @Override
+    public void dipose()
+    {
+        super.dipose();
+        if (mapCommand != null)
+        {
+            mapCommand.clear();
+        }
+    }
+    
 }

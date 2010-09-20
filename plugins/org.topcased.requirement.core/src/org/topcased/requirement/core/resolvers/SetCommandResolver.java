@@ -153,4 +153,15 @@ public class SetCommandResolver extends AdditionalCommand<SetCommand>
         }
         return result;
     }
+    
+    @Override
+    public void dipose()
+    {
+        super.dipose();
+        if (commands != null)
+        {
+            commands.clear();
+        }
+    }
+    
 }
