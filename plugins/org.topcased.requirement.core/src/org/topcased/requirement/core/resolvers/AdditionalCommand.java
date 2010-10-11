@@ -76,14 +76,17 @@ public abstract class AdditionalCommand<T> implements IDisposableCommandStackEve
     }
 
     /**
-     * get the list of specific commands when the parameter command and the parameter clazz are equals This is the same
+     * Gets the list of specific commands when the parameter command and the parameter clazz are equals This is the same
      * behaviour as CommandStack.getCommands(command, clazz) but specific to the type of <T>
      * 
      * @param command
      * @param clazz
      * @return List<Object>
      */
-    protected abstract List<Object> getSpecificCommands(Command command, Class< ? > clazz);
+    protected List<Object> getSpecificCommands(Command command, Class< ? > clazz)
+    {
+        return CommandStack.getCommands(command, clazz);
+    }
 
     public void dipose()
     {
