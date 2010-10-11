@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright (c) 2008 TOPCASED consortium.
+ * Copyright (c) 2010 Communication & Systems.
  * 
  * All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse
  * Public License v1.0 which accompanies this distribution, and is available at
@@ -10,7 +10,11 @@
  **********************************************************************************************************************/
 package org.topcased.requirement.core.commands;
 
-import org.eclipse.emf.common.command.Command;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.AddCommand;
@@ -37,8 +41,8 @@ import org.topcased.requirement.core.utils.RequirementUtils;
  */
 public class RemoveRequirementCommand extends CompoundCommand
 {
-    /** The hierarchical element to delete */
-    private HierarchicalElement toDelete;
+    /** List of selected objects to remove */
+    private Collection<EObject> selected;
 
     /** The editing domain to use */
     private EditingDomain editingDomain;
@@ -52,7 +56,21 @@ public class RemoveRequirementCommand extends CompoundCommand
     {
         super(Messages.getString("RemoveRequirementCommand.0")); //$NON-NLS-1$
         editingDomain = domain;
-        toDelete = RequirementUtils.getHierarchicalElementFor(deleted);
+        selected = new ArrayList<EObject>();
+        selected.add(deleted);
+        initializeCommands();
+    }
+
+    /**
+     * Constructor
+     * 
+     * @param objects A collection of model objects for which the matching {@link HierarchicalElement} must be removed.
+     */
+    public RemoveRequirementCommand(EditingDomain domain, Collection<EObject> deleted)
+    {
+        super(Messages.getString("RemoveHierarchicalElementCommand.0")); //$NON-NLS-1$
+        editingDomain = domain;
+        selected = deleted;
         initializeCommands();
     }
 
@@ -61,16 +79,22 @@ public class RemoveRequirementCommand extends CompoundCommand
      */
     protected void initializeCommands()
     {
-        if (toDelete != null)
+        List<EObject> toRemove = new ArrayList<EObject>();
+        for (Iterator<EObject> it = selected.iterator(); it.hasNext();)
         {
-            // 1) The HierarchicalElement is removed from the model
-            appendIfCanExecute(RemoveCommand.create(editingDomain, toDelete));
-
-            // 2) Then, hierarchical element and its requirements are added to the trash chapter.
-            SpecialChapter trash = RequirementUtils.getTrashChapter(editingDomain);
-            Command addTrashCmd = AddCommand.create(editingDomain, trash, RequirementPackage.eINSTANCE.getSpecialChapter_HierarchicalElement(), toDelete);
-            appendIfCanExecute(addTrashCmd);
+            HierarchicalElement elt = RequirementUtils.getHierarchicalElementFor(it.next());
+            if (elt != null)
+            {
+                toRemove.add(elt);
+            }
         }
+
+        // 1) The HierarchicalElement(s) is/are removed from the model
+        appendIfCanExecute(RemoveCommand.create(editingDomain, toRemove));
+
+        // 2) Then, hierarchical element and its requirements are added to the trash chapter.
+        SpecialChapter trash = RequirementUtils.getTrashChapter(editingDomain);
+        appendIfCanExecute(AddCommand.create(editingDomain, trash, RequirementPackage.eINSTANCE.getSpecialChapter_HierarchicalElement(), toRemove));
     }
 
     /**
@@ -79,6 +103,6 @@ public class RemoveRequirementCommand extends CompoundCommand
     @Override
     public boolean canExecute()
     {
-        return super.canExecute() && toDelete != null && editingDomain != null;
+        return super.canExecute() && !selected.isEmpty() && editingDomain != null;
     }
 }
