@@ -18,11 +18,11 @@ import java.util.regex.Pattern;
 
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.Requirement;
-import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.preferences.ComputeRequirementIdentifier;
 import org.topcased.requirement.core.preferences.RequirementNamingConstants;
 import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
+import org.topcased.requirement.core.views.AbstractRequirementView;
 
 /**
  * This algorithm is based on non stored index. The getCurrentIndex method iterate on all 
@@ -106,7 +106,7 @@ public class RegexRequirementCountingAlgorithm implements IRequirementCountingAl
         int value = -1;
         if (current.getIdentifier() != null && current.getIdentifier().length() > 0)
         {
-            String format = RequirementCorePlugin.getDefault().getPreferenceStore().getString(RequirementNamingConstants.REQUIREMENT_NAMING_FORMAT);
+            String format = AbstractRequirementView.getPreferenceStore().getString(RequirementNamingConstants.REQUIREMENT_NAMING_FORMAT);
             String regex = format.replace(DefaultRequirementIdentifierVariables.INDEX_VAR, "(\\d*)"); //$NON-NLS-1$
             regex = regex.replaceAll("\\{[^\\{]*\\}", "[\\\\w\\\\p{Punct} ]*"); //$NON-NLS-1$ //$NON-NLS-2$
             Pattern pat = Pattern.compile(regex);
