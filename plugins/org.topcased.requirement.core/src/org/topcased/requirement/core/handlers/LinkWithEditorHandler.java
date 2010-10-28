@@ -12,6 +12,7 @@
 package org.topcased.requirement.core.handlers;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.commands.AbstractHandlerWithState;
@@ -156,13 +157,20 @@ public class LinkWithEditorHandler extends AbstractHandlerWithState implements I
     {
         isDispatching = true;
         IStructuredSelection selection = (IStructuredSelection) page.getViewer().getSelection();
-        Object first = selection.getFirstElement();
-
-        if (first instanceof HierarchicalElement && getActiveModelerEditor() instanceof Modeler)
+        List<EObject> list = new ArrayList<EObject>(selection.size());
+        Modeler modeler = (Modeler) getActiveModelerEditor();
+        for (Iterator<?> i = selection.iterator() ; i.hasNext() ; )
         {
-            Modeler modeler = (Modeler) getActiveModelerEditor();
-            HierarchicalElement hierarchicalElement = (HierarchicalElement) first;
-            modeler.gotoEObject(hierarchicalElement.getElement());
+            Object first = i.next();
+            if (first instanceof HierarchicalElement && getActiveModelerEditor() instanceof Modeler)
+            {
+                HierarchicalElement hierarchicalElement = (HierarchicalElement) first;
+                list.add(hierarchicalElement.getElement());
+            }
+        }
+        if (!list.isEmpty())
+        {
+            modeler.gotoEObjects(list,true);
         }
         isDispatching = false;
     }
