@@ -17,11 +17,11 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import org.eclipse.emf.common.command.AbstractCommand;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
 import org.topcased.modeler.commands.ChangeLabelTextCommand;
 import org.topcased.modeler.commands.CommandStack;
-import org.topcased.modeler.commands.EMFtoGEFCommandWrapper;
 import org.topcased.requirement.core.commands.RenameRequirementCommand;
 
 /**
@@ -33,12 +33,12 @@ import org.topcased.requirement.core.commands.RenameRequirementCommand;
 public class RenameCommandResolver extends AdditionalCommand<ChangeLabelTextCommand>
 {
 
-    private Map<ChangeLabelTextCommand, EMFtoGEFCommandWrapper> commands;
+    private Map<ChangeLabelTextCommand, AbstractCommand> commands;
 
     public RenameCommandResolver()
     {
         this(ChangeLabelTextCommand.class);
-        commands = new HashMap<ChangeLabelTextCommand, EMFtoGEFCommandWrapper>();
+        commands = new HashMap<ChangeLabelTextCommand, AbstractCommand>();
     }
 
     public RenameCommandResolver(Class< ? super ChangeLabelTextCommand> clazz)
@@ -56,7 +56,7 @@ public class RenameCommandResolver extends AdditionalCommand<ChangeLabelTextComm
         {
             if (!renameCommand.equals(UnexecutableCommand.INSTANCE))
             {
-                EMFtoGEFCommandWrapper cmd = new EMFtoGEFCommandWrapper(new RenameRequirementCommand(renameCommand.getEObject(), renameCommand.getOldName(), renameCommand.getName()));
+                AbstractCommand cmd = new RenameRequirementCommand(renameCommand.getEObject(), renameCommand.getOldName(), renameCommand.getName());
                 if (cmd.canExecute())
                 {
                     cmd.execute();
@@ -74,10 +74,10 @@ public class RenameCommandResolver extends AdditionalCommand<ChangeLabelTextComm
     {
         for (ChangeLabelTextCommand renameCommand : renameCommands)
         {
-            EMFtoGEFCommandWrapper compound = commands.get(renameCommand);
-            if (compound != null)
+            AbstractCommand command = commands.get(renameCommand);
+            if (command != null)
             {
-                compound.redo();
+                command.redo();
             }
         }
     }
@@ -91,10 +91,10 @@ public class RenameCommandResolver extends AdditionalCommand<ChangeLabelTextComm
         for (ListIterator<ChangeLabelTextCommand> i = renameCommands.listIterator(renameCommands.size()); i.hasPrevious();)
         {
             ChangeLabelTextCommand renameCommand = i.previous();
-            EMFtoGEFCommandWrapper compound = commands.get(renameCommand);
-            if (compound != null)
+            AbstractCommand command = commands.get(renameCommand);
+            if (command != null)
             {
-                compound.undo();
+                command.undo();
             }
         }
     }
