@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import org.eclipse.emf.common.command.AbstractCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.topcased.modeler.commands.DeleteModelCommand;
-import org.topcased.modeler.commands.EMFtoGEFCommandWrapper;
 import org.topcased.requirement.core.commands.RemoveRequirementCommand;
 
 /**
@@ -35,12 +35,12 @@ import org.topcased.requirement.core.commands.RemoveRequirementCommand;
 public class DeleteCommandResolver extends AdditionalCommand<DeleteModelCommand>
 {
 
-    private Map<DeleteModelCommand, EMFtoGEFCommandWrapper> commands;
+    private Map<DeleteModelCommand, AbstractCommand> commands;
 
     public DeleteCommandResolver()
     {
         this(DeleteModelCommand.class);
-        commands = new HashMap<DeleteModelCommand, EMFtoGEFCommandWrapper>();
+        commands = new HashMap<DeleteModelCommand, AbstractCommand>();
     }
 
     public DeleteCommandResolver(Class< ? super DeleteModelCommand> clazz)
@@ -57,7 +57,7 @@ public class DeleteCommandResolver extends AdditionalCommand<DeleteModelCommand>
         for (DeleteModelCommand deleteModelCommand : deleteModelCommands)
         {
             Collection<EObject> eObjects = deleteModelCommand.getObjectsDeleting();
-            EMFtoGEFCommandWrapper deleteCmd = new EMFtoGEFCommandWrapper(new RemoveRequirementCommand(getModeler().getEditingDomain(), eObjects));
+            AbstractCommand deleteCmd = new RemoveRequirementCommand(getModeler().getEditingDomain(), eObjects);
             deleteCmd.execute();
             commands.put(deleteModelCommand, deleteCmd);
         }
@@ -71,10 +71,10 @@ public class DeleteCommandResolver extends AdditionalCommand<DeleteModelCommand>
     {
         for (DeleteModelCommand deleteModelCommand : deleteModelCommands)
         {
-            EMFtoGEFCommandWrapper wrap = commands.get(deleteModelCommand);
-            if (wrap != null)
+            AbstractCommand command = commands.get(deleteModelCommand);
+            if (command != null)
             {
-                wrap.redo();
+                command.redo();
             }
         }
     }
@@ -88,10 +88,10 @@ public class DeleteCommandResolver extends AdditionalCommand<DeleteModelCommand>
         for (ListIterator<DeleteModelCommand> i = deleteModelCommands.listIterator(deleteModelCommands.size()); i.hasPrevious();)
         {
             DeleteModelCommand deleteModelCommand = i.previous();
-            EMFtoGEFCommandWrapper wrap = commands.get(deleteModelCommand);
-            if (wrap != null)
+            AbstractCommand command = commands.get(deleteModelCommand);
+            if (command != null)
             {
-                wrap.undo();
+                command.undo();
             }
         }
     }
