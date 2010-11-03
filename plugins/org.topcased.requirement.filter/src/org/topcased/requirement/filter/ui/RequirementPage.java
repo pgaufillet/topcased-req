@@ -60,6 +60,8 @@ public class RequirementPage extends WizardPage
 
     /** The AND button. */
     private Button AND;
+    
+    private Button noAttributeMeansDeletion;
 
     /** The table of regular expressions. */
     private Table table;
@@ -260,7 +262,10 @@ public class RequirementPage extends WizardPage
         AND = new Button(compoORAND, SWT.RADIO);
         AND.setText("All regular expressions must be matched");
         initFromPreference(table);
-
+        noAttributeMeansDeletion = new Button(top, SWT.CHECK);
+        noAttributeMeansDeletion.setText("No attributes filtered found means deletion");
+        noAttributeMeansDeletion.setSelection(true);
+        noAttributeMeansDeletion.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, false, 2, 1));
         Label warning = new Label(top, SWT.NONE);
         warning.setText("\nWarning : At the end of filter process, your file shall be overridded.");
         warning.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, false, 2, 1));
@@ -354,6 +359,11 @@ public class RequirementPage extends WizardPage
     {
         return AND.getSelection();
     }
+    
+    public boolean isNoAttributesMeansDeletion()
+    {
+        return noAttributeMeansDeletion.getSelection();
+    }
 
     public String getNameRegex()
     {
@@ -385,5 +395,6 @@ public class RequirementPage extends WizardPage
         }
         return result;
     }
+
 
 }

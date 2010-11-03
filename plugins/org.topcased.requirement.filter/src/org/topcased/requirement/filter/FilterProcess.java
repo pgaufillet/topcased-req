@@ -65,6 +65,8 @@ public class FilterProcess
 
     private final String nameRegex;
 
+    private final boolean noAttributesFoundMeansDeletion;
+
     /**
      * Instantiates a new filter process.
      * 
@@ -74,9 +76,22 @@ public class FilterProcess
      */
     public FilterProcess(List<String> attributes, List<String> regexes, String nameRegex, boolean andSelected, IPath... ipathes)
     {
+        this(attributes,regexes,nameRegex,andSelected,true,ipathes);
+    }
+    
+    /**
+     * Instantiates a new filter process.
+     * 
+     * @param expressions map
+     * @param match all elements
+     * @param path of requirements file(s) to filter
+     */
+    public FilterProcess(List<String> attributes, List<String> regexes, String nameRegex, boolean andSelected, boolean noAttributesFoundMeansDeletion,IPath... ipathes)
+    {
         this.attributes = attributes;
         this.regexes = regexes;
         this.nameRegex = nameRegex;
+        this.noAttributesFoundMeansDeletion = noAttributesFoundMeansDeletion;
         pathes = ipathes;
         algoAnd = andSelected;
     }
@@ -194,6 +209,8 @@ public class FilterProcess
                     {
                         validName = mapRegex.get(nameRegex).matcher(req.getIdent()).matches();
                     }
+                    boolean found = false ;
+                    boolean matches = false ;
                     for (Attribute a : req.getAttributes())
                     {
                         for (int index = 0; index < regexes.size(); index++)
@@ -201,16 +218,29 @@ public class FilterProcess
                             String regex = regexes.get(index);
                             if (attributes.get(index) != null && attributes.get(index).equals(a.getName()))
                             {
+                                found = true ;
                                 String value = (a.getValue().length() > 0 ? a.getValue() : "");
-                                if (algoAnd)
-                                {
-                                    isGood = isGood && mapRegex.get(regex).matcher(value).matches();
-                                }
-                                else
-                                {
-                                    isGood = isGood || mapRegex.get(regex).matcher(value).matches();
-                                }
+                                matches |= mapRegex.get(regex).matcher(value).matches();
                             }
+                        }
+                    }
+                    if (algoAnd)
+                    {
+                        isGood = isGood && matches;
+                    }
+                    else
+                    {
+                        isGood = isGood || matches;
+                    }
+                    if (!found && noAttributesFoundMeansDeletion)
+                    {
+                        if (algoAnd)
+                        {
+                            isGood = false ;
+                        }
+                        else
+                        {
+                            isGood = isGood || false;
                         }
                     }
                     if (algoAnd)

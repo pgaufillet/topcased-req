@@ -87,7 +87,8 @@ public class RequirementFilterWizard extends Wizard
                     List<String> regexes = page.getRegexes();
                     String nameRegex = page.getNameRegex();
                     boolean andSelected = page.isANDSelected();
-                    FilterProcess process = new FilterProcess(attributes, regexes, nameRegex, andSelected, ipathes);
+                    boolean noAttributes = page.isNoAttributesMeansDeletion();
+                    FilterProcess process = new FilterProcess(attributes, regexes, nameRegex, andSelected, noAttributes, ipathes);
                     process.execute(monitor);
                     page.savePreferences(attributes, regexes, nameRegex);
                 }
