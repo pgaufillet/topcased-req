@@ -46,6 +46,7 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.RegistryToggleState;
+import org.topcased.modeler.editor.Modeler;
 import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.Attribute;
 import org.topcased.requirement.AttributeLink;
@@ -394,6 +395,11 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
             else if (object instanceof Requirement)
             {
                 updateReferencedUpstream((Requirement) object);
+                Modeler modeler = Utils.getCurrentModeler();
+                if (modeler != null)
+                {
+                    modeler.refreshActiveDiagram();
+                }
             }
             else if (object instanceof HierarchicalElement)
             {

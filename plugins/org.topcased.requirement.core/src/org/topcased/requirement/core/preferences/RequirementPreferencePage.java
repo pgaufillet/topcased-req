@@ -42,6 +42,9 @@ public class RequirementPreferencePage extends PreferencePage implements IWorkbe
 
     /** the field to edit whether a deleting a model element with requirements need confirmation */
     private BooleanFieldEditor deleteModelElements;
+    
+    /** the field to edit whether a deleting a model element with requirements need confirmation */
+    private BooleanFieldEditor displayCurrentReqDecorator;
 
     /**
      * Constructor
@@ -78,8 +81,22 @@ public class RequirementPreferencePage extends PreferencePage implements IWorkbe
                 fieldsContainer);
         deleteModelElements.setPreferenceStore(preferenceStore);
 
+        Group group2 = new Group(parentComposite, SWT.SHADOW_ETCHED_OUT);
+        group2.setLayout(new GridLayout());
+        group2.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        group2.setText("Editor");
+        
+        Composite fieldsContainer2 = new Composite(group2, SWT.NONE);
+        fieldsContainer2.setLayout(new GridLayout());
+        fieldsContainer2.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        
+        displayCurrentReqDecorator = new BooleanFieldEditor(RequirementPreferenceConstants.DISPLAY_CURRENT_DECORATOR, "Display current requirements decorator",
+                fieldsContainer2);
+        displayCurrentReqDecorator.setPreferenceStore(preferenceStore);
+        
         // load preferences to fields
         deleteModelElements.load();
+        displayCurrentReqDecorator.load();
 
         return parentComposite;
     }
@@ -92,6 +109,7 @@ public class RequirementPreferencePage extends PreferencePage implements IWorkbe
     protected void performDefaults()
     {
         deleteModelElements.loadDefault();
+        displayCurrentReqDecorator.loadDefault();
         super.performDefaults();
     }
 
@@ -103,6 +121,7 @@ public class RequirementPreferencePage extends PreferencePage implements IWorkbe
     public boolean performOk()
     {
         deleteModelElements.store();
+        displayCurrentReqDecorator.store();
         return super.performOk();
     }
 

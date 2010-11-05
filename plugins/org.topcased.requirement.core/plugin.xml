@@ -2045,4 +2045,20 @@
             priority="Low">
       </styleEvaluator>
    </extension>
+   <extension
+         point="org.eclipse.gmf.runtime.diagram.ui.decoratorProviders">
+      <decoratorProvider
+            class="org.topcased.requirement.core.decorators.CurrentReqEditPartDecoratorProvider">
+         <Priority
+               name="Lowest">
+         </Priority>
+         <object
+               class="org.eclipse.emf.ecore.EObject(org.eclipse.emf.ecore)"
+               id="EObject">
+         </object>
+         <context
+               decoratorTargets="EObject">
+         </context>
+      </decoratorProvider>
+   </extension>
 </plugin>
