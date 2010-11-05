@@ -9,7 +9,7 @@ Bundle-Activator: org.topcased.requirement.core.internal.RequirementCorePlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.topcased.requirement;visibility:=reexport,
- org.topcased.modeler.core;visibility:=reexport,
+ org.topcased.modeler;visibility:=reexport,
  org.eclipse.emf.compare.diff,
  org.eclipse.emf.compare.match,
  org.eclipse.core.expressions
