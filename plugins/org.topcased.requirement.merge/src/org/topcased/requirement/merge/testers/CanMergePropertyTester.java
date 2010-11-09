@@ -16,17 +16,17 @@ import org.eclipse.core.resources.IFile;
 import org.topcased.modeler.utils.Utils;
 
 /**
- * A simple property tester to check if the current IFile selected is a ".di" file,
- * And also check that no currentModeler is opened (prevent problems when modifying requirement file while opened)
+ * A simple property tester to check if the current IFile selected is a ".di" file, And also check that no
+ * currentModeler is opened (prevent problems when modifying requirement file while opened)
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
- *
+ * 
  */
 public class CanMergePropertyTester extends PropertyTester
 {
-
     /**
-     * @see org.eclipse.core.expressions.IPropertyTester#test(java.lang.Object, java.lang.String, java.lang.Object[], java.lang.Object)
+     * @see org.eclipse.core.expressions.IPropertyTester#test(java.lang.Object, java.lang.String, java.lang.Object[],
+     *      java.lang.Object)
      */
     public boolean test(Object receiver, String property, Object[] args, Object expectedValue)
     {
@@ -40,5 +40,4 @@ public class CanMergePropertyTester extends PropertyTester
         }
         return false;
     }
-
 }
