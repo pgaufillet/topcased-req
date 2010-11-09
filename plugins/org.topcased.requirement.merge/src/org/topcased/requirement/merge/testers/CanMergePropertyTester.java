@@ -35,11 +35,7 @@ public class CanMergePropertyTester extends PropertyTester
             if (receiver instanceof IFile)
             {
                 IFile file = (IFile) receiver;
-                
-                if (file.getFileExtension().endsWith("di")) //$NON-NLS-1$
-                {
-                    return true;
-                }
+                return file != null && file.getFileExtension() != null && file.getFileExtension().endsWith("di"); //$NON-NLS-1$
             }
         }
         return false;
