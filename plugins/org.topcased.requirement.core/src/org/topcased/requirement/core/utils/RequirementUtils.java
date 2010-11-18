@@ -312,6 +312,10 @@ public final class RequirementUtils
     public static Collection<Setting> getCrossReferences(EObject source)
     {
         Collection<Setting> collection = Collections.<Setting> emptyList();
+        if (source == null)
+        {
+            return collection ;
+        }
         ECrossReferenceAdapter adapter = RequirementCacheAdapter.getExistingRequirementCacheAdapter(source);
         if (adapter == null)
         {
