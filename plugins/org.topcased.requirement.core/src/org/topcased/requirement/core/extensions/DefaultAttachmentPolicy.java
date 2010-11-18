@@ -94,7 +94,7 @@ public class DefaultAttachmentPolicy implements IModelAttachmentPolicy
     {
         for (Resource resource : resourceSet.getResources())
         {
-            if (resource instanceof DiagramsResourceImpl)
+            if (resource instanceof DiagramsResourceImpl && !resource.getContents().isEmpty())
             {
                 Diagrams res = (Diagrams) resource.getContents().get(0);
                 Diagram root = DiagramsUtils.getRootDiagram(res);
