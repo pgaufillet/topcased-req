@@ -32,7 +32,7 @@ public class IsRequirementFilePropertyTester extends PropertyTester
         {
             IFile file = (IFile) receiver;
             
-            if (file.getFileExtension().equals("requirement")) //$NON-NLS-1$
+            if (file != null && file.getFileExtension() != null && file.getFileExtension().equals("requirement")) //$NON-NLS-1$
             {
                 return true;
             }
