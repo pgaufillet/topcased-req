@@ -147,7 +147,7 @@ public final class RequirementHelper
                 }
                 else if (extension.endsWith("di")) //$NON-NLS-1$
                 {
-                    if (modelResource.getContents().get(0) instanceof Diagrams)
+                    if (!modelResource.getContents().isEmpty() && modelResource.getContents().get(0) instanceof Diagrams)
                     {
                         result = getRequirementProject((Diagrams) modelResource.getContents().get(0));
                     }
@@ -156,7 +156,7 @@ public final class RequirementHelper
                 {
                     URI uri = URI.createURI(modelResource.getURI().toString() + "di"); //$NON-NLS-1$
                     Resource diResource = modelResource.getResourceSet().getResource(uri, true);
-                    if (diResource != null && diResource.getContents().get(0) instanceof Diagrams)
+                    if (diResource != null && !diResource.getContents().isEmpty() && diResource.getContents().get(0) instanceof Diagrams)
                     {
                         result = getRequirementProject((Diagrams) diResource.getContents().get(0));
                     }
