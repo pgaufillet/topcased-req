@@ -166,7 +166,11 @@ public class DefaultAttachmentPolicy implements IModelAttachmentPolicy
         if (!"".equals(resourcePath) && diagram.eResource() != null && diagram.eResource().getResourceSet() != null)
         {
             URI uri = URI.createURI(resourcePath).trimFragment().resolve(rootDiagram.eResource().getURI());
-            return (RequirementProject) diagram.eResource().getResourceSet().getResource(uri, true).getContents().get(0);
+            Resource reqResource = diagram.eResource().getResourceSet().getResource(uri, true);
+            if (!reqResource.getContents().isEmpty())
+            {
+                return (RequirementProject) reqResource.getContents().get(0);
+            }
         }
         return null;
     }
