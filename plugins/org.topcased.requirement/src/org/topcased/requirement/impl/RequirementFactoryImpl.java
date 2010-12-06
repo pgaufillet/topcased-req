@@ -34,7 +34,7 @@ public class RequirementFactoryImpl extends EFactoryImpl implements RequirementF
     {
         try
         {
-            RequirementFactory theRequirementFactory = (RequirementFactory) EPackage.Registry.INSTANCE.getEFactory("http://org.topcased.requirement/1.0");
+            RequirementFactory theRequirementFactory = (RequirementFactory) EPackage.Registry.INSTANCE.getEFactory("http://org.topcased.requirement/1.0"); //$NON-NLS-1$ 
             if (theRequirementFactory != null)
             {
                 return theRequirementFactory;
@@ -101,7 +101,7 @@ public class RequirementFactoryImpl extends EFactoryImpl implements RequirementF
             case RequirementPackage.ANONYMOUS_REQUIREMENT:
                 return createAnonymousRequirement();
             default:
-                throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+                throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 
@@ -118,7 +118,7 @@ public class RequirementFactoryImpl extends EFactoryImpl implements RequirementF
             case RequirementPackage.ATTRIBUTES_TYPE:
                 return createAttributesTypeFromString(eDataType, initialValue);
             default:
-                throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+                throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 
@@ -135,7 +135,7 @@ public class RequirementFactoryImpl extends EFactoryImpl implements RequirementF
             case RequirementPackage.ATTRIBUTES_TYPE:
                 return convertAttributesTypeToString(eDataType, instanceValue);
             default:
-                throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
+                throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 
@@ -324,7 +324,7 @@ public class RequirementFactoryImpl extends EFactoryImpl implements RequirementF
     {
         AttributesType result = AttributesType.get(initialValue);
         if (result == null)
-            throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+            throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         return result;
     }
 

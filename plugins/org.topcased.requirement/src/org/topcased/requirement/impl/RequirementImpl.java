@@ -214,7 +214,7 @@ public abstract class RequirementImpl extends IdentifiedElementImpl implements R
             return super.toString();
 
         StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (externalResources: ");
+        result.append(" (externalResources: "); //$NON-NLS-1$
         result.append(externalResources);
         result.append(')');
         return result.toString();

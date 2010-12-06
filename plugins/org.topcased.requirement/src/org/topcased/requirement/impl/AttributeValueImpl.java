@@ -172,7 +172,7 @@ public class AttributeValueImpl extends EObjectImpl implements AttributeValue
             return super.toString();
 
         StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (value: ");
+        result.append(" (value: "); //$NON-NLS-1$
         result.append(value);
         result.append(')');
         return result.toString();

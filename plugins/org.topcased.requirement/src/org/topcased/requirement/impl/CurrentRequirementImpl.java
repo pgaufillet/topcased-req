@@ -171,7 +171,7 @@ public class CurrentRequirementImpl extends RequirementImpl implements CurrentRe
             return super.toString();
 
         StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (impacted: ");
+        result.append(" (impacted: "); //$NON-NLS-1$
         result.append(impacted);
         result.append(')');
         return result.toString();

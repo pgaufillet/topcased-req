@@ -208,7 +208,7 @@ public class HierarchicalElementImpl extends IdentifiedElementImpl implements Hi
         if (newParent != eInternalContainer() || (eContainerFeatureID() != RequirementPackage.HIERARCHICAL_ELEMENT__PARENT && newParent != null))
         {
             if (EcoreUtil.isAncestor(this, newParent))
-                throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
+                throw new IllegalArgumentException("Recursive containment not allowed for " + toString()); //$NON-NLS-1$
             NotificationChain msgs = null;
             if (eInternalContainer() != null)
                 msgs = eBasicRemoveFromContainer(msgs);
@@ -439,7 +439,7 @@ public class HierarchicalElementImpl extends IdentifiedElementImpl implements Hi
             return super.toString();
 
         StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (nextReqIndex: ");
+        result.append(" (nextReqIndex: "); //$NON-NLS-1$
         result.append(nextReqIndex);
         result.append(')');
         return result.toString();

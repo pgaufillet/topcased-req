@@ -171,7 +171,7 @@ public class AttributeLinkImpl extends ObjectAttributeImpl implements AttributeL
             return super.toString();
 
         StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (partial: ");
+        result.append(" (partial: "); //$NON-NLS-1$
         result.append(partial);
         result.append(')');
         return result.toString();

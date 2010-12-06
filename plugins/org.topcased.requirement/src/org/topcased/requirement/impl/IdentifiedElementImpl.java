@@ -226,9 +226,9 @@ public abstract class IdentifiedElementImpl extends EModelElementImpl implements
             return super.toString();
 
         StringBuffer result = new StringBuffer(super.toString());
-        result.append(" (identifier: ");
+        result.append(" (identifier: "); //$NON-NLS-1$
         result.append(identifier);
-        result.append(", shortDescription: ");
+        result.append(", shortDescription: "); //$NON-NLS-1$
         result.append(shortDescription);
         result.append(')');
         return result.toString();

@@ -19,7 +19,7 @@ import org.topcased.requirement.util.migration.RequirementMigrationHelper;
  * @see org.topcased.requirement.util.RequirementResourceFactoryImpl
  * @generated
  */
-public class RequirementResourceImpl extends XMIResourceImpl
+public class RequirementResourceImpl extends XMIResourceImpl implements RequirementResource
 {
     
     private RequirementMigrationHelper myMigrationHelper;
