@@ -37,6 +37,7 @@ import org.eclipse.ui.dialogs.ResourceSelectionDialog;
 import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
 import org.topcased.requirement.core.extensions.RequirementTransformationManager;
 import org.topcased.requirement.core.internal.Messages;
+import org.topcased.requirement.util.RequirementResource;
 
 /**
  * The "New" wizard page allows setting the container for the new file as well as the file name. The page will only
@@ -111,8 +112,8 @@ public class RequirementWizardPage extends WizardPage
     {
         super("wizardPage"); //$NON-NLS-1$
         this.selection = selection;
-        
-        //Is this dialog an attach dialog or a merge dialog?
+
+        // Is this dialog an attach dialog or a merge dialog?
         if (toMerge)
         {
             setTitle(Messages.getString("RequirementWizardPage.2")); //$NON-NLS-1$
@@ -123,15 +124,15 @@ public class RequirementWizardPage extends WizardPage
             setTitle(Messages.getString("RequirementWizardPage.4")); //$NON-NLS-1$
             setDescription(Messages.getString("RequirementWizardPage.5")); //$NON-NLS-1$
         }
-        
-        //Is this diagram already attached?
+
+        // Is this diagram already attached?
         if (alreadyAttachedRequirementPath != null)
         {
             ALREADY_ATTACHED_REQUIREMENT = alreadyAttachedRequirementPath;
         }
         else
         {
-            ALREADY_ATTACHED_REQUIREMENT = null; 
+            ALREADY_ATTACHED_REQUIREMENT = null;
         }
     }
 
@@ -329,9 +330,9 @@ public class RequirementWizardPage extends WizardPage
             if (obj instanceof IFile)
             {
                 targetModelFd.setText(((IResource) obj).getFullPath().toString());
-                
+
             }
-            
+
             if (ALREADY_ATTACHED_REQUIREMENT == null)
             {
                 name = ((IFile) obj).getLocation().removeFileExtension().lastSegment();
@@ -376,7 +377,7 @@ public class RequirementWizardPage extends WizardPage
         {
             if (!RequirementTransformationManager.getInstance().isEnableFor(getSourceModelFile().getFileExtension()))
             {
-                if (!getSourceModelFile().getFileExtension().equals("requirement")) //$NON-NLS-1$
+                if (!getSourceModelFile().getFileExtension().equals(RequirementResource.FILE_EXTENSION))
                 {
                     message = Messages.getString("RequirementWizardPage.19"); //$NON-NLS-1$
                 }

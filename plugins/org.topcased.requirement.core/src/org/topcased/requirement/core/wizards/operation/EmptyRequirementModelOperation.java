@@ -19,6 +19,7 @@ import org.topcased.requirement.RequirementFactory;
 import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.utils.RequirementUtils;
+import org.topcased.requirement.util.RequirementResource;
 
 /**
  * 
@@ -64,14 +65,13 @@ public class EmptyRequirementModelOperation extends AbstractRequirementModelOper
     {
         monitor.subTask(Messages.getString("EmptyRequirementModelOperation.1")); //$NON-NLS-1$
         ResourceSet resourceSet = new ResourceSetImpl();
-        URI fileURI = URI.createPlatformResourceURI(requirementModelFile.getFullPath().addFileExtension(MODEL_EXTENSION).toString(), true);
+        URI fileURI = URI.createPlatformResourceURI(requirementModelFile.getFullPath().addFileExtension(RequirementResource.FILE_EXTENSION).toString(), true);
         requirementResource = resourceSet.createResource(fileURI);
         monitor.worked(1);
 
         // Add the initial model object to the contents.
         RequirementProject newProject = RequirementFactory.eINSTANCE.createRequirementProject();
         requirementResource.getContents().add(newProject);
-
 
         RequirementProject rootObject = (RequirementProject) RequirementUtils.getRoot(requirementResource, RequirementProject.class);
         updateRequirementProject(rootObject);
@@ -82,7 +82,7 @@ public class EmptyRequirementModelOperation extends AbstractRequirementModelOper
         rootObject.getChapter().add(RequirementFactory.eINSTANCE.createTrashChapter());
         rootObject.getChapter().add(RequirementFactory.eINSTANCE.createUntracedChapter());
         createAttributeConfiguration(rootObject);
-        
+
         monitor.worked(1);
 
         // Save the contents of the resource to the file system

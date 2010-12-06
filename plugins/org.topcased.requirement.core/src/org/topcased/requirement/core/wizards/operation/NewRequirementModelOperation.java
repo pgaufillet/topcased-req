@@ -30,6 +30,7 @@ import org.topcased.requirement.core.handlers.UnlinkRequirementModelHandler;
 import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.utils.RequirementUtils;
+import org.topcased.requirement.util.RequirementResource;
 
 /**
  * 
@@ -47,7 +48,7 @@ public class NewRequirementModelOperation extends AbstractRequirementModelOperat
 
     private static final String MODEL_OLD = "old"; //$NON-NLS-1$
 
-    private IFile sourceModelFile; //requirement model already created or not
+    private IFile sourceModelFile; // requirement model already created or not
 
     /**
      * The constructor
@@ -72,10 +73,11 @@ public class NewRequirementModelOperation extends AbstractRequirementModelOperat
         if (modeler != null)
         {
             domain = modeler.getEditingDomain();
-        }  
-        
-        // Deals with source model file extension and the fact that the target model could already have a requirement project attached
-        if (sourceModelFile.getFileExtension().equals("requirement")) //$NON-NLS-1$
+        }
+
+        // Deals with source model file extension and the fact that the target model could already have a requirement
+        // project attached
+        if (RequirementResource.FILE_EXTENSION.equals(sourceModelFile.getFileExtension()))
         {
             if (isCurrentModelerAlreadyAttached(domain))
             {
@@ -121,7 +123,7 @@ public class NewRequirementModelOperation extends AbstractRequirementModelOperat
         monitor.beginTask(Messages.getString("NewRequirementModelOperation.0"), 4); //$NON-NLS-1$
 
         // Get a resource of the destination file
-        requirementResource = RequirementUtils.getResource(requirementModelFile.getFullPath().addFileExtension(MODEL_EXTENSION));
+        requirementResource = RequirementUtils.getResource(requirementModelFile.getFullPath().addFileExtension(RequirementResource.FILE_EXTENSION));
 
         // Add the initial model object to the contents
         createInitialModel(requirementResource);
@@ -143,16 +145,16 @@ public class NewRequirementModelOperation extends AbstractRequirementModelOperat
      */
     protected void copyAndCreate(IProgressMonitor monitor)
     {
-        IFile fileDest = ResourcesPlugin.getWorkspace().getRoot().getFile(requirementModelFile.getFullPath().addFileExtension(MODEL_EXTENSION));
-        
-        //If the requirement model file is not close to the target model file
+        IFile fileDest = ResourcesPlugin.getWorkspace().getRoot().getFile(requirementModelFile.getFullPath().addFileExtension(RequirementResource.FILE_EXTENSION));
+
+        // If the requirement model file is not close to the target model file
         if (!fileDest.exists())
         {
             monitor.subTask(Messages.getString("NewRequirementModelOperation.1")); //$NON-NLS-1$
             // rename the file from the name given in the dialog and copy it next to the target model
             try
             {
-                sourceModelFile.copy(requirementModelFile.getFullPath().addFileExtension(MODEL_EXTENSION), true, monitor);
+                sourceModelFile.copy(requirementModelFile.getFullPath().addFileExtension(RequirementResource.FILE_EXTENSION), true, monitor);
             }
             catch (CoreException e)
             {
@@ -179,7 +181,7 @@ public class NewRequirementModelOperation extends AbstractRequirementModelOperat
         Resource oldRequirementResource = RequirementUtils.getRequirementModel(domain);
         IFile oldRequirementFile = RequirementUtils.getFile(oldRequirementResource);
 
-        //Launch the unlink model action via the handler of this action
+        // Launch the unlink model action via the handler of this action
         UnlinkRequirementModelHandler unlinkAction = new UnlinkRequirementModelHandler();
         try
         {
@@ -190,19 +192,19 @@ public class NewRequirementModelOperation extends AbstractRequirementModelOperat
             RequirementCorePlugin.log(e);
         }
 
-        //Cancel has not been pressed
+        // Cancel has not been pressed
         if (unlinkAction.getDialogResult() != 1)
         {
             // The file has not been deleted by the user, we need to rename it
             if (unlinkAction.getDialogResult() == 0)
             {
                 monitor.subTask(Messages.getString("NewRequirementModelOperation.3")); //$NON-NLS-1$
-                
+
                 // rename the file to add with the extension ".old.requirement"
-                IPath path = oldRequirementFile.getFullPath().removeFileExtension().addFileExtension(MODEL_OLD); 
+                IPath path = oldRequirementFile.getFullPath().removeFileExtension().addFileExtension(MODEL_OLD);
                 try
                 {
-                    oldRequirementFile.move(path.addFileExtension(MODEL_EXTENSION), true, monitor);
+                    oldRequirementFile.move(path.addFileExtension(RequirementResource.FILE_EXTENSION), true, monitor);
                 }
                 catch (CoreException e)
                 {
@@ -210,7 +212,7 @@ public class NewRequirementModelOperation extends AbstractRequirementModelOperat
                 }
                 monitor.worked(1);
             }
-    
+
             // Deals with the source model file extension
             if (toTransform)
             {
@@ -244,7 +246,7 @@ public class NewRequirementModelOperation extends AbstractRequirementModelOperat
         // Create the requirement model
         newRequirementModel(monitor);
     }
-    
+
     /**
      * Check if the current modeler is already attached to a requirement model
      * 
@@ -253,8 +255,8 @@ public class NewRequirementModelOperation extends AbstractRequirementModelOperat
     protected boolean isCurrentModelerAlreadyAttached(EditingDomain domain)
     {
         Resource linkedTargetModel = null;
-        
-        //Get the attachment policy for the target model file
+
+        // Get the attachment policy for the target model file
         IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(targetModelFile.getFileExtension());
 
         // Check if the target model file is already linked to a requirement project
@@ -272,7 +274,7 @@ public class NewRequirementModelOperation extends AbstractRequirementModelOperat
             if (linkedTargetModel != null)
             {
                 return RequirementUtils.getFile(linkedTargetModel).equals(targetModelFile);
-            }           
+            }
         }
         return false;
     }

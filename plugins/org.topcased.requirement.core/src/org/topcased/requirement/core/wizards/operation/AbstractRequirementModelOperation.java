@@ -41,8 +41,6 @@ import org.topcased.requirement.core.utils.RequirementUtils;
 public abstract class AbstractRequirementModelOperation extends WorkspaceModifyOperation
 {
 
-    public static final String MODEL_EXTENSION = "requirement"; //$NON-NLS-1$
-
     protected Resource requirementResource;
 
     protected IFile targetModelFile; // target model
@@ -78,7 +76,7 @@ public abstract class AbstractRequirementModelOperation extends WorkspaceModifyO
     }
 
     /**
-     *
+     * 
      * Updates into the target model the reference to the requirement model
      */
     protected void updateRequirementReference(IProgressMonitor monitor)
@@ -87,34 +85,34 @@ public abstract class AbstractRequirementModelOperation extends WorkspaceModifyO
         monitor.subTask(Messages.getString("AbstractRequirementModelOperation.0")); //$NON-NLS-1$
         IModelAttachmentPolicy policy = null;
         Resource targetModelResource = RequirementUtils.getResource(targetModelFile.getFullPath());
-        
-        //Get the policy from the file extension of the target resource
+
+        // Get the policy from the file extension of the target resource
         String fileExtension = targetModelResource.getURI().fileExtension();
         policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(fileExtension);
-        
-        //Link the model to the requirement model
+
+        // Link the model to the requirement model
         if (policy != null)
-        {            
-            cmd = policy.linkRequirementModel(targetModelResource, requirementResource);         
-        } 
+        {
+            cmd = policy.linkRequirementModel(targetModelResource, requirementResource);
+        }
         else
         {
             cmd = DefaultAttachmentPolicy.getInstance().linkRequirementModel(targetModelResource, requirementResource);
         }
-        
-        //Execute the command
-        if (cmd!= null && cmd.canExecute())
+
+        // Execute the command
+        if (cmd != null && cmd.canExecute())
         {
             Utils.getCurrentModeler().getEditingDomain().getCommandStack().execute(cmd);
         }
-        
+
         monitor.worked(1);
     }
-    
+
     /**
-    *
-    * Process the merge operation
-    */
+     * 
+     * Process the merge operation
+     */
     protected void mergeOperation(Resource requirementResourceMerged, IProgressMonitor monitor)
     {
         monitor.subTask(Messages.getString("AbstractRequirementModelOperation.1")); //$NON-NLS-1$

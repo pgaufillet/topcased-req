@@ -59,6 +59,7 @@ import org.topcased.requirement.core.preferences.ComputeRequirementIdentifier;
 import org.topcased.requirement.core.views.AddRequirementMarker;
 import org.topcased.requirement.core.views.current.CurrentPage;
 import org.topcased.requirement.core.views.upstream.UpstreamPage;
+import org.topcased.requirement.util.RequirementResource;
 
 import ttm.Requirement;
 
@@ -83,9 +84,6 @@ public final class RequirementHelper
      * Constant used to indicate that an anonymous requirement creation is expected
      */
     private static final boolean CREATE_ANONYMOUS = false;
-
-    /** Constant for requirement file extension */
-    private static final String REQUIREMENT_FILE_EXTENSION = "requirement"; //$NON-NLS-1$
 
     /** Most of operations offer by this factory are based on the editing domain */
     private EditingDomain editingDomain;
@@ -138,7 +136,7 @@ public final class RequirementHelper
             if (extension != null)
             {
 
-                if (REQUIREMENT_FILE_EXTENSION.equals(extension))
+                if (RequirementResource.FILE_EXTENSION.equals(extension))
                 {
                     if (!modelResource.getContents().isEmpty() && modelResource.getContents().get(0) instanceof RequirementProject)
                     {

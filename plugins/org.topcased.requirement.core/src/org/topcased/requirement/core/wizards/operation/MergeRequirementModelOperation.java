@@ -22,6 +22,7 @@ import org.topcased.requirement.core.extensions.RequirementTransformationManager
 import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.utils.RequirementUtils;
+import org.topcased.requirement.util.RequirementResource;
 
 /**
  * 
@@ -38,7 +39,7 @@ public class MergeRequirementModelOperation extends AbstractRequirementModelOper
 {
     private static final String MODEL_TMP = "tmp"; //$NON-NLS-1$
 
-    private IFile sourceModelFile; //requirement model already created or not
+    private IFile sourceModelFile; // requirement model already created or not
 
     /**
      * The constructor
@@ -59,14 +60,14 @@ public class MergeRequirementModelOperation extends AbstractRequirementModelOper
     protected void execute(IProgressMonitor monitor)
     {
 
-        if (sourceModelFile.getFileExtension().equals("requirement")) //$NON-NLS-1$
+        if (RequirementResource.FILE_EXTENSION.equals(sourceModelFile.getFileExtension()))
         {
             monitor.subTask(Messages.getString("MergeRequirementModelOperation.0")); //$NON-NLS-1$
             // rename the file from the name given in the dialog and temporally copy it next to the target model
             IPath mergePath = requirementModelFile.getFullPath().addFileExtension(MODEL_TMP);
             try
             {
-                sourceModelFile.copy(mergePath.addFileExtension(MODEL_EXTENSION), true, monitor);
+                sourceModelFile.copy(mergePath.addFileExtension(RequirementResource.FILE_EXTENSION), true, monitor);
             }
             catch (CoreException e)
             {
@@ -121,10 +122,10 @@ public class MergeRequirementModelOperation extends AbstractRequirementModelOper
         monitor.beginTask(Messages.getString("MergeRequirementModelOperation.2"), 3); //$NON-NLS-1$      
 
         // Get a resource of the destination file
-        requirementResource = RequirementUtils.getResource(requirementModelFile.getFullPath().addFileExtension(MODEL_EXTENSION));
+        requirementResource = RequirementUtils.getResource(requirementModelFile.getFullPath().addFileExtension(RequirementResource.FILE_EXTENSION));
 
         // Get the resource to update/merge
-        Resource requirementResourceMerged = RequirementUtils.getResource(mergePath.addFileExtension(MODEL_EXTENSION));
+        Resource requirementResourceMerged = RequirementUtils.getResource(mergePath.addFileExtension(RequirementResource.FILE_EXTENSION));
 
         // Add the initial model object to the contents
         createInitialModel(requirementResourceMerged);
@@ -135,7 +136,7 @@ public class MergeRequirementModelOperation extends AbstractRequirementModelOper
 
         // Delete the temporary model
         monitor.subTask(Messages.getString("MergeRequirementModelOperation.3")); //$NON-NLS-1$
-        Resource toDelete = RequirementUtils.getResource(mergePath.addFileExtension(MODEL_EXTENSION));
+        Resource toDelete = RequirementUtils.getResource(mergePath.addFileExtension(RequirementResource.FILE_EXTENSION));
         RequirementUtils.deleteResource(toDelete);
         monitor.worked(1);
     }

@@ -25,21 +25,22 @@ import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.current.CurrentRequirementView;
 import org.topcased.requirement.core.views.upstream.UpstreamRequirementView;
+import org.topcased.requirement.util.RequirementResource;
 
 /**
  * A command to unlink a requirement model from a topcased diagram
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
- *
+ * 
  */
 public class UnlinkRequirementModelCommand extends AbstractCommand
-{    
+{
     private Resource requirementResource;
-    
+
     private boolean deleteRequirementResource;
-    
+
     private Modeler modeler;
-    
+
     /**
      * Constructor
      * 
@@ -67,7 +68,7 @@ public class UnlinkRequirementModelCommand extends AbstractCommand
      */
     public void redo()
     {
-        //Set the property
+        // Set the property
         DefaultAttachmentPolicy.getInstance().setProperty(modeler, null);
 
         // unload and delete the requirement model from file system.
@@ -78,27 +79,26 @@ public class UnlinkRequirementModelCommand extends AbstractCommand
                 RequirementUtils.deleteResource(requirementResource);
             }
         }
-        
-        //Notify views that the diagram property has changed
+
+        // Notify views that the diagram property has changed
         ((CurrentRequirementView) CurrentRequirementView.getInstance()).partClosed(modeler);
         ((UpstreamRequirementView) UpstreamRequirementView.getInstance()).partClosed(modeler);
     }
-    
-    
+
     /**
      * @see org.eclipse.emf.common.command.AbstractCommand#undo()
      */
     @Override
     public void undo()
     {
-        //Set the property
+        // Set the property
         DefaultAttachmentPolicy.getInstance().setProperty(modeler, requirementResource);
-        
-        //Notify views that the diagram property has changed
+
+        // Notify views that the diagram property has changed
         ((CurrentRequirementView) CurrentRequirementView.getInstance()).partActivated(modeler);
         ((UpstreamRequirementView) UpstreamRequirementView.getInstance()).partActivated(modeler);
     }
-    
+
     /**
      * @see org.eclipse.emf.common.command.AbstractCommand#canExecute()
      */
@@ -114,10 +114,11 @@ public class UnlinkRequirementModelCommand extends AbstractCommand
     @Override
     public boolean canUndo()
     {
-        //Get the old requirement file (handle cases when a new requirement model is attached to a previously attached diagram)
-        IPath path = new Path(URI.decode(requirementResource.getURI().toPlatformString(true))).removeFileExtension().addFileExtension("old").addFileExtension("requirement"); //$NON-NLS-1$ //$NON-NLS-2$
+        // Get the old requirement file (handle cases when a new requirement model is attached to a previously attached
+        // diagram)
+        IPath path = new Path(URI.decode(requirementResource.getURI().toPlatformString(true))).removeFileExtension().addFileExtension("old").addFileExtension(RequirementResource.FILE_EXTENSION); //$NON-NLS-1$
         IFile fileOld = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-        
+
         return !deleteRequirementResource && !fileOld.exists();
     }
 }
