@@ -29,6 +29,7 @@ import org.topcased.bus.core.ServicesManager;
 import org.topcased.bus.core.constant.IServiceCst;
 import org.topcased.requirement.internal.Messages;
 import org.topcased.requirement.internal.RequirementImportPlugin;
+import org.topcased.requirement.util.RequirementResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -48,17 +49,17 @@ public class TTM2RequirementService implements IService
     public static final String ID = "org.topcased.requirement.service.import"; //$NON-NLS-1$
 
     private static final String TRANSFO_ID = "org.topcased.requirement.transformation.import"; //$NON-NLS-1$
-    
+
     private static final String CHANGE_URI_ID = "org.topcased.service.changeuri"; //$NON-NLS-1$
-    
-    //parameters
+
+    // parameters
     private static final String inParam = "IN"; //$NON-NLS-1$
-    
+
     private static final String outParam = "OUT"; //$NON-NLS-1$
-    
+
     private static final String pathParam = "Path"; //$NON-NLS-1$
-    
-    //time format
+
+    // time format
     private static final String timeFormat = "yyyy-MM-dd hh'h'mm"; //$NON-NLS-1$
 
     /**
@@ -69,17 +70,17 @@ public class TTM2RequirementService implements IService
         // first checks the parameters
         if (checkServiceParameters(parameters))
         {
-            String beginTime = new SimpleDateFormat(timeFormat).format(new Date()); 
+            String beginTime = new SimpleDateFormat(timeFormat).format(new Date());
             RequirementImportPlugin.log(Messages.getString("TTM2RequirementService.0").concat(beginTime), IStatus.INFO); //$NON-NLS-1$
 
-            String inpath = (String) parameters.get(inParam); 
-            IPath outpath = new Path((String) parameters.get(outParam)); 
-            outpath = outpath.addFileExtension("requirement"); //$NON-NLS-1$
-            IPath path = (IPath) parameters.get(pathParam); 
+            String inpath = (String) parameters.get(inParam);
+            IPath outpath = new Path((String) parameters.get(outParam));
+            outpath = outpath.addFileExtension(RequirementResource.FILE_EXTENSION);
+            IPath path = (IPath) parameters.get(pathParam);
 
             HashMap<String, String> models = new HashMap<String, String>();
-            models.put(inParam, inpath); 
-            models.put(outParam, outpath.toOSString()); 
+            models.put(inParam, inpath);
+            models.put(outParam, outpath.toOSString());
 
             HashMap<String, Object> serviceParameters = new HashMap<String, Object>();
             serviceParameters.put("Id", TRANSFO_ID); //$NON-NLS-1$
@@ -88,7 +89,7 @@ public class TTM2RequirementService implements IService
             serviceParameters.put("IsXml", new Boolean(false)); //$NON-NLS-1$
 
             Object newInputFilePath = convertTTMModel(parameters);
-            models.put(inParam, (String) newInputFilePath); 
+            models.put(inParam, (String) newInputFilePath);
 
             IService transformation = ServicesManager.getInstance().getService(IServiceCst.TRANSFORMATION);
             transformation.serviceRun(serviceParameters);

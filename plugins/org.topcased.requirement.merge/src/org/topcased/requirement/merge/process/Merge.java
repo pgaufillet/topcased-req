@@ -59,6 +59,7 @@ import org.topcased.requirement.core.extensions.DefaultAttachmentPolicy;
 import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
 import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
 import org.topcased.requirement.merge.utils.Triplet;
+import org.topcased.requirement.util.RequirementResource;
 
 public class Merge
 {
@@ -217,7 +218,7 @@ public class Merge
                 RequirementProject project = null;
                 Diagrams diagram = (Diagrams) eobject;
                 IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(uri.fileExtension());
-                
+
                 // Get the associated requirement model
                 if (policy != null)
                 {
@@ -227,7 +228,7 @@ public class Merge
                 {
                     project = DefaultAttachmentPolicy.getInstance().getRequirementProjectFromTargetDiagram(diagram);
                 }
-                
+
                 if (project != null)
                 {
                     // get the associate model
@@ -467,10 +468,10 @@ public class Merge
                 if (current.eContainer() instanceof HierarchicalElement)
                 {
                     HierarchicalElement hier = (HierarchicalElement) current.eContainer();
-                    EObject element = hier.getElement() ;
+                    EObject element = hier.getElement();
                     if (element.eIsProxy())
                     {
-                        element = (EObject) hier.eGet(RequirementPackage.Literals.HIERARCHICAL_ELEMENT__ELEMENT,true);
+                        element = (EObject) hier.eGet(RequirementPackage.Literals.HIERARCHICAL_ELEMENT__ELEMENT, true);
                     }
                     if (element != null && !element.eIsProxy() && hier.getElement().eResource().getURI().equals(t.getModel().eResource().getURI()))
                     {
@@ -521,7 +522,7 @@ public class Merge
                 if (link.getValue() != null)
                 {
                     Resource resource = link.getValue().eResource();
-                    if ("requirement".equals(resource.getURI().fileExtension()) && resource != copy.eResource())
+                    if (RequirementResource.FILE_EXTENSION.equals(resource.getURI().fileExtension()) && resource != copy.eResource())
                     {
                         link.setValue(getEquivalent(copy.eResource(), link.getValue()));
                     }
