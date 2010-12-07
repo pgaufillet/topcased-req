@@ -21,6 +21,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -70,7 +71,7 @@ public class UpdateAttributeConfigurationDialog extends TitleAreaDialog
      * 
      * @param parentShell The parent shell
      */
-    public UpdateAttributeConfigurationDialog(List<?> theSelection, Shell parentShell)
+    public UpdateAttributeConfigurationDialog(List< ? > theSelection, Shell parentShell)
     {
         super(parentShell);
         setShellStyle(getShellStyle() | SWT.RESIZE);
@@ -301,7 +302,7 @@ public class UpdateAttributeConfigurationDialog extends TitleAreaDialog
                 }
                 else
                 {
-                    setMessage(Messages.getString("UpdateAttributeConfigurationDialog.10") + selected.getName() + Messages.getString("UpdateAttributeConfigurationDialog.11"), IMessageProvider.WARNING); //$NON-NLS-1$ //$NON-NLS-2$
+                    setMessage(NLS.bind(Messages.getString("UpdateAttributeConfigurationDialog.alreadyExisting"), selected.getName()), IMessageProvider.WARNING); //$NON-NLS-1$
                 }
             }
         }
@@ -392,8 +393,7 @@ public class UpdateAttributeConfigurationDialog extends TitleAreaDialog
                     }
                     else
                     {
-                        setMessage(
-                                Messages.getString("UpdateAttributeConfigurationDialog.10") + leftConfiguration.getName() + Messages.getString("UpdateAttributeConfigurationDialog.11"), IMessageProvider.WARNING); //$NON-NLS-1$ //$NON-NLS-2$
+                        setMessage(NLS.bind(Messages.getString("UpdateAttributeConfigurationDialog.alreadyExisting"), leftConfiguration.getName()), IMessageProvider.WARNING); //$NON-NLS-1$
                     }
                 }
                 else
