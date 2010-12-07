@@ -31,6 +31,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -70,8 +71,9 @@ import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.services.RequirementModelSourceProvider;
 import org.topcased.requirement.util.RequirementCacheAdapter;
-import org.topcased.requirement.util.RequirementResourceImpl;
+import org.topcased.requirement.util.RequirementResource;
 
+import ttm.Document;
 import ttm.Requirement;
 
 /**
@@ -526,17 +528,17 @@ public final class RequirementUtils
      * Gets the requirement model as an EMF resource.
      * 
      * @param domain the editing domain of the active modeler
-     * @return the requirement model as a resource
+     * @return the requirement model as a requirement resource
      */
-    public static Resource getRequirementModel(EditingDomain domain)
+    public static RequirementResource getRequirementModel(EditingDomain domain)
     {
         if (domain != null)
         {
             for (Resource resource : domain.getResourceSet().getResources())
             {
-                if (resource instanceof RequirementResourceImpl)
+                if (resource instanceof RequirementResource)
                 {
-                    return resource;
+                    return (RequirementResource) resource;
                 }
             }
         }
@@ -602,7 +604,7 @@ public final class RequirementUtils
      */
     public static RequirementProject getRequirementProject(EditingDomain editingDomain)
     {
-        Resource requirementModel = RequirementUtils.getRequirementModel(editingDomain);
+        RequirementResource requirementModel = RequirementUtils.getRequirementModel(editingDomain);
         return getRequirementProject(requirementModel);
     }
 
@@ -641,7 +643,7 @@ public final class RequirementUtils
      */
     public static AttributeConfiguration getAttributeConfiguration(EditingDomain editingDomain)
     {
-        Resource requirementModel = RequirementUtils.getRequirementModel(editingDomain);
+        RequirementResource requirementModel = RequirementUtils.getRequirementModel(editingDomain);
         return RequirementUtils.getAttributeConfiguration(requirementModel);
     }
 
@@ -657,6 +659,22 @@ public final class RequirementUtils
         if (project != null)
         {
             return project.getUpstreamModel();
+        }
+        return null;
+    }
+    
+    /**
+     * Gets the {@link Document} model objects contained under the {@link UpstreamModel}.
+     * 
+     * @param requirement The resource representing a requirement model
+     * @return the upstream model found.
+     */
+    public static EList<Document> getUpstreamDocuments(Resource requirement)
+    {
+        UpstreamModel upstreamModel = getUpstreamModel(requirement);
+        if (upstreamModel != null)
+        {
+            return upstreamModel.getDocuments();
         }
         return null;
     }
