@@ -27,6 +27,7 @@ import org.eclipse.ui.IWorkbench;
 import org.topcased.facilities.resources.SharedImageHelper;
 import org.topcased.modeler.editor.Modeler;
 import org.topcased.modeler.utils.Utils;
+import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.wizards.operation.AbstractRequirementModelOperation;
 import org.topcased.requirement.core.wizards.operation.EmptyRequirementModelOperation;
@@ -49,7 +50,7 @@ public abstract class AbstractRequirementModelWizard extends Wizard implements I
     protected String projectName;
 
     protected String projectDescription;
-    
+
     protected boolean toMerge = false;
 
     /**
@@ -61,6 +62,8 @@ public abstract class AbstractRequirementModelWizard extends Wizard implements I
     {
         super();
         setDefaultPageImageDescriptor(SharedImageHelper.getTopcasedDialogImageDescriptor());
+        setHelpAvailable(false);
+        setWindowTitle(Messages.getString("RequirementManager.shell.title")); //$NON-NLS-1$
     }
 
     /**

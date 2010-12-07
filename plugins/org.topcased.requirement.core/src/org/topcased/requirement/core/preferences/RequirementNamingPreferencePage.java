@@ -131,7 +131,7 @@ public class RequirementNamingPreferencePage extends AbstractTopcasedPreferenceP
         addDataLayout.widthHint = 75;
 
         final Button addButton = new Button(mainGroup, SWT.PUSH);
-        addButton.setText(Messages.getString("RequirementNamingPreferencePage.2")); //$NON-NLS-1$
+        addButton.setText(Messages.getString("RequirementManager.add")); //$NON-NLS-1$
         addButton.setLayoutData(addDataLayout);
         addButton.addSelectionListener(new AddButtonSelectionListener());
     }

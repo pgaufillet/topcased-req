@@ -33,6 +33,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ResourceSelectionDialog;
 import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
 import org.topcased.requirement.core.extensions.RequirementTransformationManager;
@@ -48,8 +50,6 @@ import org.topcased.requirement.util.RequirementResource;
  */
 public class RequirementWizardPage extends WizardPage
 {
-
-    private static final String BROWSE_TEXT = "..."; //$NON-NLS-1$
 
     private static final String DEFAULT_MODEL_NAME = "My"; //$NON-NLS-1$
 
@@ -116,13 +116,13 @@ public class RequirementWizardPage extends WizardPage
         // Is this dialog an attach dialog or a merge dialog?
         if (toMerge)
         {
-            setTitle(Messages.getString("RequirementWizardPage.2")); //$NON-NLS-1$
-            setDescription(Messages.getString("RequirementWizardPage.3")); //$NON-NLS-1$
+            setTitle(Messages.getString("RequirementWizardPage.merge.title")); //$NON-NLS-1$
+            setDescription(Messages.getString("RequirementWizardPage.merge.desc")); //$NON-NLS-1$
         }
         else
         {
-            setTitle(Messages.getString("RequirementWizardPage.4")); //$NON-NLS-1$
-            setDescription(Messages.getString("RequirementWizardPage.5")); //$NON-NLS-1$
+            setTitle(Messages.getString("RequirementWizardPage.attach.title")); //$NON-NLS-1$
+            setDescription(Messages.getString("RequirementWizardPage.attach.desc")); //$NON-NLS-1$
         }
 
         // Is this diagram already attached?
@@ -181,7 +181,8 @@ public class RequirementWizardPage extends WizardPage
         targetModelFd.setEditable(false);
 
         targetModelBt = new Button(mainGroup, SWT.PUSH);
-        targetModelBt.setText(BROWSE_TEXT);
+        targetModelBt.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER));
+        targetModelBt.setToolTipText(Messages.getString("RequirementManager.open")); //$NON-NLS-1$
 
         /*
          * Selection of the upsteam requirement to import
@@ -194,7 +195,8 @@ public class RequirementWizardPage extends WizardPage
         importModelFd.setEditable(false);
 
         importModelBt = new Button(mainGroup, SWT.PUSH);
-        importModelBt.setText(BROWSE_TEXT);
+        importModelBt.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER));
+        importModelBt.setToolTipText(Messages.getString("RequirementManager.open")); //$NON-NLS-1$
 
         /*
          * Model requirement name

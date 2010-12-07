@@ -38,7 +38,7 @@ public class TextAttributeMultiValuePropertySection extends AbstractEnumerationP
      */
     protected String getLabelText()
     {
-        return Messages.getString("TextAttributeMultiValuePropertySection.0"); //$NON-NLS-1$
+        return Messages.getString("RequirementManager.property.value"); //$NON-NLS-1$
     }
     
     /**

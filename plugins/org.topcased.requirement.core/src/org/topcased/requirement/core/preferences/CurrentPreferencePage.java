@@ -127,7 +127,7 @@ public class CurrentPreferencePage extends PreferencePage implements IWorkbenchP
         final GridData addDataLayout = new GridData(SWT.FILL, SWT.FILL, true, true);
         addDataLayout.widthHint = 75;
         addButton.setLayoutData(addDataLayout);
-        addButton.setText(Messages.getString("CurrentPreferencePage.3")); //$NON-NLS-1$
+        addButton.setText(Messages.getString("RequirementManager.add")); //$NON-NLS-1$
         addButton.addSelectionListener(new SelectionAdapter()
         {
             public void widgetSelected(SelectionEvent e)
@@ -146,7 +146,7 @@ public class CurrentPreferencePage extends PreferencePage implements IWorkbenchP
         final GridData removeDataLayout = new GridData(SWT.FILL, SWT.FILL, true, true);
         removeDataLayout.widthHint = 75;
         removeAttributeButton.setLayoutData(removeDataLayout);
-        removeAttributeButton.setText(Messages.getString("CurrentPreferencePage.4")); //$NON-NLS-1$
+        removeAttributeButton.setText(Messages.getString("RequirementManager.remove")); //$NON-NLS-1$
         removeAttributeButton.setEnabled(false);
         removeAttributeButton.addSelectionListener(new RemoveAttributeListener());
 
@@ -326,7 +326,7 @@ public class CurrentPreferencePage extends PreferencePage implements IWorkbenchP
         final GridData addDataLayout = new GridData(SWT.FILL, SWT.FILL, true, true);
         addDataLayout.widthHint = 75;
         addButtonValue.setLayoutData(addDataLayout);
-        addButtonValue.setText(Messages.getString("CurrentPreferencePage.12")); //$NON-NLS-1$
+        addButtonValue.setText(Messages.getString("RequirementManager.add")); //$NON-NLS-1$
         addButtonValue.addSelectionListener(new SelectionAdapter()
         {
             public void widgetSelected(SelectionEvent e)
@@ -352,7 +352,7 @@ public class CurrentPreferencePage extends PreferencePage implements IWorkbenchP
         final GridData removeDataLayout = new GridData(SWT.FILL, SWT.FILL, true, true);
         removeDataLayout.widthHint = 75;
         removeValueButton.setLayoutData(removeDataLayout);
-        removeValueButton.setText(Messages.getString("CurrentPreferencePage.13")); //$NON-NLS-1$
+        removeValueButton.setText(Messages.getString("RequirementManager.remove")); //$NON-NLS-1$
         removeValueButton.setEnabled(false);
         removeValueButton.addSelectionListener(new RemoveValueListener());
 

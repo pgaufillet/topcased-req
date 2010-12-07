@@ -90,7 +90,7 @@ public class UpdateAttributeConfigurationDialog extends TitleAreaDialog
     protected void configureShell(Shell shell)
     {
         super.configureShell(shell);
-        shell.setText(Messages.getString("UpdateAttributeConfigurationDialog.0")); //$NON-NLS-1$
+        shell.setText(Messages.getString("RequirementManager.shell.title")); //$NON-NLS-1$
         shell.setSize(550, 450);
     }
 
@@ -153,7 +153,7 @@ public class UpdateAttributeConfigurationDialog extends TitleAreaDialog
         buttonPanel.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false));
 
         final Button addBtn = new Button(buttonPanel, SWT.PUSH);
-        addBtn.setText(Messages.getString("UpdateAttributeConfigurationDialog.3")); //$NON-NLS-1$
+        addBtn.setText(NLS.bind(Messages.getString("UpdateAttributeConfigurationDialog.add"), Messages.getString("RequirementManager.add"))); //$NON-NLS-1$ //$NON-NLS-2$
         addBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         addBtn.addSelectionListener(new SelectionAdapter()
         {
@@ -164,7 +164,7 @@ public class UpdateAttributeConfigurationDialog extends TitleAreaDialog
         });
 
         final Button removeBtn = new Button(buttonPanel, SWT.PUSH);
-        removeBtn.setText(Messages.getString("UpdateAttributeConfigurationDialog.4")); //$NON-NLS-1$
+        removeBtn.setText(NLS.bind(Messages.getString("UpdateAttributeConfigurationDialog.remove"), Messages.getString("RequirementManager.remove"))); //$NON-NLS-1$ //$NON-NLS-2$
         removeBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         removeBtn.addSelectionListener(new SelectionAdapter()
         {
@@ -175,7 +175,7 @@ public class UpdateAttributeConfigurationDialog extends TitleAreaDialog
         });
 
         final Button replaceBtn = new Button(buttonPanel, SWT.PUSH);
-        replaceBtn.setText(Messages.getString("UpdateAttributeConfigurationDialog.5")); //$NON-NLS-1$
+        replaceBtn.setText(NLS.bind(Messages.getString("UpdateAttributeConfigurationDialog.replace"), Messages.getString("RequirementManager.replace"))); //$NON-NLS-1$ //$NON-NLS-2$
         replaceBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         replaceBtn.addSelectionListener(new SelectionAdapter()
         {
@@ -187,7 +187,7 @@ public class UpdateAttributeConfigurationDialog extends TitleAreaDialog
         });
 
         final Button renameBtn = new Button(buttonPanel, SWT.PUSH);
-        renameBtn.setText(Messages.getString("UpdateAttributeConfigurationDialog.13")); //$NON-NLS-1$
+        renameBtn.setText(NLS.bind(Messages.getString("UpdateAttributeConfigurationDialog.rename"), Messages.getString("RequirementManager.rename"))); //$NON-NLS-1$ //$NON-NLS-2$
         renameBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         renameBtn.addSelectionListener(new SelectionAdapter()
         {
@@ -199,7 +199,7 @@ public class UpdateAttributeConfigurationDialog extends TitleAreaDialog
         });
 
         final Button moveUpBtn = new Button(buttonPanel, SWT.PUSH);
-        moveUpBtn.setText(Messages.getString("UpdateAttributeConfigurationDialog.6")); //$NON-NLS-1$
+        moveUpBtn.setText(Messages.getString("UpdateAttributeConfigurationDialog.up")); //$NON-NLS-1$
         moveUpBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         moveUpBtn.setImage(RequirementCorePlugin.getImageDescriptor("icons/up.gif").createImage()); //$NON-NLS-1$
         moveUpBtn.addSelectionListener(new SelectionAdapter()
@@ -211,7 +211,7 @@ public class UpdateAttributeConfigurationDialog extends TitleAreaDialog
         });
 
         final Button moveDownBtn = new Button(buttonPanel, SWT.PUSH);
-        moveDownBtn.setText(Messages.getString("UpdateAttributeConfigurationDialog.7")); //$NON-NLS-1$
+        moveDownBtn.setText(Messages.getString("UpdateAttributeConfigurationDialog.down")); //$NON-NLS-1$
         moveDownBtn.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         moveDownBtn.setImage(RequirementCorePlugin.getImageDescriptor("icons/down.gif").createImage()); //$NON-NLS-1$
         moveDownBtn.addSelectionListener(new SelectionAdapter()

@@ -114,7 +114,7 @@ public class DocumentSelectionDialog extends TitleAreaDialog
     protected void configureShell(Shell shell)
     {
         super.configureShell(shell);
-        shell.setText(Messages.getString("DocumentSelectionDialog.shell")); //$NON-NLS-1$
+        shell.setText(Messages.getString("RequirementManager.shell.title")); //$NON-NLS-1$
         shell.setMinimumSize(600, 400);
     }
 
@@ -243,7 +243,7 @@ public class DocumentSelectionDialog extends TitleAreaDialog
         // Add select File button
         Button openButton = new Button(composite, SWT.NONE);
         openButton.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER));
-        openButton.setToolTipText(Messages.getString("DocumentSelectionDialog.add")); //$NON-NLS-1$
+        openButton.setToolTipText(Messages.getString("RequirementManager.open")); //$NON-NLS-1$
         openButton.addSelectionListener(new SelectionAdapter()
         {
             public void widgetSelected(SelectionEvent e)
@@ -270,7 +270,7 @@ public class DocumentSelectionDialog extends TitleAreaDialog
     {
         Button removeAllBtn = new Button(composite, SWT.NONE);
         removeAllBtn.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_ELCL_REMOVEALL));
-        removeAllBtn.setToolTipText(Messages.getString("DocumentSelectionDialog.removeAll")); //$NON-NLS-1$
+        removeAllBtn.setToolTipText(Messages.getString("RequirementManager.removeAll")); //$NON-NLS-1$
         removeAllBtn.addSelectionListener(new SelectionAdapter()
         {
             public void widgetSelected(SelectionEvent e)
@@ -289,7 +289,7 @@ public class DocumentSelectionDialog extends TitleAreaDialog
     {
         Button removeBtn = new Button(composite, SWT.NONE);
         removeBtn.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_ELCL_REMOVE));
-        removeBtn.setToolTipText(Messages.getString("DocumentSelectionDialog.remove")); //$NON-NLS-1$
+        removeBtn.setToolTipText(Messages.getString("RequirementManager.remove")); //$NON-NLS-1$
         removeBtn.addSelectionListener(new SelectionAdapter()
         {
             public void widgetSelected(SelectionEvent e)

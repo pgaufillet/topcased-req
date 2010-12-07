@@ -91,7 +91,7 @@ public class UpstreamPreferencePage extends PreferencePage implements IWorkbench
         buttonsComposite.setLayoutData(new GridData(SWT.NONE, SWT.TOP, false, true));
 
         final Button addButton = new Button(buttonsComposite, SWT.PUSH);
-        addButton.setToolTipText(Messages.getString("UpstreamPreferencePage.3")); //$NON-NLS-1$
+        addButton.setToolTipText(Messages.getString("RequirementManager.add")); //$NON-NLS-1$
         addButton.setImage(RequirementCorePlugin.getImageDescriptor(ISharedImages.IMG_OBJ_ADD).createImage());
         addButton.addSelectionListener(new SelectionAdapter()
         {
@@ -108,7 +108,7 @@ public class UpstreamPreferencePage extends PreferencePage implements IWorkbench
         });
 
         removeButton = new Button(buttonsComposite, SWT.PUSH);
-        removeButton.setToolTipText(Messages.getString("UpstreamPreferencePage.4")); //$NON-NLS-1$
+        removeButton.setToolTipText(Messages.getString("RequirementManager.remove")); //$NON-NLS-1$
         removeButton.setImage(RequirementCorePlugin.getImageDescriptor(ISharedImages.IMG_ETOOL_DELETE).createImage());
         removeButton.setEnabled(false);
         removeButton.addSelectionListener(new RemoveAttributeListener());

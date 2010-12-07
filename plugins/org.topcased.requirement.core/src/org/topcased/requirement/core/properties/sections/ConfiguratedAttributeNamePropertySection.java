@@ -31,7 +31,7 @@ public class ConfiguratedAttributeNamePropertySection extends AbstractStringProp
      */
     protected String getLabelText()
     {
-        return Messages.getString("ConfiguratedAttributeNamePropertySection.0"); //$NON-NLS-1$
+        return Messages.getString("RequirementManager.property.name"); //$NON-NLS-1$
     }
 
     /**

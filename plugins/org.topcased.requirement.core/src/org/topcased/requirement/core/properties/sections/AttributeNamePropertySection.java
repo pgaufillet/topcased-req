@@ -31,7 +31,7 @@ public class AttributeNamePropertySection extends AbstractStringPropertySection
      */
     protected String getLabelText()
     {
-        return Messages.getString("AttributeNamePropertySection.0"); //$NON-NLS-1$
+        return Messages.getString("RequirementManager.property.name"); //$NON-NLS-1$
     }
 
     /**

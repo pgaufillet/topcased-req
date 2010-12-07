@@ -44,7 +44,7 @@ public class ObjectAttributeValuePropertySection extends AbstractChooserProperty
      */
     protected String getLabelText()
     {
-        return Messages.getString("ObjectAttributeValuePropertySection.0"); //$NON-NLS-1$
+        return Messages.getString("RequirementManager.property.value"); //$NON-NLS-1$
     }
 
     /**
