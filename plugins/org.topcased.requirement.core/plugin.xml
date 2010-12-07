@@ -510,6 +510,26 @@
             </and>
          </activeWhen>
       </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.ImportUpstreamDocumentHandler"
+            commandId="org.topcased.requirement.core.addDoc">
+         <activeWhen>
+            <and>
+               <with
+                     variable="activeWorkbenchWindow.activePerspective">
+                  <equals
+                        value="org.topcased.requirement.core.perspective">
+                  </equals>
+               </with>
+               <with
+                     variable="requirementActionsEnablement.hasRequirementModel">
+                  <equals
+                        value="true">
+                  </equals>
+               </with>
+            </and>
+         </activeWhen>
+      </handler>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -699,6 +719,24 @@
             <menuContribution
                   locationURI="toolbar:org.topcased.requirement.core.upstreamView">
                <command
+                     commandId="org.topcased.requirement.core.addDoc"
+                     label="&amp;Add Upstream Documents"
+                     style="push">
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="requirementActionsEnablement.hasRequirementModel">
+                        <equals
+                              value="true">
+                        </equals>
+                     </with>
+                  </visibleWhen>
+               </command>
+               <separator
+                     name="leftSeparator"
+                     visible="true">
+               </separator>
+               <command
                      commandId="org.topcased.requirement.core.updateRequirementModel"
                      label="&amp;Update Requirement Model"
                      style="push">
@@ -727,7 +765,7 @@
                   </visibleWhen>
                </command>
                <separator
-                     name="separatorLeft"
+                     name="middleSeparator"
                      visible="true">
                </separator>
                <command
@@ -759,12 +797,12 @@
                   </visibleWhen>
                </command>
                <separator
-                     name="separatorRight"
+                     name="rightSeparator"
                      visible="true">
                </separator>
                <command
                      commandId="org.topcased.requirement.core.sort"
-                     label="&amp;Sort"
+                     label="&amp;Alphabetical orderSort"
                      style="toggle">
                   <visibleWhen
                         checkEnabled="false">
@@ -1186,7 +1224,8 @@
       </image>
       <image
             commandId="org.topcased.requirement.core.collapse"
-            icon="icons/collapse.gif">
+            disabledIcon="IMG_ELCL_COLLAPSEALL_DISABLED"
+            icon="IMG_ELCL_COLLAPSEALL">
       </image>
       <image
             commandId="org.topcased.requirement.core.moveUp"
@@ -1198,7 +1237,8 @@
       </image>
       <image
             commandId="org.topcased.requirement.core.linkWithEditor"
-            icon="icons/synced.gif">
+            disabledIcon="IMG_ELCL_SYNCED_DISABLED"
+            icon="IMG_ELCL_SYNCED">
       </image>
       <image
             commandId="org.topcased.requirement.core.linkRequirement"
@@ -1241,6 +1281,7 @@
       </image>
       <image
             commandId="org.topcased.requirement.core.paste"
+            disabledIcon="IMG_TOOL_PASTE_DISABLED"
             icon="IMG_TOOL_PASTE">
       </image>
       <image
@@ -1282,6 +1323,11 @@
       <image
             commandId="org.topcased.requirement.core.table"
             icon="icons/flat-mode.gif">
+      </image>
+      <image
+            commandId="org.topcased.requirement.core.addDoc"
+            disabledIcon="IMG_OBJ_ADD_DISABLED"
+            icon="IMG_OBJ_ADD">
       </image>
    </extension>
    <extension
@@ -1509,6 +1555,10 @@
                class="org.eclipse.ui.handlers.RegistryToggleState"
                id="org.eclipse.ui.commands.toggleState">
          </state>
+      </command>
+      <command
+            id="org.topcased.requirement.core.addDoc"
+            name="Add a new Document to the Upstream View">
       </command>
    </extension>
    <extension
