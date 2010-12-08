@@ -82,8 +82,8 @@ public class GeneratorHelper
 
         if (cReqs.isEmpty()) {
             result.append("<td align=\"center\">" + requirement.getIdent() + "</td><td colspan=\"" + new Integer(3 + conf.getListAttributes().size()).toString() + "\"></td>");
-        } else {
-            result.append("<td rowspan=\"" + cReqs.size() + "\" colspan=\"1\" align=\"center\">" + requirement.getIdent());
+            result.append("</td>");
+        } else {    
             String lSep = ""; 
             for (final CurrentRequirement cReq : cReqs)
             {
@@ -146,7 +146,7 @@ public class GeneratorHelper
                 }
 
                 result.append(lSep);
-
+                result.append("<td rowspan=\"1\" colspan=\"1\" align=\"center\">" + requirement.getIdent());
                 result.append(OPEN_CELL_TAG + isPartial + CLOSE_CELL_TAG);
 
                 result.append(OPEN_CELL_TAG + cReq.getIdentifier() + CLOSE_CELL_TAG);
@@ -157,11 +157,11 @@ public class GeneratorHelper
                 result.append(OPEN_CELL_TAG + cReq.getShortDescription() + CLOSE_CELL_TAG);
 
                 result.append(attributesResult);
-                lSep = "<tr>";
+                result.append("</td>");
+                lSep = "<tr>";     
             }
         }
-
-        result.append("</td>");
+        
         return result.toString();
     }
 
