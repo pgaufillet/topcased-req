@@ -534,6 +534,7 @@ class profileContentProvider implements IStructuredContentProvider
                 }
             }
         }
+        profiles.remove(null);
         return profiles.toArray();
     }
 

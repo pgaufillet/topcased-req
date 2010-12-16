@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Requirement Import From Document
 Bundle-SymbolicName: org.topcased.requirement.import.document;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.0.1.qualifier
 Bundle-Activator: org.topcased.requirement.document.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
