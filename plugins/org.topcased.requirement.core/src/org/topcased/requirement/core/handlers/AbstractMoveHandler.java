@@ -19,14 +19,18 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.emf.common.command.CompoundCommand;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
-import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.Requirement;
+import org.topcased.requirement.core.extensions.IEditorServices;
+import org.topcased.requirement.core.extensions.SupportingEditorsManager;
 import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.utils.RequirementHelper;
+import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.current.CurrentRequirementView;
 
 /**
@@ -117,7 +121,13 @@ public class AbstractMoveHandler extends AbstractHandler
 
             if (!compoundCmd.isEmpty() && compoundCmd.canExecute())
             {
-                Utils.getCurrentModeler().getEditingDomain().getCommandStack().execute(compoundCmd);
+                IEditorPart editor = RequirementUtils.getCurrentEditor();
+                IEditorServices services = SupportingEditorsManager.getInstance().getServices(editor);
+                if (services != null)
+                {
+                    EditingDomain domain = services.getEditingDomain(editor);
+                    domain.getCommandStack().execute(compoundCmd);
+                }
             }
         }
         return null;

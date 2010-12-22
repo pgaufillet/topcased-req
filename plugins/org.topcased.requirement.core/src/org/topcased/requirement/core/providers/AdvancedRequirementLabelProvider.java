@@ -13,9 +13,9 @@ package org.topcased.requirement.core.providers;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.topcased.facilities.dialogs.ChooseDialog;
-import org.topcased.modeler.editor.TopcasedAdapterFactoryEditingDomain;
 import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
@@ -48,7 +48,7 @@ public class AdvancedRequirementLabelProvider extends CurrentRequirementLabelPro
     @Override
     public String getText(Object object)
     {
-        EditingDomain domain = TopcasedAdapterFactoryEditingDomain.getEditingDomainFor(object);
+        EditingDomain domain = AdapterFactoryEditingDomain.getEditingDomainFor(object);
         if (object instanceof Requirement)
         {
             EObject requirement = (Requirement) object;

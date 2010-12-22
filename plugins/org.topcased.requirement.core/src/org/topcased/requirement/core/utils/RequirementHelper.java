@@ -16,6 +16,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.common.command.UnexecutableCommand;
@@ -29,12 +34,12 @@ import org.eclipse.emf.edit.command.DragAndDropCommand;
 import org.eclipse.emf.edit.command.MoveCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.dnd.DND;
-import org.topcased.modeler.diagrams.model.Diagrams;
-import org.topcased.modeler.editor.Modeler;
-import org.topcased.modeler.exceptions.EditingDomainReadOnlyException;
-import org.topcased.modeler.utils.Utils;
+import org.eclipse.ui.IEditorPart;
 import org.topcased.requirement.AnonymousRequirement;
 import org.topcased.requirement.AttributeAllocate;
 import org.topcased.requirement.AttributeConfiguration;
@@ -49,12 +54,15 @@ import org.topcased.requirement.RequirementPackage;
 import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.SpecialChapter;
 import org.topcased.requirement.TextAttribute;
-import org.topcased.requirement.core.extensions.DefaultAttachmentPolicy;
+import org.topcased.requirement.common.operation.EMFRunnableOperation;
+import org.topcased.requirement.core.extensions.IEditorServices;
 import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
 import org.topcased.requirement.core.extensions.IRequirementCountingAlgorithm;
 import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
 import org.topcased.requirement.core.extensions.RequirementCountingAlgorithmManager;
+import org.topcased.requirement.core.extensions.SupportingEditorsManager;
 import org.topcased.requirement.core.internal.Messages;
+import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.preferences.ComputeRequirementIdentifier;
 import org.topcased.requirement.core.views.AddRequirementMarker;
 import org.topcased.requirement.core.views.current.CurrentPage;
@@ -110,6 +118,7 @@ public final class RequirementHelper
      * 
      * @param eobject , the starting eobject
      * @return the requirement project
+     * @deprecated use {@link #getRequirementProject(Resource)} instead
      */
     public RequirementProject getRequirementProject(EObject eobject)
     {
@@ -124,67 +133,50 @@ public final class RequirementHelper
     /**
      * Returns the requirement project linked to the current resource
      * 
-     * @param modelResource
+     * @param anyResource resource of any kind in the resource set
      * @return the requirement project
      */
-    public RequirementProject getRequirementProject(Resource modelResource)
+    public RequirementProject getRequirementProject(Resource anyResource)
     {
         RequirementProject result = null;
-        if (modelResource != null)
+        if (anyResource != null)
         {
-            String extension = modelResource.getURI().fileExtension();
+            String extension = anyResource.getURI().fileExtension();
             if (extension != null)
             {
 
                 if (RequirementResource.FILE_EXTENSION.equals(extension))
                 {
-                    if (!modelResource.getContents().isEmpty() && modelResource.getContents().get(0) instanceof RequirementProject)
+                    if (!anyResource.getContents().isEmpty() && anyResource.getContents().get(0) instanceof RequirementProject)
                     {
-                        result = (RequirementProject) modelResource.getContents().get(0);
+                        result = (RequirementProject) anyResource.getContents().get(0);
                     }
                 }
-                else if (extension.endsWith("di")) //$NON-NLS-1$
+                else if (ModelAttachmentPolicyManager.getInstance().getModelPolicy(extension) != null) //$NON-NLS-1$
                 {
-                    if (!modelResource.getContents().isEmpty() && modelResource.getContents().get(0) instanceof Diagrams)
+                    IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(anyResource.getResourceSet());
+                    if (policy != null)
                     {
-                        result = getRequirementProject((Diagrams) modelResource.getContents().get(0));
+                        result = policy.getRequirementProjectFromTargetMainResource(anyResource);
+                    }
+                    else
+                    {
+                        String msg = NLS.bind(Messages.getString("ModelAttachmentPolicyManager.0"), extension);
+                        RequirementCorePlugin.log(msg, Status.ERROR, null);//$NON-NLS-1$
+                        result = null;
                     }
                 }
                 else
                 {
-                    URI uri = URI.createURI(modelResource.getURI().toString() + "di"); //$NON-NLS-1$
-                    Resource diResource = modelResource.getResourceSet().getResource(uri, true);
-                    if (diResource != null && !diResource.getContents().isEmpty() && diResource.getContents().get(0) instanceof Diagrams)
+                    URI uri = URI.createURI(anyResource.getURI().toString() + "di"); //$NON-NLS-1$
+                    Resource diResource = anyResource.getResourceSet().getResource(uri, true);
+                    if (diResource != null)
                     {
-                        result = getRequirementProject((Diagrams) diResource.getContents().get(0));
+                        result = getRequirementProject(diResource);
                     }
                 }
             }
 
-        }
-        return result;
-    }
-
-    /**
-     * Returns the requirement project linked to the current diagrams
-     * 
-     * @param diagrams
-     * @return the requirement project
-     */
-    public RequirementProject getRequirementProject(Diagrams diagrams)
-    {
-        RequirementProject result = null;
-        if (diagrams != null && diagrams.eResource() != null && diagrams.eResource().getResourceSet() != null)
-        {
-            IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(diagrams.eResource().getResourceSet());
-            if (policy == null)
-            {
-                policy = DefaultAttachmentPolicy.getInstance();
-            }
-            if (policy != null)
-            {
-                result = policy.getRequirementProjectFromTargetDiagram(diagrams);
-            }
         }
         return result;
     }
@@ -245,9 +237,8 @@ public final class RequirementHelper
             {
                 AnonymousRequirement anonymmous = createAnonymousRequirement(hierarchicalElement);
                 createdRequirements.add(anonymmous);
-                EditingDomainReadOnlyException.appendIfCanExecute(globalCmd, hierarchicalElement.eResource(), editingDomain,
+                appendIfCanExecute(globalCmd, hierarchicalElement.eResource(), editingDomain,
                         AddCommand.create(editingDomain, hierarchicalElement, RequirementPackage.eINSTANCE.getHierarchicalElement_Requirement(), anonymmous));
-
             }
 
             // it is only here that all the commands are executed
@@ -265,10 +256,14 @@ public final class RequirementHelper
     }
 
     /**
-     * @param globalCmd
-     * @param editingDomain2
-     * @param eResource
-     * @param create
+     * In your code if you don't want to write check for read only use this method to throw a specific exception caught
+     * by the corresponding command stack to notify the user the resource is read only
+     * 
+     * @param globalCmd, the global command where the command will be added
+     * @param toCheck, the concerned resource
+     * @param domain, the editing domain
+     * @param com, the command to add in the compound
+     * @throws RuntimeException a specific exception caught by the command stack if the resource is read-only
      */
     public static void appendIfCanExecute(CompoundCommand globalCmd, Resource toCheck, EditingDomain domain, Command com)
     {
@@ -276,7 +271,12 @@ public final class RequirementHelper
         {
             if (toCheck != null && domain != null && domain.isReadOnly(toCheck))
             {
-                throw new EditingDomainReadOnlyException();
+                IEditorPart editor = RequirementUtils.getCurrentEditor();
+                IEditorServices services = SupportingEditorsManager.getInstance().getServices(editor);
+                if (services != null)
+                {
+                    throw services.makeReadOnlyException(toCheck);
+                }
             }
         }
     }
@@ -321,15 +321,13 @@ public final class RequirementHelper
         {
             // Add child to the model as a hierarchical element
             EObject project = RequirementUtils.getRequirementProject(editingDomain);
-            EditingDomainReadOnlyException.appendIfCanExecute(cmd, project.eResource(), editingDomain,
-                    AddCommand.create(editingDomain, project, RequirementPackage.eINSTANCE.getRequirementProject_HierarchicalElement(), child));
+            appendIfCanExecute(cmd, project.eResource(), editingDomain, AddCommand.create(editingDomain, project, RequirementPackage.eINSTANCE.getRequirementProject_HierarchicalElement(), child));
             return null;
         }
         else
         {
             HierarchicalElement element = getHierarchicalElement(parent, cmd);
-            EditingDomainReadOnlyException.appendIfCanExecute(cmd, element.eResource(), editingDomain,
-                    AddCommand.create(editingDomain, element, RequirementPackage.eINSTANCE.getHierarchicalElement_Children(), child));
+            appendIfCanExecute(cmd, element.eResource(), editingDomain, AddCommand.create(editingDomain, element, RequirementPackage.eINSTANCE.getHierarchicalElement_Children(), child));
             return element;
         }
     }
@@ -342,11 +340,11 @@ public final class RequirementHelper
      */
     private boolean isElementRoot(EObject parent)
     {
-        Modeler modeler = Utils.getCurrentModeler();
-
-        if (modeler != null)
+        IEditorPart editor = RequirementUtils.getCurrentEditor();
+        IEditorServices services = SupportingEditorsManager.getInstance().getServices(editor);
+        if (services != null)
         {
-            IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(modeler.getEditingDomain());
+            IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(services.getEditingDomain(editor));
 
             if (policy != null)
             {
@@ -354,7 +352,10 @@ public final class RequirementHelper
             }
             else
             {
-                return DefaultAttachmentPolicy.getInstance().isRootContainer(parent);
+                String extension = services.getEditingDomain(editor).getResourceSet().getResources().get(0).getURI().fileExtension();
+                String msg = NLS.bind(Messages.getString("ModelAttachmentPolicyManager.0"), extension);
+                RequirementCorePlugin.log(msg, Status.ERROR, null);//$NON-NLS-1$
+                return false;
             }
         }
         return false;
@@ -413,7 +414,7 @@ public final class RequirementHelper
                         if (!target.equals(requirement.eContainer()))
                         {
                             Command dndCmd = DragAndDropCommand.create(editingDomain, target, pos, DND.DROP_MOVE, DND.DROP_MOVE, Collections.singleton(requirement));
-                            EditingDomainReadOnlyException.appendIfCanExecute(compoundCmd, target.eResource(), editingDomain, dndCmd);
+                            appendIfCanExecute(compoundCmd, target.eResource(), editingDomain, dndCmd);
                         }
                         toSelect.add(requirement);
                     }
@@ -465,7 +466,12 @@ public final class RequirementHelper
         // Attach the requirement to the model
         if (!compoundCmd.appendAndExecute(AddCommand.create(editingDomain, target, RequirementPackage.eINSTANCE.getHierarchicalElement_Requirement(), newCurrentReq, pos)))
         {
-            throw new EditingDomainReadOnlyException(target.eResource());
+            IEditorPart editor = RequirementUtils.getCurrentEditor();
+            IEditorServices services = SupportingEditorsManager.getInstance().getServices(editor);
+            if (services != null)
+            {
+                throw services.makeReadOnlyException(target.eResource());
+            }
         }
 
         // Handle the case when this created requirement is the first
@@ -870,6 +876,37 @@ public final class RequirementHelper
     public CurrentPage getCurrentPage()
     {
         return currentPage;
+    }
+
+    /**
+     * Encapsulate a runnable which makes EMF changes to make it in a transactional operation if needed.
+     * 
+     * @param runnable the runnable with EMF changes
+     * @return safely executable runnable
+     */
+    public IRunnableWithProgress encapsulateEMFRunnable(final IRunnableWithProgress runnable, String label)
+    {
+        if (editingDomain instanceof TransactionalEditingDomain)
+        {
+            return new EMFRunnableOperation((TransactionalEditingDomain) editingDomain, label)
+            {
+
+                @Override
+                protected IStatus doExecute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException
+                {
+                    try
+                    {
+                        runnable.run(monitor);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new ExecutionException("Operation failed", e);
+                    }
+                    return Status.OK_STATUS;
+                }
+            };
+        }
+        return runnable;
     }
 
 }

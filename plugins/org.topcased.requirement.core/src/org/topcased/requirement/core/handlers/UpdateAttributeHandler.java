@@ -23,7 +23,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.dialogs.Dialog;
-import org.topcased.modeler.utils.Utils;
+import org.eclipse.ui.IEditorPart;
 import org.topcased.requirement.Attribute;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.ObjectAttribute;
@@ -31,6 +31,8 @@ import org.topcased.requirement.Requirement;
 import org.topcased.requirement.RequirementPackage;
 import org.topcased.requirement.TextAttribute;
 import org.topcased.requirement.core.dialogs.UpdateAttributeDialog;
+import org.topcased.requirement.core.extensions.IEditorServices;
+import org.topcased.requirement.core.extensions.SupportingEditorsManager;
 import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
@@ -63,7 +65,12 @@ public class UpdateAttributeHandler extends AbstractHandler
      */
     public Object execute(ExecutionEvent event) throws ExecutionException
     {
-        editingDomain = Utils.getCurrentModeler().getEditingDomain();
+        IEditorPart editor = RequirementUtils.getCurrentEditor();
+        IEditorServices services = SupportingEditorsManager.getInstance().getServices(editor);
+        if (services != null)
+        {
+            editingDomain = services.getEditingDomain(editor);
+        }
         CurrentPage page = RequirementHelper.INSTANCE.getCurrentPage();
 
         if (((EvaluationContext) event.getApplicationContext()).getDefaultVariable() instanceof List< ? >)

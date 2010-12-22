@@ -14,12 +14,16 @@ package org.topcased.requirement.core.testers;
 
 import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.gef.DefaultEditDomain;
+import org.eclipse.gef.EditDomain;
 import org.eclipse.gef.EditPart;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
-import org.topcased.modeler.edit.IModelElementEditPart;
-import org.topcased.modeler.editor.Modeler;
-import org.topcased.modeler.editor.ModelerGraphicalViewer;
 import org.topcased.requirement.core.extensions.DropRestrictionManager;
+import org.topcased.requirement.core.extensions.IEditorServices;
+import org.topcased.requirement.core.extensions.SupportingEditorsManager;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
@@ -38,16 +42,36 @@ public class CanCreateRequirementPropertyTester extends PropertyTester
      */
     public boolean test(Object receiver, String property, Object[] args, Object expectedValue)
     {
-        if (receiver instanceof IModelElementEditPart)
+        if (receiver instanceof EditPart)
         {
-            ModelerGraphicalViewer graphicalEditor = (ModelerGraphicalViewer) ((EditPart) receiver).getViewer();
-            Modeler modeler = graphicalEditor.getModelerEditor();
-            // Check if the modeler is linked to requirements
-            if (RequirementUtils.getRequirementModel(modeler.getEditingDomain()) != null)
+            EditDomain gefDomain = ((EditPart) receiver).getViewer().getEditDomain();
+            IEditorPart editor = null;
+            if (gefDomain instanceof DefaultEditDomain)
             {
-                IFile file = ((IFileEditorInput) modeler.getEditorInput()).getFile();
-                IModelElementEditPart editPart = (IModelElementEditPart) receiver;
-                return DropRestrictionManager.getInstance().isDropAllowed(file.getFileExtension(), editPart.getEObject());
+                editor = ((DefaultEditDomain) gefDomain).getEditorPart();
+                // get top editor in case of multi-tab editor
+                editor = editor.getEditorSite().getPage().getActiveEditor();
+            }
+            else
+            {
+                editor = RequirementUtils.getCurrentEditor();
+            }
+            IEditorServices services = SupportingEditorsManager.getInstance().getServices(editor);
+            if (services != null)
+            {
+                EditingDomain domain = services.getEditingDomain(editor);
+
+                // Check if the modeler is linked to requirements
+                if (RequirementUtils.getRequirementModel(domain) != null && editor.getEditorInput() instanceof IFileEditorInput)
+                {
+                    IFile file = ((IFileEditorInput) editor.getEditorInput()).getFile();
+                    // check restrictions
+                    if (services.canCreateRequirement((EditPart) receiver))
+                    {
+                        EObject eobject = services.getEObject((EditPart) receiver);
+                        return DropRestrictionManager.getInstance().isDropAllowed(file.getFileExtension(), eobject);
+                    }
+                }
             }
         }
         return false;

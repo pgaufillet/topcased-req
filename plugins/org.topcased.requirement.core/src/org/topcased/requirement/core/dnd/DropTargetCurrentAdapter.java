@@ -240,6 +240,7 @@ public class DropTargetCurrentAdapter extends EditingDomainViewerDropAdapter
                 handleDrop(event, monitor);
             }
         };
+        runnable = RequirementHelper.INSTANCE.encapsulateEMFRunnable(runnable, Messages.getString("DropTargetCurrentAdapter.0")); //$NON-NLS-1$); 
         try
         {
             new ProgressMonitorDialog(Display.getCurrent().getActiveShell()).run(false, false, runnable);

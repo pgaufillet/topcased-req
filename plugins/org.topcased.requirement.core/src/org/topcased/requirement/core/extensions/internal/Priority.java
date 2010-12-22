@@ -13,7 +13,8 @@
 package org.topcased.requirement.core.extensions.internal;
 
 /**
- * An enumerate class which handles priority for a style evaluator. Values are ordered from max priority to min.
+ * An enumerate class which handles priority for a style evaluator or a supported editor. Values are ordered from max
+ * priority to min.
  */
 public enum Priority {
     Highest, High, Medium, Low, Lowest;

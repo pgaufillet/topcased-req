@@ -52,16 +52,16 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.RegistryToggleState;
 import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.views.markers.MarkerItem;
-import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.Requirement;
 import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.core.dnd.DragSourceCurrentAdapter;
 import org.topcased.requirement.core.dnd.DropTargetCurrentAdapter;
 import org.topcased.requirement.core.dnd.RequirementTransfer;
-import org.topcased.requirement.core.filters.RequirementFilter;
 import org.topcased.requirement.core.filters.CurrentViewFilterFromUpstreamSelection;
+import org.topcased.requirement.core.filters.RequirementFilter;
 import org.topcased.requirement.core.handlers.ICommandConstants;
+import org.topcased.requirement.core.handlers.LinkWithEditorHandler;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.listeners.RequirementDoubleClickListener;
 import org.topcased.requirement.core.listeners.UpstreamSelectionChangedListener;
@@ -89,6 +89,9 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
     private IStructuredSelection selection;
 
     private MenuManager menuManager;
+
+    /** The handler for linking to editor */
+    private LinkWithEditorHandler linkHandler = null;
 
     static final String CURRENT_POPUP_ID = "org.topcased.requirement.core.views.current.popupMenu"; //$NON-NLS-1$
 
@@ -233,7 +236,7 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
     {
         public void menuAboutToShow(IMenuManager manager)
         {
-            if (model != null && Utils.getCurrentModeler() != null)
+            if (model != null && RequirementUtils.getCurrentEditor() != null)
             {
 
                 // add a first separator to surround undo & redo actions
@@ -242,14 +245,14 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
                 manager.add(first);
 
                 // using gef undo stack action because emf undo/redo got label problems.
-                UndoAction undoAction = new UndoAction(Utils.getCurrentModeler().getSite().getPart());
+                UndoAction undoAction = new UndoAction(RequirementUtils.getCurrentEditor().getSite().getPart());
                 undoAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_UNDO));
                 undoAction.update();
                 undoAction.setActionDefinitionId(ICommandConstants.UNDO_ID);
                 manager.add(undoAction);
 
                 // using gef redo stack actions because emf undo/redo got label problems.
-                RedoAction redoAction = new RedoAction(Utils.getCurrentModeler().getSite().getPart());
+                RedoAction redoAction = new RedoAction(RequirementUtils.getCurrentEditor().getSite().getPart());
                 redoAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_REDO));
                 redoAction.update();
                 redoAction.setActionDefinitionId(ICommandConstants.REDO_ID);
@@ -439,7 +442,17 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
             {
                 public void run()
                 {
-                    viewer.setSelection(selection, true);
+                    // prevent editor's redirection to avoid infinite loop when the editor is multi-tab
+                    if (linkHandler != null)
+                    {
+                        linkHandler.setDispatching(true);
+                        viewer.setSelection(selection, true);
+                        linkHandler.setDispatching(false);
+                    }
+                    else
+                    {
+                        viewer.setSelection(selection, true);
+                    }
                 }
             });
         }
@@ -536,4 +549,14 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
             }
         }
     };
+
+    /**
+     * Informs the page with the reference to the LinkWithEditorHandler
+     * 
+     * @param linkWithEditorHandler the handler
+     */
+    public void setLinkWithEditorHandler(LinkWithEditorHandler linkWithEditorHandler)
+    {
+        linkHandler = linkWithEditorHandler;
+    }
 }

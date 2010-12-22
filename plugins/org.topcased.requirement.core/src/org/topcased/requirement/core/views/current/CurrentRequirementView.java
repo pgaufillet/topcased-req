@@ -13,6 +13,7 @@ package org.topcased.requirement.core.views.current;
 import org.eclipse.core.commands.Command;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPart;
@@ -25,7 +26,6 @@ import org.eclipse.ui.part.IPageBookViewPage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
 import org.topcased.modeler.documentation.IDocPage;
-import org.topcased.modeler.editor.Modeler;
 import org.topcased.requirement.core.documentation.current.CurrentDescPage;
 import org.topcased.requirement.core.handlers.ICommandConstants;
 import org.topcased.requirement.core.properties.RequirementPropertySheetPage;
@@ -178,7 +178,7 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
     {
         super.partClosed(part);
 
-        if (part instanceof Modeler)
+        if (part instanceof IEditorPart)
         {
             // We need to constantly set the value of the hasRequirement variable to synchronize toolbar actions
             // enablement with the requirement model state

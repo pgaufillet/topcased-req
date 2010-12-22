@@ -10,13 +10,19 @@
  **********************************************************************************************************************/
 package org.topcased.requirement.core.wizards.operation;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.command.AbstractCommand;
+import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.topcased.requirement.RequirementFactory;
 import org.topcased.requirement.RequirementProject;
+import org.topcased.requirement.core.commands.UpdateMonitorCommand;
 import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.util.RequirementResource;
@@ -44,16 +50,43 @@ public class EmptyRequirementModelOperation extends AbstractRequirementModelOper
     }
 
     /**
-     * @see org.eclipse.ui.actions.WorkspaceModifyOperation#execute(org.eclipse.core.runtime.IProgressMonitor)
+     * Get commands to create empty requirement model
+     * 
+     * @see AbstractRequirementModelOperation#getCommands(IProgressMonitor)
      */
-    protected void execute(IProgressMonitor monitor)
+    protected List<Command> getCommands(final IProgressMonitor monitor)
     {
-        // Create the empty requirement model
-        monitor.beginTask(Messages.getString("EmptyRequirementModelOperation.0"), 4); //$NON-NLS-1$
-        createEmptyRequirementModel(monitor);
+        Command startTaskCmd = UpdateMonitorCommand.getCommand(monitor, getLabel(), 4, null, -1);
+        Command cmdWS = new AbstractCommand()
+        {
+            public void redo()
+            {
+                // Create the empty requirement model
+                createEmptyRequirementModel(monitor);
+            }
 
-        // Update the model
-        updateRequirementReference(monitor);
+            public void execute()
+            {
+                redo();
+            }
+
+            @Override
+            public void undo()
+            {
+                RequirementUtils.deleteResource(getRequirementResource());
+            }
+        };
+        // Update the target model
+        Command cmdModel = getUpdateRequirementReferenceCmd(monitor);
+        return Arrays.asList(startTaskCmd, cmdWS, cmdModel);
+    }
+
+    /**
+     * Get the label
+     */
+    public String getLabel()
+    {
+        return Messages.getString("EmptyRequirementModelOperation.0"); //$NON-NLS-1$
     }
 
     /**
@@ -66,14 +99,14 @@ public class EmptyRequirementModelOperation extends AbstractRequirementModelOper
         monitor.subTask(Messages.getString("EmptyRequirementModelOperation.1")); //$NON-NLS-1$
         ResourceSet resourceSet = new ResourceSetImpl();
         URI fileURI = URI.createPlatformResourceURI(requirementModelFile.getFullPath().addFileExtension(RequirementResource.FILE_EXTENSION).toString(), true);
-        requirementResource = resourceSet.createResource(fileURI);
+        setRequirementResource(resourceSet.createResource(fileURI));
         monitor.worked(1);
 
         // Add the initial model object to the contents.
         RequirementProject newProject = RequirementFactory.eINSTANCE.createRequirementProject();
-        requirementResource.getContents().add(newProject);
+        getRequirementResource().getContents().add(newProject);
 
-        RequirementProject rootObject = (RequirementProject) RequirementUtils.getRoot(requirementResource, RequirementProject.class);
+        RequirementProject rootObject = (RequirementProject) RequirementUtils.getRoot(getRequirementResource(), RequirementProject.class);
         updateRequirementProject(rootObject);
 
         // additional operation
@@ -86,16 +119,8 @@ public class EmptyRequirementModelOperation extends AbstractRequirementModelOper
         monitor.worked(1);
 
         // Save the contents of the resource to the file system
-        RequirementUtils.saveResource(requirementResource);
+        RequirementUtils.saveResource(getRequirementResource());
         monitor.worked(1);
-    }
-
-    /**
-     * Creates an Requirement model with an empty upstream model
-     */
-    protected void createEmptyModel()
-    {
-
     }
 
 }

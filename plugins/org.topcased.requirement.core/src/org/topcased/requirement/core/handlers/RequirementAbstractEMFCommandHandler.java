@@ -24,9 +24,12 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
-import org.topcased.modeler.utils.Utils;
+import org.eclipse.ui.IEditorPart;
+import org.topcased.requirement.core.extensions.IEditorServices;
+import org.topcased.requirement.core.extensions.SupportingEditorsManager;
 import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
+import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
  * This class defines and run an EMF command.<br>
@@ -34,47 +37,51 @@ import org.topcased.requirement.core.internal.RequirementCorePlugin;
  * @author christophe.mertz@c-s.fr
  * @author <a href="mailto:sebastien.gabel@c-s.fr">Sebastien GABEL</a>
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
- *
+ * 
  */
 public abstract class RequirementAbstractEMFCommandHandler extends AbstractHandler
 {
     private CompoundCommand compoundCmd;
-        
+
     protected EditingDomain editingDomain;
-    
+
     protected ExecutionEvent evt;
-        
-    
+
     /**
      * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
      */
     public Object execute(ExecutionEvent event) throws ExecutionException
     {
-        evt = event;
-        compoundCmd = new CompoundCommand();
-        editingDomain = Utils.getCurrentModeler().getEditingDomain();
-        ProgressMonitorDialog progressDialog = new ProgressMonitorDialog(Display.getDefault().getActiveShell());
-        try
+        IEditorPart editor = RequirementUtils.getCurrentEditor();
+        IEditorServices services = SupportingEditorsManager.getInstance().getServices(editor);
+        if (services != null)
         {
-            progressDialog.run(false, false, new IRunnableWithProgress()
+            evt = event;
+            compoundCmd = new CompoundCommand();
+            editingDomain = services.getEditingDomain(editor);
+            ProgressMonitorDialog progressDialog = new ProgressMonitorDialog(Display.getDefault().getActiveShell());
+            try
             {
-                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException
+                progressDialog.run(false, false, new IRunnableWithProgress()
                 {
-                    RequirementAbstractEMFCommandHandler.this.run(monitor);
-                }
-            });
-        }
-        catch (InvocationTargetException ite)
-        {
-            RequirementCorePlugin.log(ite);
-        }
-        catch (InterruptedException ie)
-        {
-            RequirementCorePlugin.log(ie);
+                    public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException
+                    {
+                        RequirementAbstractEMFCommandHandler.this.run(monitor);
+                    }
+                });
+            }
+            catch (InvocationTargetException ite)
+            {
+                RequirementCorePlugin.log(ite);
+            }
+            catch (InterruptedException ie)
+            {
+                RequirementCorePlugin.log(ie);
+            }
         }
         return null;
     }
-    
+
     /**
      * Executes the command
      * 
@@ -87,17 +94,17 @@ public abstract class RequirementAbstractEMFCommandHandler extends AbstractHandl
 
         Command cmd = editingDomain.createCommand(getCommand(), getParam());
         compoundCmd.appendIfCanExecute(cmd);
-        
+
         if (!compoundCmd.isEmpty() && compoundCmd.canExecute())
         {
             // Execute it.
             editingDomain.getCommandStack().execute(compoundCmd);
         }
-        
+
         monitor.worked(1);
         monitor.done();
     }
-    
+
     /**
      * @return param the parameter of the command
      */
@@ -107,5 +114,5 @@ public abstract class RequirementAbstractEMFCommandHandler extends AbstractHandl
      * @return command the command type
      */
     public abstract Class< ? extends Command> getCommand();
-  
+
 }

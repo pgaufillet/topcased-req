@@ -20,9 +20,11 @@ import org.eclipse.emf.common.command.AbstractCommand;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.window.Window;
-import org.topcased.modeler.utils.Utils;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.handlers.HandlerUtil;
 import org.topcased.requirement.UpstreamModel;
 import org.topcased.requirement.core.dialogs.DocumentSelectionDialog;
+import org.topcased.requirement.core.extensions.IEditorServices;
 import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.util.RequirementResource;
@@ -49,13 +51,18 @@ public class ImportUpstreamDocumentHandler extends AbstractHandler
         Collection<Object> result = Collections.emptyList();
         if (dialog.open() == Window.OK)
         {
-            EditingDomain domain = Utils.getCurrentModeler().getEditingDomain();
-            RequirementResource reqRsc = RequirementUtils.getRequirementModel(domain);
-            UpstreamModel upstreamModel = RequirementUtils.getUpstreamModel(reqRsc);
+            IEditorPart part = HandlerUtil.getActiveEditor(event);
+            IEditorServices services = RequirementUtils.getSpecificServices(part);
+            if (services != null)
+            {
+                EditingDomain domain = services.getEditingDomain(part);
+                RequirementResource reqRsc = RequirementUtils.getRequirementModel(domain);
+                UpstreamModel upstreamModel = RequirementUtils.getUpstreamModel(reqRsc);
 
-            AbstractCommand cmd = (AbstractCommand) AddCommand.create(domain, upstreamModel, TtmPackage.Literals.PROJECT__DOCUMENTS, dialog.getCheckedDocuments());
-            cmd.setLabel(Messages.getString("ImportUpstreamDocumentHandler.cmdLabel")); //$NON-NLS-1$
-            domain.getCommandStack().execute(cmd);
+                AbstractCommand cmd = (AbstractCommand) AddCommand.create(domain, upstreamModel, TtmPackage.Literals.PROJECT__DOCUMENTS, dialog.getCheckedDocuments());
+                cmd.setLabel(Messages.getString("ImportUpstreamDocumentHandler.cmdLabel")); //$NON-NLS-1$
+                domain.getCommandStack().execute(cmd);
+            }
         }
         return result;
     }

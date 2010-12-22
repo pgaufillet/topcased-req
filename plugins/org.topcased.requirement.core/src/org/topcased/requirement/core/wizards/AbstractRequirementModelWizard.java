@@ -22,11 +22,11 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.topcased.facilities.resources.SharedImageHelper;
-import org.topcased.modeler.editor.Modeler;
-import org.topcased.modeler.utils.Utils;
+import org.topcased.requirement.core.extensions.IEditorServices;
 import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.wizards.operation.AbstractRequirementModelOperation;
@@ -73,10 +73,11 @@ public abstract class AbstractRequirementModelWizard extends Wizard implements I
     public void addPages()
     {
         IPath alreadyAttachedRequirementPath = null;
-        Modeler modeler = Utils.getCurrentModeler();
-        if (modeler != null)
+        IEditorPart editor = RequirementUtils.getCurrentEditor();
+        IEditorServices services = RequirementUtils.getSpecificServices(editor);
+        if (services != null)
         {
-            Resource requirementResource = RequirementUtils.getRequirementModel(modeler.getEditingDomain());
+            Resource requirementResource = RequirementUtils.getRequirementModel(services.getEditingDomain(editor));
             if (requirementResource != null)
             {
                 IFile requirementFile = RequirementUtils.getFile(requirementResource);

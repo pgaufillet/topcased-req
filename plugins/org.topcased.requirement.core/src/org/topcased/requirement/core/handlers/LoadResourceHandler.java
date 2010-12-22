@@ -17,9 +17,12 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
-import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.core.dialogs.LoadResourceDialog;
+import org.topcased.requirement.core.extensions.IEditorServices;
+import org.topcased.requirement.core.extensions.SupportingEditorsManager;
+import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
  * An action to load a resource into an editing domain's resource set.
@@ -36,24 +39,29 @@ public class LoadResourceHandler extends AbstractHandler
      */
     public Object execute(ExecutionEvent event) throws ExecutionException
     {
-        EditingDomain domain = Utils.getCurrentModeler().getEditingDomain();
-        LoadResourceDialog loadResourceDialog = new LoadResourceDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), domain);
-
-        loadResourceDialog.open();
-
-        if (loadResourceDialog.getReturnCode() == Dialog.OK)
+        IEditorPart editor = RequirementUtils.getCurrentEditor();
+        IEditorServices services = SupportingEditorsManager.getInstance().getServices(editor);
+        if (services != null)
         {
-            URI uri = null;
-            String res = loadResourceDialog.getModelFile();
-            if (loadResourceDialog.isPlatform())
+            EditingDomain domain = services.getEditingDomain(editor);
+            LoadResourceDialog loadResourceDialog = new LoadResourceDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), domain);
+
+            loadResourceDialog.open();
+
+            if (loadResourceDialog.getReturnCode() == Dialog.OK)
             {
-                uri = URI.createPlatformResourceURI(res, false);
+                URI uri = null;
+                String res = loadResourceDialog.getModelFile();
+                if (loadResourceDialog.isPlatform())
+                {
+                    uri = URI.createPlatformResourceURI(res, false);
+                }
+                else
+                {
+                    uri = URI.createFileURI(res);
+                }
+                domain.getResourceSet().getResource(uri, true);
             }
-            else
-            {
-                uri = URI.createFileURI(res);
-            }
-            domain.getResourceSet().getResource(uri, true);
         }
         return null;
     }

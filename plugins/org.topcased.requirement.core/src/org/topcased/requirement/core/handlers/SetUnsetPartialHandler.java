@@ -20,10 +20,13 @@ import org.eclipse.core.expressions.EvaluationContext;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
-import org.topcased.modeler.utils.Utils;
+import org.eclipse.ui.IEditorPart;
 import org.topcased.requirement.AttributeLink;
 import org.topcased.requirement.RequirementPackage;
+import org.topcased.requirement.core.extensions.IEditorServices;
+import org.topcased.requirement.core.extensions.SupportingEditorsManager;
 import org.topcased.requirement.core.internal.Messages;
+import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
  * This handler set/unset partial status for an {@link AttributeLink}.<br>
@@ -39,12 +42,14 @@ public class SetUnsetPartialHandler extends AbstractHandler
      */
     public Object execute(ExecutionEvent event) throws ExecutionException
     {
-        EditingDomain  editingDomain = Utils.getCurrentModeler().getEditingDomain();
-        
-        if (((EvaluationContext)event.getApplicationContext()).getDefaultVariable() instanceof List<?>)
+        IEditorPart editor = RequirementUtils.getCurrentEditor();
+        IEditorServices services = SupportingEditorsManager.getInstance().getServices(editor);
+
+        if (services != null && ((EvaluationContext) event.getApplicationContext()).getDefaultVariable() instanceof List< ? >)
         {
-            //Get the current selection
-            List<?> elements = ((List<?>)((EvaluationContext)event.getApplicationContext()).getDefaultVariable());
+            EditingDomain editingDomain = services.getEditingDomain(editor);
+            // Get the current selection
+            List< ? > elements = ((List< ? >) ((EvaluationContext) event.getApplicationContext()).getDefaultVariable());
             CompoundCommand compoundCmd = new CompoundCommand(Messages.getString("SetUnsetPartialHandler.0")); //$NON-NLS-1$
             for (Object currObject : elements)
             {

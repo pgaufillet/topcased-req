@@ -12,19 +12,18 @@
 
 package org.topcased.requirement.core.views;
 
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdapterFactory;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
-import org.topcased.modeler.di.model.Diagram;
-import org.topcased.modeler.di.model.util.DIUtils;
-import org.topcased.modeler.diagrams.model.Diagrams;
-import org.topcased.modeler.diagrams.model.util.DiagramsUtils;
-import org.topcased.modeler.editor.Modeler;
+import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.ui.IEditorPart;
 import org.topcased.requirement.RequirementProject;
-import org.topcased.requirement.core.extensions.DefaultAttachmentPolicy;
+import org.topcased.requirement.core.extensions.IEditorServices;
 import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
 import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
+import org.topcased.requirement.core.internal.Messages;
+import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.current.CurrentPage;
 import org.topcased.requirement.core.views.current.ICurrentRequirementPage;
@@ -45,78 +44,55 @@ public class RequirementAdapterFactory implements IAdapterFactory
     @SuppressWarnings("rawtypes")
     public Object getAdapter(Object adaptableObject, Class adapterType)
     {
-        if (adaptableObject instanceof Modeler)
+        if (adaptableObject instanceof IEditorPart)
         {
-            // Get the current modeler
-            Modeler modeler = (Modeler) adaptableObject;
+            // Get the current editor
+            IEditorPart editor = (IEditorPart) adaptableObject;
+            IEditorServices services = RequirementUtils.getSpecificServices(editor);
 
             // Get the policy for it
-            IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(modeler.getEditingDomain());
+            if (services != null)
+            {
+                EditingDomain domain = services.getEditingDomain(editor);
+                IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(domain);
 
-            if (policy != null)
-            {
-                if (loadRequirementModelWithSpecifiedPolicy(modeler, policy))
+                if (policy != null)
                 {
-                    return getPage(adapterType);
+                    if (loadRequirementModelWithSpecifiedPolicy(editor, policy))
+                    {
+                        return getPage(adapterType);
+                    }
                 }
-            }
-            else if (loadRequirementModelWithDefaultPolicy(modeler))
-            {
-                return getPage(adapterType);
+                else
+                {
+                    String extension = domain.getResourceSet().getResources().get(0).getURI().fileExtension();
+                    String msg = NLS.bind(Messages.getString("ModelAttachmentPolicyManager.0"), extension);
+                    RequirementCorePlugin.log(msg, Status.ERROR, null);//$NON-NLS-1$
+                    return null;
+                }
             }
         }
         return null;
     }
 
     /**
-     * This method get the linked target model for the default policy and load the requirement model
-     * 
-     * @param modeler the current modeler
-     * @return true if there is a target model linked to a requirement model
-     */
-    private boolean loadRequirementModelWithDefaultPolicy(Modeler modeler)
-    {
-        EObject eobject = modeler.getResourceSet().getResources().get(0).getContents().get(0);
-        if (eobject instanceof Diagrams)
-        {
-            Diagram rootDiagram = DiagramsUtils.getRootDiagram((Diagrams) eobject);
-            String resourcePath = DIUtils.getPropertyValue(rootDiagram, DefaultAttachmentPolicy.REQUIREMENT_PROPERTY_KEY);
-            if (!"".equals(resourcePath)) //$NON-NLS-1$
-            {
-                URI uri = URI.createURI(resourcePath).trimFragment().resolve(rootDiagram.eResource().getURI());
-
-                if (ResourcesPlugin.getWorkspace().getRoot().findMember(uri.toPlatformString(true)) != null)
-                {
-                    RequirementUtils.loadRequirementModel(uri, modeler.getEditingDomain());
-                    return true;
-                }
-                else
-                {
-                    DefaultAttachmentPolicy.getInstance().setProperty(modeler, null);
-                }
-
-            }
-        }
-        return false;
-    }
-
-    /**
      * This method get the linked target model for a specified policy and load the requirement model
      * 
-     * @param modeler the current modeler
+     * @param editor the current editor
      * @param policy the specified policy
      * @return true if there is a target model linked to a requirement model
      */
-    private boolean loadRequirementModelWithSpecifiedPolicy(Modeler modeler, IModelAttachmentPolicy policy)
+    private boolean loadRequirementModelWithSpecifiedPolicy(IEditorPart editor, IModelAttachmentPolicy policy)
     {
-        EObject eobject = modeler.getResourceSet().getResources().get(0).getContents().get(0);
-        if (eobject instanceof Diagrams)
+        IEditorServices services = RequirementUtils.getSpecificServices(editor);
+        if (services != null)
         {
-            RequirementProject project = policy.getRequirementProjectFromTargetDiagram((Diagrams) eobject);
+            EditingDomain domain = services.getEditingDomain(editor);
+            RequirementProject project = policy.getRequirementProjectFromTargetMainResource(domain.getResourceSet().getResources().get(0));
             if (project != null)
             {
                 URI uri = project.eResource().getURI();
-                RequirementUtils.loadRequirementModel(uri, modeler.getEditingDomain());
+                RequirementUtils.loadRequirementModel(uri, domain);
                 return true;
             }
         }

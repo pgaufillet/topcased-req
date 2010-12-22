@@ -24,7 +24,7 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.handlers.RegistryToggleState;
 import org.eclipse.ui.views.properties.PropertySheet;
-import org.topcased.modeler.editor.properties.ModelerPropertySheetPage;
+import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.topcased.requirement.core.properties.sections.RequirementPropertySection;
 
 /**
@@ -39,7 +39,7 @@ public class TableHandler extends AbstractHandlerWithState
      * the property view
      */
     PropertySheet sheet;
-    
+
     /**
      * FIXME : for now there is two RegisteryTOGGLEState for each commands who should be RADIO styled!! Tried to put the
      * RegisteryRadioState for each but having bugs with this state
@@ -71,30 +71,30 @@ public class TableHandler extends AbstractHandlerWithState
         {
             if (sheet != null)
             {
-                if (sheet.getCurrentPage() instanceof ModelerPropertySheetPage)
+                if (sheet.getCurrentPage() instanceof TabbedPropertySheetPage)
                 {
-                    ModelerPropertySheetPage page = (ModelerPropertySheetPage) sheet.getCurrentPage();
+                    TabbedPropertySheetPage page = (TabbedPropertySheetPage) sheet.getCurrentPage();
                     if (page.getCurrentTab().getSectionAtIndex(0) instanceof RequirementPropertySection)
                     {
-                        //Get the requirement property section
+                        // Get the requirement property section
                         RequirementPropertySection section = (RequirementPropertySection) page.getCurrentTab().getSectionAtIndex(0);
-                        
-                        //Get the parent composite
+
+                        // Get the parent composite
                         Composite parent = section.getParentCompo();
                         IWorkbenchPart part = section.getPart();
                         ISelection selection = section.getSelection();
-                        
-                        //Dispose the current viewer
+
+                        // Dispose the current viewer
                         section.disposeViewer();
-                        
-                        //Create the new viewer
+
+                        // Create the new viewer
                         section.createTable(parent);
-                        section.setInput(part, selection);  
-                        
-                        //Repack, resize and refresh it
+                        section.setInput(part, selection);
+
+                        // Repack, resize and refresh it
                         parent.pack(false);
                         parent.setSize(1000, 500);
-                        section.getViewer().refresh(true);  
+                        section.getViewer().refresh(true);
                     }
                 }
             }

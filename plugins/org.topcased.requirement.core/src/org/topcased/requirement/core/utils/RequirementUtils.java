@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -30,8 +31,8 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.AdapterFactory;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -41,20 +42,20 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.services.ISourceProviderService;
 import org.topcased.facilities.util.EditorUtil;
-import org.topcased.modeler.diagrams.model.Diagrams;
-import org.topcased.modeler.editor.Modeler;
-import org.topcased.modeler.editor.TopcasedAdapterFactoryEditingDomain;
-import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.AttributeAllocate;
 import org.topcased.requirement.AttributeConfiguration;
 import org.topcased.requirement.AttributeLink;
@@ -65,9 +66,11 @@ import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.SpecialChapter;
 import org.topcased.requirement.TrashChapter;
 import org.topcased.requirement.UpstreamModel;
-import org.topcased.requirement.core.extensions.DefaultAttachmentPolicy;
+import org.topcased.requirement.core.extensions.IEditorServices;
 import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
 import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
+import org.topcased.requirement.core.extensions.SupportingEditorsManager;
+import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.services.RequirementModelSourceProvider;
 import org.topcased.requirement.util.RequirementCacheAdapter;
@@ -124,9 +127,9 @@ public final class RequirementUtils
      */
     public static AdapterFactory getAdapterFactory(EditingDomain editingDomain)
     {
-        if (editingDomain instanceof TopcasedAdapterFactoryEditingDomain)
+        if (editingDomain instanceof AdapterFactoryEditingDomain)
         {
-            TopcasedAdapterFactoryEditingDomain topcasedDomain = (TopcasedAdapterFactoryEditingDomain) editingDomain;
+            AdapterFactoryEditingDomain topcasedDomain = (AdapterFactoryEditingDomain) editingDomain;
             if (topcasedDomain.getAdapterFactory() instanceof ComposedAdapterFactory)
             {
                 ComposedAdapterFactory factory = (ComposedAdapterFactory) topcasedDomain.getAdapterFactory();
@@ -165,30 +168,21 @@ public final class RequirementUtils
      * 
      * @param the clazz to search
      * 
-     * @return
+     * @return collection of model objects or empty collection
      */
     public static Collection<EObject> getAllObjects(EClass classifier)
     {
-        Collection<EObject> result = new ArrayList<EObject>();
-
-        // Get all target models referenced in the DSL model (excluding diagrams model)
-        Set<Resource> alltargetModels = RequirementUtils.getTargetModels();
-
-        // Get all EObject element in the target models
-        for (Resource r : alltargetModels)
+        IEditorServices services = getSpecificServices(null);
+        if (services != null)
         {
-            Collection<EObject> collection = new ArrayList<EObject>();
-            if (r != null)
+            Resource modelResource = services.getModelResource(null);
+            if (modelResource.getContents().size() > 0)
             {
-                for (Iterator<EObject> h = r.getContents().get(0).eAllContents(); h.hasNext();)
-                {
-                    collection.add(h.next());
-                }
+                EObject model = modelResource.getContents().get(0);
+                return services.getAllModelObjects(model, classifier);
             }
-            result.addAll(collection);
         }
-
-        return result;
+        return new ArrayList<EObject>();
     }
 
     /**
@@ -316,7 +310,7 @@ public final class RequirementUtils
         Collection<Setting> collection = Collections.<Setting> emptyList();
         if (source == null)
         {
-            return collection ;
+            return collection;
         }
         ECrossReferenceAdapter adapter = RequirementCacheAdapter.getExistingRequirementCacheAdapter(source);
         if (adapter == null)
@@ -422,7 +416,7 @@ public final class RequirementUtils
         {
             URI uri = resource.getURI();
             IResource toDelete = ResourcesPlugin.getWorkspace().getRoot().findMember(uri.toPlatformString(true));
-            if (toDelete.isAccessible() && toDelete.exists())
+            if (toDelete != null && toDelete.isAccessible() && toDelete.exists())
             {
                 toDelete.delete(true, new NullProgressMonitor());
                 toDelete.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
@@ -477,22 +471,22 @@ public final class RequirementUtils
     }
 
     /**
-     * Loads the requirement model if required and returns the resource.
+     * Loads the requirement model if required.
      * 
      * @param uri The uri of the requirement model
      * @param domain The shared editing domain
-     * @return the requirement model as an EMF resource
      */
     public static void loadRequirementModel(URI uri, EditingDomain domain)
     {
-        // Gets the requirement model from the editing domain or loads it if it's the first time
+        // Gets the requirement model from the editing domain or loads it if
+        // it's the first time
         domain.getResourceSet().getResource(uri, true);
-        if (domain instanceof TopcasedAdapterFactoryEditingDomain)
+        if (domain instanceof AdapterFactoryEditingDomain)
         {
-            TopcasedAdapterFactoryEditingDomain topcasedDomain = (TopcasedAdapterFactoryEditingDomain) domain;
-            if (topcasedDomain.getAdapterFactory() instanceof ComposedAdapterFactory)
+            AdapterFactoryEditingDomain adapterFactoryDomain = (AdapterFactoryEditingDomain) domain;
+            if (adapterFactoryDomain.getAdapterFactory() instanceof ComposedAdapterFactory)
             {
-                ComposedAdapterFactory factory = (ComposedAdapterFactory) topcasedDomain.getAdapterFactory();
+                ComposedAdapterFactory factory = (ComposedAdapterFactory) adapterFactoryDomain.getAdapterFactory();
                 factory.addAdapterFactory(RequirementUtils.getAdapterFactory());
             }
         }
@@ -506,22 +500,26 @@ public final class RequirementUtils
      */
     public static boolean unloadRequirementModel(EditingDomain domain)
     {
-        if (domain instanceof TopcasedAdapterFactoryEditingDomain)
+        if (domain instanceof AdapterFactoryEditingDomain)
         {
-            TopcasedAdapterFactoryEditingDomain topcasedDomain = (TopcasedAdapterFactoryEditingDomain) domain;
-            if (topcasedDomain.getAdapterFactory() instanceof ComposedAdapterFactory)
+            AdapterFactoryEditingDomain adapterFactoryDomain = (AdapterFactoryEditingDomain) domain;
+            if (adapterFactoryDomain.getAdapterFactory() instanceof ComposedAdapterFactory)
             {
-                ComposedAdapterFactory factory = (ComposedAdapterFactory) topcasedDomain.getAdapterFactory();
+                ComposedAdapterFactory factory = (ComposedAdapterFactory) adapterFactoryDomain.getAdapterFactory();
                 factory.removeAdapterFactory(RequirementUtils.getAdapterFactory());
             }
         }
 
         Resource requirementRsc = getRequirementModel(domain);
+        if (requirementRsc != null)
+        {
+            // Unload the requirement resource and notify commands that the
+            // hasRequirement variable has changed
+            requirementRsc.unload();
 
-        // Unload the requirement resource and notify commands that the hasRequirement variable has changed
-        requirementRsc.unload();
-
-        return domain.getResourceSet().getResources().remove(requirementRsc);
+            return domain.getResourceSet().getResources().remove(requirementRsc);
+        }
+        return false;
     }
 
     /**
@@ -561,37 +559,15 @@ public final class RequirementUtils
      * Gets a set of models loaded in the Topcased editing domain.
      * 
      * @return all models loaded as a set of Resources.
+     * @deprecated use {@link #getAllObjects(EClass)} instead
      */
     public static Set<Resource> getTargetModels()
     {
         Set<Resource> toReturn = new HashSet<Resource>();
-        Modeler modeler = Utils.getCurrentModeler();
-        if (modeler != null)
+        IEditorServices services = getSpecificServices(null);
+        if (services != null)
         {
-            EditingDomain editingDomain = modeler.getEditingDomain();
-            for (Resource resource : editingDomain.getResourceSet().getResources())
-            {
-                URI uriResource = resource.getURI();
-                if (uriResource != null && uriResource.fileExtension() != null)
-                {
-                    if (uriResource.fileExtension().endsWith("di")) //$NON-NLS-1$
-                    {
-                        String uri = null;
-                        EObject root = resource.getContents().get(0);
-                        if (root instanceof Diagrams)
-                        {
-                            Diagrams di = (Diagrams) root;
-                            uri = EcoreUtil.getURI(di.getModel()).trimFragment().toString();
-                        }
-                        ResourceSet resourceSet = new ResourceSetImpl();
-                        Resource targetModel = resourceSet.getResource(URI.createURI(uri), true);
-                        if (targetModel != null)
-                        {
-                            toReturn.add(targetModel);
-                        }
-                    }
-                }
-            }
+            return Collections.singleton(services.getModelResource(null));
         }
         return toReturn;
     }
@@ -662,21 +638,21 @@ public final class RequirementUtils
         }
         return null;
     }
-    
+
     /**
      * Gets the {@link Document} model objects contained under the {@link UpstreamModel}.
      * 
      * @param requirement The resource representing a requirement model
      * @return the upstream model found.
      */
-    public static EList<Document> getUpstreamDocuments(Resource requirement)
+    public static List<Document> getUpstreamDocuments(Resource requirement)
     {
         UpstreamModel upstreamModel = getUpstreamModel(requirement);
         if (upstreamModel != null)
         {
             return upstreamModel.getDocuments();
         }
-        return null;
+        return Collections.emptyList();
     }
 
     /**
@@ -798,10 +774,10 @@ public final class RequirementUtils
                 if (resourceToClose.lastSegment().equals(resourceName))
                 {
                     IEditorPart part = editorRef.getEditor(false);
-                    if (part != null && part instanceof Modeler)
+                    if (part != null && part instanceof IEditorPart)
                     {
-                        Modeler modeler = (Modeler) part;
-                        modeler.doSave(new NullProgressMonitor());
+                        IEditorPart editor = (IEditorPart) part;
+                        editor.doSave(new NullProgressMonitor());
                         closed = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditor(part, false);
                     }
                 }
@@ -822,16 +798,21 @@ public final class RequirementUtils
     public static void fireIsImpactedVariableChanged()
     {
         Boolean isImpacted = true;
-        Modeler modeler = Utils.getCurrentModeler();
+
+        IEditorServices services = getSpecificServices(null);
+
+        // Modeler modeler = Utils.getCurrentModeler();
         ISourceProviderService spc = (ISourceProviderService) PlatformUI.getWorkbench().getService(ISourceProviderService.class);
         RequirementModelSourceProvider myPro = (RequirementModelSourceProvider) spc.getSourceProvider(RequirementModelSourceProvider.IS_IMPACTED);
-        if (modeler != null && myPro != null)
+
+        if (services != null && myPro != null)
         {
-            Resource requirement = RequirementUtils.getRequirementModel(modeler.getEditingDomain());
+            Resource requirement = getRequirementModel(services.getEditingDomain(null));
             if (requirement != null)
             {
                 Collection<EObject> allRequirement = RequirementUtils.getAllObjects(requirement, CurrentRequirement.class);
-                // checks that all CurrentRequirement are marked as not impacted.
+                // checks that all CurrentRequirement are marked as not
+                // impacted.
                 for (EObject aReq : allRequirement)
                 {
                     if (aReq instanceof CurrentRequirement && ((CurrentRequirement) aReq).isImpacted())
@@ -844,6 +825,27 @@ public final class RequirementUtils
                 myPro.setIsImpactedState(isImpacted);
             }
         }
+
+        // if (modeler != null && myPro != null)
+        // {
+        // Resource requirement = RequirementUtils.getRequirementModel(modeler.getEditingDomain());
+        // if (requirement != null)
+        // {
+        // Collection<EObject> allRequirement = RequirementUtils.getAllObjects(requirement, CurrentRequirement.class);
+        // // checks that all CurrentRequirement are marked as not
+        // // impacted.
+        // for (EObject aReq : allRequirement)
+        // {
+        // if (aReq instanceof CurrentRequirement && ((CurrentRequirement) aReq).isImpacted())
+        // {
+        // // action must be disabled.
+        // isImpacted = false;
+        // break;
+        // }
+        // }
+        // myPro.setIsImpactedState(isImpacted);
+        // }
+        // }
     }
 
     /**
@@ -858,24 +860,57 @@ public final class RequirementUtils
         ISourceProviderService service = (ISourceProviderService) PlatformUI.getWorkbench().getService(ISourceProviderService.class);
         RequirementModelSourceProvider provider = (RequirementModelSourceProvider) service.getSourceProvider(RequirementModelSourceProvider.HAS_REQUIREMENT_MODEL);
 
-        Modeler modeler = Utils.getCurrentModeler();
+        IEditorServices services = getSpecificServices(null);
+        if (services != null)
+        {
+            EditingDomain domain = services.getEditingDomain(null);
+            if (domain != null)
+            {
+                IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(domain);
+                if (policy != null)
+                {
+                    enable = policy.getLinkedTargetModel(domain.getResourceSet()) != null;
+                }
+                else
+                {
+                    String extension = domain.getResourceSet().getResources().get(0).getURI().fileExtension();
+                    String msg = NLS.bind(Messages.getString("ModelAttachmentPolicyManager.0"), extension);
+                    RequirementCorePlugin.log(msg, Status.ERROR, null);//$NON-NLS-1$
+                    enable = false;
+                }
+            }
+        }
 
-        if (modeler != null)
-        {
-            IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(modeler.getEditingDomain());
-            if (policy != null)
-            {
-                enable = policy.getLinkedTargetModel(modeler.getEditingDomain().getResourceSet()) != null;
-            }
-            else
-            {
-                enable = DefaultAttachmentPolicy.getInstance().getLinkedTargetModel(modeler.getEditingDomain().getResourceSet()) != null;
-            }
-        }
-        else
-        {
-            enable = false;
-        }
+        // Modeler modeler = Utils.getCurrentModeler();
+        //
+        // if (modeler != null)
+        // {
+        // IModelAttachmentPolicy policy =
+        // ModelAttachmentPolicyManager.getInstance().getModelPolicy(modeler.getEditingDomain());
+        // if (policy != null)
+        // {
+        // enable = policy.getLinkedTargetModel(modeler.getEditingDomain().getResourceSet()) != null;
+        // }
+        // else
+        // {
+        // enable =
+        // DefaultAttachmentPolicy.getInstance().getLinkedTargetModel(modeler.getEditingDomain().getResourceSet()) !=
+        // null;
+        // }
+        // }
+        // else
+        // {
+        // enable = false;
+        // ModelSet resSet = EditorUtils.getDiResourceSet();
+        // if (resSet != null)
+        // {
+        // IModel reqModel = resSet.getModel("org.topcased.requirement.papyrus.requirementModel");
+        // if (reqModel != null)
+        // {
+        // enable = true;
+        // }
+        // }
+        // }
 
         provider.setHasRequirementState(enable);
     }
@@ -891,5 +926,47 @@ public final class RequirementUtils
         RequirementModelSourceProvider provider = (RequirementModelSourceProvider) service.getSourceProvider(RequirementModelSourceProvider.IS_SECTION_ENABLED);
 
         provider.setIsSectionEnabledState(enable);
+    }
+
+    /**
+     * Get the currently active editor, whatever its type
+     * 
+     * @return the active editor or null
+     */
+    public static IEditorPart getCurrentEditor()
+    {
+        IWorkbench workbench = PlatformUI.getWorkbench();
+        if (workbench != null)
+        {
+            IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
+            if (activeWorkbenchWindow != null)
+            {
+                IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+                if (activePage != null)
+                {
+                    return activePage.getActiveEditor();
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Get the services specific to an editor.
+     * 
+     * @param editor the editor to find services for, or null to take the currently active editor
+     * @return appropriated services or null if none
+     */
+    public static IEditorServices getSpecificServices(IEditorPart editor)
+    {
+        if (editor == null)
+        {
+            editor = getCurrentEditor();
+        }
+        if (editor != null)
+        {
+            return SupportingEditorsManager.getInstance().getServices(editor);
+        }
+        return null;
     }
 }

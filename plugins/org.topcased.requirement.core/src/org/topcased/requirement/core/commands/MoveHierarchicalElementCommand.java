@@ -18,9 +18,9 @@ import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
+import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.topcased.modeler.editor.TopcasedAdapterFactoryEditingDomain;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.RequirementPackage;
 import org.topcased.requirement.core.internal.Messages;
@@ -61,7 +61,7 @@ public class MoveHierarchicalElementCommand extends CompoundCommand
     public MoveHierarchicalElementCommand(EObject newContainer, Collection< ? > children)
     {
         super(Messages.getString("MoveHierarchicalElementCommand.0")); //$NON-NLS-1$
-        domain = TopcasedAdapterFactoryEditingDomain.getEditingDomainFor(newContainer);
+        domain = AdapterFactoryEditingDomain.getEditingDomainFor(newContainer);
         container = newContainer;
         elements = children;
         targetCreated = false;
@@ -175,7 +175,7 @@ public class MoveHierarchicalElementCommand extends CompoundCommand
     @Override
     public boolean canExecute()
     {
-        boolean result = RequirementUtils.hasRequirementModel(TopcasedAdapterFactoryEditingDomain.getEditingDomainFor(container));
+        boolean result = RequirementUtils.hasRequirementModel(AdapterFactoryEditingDomain.getEditingDomainFor(container));
         return super.canExecute() && elements != null && !elements.isEmpty() && container != null && result;
     }
 }

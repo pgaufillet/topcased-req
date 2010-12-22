@@ -11,34 +11,42 @@
  **********************************************************************************************************************/
 package org.topcased.requirement.core.dnd;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.command.Command;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
-import org.eclipse.gef.GraphicalViewer;
+import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.dnd.AbstractTransferDropTargetListener;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;
-import org.topcased.modeler.commands.EMFtoGEFCommandWrapper;
-import org.topcased.modeler.edit.DiagramEditPart;
-import org.topcased.modeler.edit.IModelElementEditPart;
-import org.topcased.modeler.utils.Utils;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.part.FileEditorInput;
 import org.topcased.requirement.core.commands.CreateCurrentReqCommand;
 import org.topcased.requirement.core.commands.CreateRequirementCommand;
 import org.topcased.requirement.core.extensions.DropRestrictionManager;
+import org.topcased.requirement.core.extensions.IEditorServices;
 import org.topcased.requirement.core.extensions.ISpecificDropAction;
 import org.topcased.requirement.core.extensions.SpecificDropActionDescriptor;
 import org.topcased.requirement.core.extensions.SpecificDropActionManager;
+import org.topcased.requirement.core.extensions.SupportingEditorsManager;
 import org.topcased.requirement.core.internal.Messages;
+import org.topcased.requirement.core.internal.RequirementCorePlugin;
+import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.current.CurrentRequirementView;
 import org.topcased.requirement.core.views.upstream.UpstreamRequirementView;
@@ -65,7 +73,7 @@ public class RequirementDropListener extends AbstractTransferDropTargetListener
      * 
      * @param viewer the GraphicalViewer of the editing window
      */
-    public RequirementDropListener(GraphicalViewer viewer)
+    public RequirementDropListener(EditPartViewer viewer)
     {
         super(viewer, RequirementTransfer.getInstance());
     }
@@ -97,42 +105,77 @@ public class RequirementDropListener extends AbstractTransferDropTargetListener
     {
         if (currentPart != null)
         {
-            EObject eobject = getEObject();
-            if (eobject != null)
+            IRunnableWithProgress runnable = new IRunnableWithProgress()
             {
-                // extract source objects
-                ISelection selection = ((RequirementTransfer) getTransfer()).getSelection();
-                Collection< ? > source = extractDragSource(selection);
 
-                // handle specific action on drop
-                Command dropCmd = null;
-                ISpecificDropAction action = null;
-                String uri = EcoreUtil.getURI(eobject.eClass().getEPackage()).trimFragment().toString();
-                SpecificDropActionDescriptor descriptor = SpecificDropActionManager.getInstance().find(uri);
-                if (descriptor != null)
+                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException
                 {
-                    action = descriptor.getActionFor((EObject) eobject);
+                    doDrop();
                 }
-                if (action != null)
-                {
-                    dropCmd = action.createSpecificDropAction(source, eobject);
-                }
-                // default requirement creation
-                else if (eobject != null)
-                {
-                    dropCmd = new CreateCurrentReqCommand(Messages.getString("CreateCurrentRequirementHandler.0")); //$NON-NLS-1$
-                    ((CreateRequirementCommand) dropCmd).setRequirements(source);
-                    ((CreateRequirementCommand) dropCmd).setTarget(eobject);
-                }
-
-                // execution of the command
-                if (dropCmd != null && dropCmd.canExecute())
-                {
-                    getViewer().getEditDomain().getCommandStack().execute(new EMFtoGEFCommandWrapper(dropCmd));
-                }
+            };
+            runnable = RequirementHelper.INSTANCE.encapsulateEMFRunnable(runnable, Messages.getString("CreateCurrentRequirementHandler.0")); //$NON-NLS-1$
+            try
+            {
+                runnable.run(new NullProgressMonitor());
+            }
+            catch (Exception e)
+            {
+                RequirementCorePlugin.log(e);
             }
         }
         super.drop(event);
+    }
+
+    private void doDrop()
+    {
+        EObject eobject = getEObject();
+        if (eobject != null)
+        {
+            // extract source objects
+            ISelection selection = ((RequirementTransfer) getTransfer()).getSelection();
+            Collection< ? > source = extractDragSource(selection);
+
+            // handle specific action on drop
+            Command dropCmd = null;
+            ISpecificDropAction action = null;
+            String uri = EcoreUtil.getURI(eobject.eClass().getEPackage()).trimFragment().toString();
+            SpecificDropActionDescriptor descriptor = SpecificDropActionManager.getInstance().find(uri);
+            if (descriptor != null)
+            {
+                action = descriptor.getActionFor((EObject) eobject);
+            }
+            if (action != null)
+            {
+                dropCmd = action.createSpecificDropAction(source, eobject);
+            }
+            // default requirement creation
+            else if (eobject != null)
+            {
+                dropCmd = new CreateCurrentReqCommand(Messages.getString("CreateCurrentRequirementHandler.0")); //$NON-NLS-1$
+                ((CreateRequirementCommand) dropCmd).setRequirements(source);
+                ((CreateRequirementCommand) dropCmd).setTarget(eobject);
+            }
+
+            // execution of the command
+            if (dropCmd != null && dropCmd.canExecute())
+            {
+                IEditorPart editor = RequirementUtils.getCurrentEditor();
+                IEditorServices services = SupportingEditorsManager.getInstance().getServices(editor);
+                if (services != null)
+                {
+                    EditingDomain domain = services.getEditingDomain(editor);
+                    if (domain instanceof TransactionalEditingDomain)
+                    {
+                        // do not use command stack, since it is called in parent transaction
+                        dropCmd.execute();
+                    }
+                    else
+                    {
+                        domain.getCommandStack().execute(dropCmd);
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -153,18 +196,28 @@ public class RequirementDropListener extends AbstractTransferDropTargetListener
         }
         else
         {
-            if (currentPart instanceof IModelElementEditPart)
+            EObject eobject = getEObject();
+            if (eobject != null)
             {
-                EObject eobject = getEObject();
-                URI graphicalModelName = URI.createURI(Utils.getCurrentModeler().getPartName());
-                String fileExtension = graphicalModelName.fileExtension();
-    
-                // if the target is restricted by the extension point dropRestriction
-                if (!(DropRestrictionManager.getInstance().isDropAllowed(fileExtension, eobject)))
+                IEditorInput input = RequirementUtils.getCurrentEditor().getEditorInput();
+                if (input instanceof FileEditorInput)
                 {
-                    event.operations = DND.DROP_NONE;
-                    event.detail = DND.DROP_NONE;
+                    String fileExtension = ((FileEditorInput) input).getFile().getFileExtension();
+                    // URI graphicalModelName = URI.createURI(RequirementUtils.getCurrentEditor().getPartName());
+                    // String fileExtension = graphicalModelName.fileExtension();
+
+                    // if the target is restricted by the extension point dropRestriction
+                    if (!(DropRestrictionManager.getInstance().isDropAllowed(fileExtension, eobject)))
+                    {
+                        event.operations = DND.DROP_NONE;
+                        event.detail = DND.DROP_NONE;
+                    }
                 }
+            }
+            else
+            {
+                event.operations = DND.DROP_NONE;
+                event.detail = DND.DROP_NONE;
             }
             for (Object s : source)
             {
@@ -224,12 +277,14 @@ public class RequirementDropListener extends AbstractTransferDropTargetListener
      */
     protected EObject getEObject()
     {
-        EObject semanticModelObject = null;
-        if (getTargetEditPart() instanceof IModelElementEditPart)
+        IEditorPart editor = RequirementUtils.getCurrentEditor();
+        IEditorServices services = SupportingEditorsManager.getInstance().getServices(editor);
+        EditPart targetPart = getTargetEditPart();
+        if (services != null && targetPart != null)
         {
-            semanticModelObject = ((IModelElementEditPart) getTargetEditPart()).getEObject();
+            return services.getEObject(targetPart);
         }
-        return semanticModelObject;
+        return null;
     }
 
     /**
@@ -242,13 +297,15 @@ public class RequirementDropListener extends AbstractTransferDropTargetListener
         EditPart currentPartTmp = super.getTargetEditPart();
         if (currentPartTmp != null)
         {
-            if (currentPartTmp instanceof DiagramEditPart)
+            IEditorPart editor = RequirementUtils.getCurrentEditor();
+            IEditorServices services = SupportingEditorsManager.getInstance().getServices(editor);
+            if (services != null && services.getEObject(currentPartTmp) != null && services.canCreateRequirement(currentPartTmp))
             {
-                currentPart = null;
+                currentPart = currentPartTmp;
             }
             else
             {
-                currentPart = currentPartTmp;
+                currentPart = null;
             }
         }
         return currentPart;

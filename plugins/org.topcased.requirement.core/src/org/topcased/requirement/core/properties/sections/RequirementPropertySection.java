@@ -11,12 +11,16 @@
 package org.topcased.requirement.core.properties.sections;
 
 import org.eclipse.core.commands.Command;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.edit.domain.IEditingDomainProvider;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.IFilter;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -34,8 +38,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.RegistryToggleState;
 import org.eclipse.ui.views.properties.tabbed.AbstractPropertySection;
+import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
-import org.topcased.modeler.editor.TopcasedAdapterFactoryEditingDomain;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.core.handlers.ICommandConstants;
 import org.topcased.requirement.core.internal.Messages;
@@ -44,7 +48,6 @@ import org.topcased.requirement.core.providers.RequirementPropertyTableLabelProv
 import org.topcased.requirement.core.providers.RequirementPropertyTreeContentProvider;
 import org.topcased.requirement.core.providers.RequirementPropertyTreeLabelProvider;
 import org.topcased.requirement.core.utils.RequirementUtils;
-import org.topcased.tabbedproperties.utils.ObjectAdapter;
 
 /**
  * Section that displays a single table or a tree containing associated upstream and current requirements.
@@ -53,19 +56,18 @@ import org.topcased.tabbedproperties.utils.ObjectAdapter;
  * @author <a href="mailto:sebastien.gabel@c-s.fr">Sebastien GABEL</a>
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  */
-public class RequirementPropertySection extends AbstractPropertySection
+public class RequirementPropertySection extends AbstractPropertySection implements IFilter
 {
     /**
      * Could be a table viewer or a tree viewer containing the upstream and current requirements.
      */
     private ColumnViewer currentViewer;
-    
-    
+
     /**
      * The parent composite of the currentViewer
      */
     private Composite parentCompo;
-    
+
     /**
      * @see org.eclipse.ui.part.Page#dispose()
      */
@@ -100,7 +102,7 @@ public class RequirementPropertySection extends AbstractPropertySection
     {
         RequirementUtils.getAdapterFactory().removeListener(modelListener);
     }
-    
+
     /**
      * @see org.eclipse.ui.views.properties.tabbed.ISection#createControls(org.eclipse.swt.widgets.Composite,
      *      org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage)
@@ -109,15 +111,15 @@ public class RequirementPropertySection extends AbstractPropertySection
     {
         super.createControls(parent, aTabbedPropertySheetPage);
         parent.setLayout(new FillLayout());
-        parentCompo = parent;     
+        parentCompo = parent;
 
         // Get the commands who have a registered state
         ICommandService cs = (ICommandService) PlatformUI.getWorkbench().getService(ICommandService.class);
         Command tableCmd = cs.getCommand(ICommandConstants.TABLE_ID);
         Command treeCmd = cs.getCommand(ICommandConstants.TREE_ID);
-        
-        //This is only for the first launch of the property section. Every
-        //changes of viewers are made in the commands handlers
+
+        // This is only for the first launch of the property section. Every
+        // changes of viewers are made in the commands handlers
         if (tableCmd.getState(RegistryToggleState.STATE_ID).getValue().equals(true))
         {
             createTable(parent);
@@ -128,56 +130,55 @@ public class RequirementPropertySection extends AbstractPropertySection
         }
         else
         {
-            //default case when no button is already persisted
+            // default case when no button is already persisted
             tableCmd.getState(RegistryToggleState.STATE_ID).setValue(true);
             treeCmd.getState(RegistryToggleState.STATE_ID).setValue(false);
             createTable(parent);
         }
     }
 
-    
     /**
      * Create the table in the property section
      * 
      * @param parent the parent composite
      */
     public void createTable(Composite parent)
-    {           
-        
+    {
+
         final Table requirementTable = getWidgetFactory().createTable(parent, SWT.MULTI | SWT.BORDER);
         requirementTable.setLayout(new FillLayout());
         requirementTable.setHeaderVisible(true);
         requirementTable.setLinesVisible(true);
-                
+
         currentViewer = new TableViewer(requirementTable);
-        
+
         final TableViewerColumn upstreamCol = new TableViewerColumn((TableViewer) currentViewer, SWT.FILL);
         upstreamCol.getColumn().setText(Messages.getString("RequirementPropertySection.0")); //$NON-NLS-1$
         upstreamCol.getColumn().setWidth(300);
 
         final TableViewerColumn currentCol = new TableViewerColumn((TableViewer) currentViewer, SWT.FILL);
         currentCol.getColumn().setText(Messages.getString("RequirementPropertySection.1")); //$NON-NLS-1$
-        currentCol.getColumn().setWidth(500);     
-        
+        currentCol.getColumn().setWidth(500);
+
         hookListeners();
     }
-    
+
     /**
      * Create the tree in the property section
      * 
      * @param parent the parent composite
      */
     public void createTree(Composite parent)
-    {          
-        parent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true)); 
+    {
+        parent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         final Tree tree = getWidgetFactory().createTree(parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
         tree.setLayout(new FillLayout());
 
         currentViewer = new TreeViewer(tree, SWT.FILL);
-       
+
         hookListeners();
     }
-    
+
     /**
      * @see org.eclipse.ui.views.properties.tabbed.ISection#setInput(org.eclipse.ui.IWorkbenchPart,
      *      org.eclipse.jface.viewers.ISelection)
@@ -185,12 +186,19 @@ public class RequirementPropertySection extends AbstractPropertySection
     public void setInput(IWorkbenchPart part, ISelection selection)
     {
         super.setInput(part, selection);
-        if (selection instanceof IStructuredSelection)
+        if (!(selection instanceof IStructuredSelection)
+                || !((part instanceof IEditingDomainProvider) || part.getAdapter(IEditingDomainProvider.class) != null || part instanceof ITabbedPropertySheetPageContributor))
         {
-            Object ssel = ((IStructuredSelection) selection).getFirstElement();
-            EObject eObject = ObjectAdapter.adaptObject(ssel);
-              
-            EditingDomain domain = TopcasedAdapterFactoryEditingDomain.getEditingDomainFor(eObject);
+            return;
+        }
+
+        Object firstElement = ((IStructuredSelection) selection).getFirstElement();
+        EObject newEObject = resolveSemanticObject(firstElement);
+
+        // check an eobject is selected
+        if (newEObject != null)
+        {
+            EditingDomain domain = AdapterFactoryEditingDomain.getEditingDomainFor(newEObject);
             Resource resource = RequirementUtils.getRequirementModel(domain);
             if (resource != null)
             {
@@ -204,17 +212,40 @@ public class RequirementPropertySection extends AbstractPropertySection
                     currentViewer.setLabelProvider(new RequirementPropertyTreeLabelProvider(RequirementUtils.getAdapterFactory()));
                     currentViewer.setContentProvider(new RequirementPropertyTreeContentProvider(RequirementUtils.getAdapterFactory()));
                 }
-                HierarchicalElement hierarchicalElement = RequirementUtils.getHierarchicalElementFor(eObject);
+                HierarchicalElement hierarchicalElement = RequirementUtils.getHierarchicalElementFor(newEObject);
                 if (hierarchicalElement != null)
-                {  
+                {
                     currentViewer.setInput(hierarchicalElement.getRequirement());
                 }
                 else
-                {           
+                {
                     currentViewer.setInput(null);
                 }
             }
-        }        
+        }
+    }
+
+    /**
+     * Resolve semantic element
+     * 
+     * @param object the object to resolve
+     * @return <code>null</code> or the semantic element associated to the specified object
+     */
+    private EObject resolveSemanticObject(Object object)
+    {
+        if (object instanceof EObject)
+        {
+            return (EObject) object;
+        }
+        else if (object instanceof IAdaptable)
+        {
+            IAdaptable adaptable = (IAdaptable) object;
+            if (adaptable.getAdapter(EObject.class) != null)
+            {
+                return (EObject) adaptable.getAdapter(EObject.class);
+            }
+        }
+        return null;
     }
 
     /**
@@ -224,10 +255,10 @@ public class RequirementPropertySection extends AbstractPropertySection
     public void aboutToBeShown()
     {
         super.aboutToBeShown();
-        
+
         RequirementUtils.fireIsSectionEnabledVariableChanged(true);
     }
-    
+
     /**
      * @see org.eclipse.ui.views.properties.tabbed.AbstractPropertySection#aboutToBeHidden()
      */
@@ -235,10 +266,10 @@ public class RequirementPropertySection extends AbstractPropertySection
     public void aboutToBeHidden()
     {
         super.aboutToBeHidden();
-        
+
         RequirementUtils.fireIsSectionEnabledVariableChanged(false);
     }
-    
+
     /**
      * Listener to refresh the viewer when the model is modified from the current requirement view
      */
@@ -266,7 +297,7 @@ public class RequirementPropertySection extends AbstractPropertySection
         }
         else
         {
-            currentViewer.refresh(updateLabel);         
+            currentViewer.refresh(updateLabel);
         }
     }
 
@@ -276,7 +307,7 @@ public class RequirementPropertySection extends AbstractPropertySection
      * @param updateLabel : true if the label is update
      */
     private void syncRefreshViewer(final boolean updateLabel)
-    {            
+    {
         currentViewer.getControl().getDisplay().syncExec(new Runnable()
         {
             public void run()
@@ -310,7 +341,7 @@ public class RequirementPropertySection extends AbstractPropertySection
     public ColumnViewer getViewer()
     {
         return currentViewer;
-    }    
+    }
 
     /**
      * @return the parent composite
@@ -318,5 +349,14 @@ public class RequirementPropertySection extends AbstractPropertySection
     public Composite getParentCompo()
     {
         return parentCompo;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean select(Object toTest)
+    {
+        EObject eObjectToTest = resolveSemanticObject(toTest);
+        return eObjectToTest != null;
     }
 }

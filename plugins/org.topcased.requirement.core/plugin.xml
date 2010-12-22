@@ -9,19 +9,7 @@
    <extension-point id="requirementCountingAlgorithm" name="Extension point to implement the counting algorithm of requirements" schema="schema/requirementCountingAlgorithm.exsd"/>
    <extension-point id="upstreamstyles" name="Upstream Requirement Styles" schema="schema/upstreamstyles.exsd"/>
    <extension-point id="mergeRequirementProcessor" name="Merge Requirement Processor" schema="schema/mergeRequirementProcessor.exsd"/>
-   <extension
-         point="org.eclipse.core.runtime.adapters">
-      <factory
-            adaptableType="org.topcased.modeler.editor.Modeler"
-            class="org.topcased.requirement.core.views.RequirementAdapterFactory">
-         <adapter
-               type="org.topcased.requirement.core.views.upstream.IUpstreamRequirementPage">
-         </adapter>
-         <adapter
-               type="org.topcased.requirement.core.views.current.ICurrentRequirementPage">
-         </adapter>
-      </factory>
-   </extension>
+   <extension-point id="supportingEditors" name="Editors supporting the requirements" schema="schema/supportingEditors.exsd"/>
    <extension
          point="org.eclipse.core.runtime.preferences">
       <initializer
@@ -36,10 +24,10 @@
          <activeWhen>
             <with
                   variable="activeEditor">
-               <instanceof
-                     value="org.topcased.modeler.editor.Modeler">
-               </instanceof>
-            </with>
+               <test
+                     property="org.topcased.requirement.core.activeEditorEnablesRequirements">
+               </test>
+            </with>	
          </activeWhen>
       </handler>
       <handler
@@ -313,7 +301,7 @@
                      </instanceof>
                      <and>
                         <instanceof
-                              value="org.topcased.modeler.edit.IModelElementEditPart">
+                              value="org.eclipse.gef.EditPart">
                         </instanceof>
                         <test
                               property="org.topcased.requirement.core.canCreateRequirement">
@@ -341,7 +329,7 @@
                      </instanceof>
                      <and>
                         <instanceof
-                              value="org.topcased.modeler.edit.IModelElementEditPart">
+                              value="org.eclipse.gef.EditPart">
                         </instanceof>
                         <test
                               property="org.topcased.requirement.core.canCreateRequirement">
@@ -554,7 +542,7 @@
                            ifEmpty="false">
                         <and>
                            <instanceof
-                                 value="org.topcased.modeler.edit.IModelElementEditPart">
+                                 value="org.eclipse.gef.EditPart">
                            </instanceof>
                            <test
                                  property="org.topcased.requirement.core.canCreateRequirement">
@@ -584,7 +572,7 @@
                            ifEmpty="false">
                         <and>
                            <instanceof
-                                 value="org.topcased.modeler.edit.IModelElementEditPart">
+                                 value="org.eclipse.gef.EditPart">
                            </instanceof>
                            <test
                                  property="org.topcased.requirement.core.canCreateRequirement">
@@ -1802,46 +1790,9 @@
    <extension
          point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
       <propertyContributor
-            contributorId="org.topcased.modeler.editor.Modeler"
-            labelProvider="org.topcased.modeler.editor.properties.ModelerLabelProvider"
-            typeMapper="org.topcased.modeler.editor.properties.ModelerTypeMapper">
-         <propertyCategory
-               category="requirement"></propertyCategory>
-      </propertyContributor>
-   </extension>
-   <extension
-         point="org.eclipse.ui.views.properties.tabbed.propertyTabs">
-      <propertyTabs
-            contributorId="org.topcased.modeler.editor.Modeler">
-         <propertyTab
-               afterTab="org.topcased.requirement.core.advancedTab"
-               category="requirement"
-               id="org.topcased.requirement.core.requirementTab"
-               image="icons/current.gif"
-               label="Requirement">
-         </propertyTab>
-      </propertyTabs>
-   </extension>
-   <extension
-         point="org.eclipse.ui.views.properties.tabbed.propertySections">
-      <propertySections
-            contributorId="org.topcased.modeler.editor.Modeler">
-         <propertySection
-               class="org.topcased.requirement.core.properties.sections.RequirementPropertySection"
-               id="org.topcased.requirement.core.properties.sections.RequirementSection"
-               tab="org.topcased.requirement.core.requirementTab">
-            <input
-                  type="org.eclipse.emf.ecore.EObject">
-            </input>
-         </propertySection>
-      </propertySections>
-   </extension>
-   <extension
-         point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
-      <propertyContributor
             contributorId="org.topcased.requirement.core.contributor"
             labelProvider="org.topcased.requirement.core.providers.RequirementModelerLabelProvider"
-            typeMapper="org.topcased.modeler.editor.properties.ModelerTypeMapper">
+            typeMapper="org.topcased.tabbedproperties.TabbedPropertiesTypeMapper">
          <propertyCategory
                category="model">
          </propertyCategory>
@@ -1987,43 +1938,6 @@
       </propertySections>         
    </extension>
    <extension
-         point="org.topcased.modeler.duplicationAdapter">
-      <adapter
-            class="org.topcased.requirement.core.listeners.RequirementDuplicationAdapter"
-            metamodel="http://www.topcased.org/SAM/1.3">
-      </adapter>
-   </extension>
-   <extension
-         point="org.topcased.modeler.commandsStackListeners">
-      <command
-            commandStackListener="org.topcased.requirement.core.resolvers.DeleteCommandResolver">
-      </command>
-      <command
-            commandStackListener="org.topcased.requirement.core.resolvers.CutCommandResolver">
-      </command>
-      <command
-            commandStackListener="org.topcased.requirement.core.resolvers.PasteCommandResolver">
-      </command>
-      <command
-            commandStackListener="org.topcased.requirement.core.resolvers.CopyCommandResolver">
-      </command>
-      <command
-            commandStackListener="org.topcased.requirement.core.resolvers.RenameCommandResolver">
-      </command>
-      <command
-            commandStackListener="org.topcased.requirement.core.resolvers.DragAndDropCommandResolver">
-      </command>
-      <command
-            commandStackListener="org.topcased.requirement.core.resolvers.SetCommandResolver">
-      </command>
-      <command
-            commandStackListener="org.topcased.requirement.core.resolvers.CreateCurrentReqCommandResolver">
-      </command>
-      <command
-            commandStackListener="org.topcased.requirement.core.resolvers.ReplaceNodeContainerCommandResolver">
-      </command>
-   </extension>
-   <extension
          point="org.topcased.requirement.core.requirementCountingAlgorithm">
       <algorithm
             class="org.topcased.requirement.core.extensions.DefaultRequirementCountingAlgorithm"
@@ -2064,7 +1978,7 @@
             id="org.topcased.requirement.core.testers.CanCreateRequirementPropertyTester"
             namespace="org.topcased.requirement.core"
             properties="canCreateRequirement"
-            type="org.topcased.modeler.edit.IModelElementEditPart">
+            type="org.eclipse.gef.EditPart">
       </propertyTester>
       <propertyTester
             class="org.topcased.requirement.core.testers.IsImpactedPropertyTester"
@@ -2073,19 +1987,13 @@
             properties="isImpacted"
             type="org.topcased.requirement.IdentifiedElement">
       </propertyTester>
-   </extension>
-   <extension
-         point="org.topcased.modeler.actionPrecondition">
-      <precondition
-            action="Delete"
-            checker="org.topcased.requirement.core.actions.preconditions.DeleteConfirmationChecker"
-            priority="Low">
-      </precondition>
-      <precondition
-            action="DeleteModel"
-            checker="org.topcased.requirement.core.actions.preconditions.DeleteConfirmationChecker"
-            priority="Low">
-      </precondition>
+      <propertyTester
+            class="org.topcased.requirement.core.testers.EnablesRequirementsPropertyTester"
+            id="org.topcased.requirement.core.testers.EnablesRequirementsPropertyTest"
+            namespace="org.topcased.requirement.core"
+            properties="activeEditorEnablesRequirements"
+            type="org.eclipse.ui.part.EditorPart">
+      </propertyTester>
    </extension>
    <extension
          point="org.topcased.requirement.core.upstreamstyles">

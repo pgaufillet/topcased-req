@@ -15,8 +15,11 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.emf.common.command.CommandStack;
-import org.topcased.modeler.editor.Modeler;
-import org.topcased.modeler.utils.Utils;
+import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.ui.IEditorPart;
+import org.topcased.requirement.core.extensions.IEditorServices;
+import org.topcased.requirement.core.extensions.SupportingEditorsManager;
+import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
  * This handler perform a very simple redo only for the key binding CTRL+Y.
@@ -31,10 +34,12 @@ public class RedoHandler extends AbstractHandler
      */
     public Object execute(ExecutionEvent event) throws ExecutionException
     {
-        Modeler modeler = Utils.getCurrentModeler();
-        if (modeler != null)
+        IEditorPart editor = RequirementUtils.getCurrentEditor();
+        IEditorServices services = SupportingEditorsManager.getInstance().getServices(editor);
+        if (services != null)
         {
-            CommandStack stack = modeler.getEditingDomain().getCommandStack();
+            EditingDomain domain = services.getEditingDomain(editor);
+            CommandStack stack = domain.getCommandStack();
             if (stack.getRedoCommand() != null)
             {
                 stack.redo();
@@ -42,5 +47,5 @@ public class RedoHandler extends AbstractHandler
         }
         return null;
     }
-   
+
 }

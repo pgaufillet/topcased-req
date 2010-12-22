@@ -33,6 +33,7 @@ import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.preferences.RequirementPreferenceConstants;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
+@SuppressWarnings("restriction")
 public class CurrentReqDecorator implements IDecorator
 {
 
@@ -45,8 +46,8 @@ public class CurrentReqDecorator implements IDecorator
 
     /** the decoration being displayed */
     private IDecoration decoration;
-    
-    private boolean displayDecorator ;
+
+    private boolean displayDecorator;
 
     static
     {
@@ -198,18 +199,18 @@ public class CurrentReqDecorator implements IDecorator
     protected boolean isDerived()
     {
         Collection<Requirement> currents = getCurrents();
-        boolean found = false ; 
+        boolean found = false;
         for (Requirement r : currents)
         {
             for (Attribute a : r.getAttribute())
             {
                 if (a instanceof AttributeLink)
                 {
-                    found = true ;
+                    found = true;
                     AttributeLink link = (AttributeLink) a;
                     if (link.getValue() == null)
                     {
-                        return true ;
+                        return true;
                     }
                 }
             }

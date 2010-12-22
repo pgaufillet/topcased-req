@@ -18,8 +18,8 @@ import java.util.List;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.RemoveCommand;
+import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
-import org.topcased.modeler.editor.TopcasedAdapterFactoryEditingDomain;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.utils.RequirementUtils;
@@ -62,7 +62,7 @@ public class RemoveHierarchicalElementCommand extends CompoundCommand
     public RemoveHierarchicalElementCommand(EObject obj)
     {
         super(Messages.getString("RemoveHierarchicalElementCommand.0")); //$NON-NLS-1$
-        editingDomain = TopcasedAdapterFactoryEditingDomain.getEditingDomainFor(obj);
+        editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(obj);
         selected = new ArrayList<EObject>();
         selected.add(obj);
         initializeCommands();

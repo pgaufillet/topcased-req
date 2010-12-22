@@ -21,14 +21,17 @@ import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
-import org.topcased.modeler.utils.Utils;
+import org.eclipse.ui.IEditorPart;
 import org.topcased.requirement.Attribute;
 import org.topcased.requirement.AttributeAllocate;
 import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.Requirement;
 import org.topcased.requirement.RequirementPackage;
+import org.topcased.requirement.core.extensions.IEditorServices;
+import org.topcased.requirement.core.extensions.SupportingEditorsManager;
 import org.topcased.requirement.core.internal.Messages;
+import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
  * The "Unallocate" handler for a hierarchical element or a current requirement
@@ -41,20 +44,22 @@ public class UnallocateHandler extends AbstractHandler
 {
     /** A single EMF compound command */
     private CompoundCommand compoundCmd;
-    
-    private EditingDomain  editingDomain;
+
+    private EditingDomain editingDomain;
 
     /**
      * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
      */
     public Object execute(ExecutionEvent event) throws ExecutionException
     {
-        editingDomain = Utils.getCurrentModeler().getEditingDomain();
-        
-        if (((EvaluationContext)event.getApplicationContext()).getDefaultVariable() instanceof List<?>)
+        IEditorPart editor = RequirementUtils.getCurrentEditor();
+        IEditorServices services = SupportingEditorsManager.getInstance().getServices(editor);
+
+        if (services != null && ((EvaluationContext) event.getApplicationContext()).getDefaultVariable() instanceof List< ? >)
         {
-            //Get the current selection
-            List<?> elements = ((List<?>)((EvaluationContext)event.getApplicationContext()).getDefaultVariable());
+            editingDomain = services.getEditingDomain(editor);
+            // Get the current selection
+            List< ? > elements = ((List< ? >) ((EvaluationContext) event.getApplicationContext()).getDefaultVariable());
             compoundCmd = new CompoundCommand(Messages.getString("UnallocateHandler.0")); //$NON-NLS-1$
             for (Object currObject : elements)
             {
@@ -74,7 +79,7 @@ public class UnallocateHandler extends AbstractHandler
         }
         return null;
     }
-    
+
     /**
      * Unallocates a current requirement.
      * 

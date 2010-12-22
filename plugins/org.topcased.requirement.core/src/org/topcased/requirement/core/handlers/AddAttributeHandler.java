@@ -24,14 +24,17 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.topcased.modeler.utils.Utils;
+import org.eclipse.ui.IEditorPart;
 import org.topcased.requirement.Attribute;
 import org.topcased.requirement.AttributeLink;
 import org.topcased.requirement.ObjectAttribute;
 import org.topcased.requirement.Requirement;
 import org.topcased.requirement.RequirementPackage;
+import org.topcased.requirement.core.extensions.IEditorServices;
+import org.topcased.requirement.core.extensions.SupportingEditorsManager;
 import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.utils.RequirementHelper;
+import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.current.CurrentPage;
 
 /**
@@ -42,7 +45,7 @@ import org.topcased.requirement.core.views.current.CurrentPage;
  */
 public class AddAttributeHandler extends AbstractHandler
 {
-    
+
     private List<EObject> toSelect;
 
     /**
@@ -51,13 +54,15 @@ public class AddAttributeHandler extends AbstractHandler
     public Object execute(ExecutionEvent event) throws ExecutionException
     {
         toSelect = new ArrayList<EObject>();
-        EditingDomain  editingDomain = Utils.getCurrentModeler().getEditingDomain();
+        IEditorPart editor = RequirementUtils.getCurrentEditor();
+        IEditorServices services = SupportingEditorsManager.getInstance().getServices(editor);
         CurrentPage page = RequirementHelper.INSTANCE.getCurrentPage();
-        
-        if (((EvaluationContext)event.getApplicationContext()).getDefaultVariable() instanceof List<?>)
+
+        if (services != null && ((EvaluationContext) event.getApplicationContext()).getDefaultVariable() instanceof List< ? >)
         {
-            //Get the current selection
-            List<?> elements = ((List<?>)((EvaluationContext)event.getApplicationContext()).getDefaultVariable());
+            EditingDomain editingDomain = services.getEditingDomain(editor);
+            // Get the current selection
+            List< ? > elements = ((List< ? >) ((EvaluationContext) event.getApplicationContext()).getDefaultVariable());
             CompoundCommand compoundCmd = new CompoundCommand(Messages.getString("AddAttributeHandler.1")); //$NON-NLS-1$
             for (Object currObject : elements)
             {
@@ -66,7 +71,7 @@ public class AddAttributeHandler extends AbstractHandler
                 {
                     parent = ((Attribute) currObject).eContainer();
                     int newIndex = calculateIndex(parent, (EObject) currObject);
-    
+
                     Attribute toDuplicate = null;
                     if (currObject instanceof AttributeLink)
                     {
@@ -91,7 +96,7 @@ public class AddAttributeHandler extends AbstractHandler
         }
         return null;
     }
-    
+
     /**
      * Deduces the index where the new attribute must be inserted.
      * 

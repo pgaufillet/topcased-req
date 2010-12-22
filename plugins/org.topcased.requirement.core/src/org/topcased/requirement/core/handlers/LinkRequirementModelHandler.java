@@ -14,16 +14,18 @@ package org.topcased.requirement.core.handlers;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.topcased.modeler.editor.Modeler;
 import org.topcased.requirement.RequirementProject;
+import org.topcased.requirement.core.extensions.IEditorServices;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.wizards.NewRequirementModelWizard;
 
@@ -44,13 +46,13 @@ public class LinkRequirementModelHandler extends AbstractHandler
     {
         NewRequirementModelWizard wizard = null;
         IEditorPart part = HandlerUtil.getActiveEditor(event);
-        if (part instanceof Modeler)
+        IEditorServices services = RequirementUtils.getSpecificServices(part);
+        if (services != null)
         {
-            Modeler modeler = (Modeler) part;
-            Resource requirementResource = RequirementUtils.getRequirementModel(modeler.getEditingDomain());
+            Resource requirementResource = services.getRequirementsResource(part);
 
             if (requirementResource != null && !requirementResource.getContents().isEmpty())
-            {                             
+            {
                 RequirementProject requirementProject = (RequirementProject) requirementResource.getContents().get(0);
                 // Create a new requirement wizard with already attached requirement model informations
                 wizard = new NewRequirementModelWizard(requirementProject.getIdentifier(), requirementProject.getShortDescription());
@@ -62,11 +64,16 @@ public class LinkRequirementModelHandler extends AbstractHandler
             }
 
             StructuredSelection selection = null;
-            if (Modeler.getCurrentIFile() != null)
+            if (part.getEditorInput() instanceof IFileEditorInput)
             {
-                selection = new StructuredSelection(Modeler.getCurrentIFile());
+                IFile currentFile = ((IFileEditorInput) part.getEditorInput()).getFile();
+                selection = new StructuredSelection(currentFile);
             }
-            wizard.init(PlatformUI.getWorkbench(),selection) ;
+            // if (Modeler.getCurrentIFile() != null)
+            // {
+            // selection = new StructuredSelection(Modeler.getCurrentIFile());
+            // }
+            wizard.init(PlatformUI.getWorkbench(), selection);
 
             // launch the wizard allowing to perform the operations
             WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wizard)

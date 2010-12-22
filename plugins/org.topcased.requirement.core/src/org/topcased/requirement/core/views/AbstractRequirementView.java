@@ -15,14 +15,19 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.domain.IEditingDomainProvider;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.IContributedContentsView;
 import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.part.IPageBookViewPage;
@@ -31,11 +36,13 @@ import org.eclipse.ui.part.PageBookView;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
-import org.topcased.modeler.editor.Modeler;
-import org.topcased.requirement.core.extensions.DefaultAttachmentPolicy;
+import org.topcased.requirement.core.extensions.IEditorServices;
 import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
 import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
+import org.topcased.requirement.core.extensions.SupportingEditorsManager;
+import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
+import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
  * Defines the abstract requirement view.<br>
@@ -125,9 +132,22 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
     protected PageRec doCreatePage(IWorkbenchPart part)
     {
         AbstractRequirementPage page = (AbstractRequirementPage) part.getAdapter(getAdapterType());
-        if (page != null && part != null && part instanceof IEditingDomainProvider)
+        IEditingDomainProvider provider;
+        if (part instanceof IEditingDomainProvider)
         {
-            page.setEditingDomain(((IEditingDomainProvider) part).getEditingDomain());
+            provider = (IEditingDomainProvider) part;
+        }
+        else if (part.getAdapter(IEditingDomainProvider.class) instanceof IEditingDomainProvider)
+        {
+            provider = (IEditingDomainProvider) part.getAdapter(IEditingDomainProvider.class);
+        }
+        else
+        {
+            provider = (IEditingDomainProvider) RequirementUtils.getCurrentEditor().getAdapter(IEditingDomainProvider.class);
+        }
+        if (page != null && part != null && provider != null)
+        {
+            page.setEditingDomain(provider.getEditingDomain());
             initPage(page);
             page.createControl(getPageBook());
             getBootstrapPart();
@@ -184,20 +204,25 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
      */
     protected void loadPage(IWorkbenchPart part, IPage page)
     {
-        if (part instanceof Modeler)
+        if (part instanceof IEditorPart)
         {
-            Modeler modeler = (Modeler) part;
-            // Bug 1970 : in case where the model is exported and contain no diagram. See
-            if (modeler.getActiveDiagram() != null)
+            IEditorServices services = SupportingEditorsManager.getInstance().getServices((IEditorPart) part);
+            if (services != null)
             {
-                IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(modeler.getEditingDomain());
-                if (policy != null && policy.getLinkedTargetModel(modeler.getEditingDomain().getResourceSet()) != null)
+                EditingDomain domain = services.getEditingDomain((IEditorPart) part);
+                if (domain != null)
                 {
-                    updatePage(page);
-                }
-                else if (DefaultAttachmentPolicy.getInstance().getLinkedTargetModel(modeler.getEditingDomain().getResourceSet()) != null)
-                {
-                    updatePage(page);
+                    IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(domain);
+                    if (policy != null && policy.getLinkedTargetModel(domain.getResourceSet()) != null)
+                    {
+                        updatePage(page);
+                    }
+                    else
+                    {
+                        String extension = domain.getResourceSet().getResources().get(0).getURI().fileExtension();
+                        String msg = NLS.bind(Messages.getString("ModelAttachmentPolicyManager.0"), extension);
+                        RequirementCorePlugin.log(msg, Status.ERROR, null);//$NON-NLS-1$
+                    }
                 }
             }
         }
@@ -242,23 +267,31 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
      */
     public static IPreferenceStore getPreferenceStore()
     {
-        IFile file = Modeler.getCurrentIFile();
-        if (file != null)
+        if (RequirementUtils.getCurrentEditor() != null)
         {
-            IProject project = file.getProject();
-            if (project != null)
+            IEditorInput input = RequirementUtils.getCurrentEditor().getEditorInput();
+            IFile file = null;
+            if (input instanceof FileEditorInput)
             {
-                Preferences root = Platform.getPreferencesService().getRootNode();
-                try
+                file = ((FileEditorInput) input).getFile();
+            }
+            if (file != null)
+            {
+                IProject project = file.getProject();
+                if (project != null)
                 {
-                    if (root.node(ProjectScope.SCOPE).node(project.getName()).nodeExists(RequirementCorePlugin.getId()))
+                    Preferences root = Platform.getPreferencesService().getRootNode();
+                    try
                     {
-                        return new ScopedPreferenceStore(new ProjectScope(project), RequirementCorePlugin.getId());
+                        if (root.node(ProjectScope.SCOPE).node(project.getName()).nodeExists(RequirementCorePlugin.getId()))
+                        {
+                            return new ScopedPreferenceStore(new ProjectScope(project), RequirementCorePlugin.getId());
+                        }
                     }
-                }
-                catch (BackingStoreException e)
-                {
-                    RequirementCorePlugin.log(e);
+                    catch (BackingStoreException e)
+                    {
+                        RequirementCorePlugin.log(e);
+                    }
                 }
             }
         }

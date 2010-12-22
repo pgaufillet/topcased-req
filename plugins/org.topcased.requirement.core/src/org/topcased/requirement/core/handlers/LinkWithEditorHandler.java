@@ -20,6 +20,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.State;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gef.EditPart;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -27,13 +28,11 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.topcased.modeler.edit.IModelElementEditPart;
-import org.topcased.modeler.editor.Modeler;
 import org.topcased.requirement.HierarchicalElement;
+import org.topcased.requirement.core.extensions.IEditorServices;
+import org.topcased.requirement.core.extensions.SupportingEditorsManager;
 import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.current.CurrentPage;
@@ -53,6 +52,16 @@ public class LinkWithEditorHandler extends AbstractHandlerWithState implements I
     private boolean isDispatching = false;
 
     /**
+     * Set when selection is in modification
+     * 
+     * @param isDispatching true if selection is in modification, false if modification ends
+     */
+    public void setDispatching(boolean isDispatching)
+    {
+        this.isDispatching = isDispatching;
+    }
+
+    /**
      * Adds a selection listener on the page when the action is checked
      */
     private void addSelectionListener()
@@ -65,6 +74,7 @@ public class LinkWithEditorHandler extends AbstractHandlerWithState implements I
      */
     private void addSelectionChangedListener()
     {
+        page.setLinkWithEditorHandler(this);
         page.getViewer().addSelectionChangedListener(this);
     }
 
@@ -95,7 +105,7 @@ public class LinkWithEditorHandler extends AbstractHandlerWithState implements I
             return;
         }
 
-        if (part instanceof Modeler)
+        if (part instanceof IEditorPart && SupportingEditorsManager.getInstance().getKey((IEditorPart) part) != null)
         {
             // synchronize the selection in the Current Page
             syncSelection(selection);
@@ -131,10 +141,12 @@ public class LinkWithEditorHandler extends AbstractHandlerWithState implements I
             StructuredSelection selectionDone = (StructuredSelection) selection;
             for (Object objInSelection : selectionDone.toArray())
             {
+                IEditorPart editor = RequirementUtils.getCurrentEditor();
+                IEditorServices services = SupportingEditorsManager.getInstance().getServices(editor);
                 EObject selectedElt = null;
-                if (objInSelection instanceof IModelElementEditPart)
+                if (services != null && objInSelection instanceof EditPart)
                 {
-                    selectedElt = ((IModelElementEditPart) objInSelection).getEObject();
+                    selectedElt = services.getEObject((EditPart) objInSelection);
                 }
                 if (selectedElt != null && RequirementUtils.getHierarchicalElementFor(selectedElt) != null)
                 {
@@ -158,41 +170,25 @@ public class LinkWithEditorHandler extends AbstractHandlerWithState implements I
         isDispatching = true;
         IStructuredSelection selection = (IStructuredSelection) page.getViewer().getSelection();
         List<EObject> list = new ArrayList<EObject>(selection.size());
-        Modeler modeler = (Modeler) getActiveModelerEditor();
-        for (Iterator<?> i = selection.iterator() ; i.hasNext() ; )
+        IEditorPart editor = RequirementUtils.getCurrentEditor();
+        IEditorServices services = SupportingEditorsManager.getInstance().getServices(editor);
+        if (services != null)
         {
-            Object first = i.next();
-            if (first instanceof HierarchicalElement && getActiveModelerEditor() instanceof Modeler)
+            for (Iterator< ? > i = selection.iterator(); i.hasNext();)
             {
-                HierarchicalElement hierarchicalElement = (HierarchicalElement) first;
-                list.add(hierarchicalElement.getElement());
+                Object first = i.next();
+                if (first instanceof HierarchicalElement)
+                {
+                    HierarchicalElement hierarchicalElement = (HierarchicalElement) first;
+                    list.add(hierarchicalElement.getElement());
+                }
+            }
+            if (!list.isEmpty())
+            {
+                services.gotoEObjects(editor, list, true);
             }
         }
-        if (!list.isEmpty())
-        {
-            modeler.gotoEObjects(list,true);
-        }
         isDispatching = false;
-    }
-
-    /**
-     * Gets the active page.
-     * 
-     * @return the active modeler page.
-     */
-    private IWorkbenchPage getActiveModelerPage()
-    {
-        return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-    }
-
-    /**
-     * Gets the active modeler editor.
-     * 
-     * @return the active modeler editor
-     */
-    private IEditorPart getActiveModelerEditor()
-    {
-        return getActiveModelerPage().getActiveEditor();
     }
 
     /**
@@ -222,6 +218,22 @@ public class LinkWithEditorHandler extends AbstractHandlerWithState implements I
             {
                 removeSelectionListener();
                 removeSelectionChangedListener();
+            }
+        }
+    }
+
+    @Override
+    public void setEnabled(Object evaluationContext)
+    {
+        super.setEnabled(evaluationContext);
+        if (page == null)
+        {
+            // if handler is enabled, at startup, synchronize
+            page = RequirementHelper.INSTANCE.getCurrentPage();
+            if (page != null && isEnabled())
+            {
+                addSelectionListener();
+                addSelectionChangedListener();
             }
         }
     }

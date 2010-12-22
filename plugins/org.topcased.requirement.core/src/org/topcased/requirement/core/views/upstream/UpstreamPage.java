@@ -42,12 +42,11 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.RegistryToggleState;
-import org.topcased.modeler.editor.Modeler;
-import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.Attribute;
 import org.topcased.requirement.AttributeLink;
 import org.topcased.requirement.HierarchicalElement;
@@ -55,6 +54,8 @@ import org.topcased.requirement.Requirement;
 import org.topcased.requirement.RequirementPackage;
 import org.topcased.requirement.core.dnd.DragSourceUpstreamAdapter;
 import org.topcased.requirement.core.dnd.RequirementTransfer;
+import org.topcased.requirement.core.extensions.IEditorServices;
+import org.topcased.requirement.core.extensions.SupportingEditorsManager;
 import org.topcased.requirement.core.filters.CurrentViewFilterFromUpstreamSelection;
 import org.topcased.requirement.core.filters.RequirementFilter;
 import org.topcased.requirement.core.handlers.ICommandConstants;
@@ -169,7 +170,7 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
         {
             public void menuAboutToShow(IMenuManager manager)
             {
-                if (Utils.getCurrentModeler() != null)
+                if (RequirementUtils.getCurrentEditor() != null)
                 {
                     // add a first separator to surround undo & redo actions
                     Separator first = new Separator(firstPopupMenuSeparator);
@@ -177,14 +178,14 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
                     manager.add(first);
 
                     // using gef undo stack action because emf undo/redo got label problems.
-                    UndoAction undoAction = new UndoAction(Utils.getCurrentModeler().getSite().getPart());
+                    UndoAction undoAction = new UndoAction(RequirementUtils.getCurrentEditor().getSite().getPart());
                     undoAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_UNDO));
                     undoAction.update();
                     undoAction.setActionDefinitionId(ICommandConstants.UNDO_ID);
                     manager.add(undoAction);
 
                     // using gef redo stack actions because emf undo/redo got label problems.
-                    RedoAction redoAction = new RedoAction(Utils.getCurrentModeler().getSite().getPart());
+                    RedoAction redoAction = new RedoAction(RequirementUtils.getCurrentEditor().getSite().getPart());
                     redoAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_REDO));
                     redoAction.update();
                     redoAction.setActionDefinitionId(ICommandConstants.REDO_ID);
@@ -395,10 +396,11 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
             else if (object instanceof Requirement)
             {
                 updateReferencedUpstream((Requirement) object);
-                Modeler modeler = Utils.getCurrentModeler();
-                if (modeler != null)
+                IEditorPart editor = RequirementUtils.getCurrentEditor();
+                IEditorServices services = SupportingEditorsManager.getInstance().getServices(editor);
+                if (editor != null && services != null)
                 {
-                    modeler.refreshActiveDiagram();
+                    services.refreshActiveDiagram(editor);
                 }
             }
             else if (object instanceof HierarchicalElement)

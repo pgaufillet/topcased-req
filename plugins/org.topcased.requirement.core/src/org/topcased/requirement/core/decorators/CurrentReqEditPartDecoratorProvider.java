@@ -17,8 +17,10 @@ import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.CreateDecoratorsOperation;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorProvider;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget;
-import org.topcased.modeler.edit.IModelElementEditPart;
+import org.eclipse.ui.IEditorPart;
 import org.topcased.requirement.HierarchicalElement;
+import org.topcased.requirement.core.extensions.IEditorServices;
+import org.topcased.requirement.core.extensions.SupportingEditorsManager;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
 public class CurrentReqEditPartDecoratorProvider extends AbstractProvider implements IDecoratorProvider
@@ -26,18 +28,23 @@ public class CurrentReqEditPartDecoratorProvider extends AbstractProvider implem
 
     /** The key used for the mood decoration */
     public static final String CURRENT = "CurrentReqEditPart_Decorator"; //$NON-NLS-1$
-    
+
     public boolean provides(IOperation operation)
     {
         if (operation instanceof CreateDecoratorsOperation)
         {
             IDecoratorTarget decoratorTarget = ((CreateDecoratorsOperation) operation).getDecoratorTarget();
             GraphicalEditPart editPart = (GraphicalEditPart) decoratorTarget.getAdapter(GraphicalEditPart.class);
-            if (editPart instanceof IModelElementEditPart)
+            IEditorPart editor = RequirementUtils.getCurrentEditor();
+            IEditorServices services = SupportingEditorsManager.getInstance().getServices(editor);
+            if (services != null)
             {
-                EObject eobject = ((IModelElementEditPart)editPart).getEObject();
-                HierarchicalElement currents = RequirementUtils.getHierarchicalElementFor(eobject);
-                return currents != null && !currents.getRequirement().isEmpty();
+                EObject eobject = services.getEObject(editPart);
+                if (eobject != null)
+                {
+                    HierarchicalElement currents = RequirementUtils.getHierarchicalElementFor(eobject);
+                    return currents != null && !currents.getRequirement().isEmpty();
+                }
             }
         }
         return false;

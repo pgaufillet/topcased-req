@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPart;
@@ -28,7 +29,6 @@ import org.eclipse.ui.handlers.RegistryToggleState;
 import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.part.IPageBookViewPage;
 import org.topcased.modeler.documentation.IDocPage;
-import org.topcased.modeler.editor.Modeler;
 import org.topcased.requirement.ObjectAttribute;
 import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.core.documentation.upstream.UpstreamDescPage;
@@ -114,7 +114,7 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
             IViewReference ref = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findViewReference(UpstreamRequirementView.VIEW_ID);
             if (ref != null)
             {
-                //We need to get the view without restoring it (prevent from the recursive view creation warning)
+                // We need to get the view without restoring it (prevent from the recursive view creation warning)
                 return ref.getView(false);
             }
         }
@@ -162,7 +162,7 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
     {
         super.partClosed(part);
 
-        if (part instanceof Modeler)
+        if (part instanceof IEditorPart)
         {
             // We need to constantly set the value of the hasRequirement variable to synchronize toolbar actions
             // enablement with the requirement model state

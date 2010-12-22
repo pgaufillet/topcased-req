@@ -14,6 +14,7 @@ import java.util.Collection;
 
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.dialogs.Dialog;
@@ -24,7 +25,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Display;
 import org.topcased.facilities.dialogs.ChooseDialog;
-import org.topcased.modeler.editor.TopcasedAdapterFactoryEditingDomain;
 import org.topcased.requirement.ObjectAttribute;
 import org.topcased.requirement.RequirementPackage;
 import org.topcased.requirement.core.providers.AdvancedRequirementLabelProvider;
@@ -75,7 +75,7 @@ public class RequirementDoubleClickListener implements IDoubleClickListener
         if (chooseDialog.open() == Dialog.OK)
         {
             Object theResult = chooseDialog.getResult()[0];
-            EditingDomain domain = TopcasedAdapterFactoryEditingDomain.getEditingDomainFor((ObjectAttribute) firstElement);
+            EditingDomain domain = AdapterFactoryEditingDomain.getEditingDomainFor((ObjectAttribute) firstElement);
             Command cmd = SetCommand.create(domain, firstElement, RequirementPackage.eINSTANCE.getObjectAttribute_Value(), "".equals(theResult) ? null : theResult); //$NON-NLS-1$
             if (cmd.canExecute())
             {

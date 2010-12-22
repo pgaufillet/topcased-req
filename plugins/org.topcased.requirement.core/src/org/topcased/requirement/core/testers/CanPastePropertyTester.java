@@ -12,31 +12,34 @@
 package org.topcased.requirement.core.testers;
 
 import org.eclipse.core.expressions.PropertyTester;
-import org.topcased.modeler.editor.Modeler;
-import org.topcased.modeler.utils.Utils;
+import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.ui.IEditorPart;
+import org.topcased.requirement.core.extensions.IEditorServices;
+import org.topcased.requirement.core.extensions.SupportingEditorsManager;
+import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
- * A Simple property tester to check if there is objects in the clipboard.
- * This property tester is used by the current requirement view to enable or disable paste commands
+ * A Simple property tester to check if there is objects in the clipboard. This property tester is used by the current
+ * requirement view to enable or disable paste commands
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
- *
+ * 
  */
 public class CanPastePropertyTester extends PropertyTester
 {
 
     /**
-     * @see org.eclipse.core.expressions.IPropertyTester#test(java.lang.Object, java.lang.String, java.lang.Object[], java.lang.Object)
+     * @see org.eclipse.core.expressions.IPropertyTester#test(java.lang.Object, java.lang.String, java.lang.Object[],
+     *      java.lang.Object)
      */
     public boolean test(Object receiver, String property, Object[] args, Object expectedValue)
     {
-        Modeler modeler = Utils.getCurrentModeler();
-        if (modeler != null)
+        IEditorPart editor = RequirementUtils.getCurrentEditor();
+        IEditorServices services = SupportingEditorsManager.getInstance().getServices(editor);
+        if (services != null)
         {
-            if (modeler.getEditingDomain().getClipboard() != null)
-            {
-                return true;
-            }
+            EditingDomain domain = services.getEditingDomain(editor);
+            return domain != null && domain.getClipboard() != null;
         }
         return false;
     }

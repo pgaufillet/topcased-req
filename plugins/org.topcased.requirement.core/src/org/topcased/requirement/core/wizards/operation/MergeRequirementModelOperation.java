@@ -10,13 +10,19 @@
  **********************************************************************************************************************/
 package org.topcased.requirement.core.wizards.operation;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.topcased.requirement.RequirementProject;
+import org.topcased.requirement.core.commands.CommandStub;
+import org.topcased.requirement.core.commands.UpdateMonitorCommand;
 import org.topcased.requirement.core.extensions.IRequirementTransformation;
 import org.topcased.requirement.core.extensions.RequirementTransformationManager;
 import org.topcased.requirement.core.internal.Messages;
@@ -55,49 +61,85 @@ public class MergeRequirementModelOperation extends AbstractRequirementModelOper
     }
 
     /**
-     * @see org.eclipse.ui.actions.WorkspaceModifyOperation#execute(org.eclipse.core.runtime.IProgressMonitor)
+     * Get commands to merge requirement models
+     * 
+     * @see AbstractRequirementModelOperation#getCommands(IProgressMonitor)
      */
-    protected void execute(IProgressMonitor monitor)
+    protected List<Command> getCommands(final IProgressMonitor monitor)
     {
-
         if (RequirementResource.FILE_EXTENSION.equals(sourceModelFile.getFileExtension()))
         {
-            monitor.subTask(Messages.getString("MergeRequirementModelOperation.0")); //$NON-NLS-1$
-            // rename the file from the name given in the dialog and temporally copy it next to the target model
-            IPath mergePath = requirementModelFile.getFullPath().addFileExtension(MODEL_TMP);
-            try
+            Command startTaskCmd = UpdateMonitorCommand.getCommand(monitor, 0, Messages.getString("MergeRequirementModelOperation.0"), 0, null); //$NON-NLS-1$
+            final IPath mergePath = requirementModelFile.getFullPath().addFileExtension(MODEL_TMP);
+            Command rename = new CommandStub()
             {
-                sourceModelFile.copy(mergePath.addFileExtension(RequirementResource.FILE_EXTENSION), true, monitor);
-            }
-            catch (CoreException e)
-            {
-                RequirementCorePlugin.log(e);
-            }
-            monitor.worked(1);
+                public void redo()
+                {
+                    // rename the file from the name given in the dialog and temporally copy it next to the target model
+                    try
+                    {
+                        sourceModelFile.copy(mergePath.addFileExtension(RequirementResource.FILE_EXTENSION), true, monitor);
+                    }
+                    catch (CoreException e)
+                    {
+                        RequirementCorePlugin.log(e);
+                    }
+                }
+            };
+            Command worked1Cmd = UpdateMonitorCommand.getCommand(monitor, 1, 0);
 
-            // Merge the existing requirement model
-            mergeRequirementModel(mergePath, monitor);
+            Command merge = new CommandStub()
+            {
+                public void redo()
+                {
+                    // Merge the existing requirement model
+                    mergeRequirementModel(mergePath, monitor);
+                }
+            };
+            return Arrays.asList(startTaskCmd, rename, worked1Cmd, merge);
 
         }
         else
         {
-            monitor.subTask(Messages.getString("MergeRequirementModelOperation.1")); //$NON-NLS-1$
+            Command startTaskCmd = UpdateMonitorCommand.getCommand(monitor, 0, Messages.getString("MergeRequirementModelOperation.1"), 0, null); //$NON-NLS-1$
 
-            IPath mergePath = requirementModelFile.getFullPath().addFileExtension(MODEL_TMP);
-            IFile mergeFile = ResourcesPlugin.getWorkspace().getRoot().getFile(mergePath);
+            final IPath mergePath = requirementModelFile.getFullPath().addFileExtension(MODEL_TMP);
+            final IFile mergeFile = ResourcesPlugin.getWorkspace().getRoot().getFile(mergePath);
 
-            // Get the transformation from the requirementTransformation extension point
-            IRequirementTransformation reqTransfo = RequirementTransformationManager.getInstance().getRequirementTransformation(sourceModelFile.getFileExtension());
-            if (reqTransfo != null)
+            Command transform = new CommandStub()
             {
-                // Process the transformation to create the temporally requirement model
-                reqTransfo.transformation(sourceModelFile, mergeFile);
-            }
-            monitor.worked(1);
+                public void redo()
+                {
+                    // Get the transformation from the requirementTransformation extension point
+                    IRequirementTransformation reqTransfo = RequirementTransformationManager.getInstance().getRequirementTransformation(sourceModelFile.getFileExtension());
+                    if (reqTransfo != null)
+                    {
+                        // Process the transformation to create the temporally requirement model
+                        reqTransfo.transformation(sourceModelFile, mergeFile);
+                    }
+                }
+            };
+            Command worked1Cmd = UpdateMonitorCommand.getCommand(monitor, 1, 0);
 
-            // Merge the existing requirement model
-            mergeRequirementModel(mergePath, monitor);
+            Command merge = new CommandStub()
+            {
+                public void redo()
+                {
+                    // Merge the existing requirement model
+                    mergeRequirementModel(mergePath, monitor);
+                }
+            };
+            return Arrays.asList(startTaskCmd, transform, worked1Cmd, merge);
         }
+    }
+
+    /**
+     * Get the label
+     */
+    public String getLabel()
+    {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     /**
@@ -120,9 +162,6 @@ public class MergeRequirementModelOperation extends AbstractRequirementModelOper
     protected void mergeRequirementModel(IPath mergePath, IProgressMonitor monitor)
     {
         monitor.beginTask(Messages.getString("MergeRequirementModelOperation.2"), 3); //$NON-NLS-1$      
-
-        // Get a resource of the destination file
-        requirementResource = RequirementUtils.getResource(requirementModelFile.getFullPath().addFileExtension(RequirementResource.FILE_EXTENSION));
 
         // Get the resource to update/merge
         Resource requirementResourceMerged = RequirementUtils.getResource(mergePath.addFileExtension(RequirementResource.FILE_EXTENSION));

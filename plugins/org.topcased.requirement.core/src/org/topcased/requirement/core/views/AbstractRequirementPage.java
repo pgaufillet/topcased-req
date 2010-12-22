@@ -13,16 +13,16 @@ package org.topcased.requirement.core.views;
 import org.eclipse.emf.common.ui.viewer.IViewerProvider;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.domain.IEditingDomainProvider;
-import org.eclipse.jface.util.TransferDropTargetListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.Page;
-import org.topcased.modeler.editor.Modeler;
-import org.topcased.modeler.utils.Utils;
-import org.topcased.requirement.core.dnd.RequirementDropListener;
+import org.topcased.requirement.core.extensions.IEditorServices;
+import org.topcased.requirement.core.extensions.SupportingEditorsManager;
+import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
  * Defines an abstract page common to Upstream and Current pages.
@@ -42,8 +42,6 @@ public abstract class AbstractRequirementPage extends Page implements IViewerPro
 
     protected Composite mainComposite;
 
-    private TransferDropTargetListener listener = null;
-
     protected static ISelectionChangedListener upstreamListener = null;
 
     /**
@@ -61,11 +59,11 @@ public abstract class AbstractRequirementPage extends Page implements IViewerPro
      */
     protected void hookListeners()
     {
-        Modeler modeler = Utils.getCurrentModeler();
-        if (modeler != null)
+        IEditorPart editor = RequirementUtils.getCurrentEditor();
+        IEditorServices services = SupportingEditorsManager.getInstance().getServices(editor);
+        if (services != null)
         {
-            listener = new RequirementDropListener(modeler.getGraphicalViewer());
-            modeler.getGraphicalViewer().addDropTargetListener(listener);
+            services.hookRequirementDropListeners(this);
         }
     }
 
@@ -74,10 +72,11 @@ public abstract class AbstractRequirementPage extends Page implements IViewerPro
      */
     protected void unhookListeners()
     {
-        Modeler modeler = Utils.getCurrentModeler();
-        if (modeler != null)
+        IEditorPart editor = RequirementUtils.getCurrentEditor();
+        IEditorServices services = SupportingEditorsManager.getInstance().getServices(editor);
+        if (services != null)
         {
-            modeler.getGraphicalViewer().removeDropTargetListener(listener);
+            services.unhookRequirementDropListeners(this);
         }
     }
 

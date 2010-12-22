@@ -7,12 +7,16 @@
  * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors : Maxime AUDRAIN (CS) - initial API and implementation
+ * Vincent HEMERY (Atos Origin) - extend framework to use regular expressions for extensions
  * 
  *****************************************************************************/
 package org.topcased.requirement.core.extensions;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -44,8 +48,11 @@ public class ModelAttachmentPolicyManager extends AbstractExtensionManager
     /** the shared instance */
     private static ModelAttachmentPolicyManager manager;
 
-    /** Map of the graphical model file extension and the attachement policy for it */
+    /** Map of the graphical model file extension patterns and the attachment policy for it */
     public Map<String, IModelAttachmentPolicy> mapClass;
+
+    /** A cache with the extensions which have already been handled and the matching regular expression to use for it. */
+    public Map<String, String> knownExtensions;
 
     /**
      * Private constructor
@@ -54,6 +61,7 @@ public class ModelAttachmentPolicyManager extends AbstractExtensionManager
     {
         super(RequirementCorePlugin.getId() + "." + MODEL_ATTACHMENT_POLICY_EXTENSION_POINT); //$NON-NLS-1$
         mapClass = new HashMap<String, IModelAttachmentPolicy>();
+        knownExtensions = new HashMap<String, String>();
         readRegistry();
     }
 
@@ -91,6 +99,8 @@ public class ModelAttachmentPolicyManager extends AbstractExtensionManager
                 RequirementCorePlugin.log(e);
             }
         }
+        // empty extensions cache to recompute with new extension patterns next time
+        knownExtensions.clear();
     }
 
     /**
@@ -102,8 +112,19 @@ public class ModelAttachmentPolicyManager extends AbstractExtensionManager
         IConfigurationElement[] elements = extension.getConfigurationElements();
         for (IConfigurationElement confElt : elements)
         {
+            // remove attachment policy with pattern
             String elt = confElt.getAttribute(ATT_EXTENSION);
             mapClass.remove(elt);
+            // remove matching extensions from cache
+            List<Entry<String, String>> entries = new ArrayList<Entry<String, String>>(knownExtensions.entrySet());
+            for (Entry<String, String> entry : entries)
+            {
+                // check matching values and remove them
+                if (elt.equals(entry.getValue()))
+                {
+                    knownExtensions.remove(entry.getKey());
+                }
+            }
         }
     }
 
@@ -115,11 +136,49 @@ public class ModelAttachmentPolicyManager extends AbstractExtensionManager
      */
     public IModelAttachmentPolicy getModelPolicy(String fileExtension)
     {
-        if (mapClass.containsKey(fileExtension))
+        // check known extensions cache
+        completeCacheForExtension(fileExtension);
+
+        String correspondingPattern = knownExtensions.get(fileExtension);
+        if (correspondingPattern != null)
         {
-            return mapClass.get(fileExtension);
+            if (mapClass.containsKey(correspondingPattern))
+            {
+                return mapClass.get(correspondingPattern);
+            }
         }
         return null;
+    }
+
+    /**
+     * Complete the cache with the pattern corresponding for the file extension
+     * 
+     * @param fileExtension extension to find a matching pattern for
+     */
+    private void completeCacheForExtension(String fileExtension)
+    {
+        if (!knownExtensions.containsKey(fileExtension))
+        {
+            // take more specific pattern in account : remove key words and keep result for the longest one
+            int patternSpecificity = 0;
+            for (String extPattern : mapClass.keySet())
+            {
+                // remove traditional key words, to know the number of other specified characters
+                String patternReplaced = extPattern.replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("\\.", "").replaceAll("\\*", "").replaceAll("\\+", "");
+                int extPatternSpecificity = patternReplaced.length();
+                if (fileExtension.matches(extPattern) && extPatternSpecificity > patternSpecificity)
+                {
+                    // store corresponding pattern in cache and keep searching for a more specific pattern
+                    knownExtensions.put(fileExtension, extPattern);
+                    patternSpecificity = extPatternSpecificity;
+                }
+            }
+            if (!knownExtensions.containsKey(fileExtension))
+            {
+                // none has been found, none exist
+                knownExtensions.put(fileExtension, null);
+            }
+        }
     }
 
     /**
@@ -155,16 +214,23 @@ public class ModelAttachmentPolicyManager extends AbstractExtensionManager
     }
 
     /**
-     * This method return true if the extension in parameter is in the hashmap
+     * This method return true if a policy has been registered for the extension in parameter
      * 
      * @param String the extension
-     * @return boolean
+     * @return boolean true if a policy exists
      */
     public boolean isEnableFor(String fileExtension)
     {
-        if (mapClass.containsKey(fileExtension))
+        // check known extensions cache
+        completeCacheForExtension(fileExtension);
+
+        String correspondingPattern = knownExtensions.get(fileExtension);
+        if (correspondingPattern != null)
         {
-            return true;
+            if (mapClass.containsKey(correspondingPattern))
+            {
+                return true;
+            }
         }
         return false;
     }

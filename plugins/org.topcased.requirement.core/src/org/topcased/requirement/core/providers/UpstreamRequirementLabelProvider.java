@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
-import org.topcased.modeler.utils.Utils;
+import org.topcased.requirement.common.utils.JFaceUtils;
 import org.topcased.requirement.core.extensions.internal.UpstreamCombinedStyle;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.preferences.UpstreamStylesPreferenceHelper;
@@ -77,10 +77,10 @@ public class UpstreamRequirementLabelProvider extends AdapterFactoryLabelProvide
     {
         super(adapterFactory);
 
-        defaultFont = Utils.getFont(Display.getCurrent().getSystemFont().getFontData()[0], SWT.NONE);
-        boldFont = Utils.getFont(Display.getCurrent().getSystemFont().getFontData()[0], SWT.BOLD);
-        italicFont = Utils.getFont(Display.getCurrent().getSystemFont().getFontData()[0], SWT.ITALIC);
-        boldItalicFont = Utils.getFont(Display.getCurrent().getSystemFont().getFontData()[0], SWT.BOLD | SWT.ITALIC);
+        defaultFont = JFaceUtils.getFont(Display.getCurrent().getSystemFont().getFontData()[0], SWT.NONE);
+        boldFont = JFaceUtils.getFont(Display.getCurrent().getSystemFont().getFontData()[0], SWT.BOLD);
+        italicFont = JFaceUtils.getFont(Display.getCurrent().getSystemFont().getFontData()[0], SWT.ITALIC);
+        boldItalicFont = JFaceUtils.getFont(Display.getCurrent().getSystemFont().getFontData()[0], SWT.BOLD | SWT.ITALIC);
     }
 
     /**

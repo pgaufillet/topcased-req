@@ -1,0 +1,154 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.topcased.requirement.core" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.topcased.requirement.core" id="supportingEditors" name="Editors supporting the requirements"/>
+      </appInfo>
+      <documentation>
+         Allows to register editors which should support attachment of requirements model.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
+      <complexType>
+         <sequence minOccurs="1" maxOccurs="unbounded">
+            <element ref="editor"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="editor">
+      <annotation>
+         <documentation>
+            Declares a supported editor
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="key" type="string" use="required">
+            <annotation>
+               <documentation>
+                  A unique identifier for the declared editor.
+This key is used in other related extension points.
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="identifier"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="editorPart" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The kind of editor part which can be used with requirements.
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.ui.IEditorPart"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="services" type="string" use="required">
+            <annotation>
+               <documentation>
+                  A class providing necessary services for the usage of requirements, with the given editor part.
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn=":org.topcased.requirement.core.extensions.IEditorServices"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="priority">
+            <annotation>
+               <documentation>
+                  The priority for this editor type.
+Usefull in case editor extensions are defined for parent-related editorPart classes.
+Default value is &quot;Lowest&quot;.
+Possible values are &quot;Highest&quot;, &quot;High&quot;, &quot;Medium&quot;, &quot;Low&quot;, &quot;Lowest&quot;.
+               </documentation>
+            </annotation>
+            <simpleType>
+               <restriction base="string">
+                  <enumeration value="Lowest">
+                  </enumeration>
+                  <enumeration value="Low">
+                  </enumeration>
+                  <enumeration value="Medium">
+                  </enumeration>
+                  <enumeration value="High">
+                  </enumeration>
+                  <enumeration value="Highest">
+                  </enumeration>
+               </restriction>
+            </simpleType>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         4.3
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         [Enter extension point usage example here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiinfo"/>
+      </appInfo>
+      <documentation>
+         Supporting editors must be declared through this extension points.
+Some linked features are implemented by declaring extensions for the linked extension points :
+See also
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         [Enter information about supplied implementation of this extension point.]
+      </documentation>
+   </annotation>
+
+
+</schema>

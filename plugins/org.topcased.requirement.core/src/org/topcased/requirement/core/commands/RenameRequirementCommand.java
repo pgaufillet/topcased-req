@@ -13,8 +13,8 @@ package org.topcased.requirement.core.commands;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
-import org.topcased.modeler.editor.TopcasedAdapterFactoryEditingDomain;
 import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.RequirementPackage;
@@ -54,7 +54,7 @@ public class RenameRequirementCommand extends CompoundCommand
      */
     public RenameRequirementCommand(EObject element, String oldValue, String newValue)
     {
-        this(TopcasedAdapterFactoryEditingDomain.getEditingDomainFor(element), element, oldValue, newValue);
+        this(AdapterFactoryEditingDomain.getEditingDomainFor(element), element, oldValue, newValue);
     }
 
     /**

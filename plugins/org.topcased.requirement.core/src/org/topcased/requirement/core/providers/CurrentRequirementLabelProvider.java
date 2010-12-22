@@ -22,13 +22,13 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
-import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.AttributeLink;
 import org.topcased.requirement.AttributeValue;
 import org.topcased.requirement.ConfiguratedAttribute;
 import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.ObjectAttribute;
+import org.topcased.requirement.common.utils.JFaceUtils;
 import org.topcased.requirement.core.preferences.CurrentPreferenceHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
@@ -70,11 +70,11 @@ public class CurrentRequirementLabelProvider extends AdapterFactoryLabelProvider
     {
         super(adapterFactory);
 
-        defaultFont = Utils.getFont(Display.getCurrent().getSystemFont().getFontData()[0], SWT.NONE);
-        italicFont = Utils.getFont(Display.getCurrent().getSystemFont().getFontData()[0], SWT.ITALIC);
+        defaultFont = JFaceUtils.getFont(Display.getCurrent().getSystemFont().getFontData()[0], SWT.NONE);
+        italicFont = JFaceUtils.getFont(Display.getCurrent().getSystemFont().getFontData()[0], SWT.ITALIC);
         setDefaultFont(defaultFont);
-        defaultColor = Utils.getColor("0,0,0"); //$NON-NLS-1$
-        italicColor = Utils.getColor("255,0,0"); //$NON-NLS-1$
+        defaultColor = JFaceUtils.getColor("0,0,0"); //$NON-NLS-1$
+        italicColor = JFaceUtils.getColor("255,0,0"); //$NON-NLS-1$
         setDefaultForeground(defaultColor);
     }
 

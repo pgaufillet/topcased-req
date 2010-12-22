@@ -17,19 +17,22 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.handlers.HandlerUtil;
-import org.topcased.modeler.editor.Modeler;
 import org.topcased.requirement.RequirementProject;
-import org.topcased.requirement.core.extensions.DefaultAttachmentPolicy;
+import org.topcased.requirement.core.extensions.IEditorServices;
 import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
 import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
+import org.topcased.requirement.core.internal.Messages;
+import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.wizards.MergeRequirementModelWizard;
 
@@ -47,24 +50,27 @@ public class UpdateRequirementModelHandler extends AbstractHandler
     public Object execute(ExecutionEvent event) throws ExecutionException
     {
         Resource targetModel = null;
-        IEditorPart part = HandlerUtil.getActiveEditor(event);
-        if (part instanceof Modeler)
+        IEditorPart editor = RequirementUtils.getCurrentEditor();
+        IEditorServices services = RequirementUtils.getSpecificServices(editor);
+        if (editor != null && services != null)
         {
-            Modeler modeler = (Modeler) part;
+            EditingDomain domain = services.getEditingDomain(editor);
             // Get the policy and the linked target model
-            IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(modeler.getEditingDomain());
+            IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(domain);
             if (policy != null)
             {
-                targetModel = policy.getLinkedTargetModel(modeler.getEditingDomain().getResourceSet());
+                targetModel = policy.getLinkedTargetModel(domain.getResourceSet());
             }
             else
             {
-                targetModel = DefaultAttachmentPolicy.getInstance().getLinkedTargetModel(modeler.getEditingDomain().getResourceSet());
+                String extension = domain.getResourceSet().getResources().get(0).getURI().fileExtension();
+                String msg = NLS.bind(Messages.getString("ModelAttachmentPolicyManager.0"), extension);
+                RequirementCorePlugin.log(msg, Status.ERROR, null);//$NON-NLS-1$
             }
             if (targetModel != null)
             {
                 // creation of the merge wizard
-                Resource requirement = RequirementUtils.getRequirementModel(modeler.getEditingDomain());
+                Resource requirement = RequirementUtils.getRequirementModel(domain);
                 RequirementProject requirementProject = (RequirementProject) requirement.getContents().get(0);
                 MergeRequirementModelWizard wizard = new MergeRequirementModelWizard(requirementProject.getIdentifier(), requirementProject.getShortDescription());
 
