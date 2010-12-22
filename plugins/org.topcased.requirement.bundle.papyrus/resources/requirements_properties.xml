@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<propertyTabView pluginId="org.eclipse.papyrus.properties.tabbed.uml">
+	<tab category="Requirement" id="basicTab" label="Requirement"/>
+	<sectionSet name="sectionSet_Single_EObject_requirements">
+		<context enablesFor="1">
+			<elementClass name="org.eclipse.emf.ecore.EObject"/>
+		</context>
+		<section adapterId="Semantic" id="section_Single_EObject_requirements" tabId="basicTab">
+			<replacedSections>
+				<replacedSection id="section_Multiple_EObject_requirements"/>
+			</replacedSections>
+			<fragment id="fragment_Single_EObject_requirements">
+				<context enablesFor="1">
+					<elementClass name="org.eclipse.emf.ecore.EObject"/>
+				</context>
+				<content>
+					<container>
+						<controller predefinedId="EObject_requirements"/>
+						<layout kind="Grid" numColumns="1" sameWidth="true"/>
+					</container>
+				</content>
+			</fragment>
+		</section>
+	</sectionSet>
+	<sectionSet name="sectionSet_Multiple_EObject_requirements">
+		<context enablesFor="-1">
+			<elementClass name="org.eclipse.emf.ecore.EObject"/>
+		</context>
+		<section adapterId="Semantic" id="section_Multiple_EObject_requirements" tabId="basicTab">
+			<fragment id="fragment_Multiple_EObject_requirements">
+				<context enablesFor="-1">
+					<elementClass name="org.eclipse.emf.ecore.EObject"/>
+				</context>
+				<content>
+					<container>
+						<controller predefinedId="EObject_requirements"/>
+						<layout kind="Grid" numColumns="1" sameWidth="true"/>
+					</container>
+				</content>
+			</fragment>
+		</section>
+	</sectionSet>
+</propertyTabView>

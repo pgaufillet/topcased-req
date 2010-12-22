@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.topcased.requirement.bundle.papyrus;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.topcased.requirement.bundle.papyrus.Activator
+Require-Bundle: org.topcased.requirement.core,
+ org.eclipse.papyrus.diagram.common,
+ org.eclipse.papyrus.tabbedproperties.core
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-Vendor: %providerName

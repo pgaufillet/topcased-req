@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.papyrus.core.model">
+         <model
+               classname="org.topcased.requirement.bundle.papyrus.resource.RequirementModel"
+               description="Model for requirements">
+         </model>
+   </extension>
+   <extension
+         point="org.topcased.requirement.core.supportingEditors">
+      <editor
+            editorPart="org.eclipse.papyrus.core.editor.IMultiDiagramEditor"
+            key="org.topcased.requirement.bundle.papyrus.services.papyrusCoreEditorServices"
+            priority="Medium"
+            services="org.topcased.requirement.bundle.papyrus.services.PapyrusEditorServices">
+      </editor>
+   </extension>
+   <extension
+         point="org.topcased.requirement.core.modelAttachmentPolicy">
+      <policy
+            class="org.topcased.requirement.bundle.papyrus.resource.PapyrusAttachmentPolicy"
+            extension="di"
+            id="org.topcased.requirement.bundle.papyrus.resource.PapyrusAttachmentPolicy">
+      </policy>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.eclipse.papyrus.core.editor.CoreMultiDiagramEditor"
+            class="org.topcased.requirement.core.views.RequirementAdapterFactory">
+         <adapter
+               type="org.topcased.requirement.core.views.upstream.IUpstreamRequirementPage">
+         </adapter>
+         <adapter
+               type="org.topcased.requirement.core.views.current.ICurrentRequirementPage">
+         </adapter>
+      </factory>
+   </extension>
+   
+   <extension point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
+      <propertyContributor 
+            contributorId="TreeOutlinePage"
+            labelProvider="org.eclipse.papyrus.tabbedproperties.core.providers.EMFObjectLabelProvider">
+         <propertyCategory category="org.eclipse.papyrus"/>
+      </propertyContributor>
+   </extension>
+   <extension point="org.eclipse.ui.views.properties.tabbed.propertyTabs">
+      <propertyTabs contributorId="TreeOutlinePage">
+         	<propertyTab id="Requirement" label="Requirement" category="org.eclipse.papyrus" afterTab="advanced" image="icons/current.gif"/>
+      </propertyTabs>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views.properties.tabbed.propertySections">
+      <propertySections
+            contributorId="TreeOutlinePage">
+         <propertySection
+               class="org.topcased.requirement.core.properties.sections.RequirementPropertySection"
+               filter="org.topcased.requirement.core.properties.sections.RequirementPropertySection"
+               id="org.topcased.requirement.bundle.papyrus.properties.requirementsection"
+               tab="Requirement">
+         </propertySection>
+      </propertySections>
+   </extension>
+   
+   
+   <!-- Helper advice declarations -->
+   <extension point="org.eclipse.gmf.runtime.emf.type.core.elementTypes">
+      <metamodel nsURI="http://www.eclipse.org/emf/2002/Ecore">
+         <!-- Helper advice for EObject with requirements -->
+         <adviceBinding
+               class="org.topcased.requirement.bundle.papyrus.helper.advice.EObjectHelperAdvice"
+               id="org.topcased.requirement.bundle.papyrus.EObjectWithRequirements"
+               inheritance="all"
+               typeId="*">
+         </adviceBinding>
+      </metamodel>
+   </extension>
+   <!-- Requirement bindings to Papyrus shared IClientContext -->
+   <extension point="org.eclipse.gmf.runtime.emf.type.core.elementTypeBindings">
+      <!-- Bindings declaration -->
+      <binding context="org.eclipse.papyrus.service.edit.TypeContext">
+         <advice ref="org.topcased.requirement.bundle.papyrus.EObjectWithRequirements" />
+      </binding>
+   </extension>
+   <!-- We must declare the bindings for each new declared IClientContext,
+    since they exclude any not included binding. -->
+   <extension point="org.eclipse.gmf.runtime.emf.type.core.elementTypeBindings">
+      <!-- Bindings declaration -->
+      <binding context="org.eclipse.papyrus.diagram.activity.TypeContext">
+         <advice ref="org.topcased.requirement.bundle.papyrus.EObjectWithRequirements" />
+      </binding>
+      <binding context="org.eclipse.papyrus.diagram.clazz.TypeContext">
+         <advice ref="org.topcased.requirement.bundle.papyrus.EObjectWithRequirements" />
+      </binding>
+      <binding context="org.eclipse.papyrus.diagram.communication.TypeContext">
+         <advice ref="org.topcased.requirement.bundle.papyrus.EObjectWithRequirements" />
+      </binding>
+      <binding context="org.eclipse.papyrus.diagram.composite.TypeContext">
+         <advice ref="org.topcased.requirement.bundle.papyrus.EObjectWithRequirements" />
+      </binding>
+      <binding context="org.eclipse.papyrus.diagram.profile.TypeContext">
+         <advice ref="org.topcased.requirement.bundle.papyrus.EObjectWithRequirements" />
+      </binding>
+      <binding context="org.eclipse.papyrus.diagram.sequence.TypeContext">
+         <advice ref="org.topcased.requirement.bundle.papyrus.EObjectWithRequirements" />
+      </binding>
+      <binding context="org.eclipse.papyrus.diagram.statemachine.TypeContext">
+         <advice ref="org.topcased.requirement.bundle.papyrus.EObjectWithRequirements" />
+      </binding>
+      <binding context="org.eclipse.papyrus.diagram.usecase.TypeContext">
+         <advice ref="org.topcased.requirement.bundle.papyrus.EObjectWithRequirements" />
+      </binding>
+      <binding context="org.eclipse.papyrus.sysml.diagram.parametric.TypeContext">
+         <advice ref="org.topcased.requirement.bundle.papyrus.EObjectWithRequirements" />
+      </binding>
+   </extension>
+   
+</plugin>

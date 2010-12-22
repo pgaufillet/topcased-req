@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<predefinedControllers>
+    <!--predefined controller for an EObject's requirements-->
+    <predefinedController id="emftStructuralFeatureController" predefinedId="EObject_requirements">
+        <feature handlerID="Enumeration" name="visibility"/>
+        <editor id="org.eclipse.papyrus.properties.runtime.comboPropertyEditor" label="Requirements:" labelPosition="16384" tooltip="List of requirements which are attached to this element."/>
+        <constraints>
+            <elementClass name="org.eclipse.emf.ecore.EObject"/>
+        </constraints>
+    </predefinedController>
+</predefinedControllers>

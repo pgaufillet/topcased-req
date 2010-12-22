@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.topcased.requirement.common;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: %providerName
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Require-Bundle: org.eclipse.emf.common.ui,
+ org.eclipse.gef,
+ org.eclipse.emf.workspace
+Export-Package: org.topcased.requirement.common.commands,
+ org.topcased.requirement.common.operation,
+ org.topcased.requirement.common.utils
+Bundle-Activator: org.topcased.requirement.common.Activator
+Bundle-ActivationPolicy: lazy
