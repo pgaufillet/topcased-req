@@ -2,10 +2,10 @@
 <feature
       id="org.topcased.requirement.feature"
       label="%featureName"
-      version="4.2.0.qualifier"
+      version="4.3.0.qualifier"
       provider-name="%providerName">
 
-   <description url="%license">
+   <description url="%optionalURL">
       %description
    </description>
 
@@ -25,10 +25,10 @@
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.emf.ecore.xmi"/>
       <import plugin="org.eclipse.ui.editors"/>
-      <import plugin="org.topcased.modeler"/>
       <import plugin="org.eclipse.emf.compare.diff"/>
       <import plugin="org.eclipse.emf.compare.match"/>
       <import plugin="org.eclipse.core.expressions"/>
+      <import plugin="org.topcased.modeler"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.emf.edit.ui"/>
       <import plugin="org.eclipse.ui.ide"/>
@@ -41,6 +41,7 @@
       <import plugin="org.eclipse.uml2.uml"/>
       <import plugin="org.topcased.sysml"/>
       <import plugin="org.topcased.requirement.core" version="3.3.0" match="greaterOrEqual"/>
+      <import plugin="org.topcased.facilities"/>
       <import plugin="org.eclipse.emf.search"/>
       <import plugin="org.eclipse.emf.search.common"/>
       <import plugin="org.eclipse.emf.search.ecore"/>
@@ -54,8 +55,9 @@
       <import plugin="org.eclipse.emf.common"/>
       <import plugin="org.eclipse.ui.workbench"/>
       <import plugin="org.eclipse.core.commands"/>
-      <import plugin="org.topcased.facilities"/>
-      <import plugin="org.apache.log4j" version="1.2.0" match="equivalent"/>
+      <import plugin="org.topcased.utils.log4j" version="1.2.0" match="equivalent"/>
+      <import plugin="org.eclipse.gef"/>
+      <import plugin="org.eclipse.emf.workspace"/>
    </requires>
 
    <plugin
@@ -151,6 +153,13 @@
 
    <plugin
          id="org.topcased.requirement.traceabilitymatrix.batch"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.topcased.requirement.common"
          download-size="0"
          install-size="0"
          version="0.0.0"
