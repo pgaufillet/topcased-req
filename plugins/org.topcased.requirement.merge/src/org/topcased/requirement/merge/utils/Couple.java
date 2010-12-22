@@ -15,27 +15,27 @@ package org.topcased.requirement.merge.utils;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.topcased.modeler.diagrams.model.Diagrams;
 import org.topcased.requirement.RequirementProject;
 
-public class Triplet
+public class Couple
 {
 
     private EObject model;
 
-    private Diagrams di;
+    // private Diagrams di;
 
     private RequirementProject requirement;
 
     private boolean isSubModel;
 
-    public Triplet(EObject model, Diagrams di, RequirementProject requirement, boolean isSubModel)
+    public Couple(EObject model, RequirementProject requirement, boolean isSubModel)
+    // public Triplet(EObject model, Diagrams di, RequirementProject requirement, boolean isSubModel)
     {
         super();
         this.model = model;
         // resolve models to get external references
         EcoreUtil.resolveAll(model.eResource().getResourceSet());
-        this.di = di;
+        // this.di = di;
         this.requirement = requirement;
         this.isSubModel = isSubModel;
     }
@@ -45,10 +45,10 @@ public class Triplet
         return model;
     }
 
-    public Diagrams getDiagram()
-    {
-        return di;
-    }
+    // public Diagrams getDiagram()
+    // {
+    // return di;
+    // }
 
     public RequirementProject getRequirement()
     {
@@ -65,7 +65,7 @@ public class Triplet
     {
         String s = "Triplet: ";
         s += "\nModel: " + this.model.toString();
-        s += "\nDiagram: " + this.di.toString();
+        // s += "\nDiagram: " + this.di.toString();
         s += "\nReq: " + this.requirement.toString() + "\n";
 
         return s;

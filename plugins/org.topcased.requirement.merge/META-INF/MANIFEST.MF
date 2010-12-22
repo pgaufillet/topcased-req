@@ -7,7 +7,11 @@ Bundle-Activator: org.topcased.requirement.merge.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.topcased.requirement.core,
- org.eclipse.core.expressions
+ org.eclipse.core.expressions,
+ org.eclipse.ui.forms,
+ org.eclipse.emf.common.ui,
+ org.eclipse.core.resources,
+ org.topcased.facilities
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: %providerName

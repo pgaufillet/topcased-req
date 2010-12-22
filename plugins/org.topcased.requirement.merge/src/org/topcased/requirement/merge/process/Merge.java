@@ -40,7 +40,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.command.DeleteCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
-import org.topcased.modeler.diagrams.model.Diagrams;
 import org.topcased.requirement.Attribute;
 import org.topcased.requirement.AttributeConfiguration;
 import org.topcased.requirement.AttributeLink;
@@ -55,17 +54,16 @@ import org.topcased.requirement.SpecialChapter;
 import org.topcased.requirement.TrashChapter;
 import org.topcased.requirement.UntracedChapter;
 import org.topcased.requirement.UpstreamModel;
-import org.topcased.requirement.core.extensions.DefaultAttachmentPolicy;
 import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
 import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
-import org.topcased.requirement.merge.utils.Triplet;
+import org.topcased.requirement.merge.utils.Couple;
 import org.topcased.requirement.util.RequirementResource;
 
 public class Merge
 {
     private Map<String, Boolean> inputs;
 
-    private Vector<Triplet> models;
+    private Vector<Couple> models;
 
     private RequirementProject requirementProject;
 
@@ -86,7 +84,7 @@ public class Merge
         super();
         this.inputs = inputs;
         this.output = output;
-        models = new Vector<Triplet>();
+        models = new Vector<Couple>();
     }
 
     public void process()
@@ -213,20 +211,16 @@ public class Merge
             URI uri = URI.createURI(file);
             EObject eobject = new ResourceSetImpl().getResource(uri, true).getContents().get(0);
 
-            if (eobject instanceof Diagrams)
+            // if (eobject instanceof Diagrams)
             {
                 RequirementProject project = null;
-                Diagrams diagram = (Diagrams) eobject;
+                // Diagrams diagram = (Diagrams) eobject;
                 IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(uri.fileExtension());
 
                 // Get the associated requirement model
                 if (policy != null)
                 {
-                    project = policy.getRequirementProjectFromTargetDiagram(diagram);
-                }
-                else
-                {
-                    project = DefaultAttachmentPolicy.getInstance().getRequirementProjectFromTargetDiagram(diagram);
+                    project = policy.getRequirementProjectFromTargetMainResource(eobject.eResource());
                 }
 
                 if (project != null)
@@ -236,7 +230,8 @@ public class Merge
                     EObject eobjectModel = new ResourceSetImpl().getResource(uriDiagram, true).getContents().get(0);
 
                     // Create a new Triplet
-                    Triplet t = new Triplet(eobjectModel, (Diagrams) eobject, project, inputs.get(file));
+                    Couple t = new Couple(eobjectModel, project, inputs.get(file));
+                    // Triplet t = new Triplet(eobjectModel, (Diagrams) eobject, project, inputs.get(file));
                     models.add(t);
                 }
             }
@@ -283,10 +278,10 @@ public class Merge
     {
 
         // For all models
-        for (Iterator<Triplet> iterator = models.iterator(); iterator.hasNext();)
+        for (Iterator<Couple> iterator = models.iterator(); iterator.hasNext();)
         {
 
-            Triplet t = (Triplet) iterator.next();
+            Couple t = (Couple) iterator.next();
 
             // get the current requirement
             RequirementProject r = t.getRequirement();
@@ -345,9 +340,9 @@ public class Merge
 
     private void initStructureRequirment()
     {
-        for (Iterator<Triplet> iterator = models.iterator(); iterator.hasNext();)
+        for (Iterator<Couple> iterator = models.iterator(); iterator.hasNext();)
         {
-            Triplet t = (Triplet) iterator.next();
+            Couple t = (Couple) iterator.next();
             EObject model = t.getModel();
 
             // if it is not a sub model
@@ -449,15 +444,15 @@ public class Merge
 
     private void copyRequirement()
     {
-        for (Iterator<Triplet> iterator = models.iterator(); iterator.hasNext();)
+        for (Iterator<Couple> iterator = models.iterator(); iterator.hasNext();)
         {
-            Triplet t = (Triplet) iterator.next();
+            Couple t = (Couple) iterator.next();
 
             addRequirements(t);
         }
     }
 
-    private void addRequirements(Triplet t)
+    private void addRequirements(Couple t)
     {
         for (TreeIterator<EObject> i = t.getRequirement().eAllContents(); i.hasNext();)
         {

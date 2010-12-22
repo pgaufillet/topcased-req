@@ -13,7 +13,7 @@ package org.topcased.requirement.merge.testers;
 
 import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.core.resources.IFile;
-import org.topcased.modeler.utils.Utils;
+import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
  * A simple property tester to check if the current IFile selected is a ".di" file, And also check that no
@@ -24,13 +24,14 @@ import org.topcased.modeler.utils.Utils;
  */
 public class CanMergePropertyTester extends PropertyTester
 {
+
     /**
      * @see org.eclipse.core.expressions.IPropertyTester#test(java.lang.Object, java.lang.String, java.lang.Object[],
      *      java.lang.Object)
      */
     public boolean test(Object receiver, String property, Object[] args, Object expectedValue)
     {
-        if (Utils.getCurrentModeler() == null)
+        if (RequirementUtils.getCurrentEditor() == null)
         {
             if (receiver instanceof IFile)
             {
@@ -40,4 +41,5 @@ public class CanMergePropertyTester extends PropertyTester
         }
         return false;
     }
+
 }
