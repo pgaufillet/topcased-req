@@ -13,6 +13,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.emf.compare.match,
  org.eclipse.core.expressions,
  org.topcased.requirement.common;visibility:=reexport,
+ org.topcased.tabbedproperties;visibility:=reexport,
  org.topcased.modeler
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
