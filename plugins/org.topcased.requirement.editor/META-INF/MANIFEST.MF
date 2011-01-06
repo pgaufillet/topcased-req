@@ -17,5 +17,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.ide;visibility:=reexport,
  org.eclipse.emf.ecore.edit;visibility:=reexport,
  org.topcased.traceability.edit;visibility:=reexport,
- org.topcased.requirement.core
+ org.topcased.requirement.core,
+ org.eclipse.ui.views.properties.tabbed
 Bundle-ActivationPolicy: lazy
