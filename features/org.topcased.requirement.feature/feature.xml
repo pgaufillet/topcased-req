@@ -55,7 +55,7 @@
       <import plugin="org.eclipse.emf.common"/>
       <import plugin="org.eclipse.ui.workbench"/>
       <import plugin="org.eclipse.core.commands"/>
-      <import plugin="org.topcased.utils.log4j" version="1.2.0" match="equivalent"/>
+      <import plugin="org.apache.log4j" version="1.2.0" match="equivalent"/>
       <import plugin="org.eclipse.gef"/>
       <import plugin="org.eclipse.emf.workspace"/>
    </requires>
