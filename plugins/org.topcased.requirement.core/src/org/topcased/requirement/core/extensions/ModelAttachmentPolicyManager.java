@@ -136,15 +136,18 @@ public class ModelAttachmentPolicyManager extends AbstractExtensionManager
      */
     public IModelAttachmentPolicy getModelPolicy(String fileExtension)
     {
-        // check known extensions cache
-        completeCacheForExtension(fileExtension);
-
-        String correspondingPattern = knownExtensions.get(fileExtension);
-        if (correspondingPattern != null)
+        if (fileExtension != null)
         {
-            if (mapClass.containsKey(correspondingPattern))
+            // check known extensions cache
+            completeCacheForExtension(fileExtension);
+
+            String correspondingPattern = knownExtensions.get(fileExtension);
+            if (correspondingPattern != null)
             {
-                return mapClass.get(correspondingPattern);
+                if (mapClass.containsKey(correspondingPattern))
+                {
+                    return mapClass.get(correspondingPattern);
+                }
             }
         }
         return null;
