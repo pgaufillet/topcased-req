@@ -21,6 +21,8 @@
       <import plugin="org.eclipse.papyrus.diagram.common"/>
       <import plugin="org.eclipse.papyrus.tabbedproperties.core"/>
       <import feature="org.topcased.requirement.feature" version="4.3.0" match="greaterOrEqual"/>
+      <import plugin="org.topcased.requirement.core"/>
+      <import feature="org.eclipse.papyrus.backbone"/>
    </requires>
 
    <plugin
