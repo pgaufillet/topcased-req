@@ -13,12 +13,18 @@
  *****************************************************************************/
 package org.topcased.requirement.bundle.papyrus.resource;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.command.Command;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.papyrus.resource.IModel;
+import org.eclipse.papyrus.resource.ModelException;
 import org.eclipse.papyrus.resource.ModelSet;
 import org.eclipse.papyrus.resource.sasheditor.SashModel;
 import org.topcased.requirement.RequirementProject;
@@ -95,6 +101,36 @@ public class PapyrusAttachmentPolicy implements IModelAttachmentPolicy
             if (reqModel instanceof RequirementModel)
             {
                 Resource reqRes = ((RequirementModel) reqModel).getResource();
+                if (reqRes == null)
+                {
+                    // try loading the model
+                    IFile file = null;
+                    URI uriWitExt = mainResource.getURI();
+                    String fileName = uriWitExt.toFileString();
+                    if (fileName != null)
+                    {
+                        file = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(fileName));
+                    }
+                    if (uriWitExt.toString().startsWith("platform:/resource")) { //$NON-NLS-1$
+                        String path = uriWitExt.toString().substring("platform:/resource".length()); //$NON-NLS-1$
+                        IResource workspaceResource = ResourcesPlugin.getWorkspace().getRoot().findMember(new Path(path));
+                        if (workspaceResource instanceof IFile)
+                        {
+                            file = (IFile) workspaceResource;
+                        }
+                    }
+                    if (file != null)
+                    {
+                        try
+                        {
+                            reqModel = ((ModelSet) resourceSet).importModel(RequirementModel.REQ_MODEL_ID, file);
+                        }
+                        catch (ModelException e)
+                        {
+                        }
+                        reqRes = ((RequirementModel) reqModel).getResource();
+                    }
+                }
                 if (reqRes != null && reqRes.getContents().size() > 0 && reqRes.getContents().get(0) instanceof RequirementProject)
                 {
                     return (RequirementProject) reqRes.getContents().get(0);
