@@ -149,7 +149,7 @@ public final class RequirementUtils
     public static Collection<EObject> getAllObjects(Resource resource, java.lang.Class< ? > clazz)
     {
         Collection<EObject> result = new ArrayList<EObject>();
-        if (resource != null)
+        if (resource != null && !resource.getContents().isEmpty())
         {
             for (Iterator<EObject> h = resource.getContents().get(0).eAllContents(); h.hasNext();)
             {
