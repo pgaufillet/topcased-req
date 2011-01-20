@@ -25,8 +25,8 @@ import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.part.IPageBookViewPage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
-import org.topcased.modeler.documentation.IDocPage;
 import org.topcased.requirement.core.documentation.current.CurrentDescPage;
+import org.topcased.requirement.core.documentation.current.PapyrusCurrentDescPage;
 import org.topcased.requirement.core.handlers.ICommandConstants;
 import org.topcased.requirement.core.properties.RequirementPropertySheetPage;
 import org.topcased.requirement.core.utils.RequirementCoverageComputer;
@@ -74,9 +74,13 @@ public class CurrentRequirementView extends AbstractRequirementView implements I
     @Override
     public Object getAdapter(Class key)
     {
-        if (currentPage != null && key == IDocPage.class)
+        if (currentPage != null && key.equals(org.topcased.modeler.documentation.IDocPage.class))
         {
             return new CurrentDescPage();
+        }
+        else if (currentPage != null && key.equals(org.eclipse.papyrus.documentation.view.IDocPage.class))
+        {
+            return new PapyrusCurrentDescPage();
         }
         else if (key.equals(IPropertySheetPage.class))
         {

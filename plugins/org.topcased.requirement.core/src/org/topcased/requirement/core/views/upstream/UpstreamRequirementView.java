@@ -28,9 +28,9 @@ import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.handlers.RegistryToggleState;
 import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.part.IPageBookViewPage;
-import org.topcased.modeler.documentation.IDocPage;
 import org.topcased.requirement.ObjectAttribute;
 import org.topcased.requirement.RequirementProject;
+import org.topcased.requirement.core.documentation.upstream.PapyrusUpstreamDescPage;
 import org.topcased.requirement.core.documentation.upstream.UpstreamDescPage;
 import org.topcased.requirement.core.handlers.ICommandConstants;
 import org.topcased.requirement.core.utils.RequirementCoverageComputer;
@@ -77,9 +77,13 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
     @Override
     public Object getAdapter(Class type)
     {
-        if (upstreamPage != null && type == IDocPage.class)
+        if (upstreamPage != null && type.equals(org.topcased.modeler.documentation.IDocPage.class))
         {
             return new UpstreamDescPage();
+        }
+        else if (upstreamPage != null && type.equals(org.eclipse.papyrus.documentation.view.IDocPage.class))
+        {
+            return new PapyrusUpstreamDescPage();
         }
         return super.getAdapter(type);
     }
