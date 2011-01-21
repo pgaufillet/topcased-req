@@ -10,8 +10,6 @@
  **********************************************************************************************************************/
 package org.topcased.requirement.core.utils;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -466,8 +464,8 @@ public final class MergeRequirement
         {
             UpstreamModel model = RequirementUtils.getUpstreamModel(element.eResource());
             deletedDoc = TtmFactory.eINSTANCE.createDocument();
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); //$NON-NLS-1$
-            deletedDoc.setIdent("deleted_".concat(dateFormat.format(new Date()))); //$NON-NLS-1$
+            String ident = RequirementUtils.getDeletedDocumentIdent(new Date());
+            deletedDoc.setIdent(ident);
             model.getDocuments().add(deletedDoc);
         }
         deletedDoc.getChildren().add(element);

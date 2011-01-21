@@ -13,15 +13,19 @@
 package org.topcased.requirement.core.utils;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -89,6 +93,18 @@ import ttm.Requirement;
  */
 public final class RequirementUtils
 {
+    /** Prefix for deleted documents */
+    private static final String DELETED_PREFIX = "deleted_";//$NON-NLS-1$
+
+    /** Pattern for detecting ident of deleted documents */
+    private static final Pattern DELETED_DOCUMENT_PATTERN = Pattern.compile(DELETED_PREFIX.concat("\\d\\d\\d\\d-\\d\\d-\\d\\d"));//$NON-NLS-1$
+
+    /** Format string for constructing ident of deleted documents */
+    private static final String DELETED_DOCUMENT_IDENT_FORMAT = DELETED_PREFIX.concat("%s");
+
+    /** Date format for constructing ident of deleted documents */
+    private static final String DELETED_DOCUMENT_DATE_FORMAT = "yyyy-MM-dd";
+
     /**
      * The shared adapter factory
      */
@@ -968,5 +984,28 @@ public final class RequirementUtils
             return SupportingEditorsManager.getInstance().getServices(editor);
         }
         return null;
+    }
+
+    /**
+     * Get ident to use for a document containing deleted requirements
+     * 
+     * @param date the deletion date
+     * @return ident to use
+     */
+    public static String getDeletedDocumentIdent(Date date)
+    {
+        DateFormat dateFormat = new SimpleDateFormat(DELETED_DOCUMENT_DATE_FORMAT);
+        return String.format(DELETED_DOCUMENT_IDENT_FORMAT, dateFormat.format(date));
+    }
+
+    /**
+     * Test if ident of a document correspond to a document containing deleted requirements
+     * 
+     * @param ident ident to test
+     * @return true if format is correct for deleted documents
+     */
+    public static boolean isDeletedDocumentIdent(String ident)
+    {
+        return DELETED_DOCUMENT_PATTERN.matcher(ident).matches();
     }
 }
