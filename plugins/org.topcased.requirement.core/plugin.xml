@@ -348,7 +348,7 @@
                <iterate
                      ifEmpty="false">
                   <instanceof
-                        value="org.topcased.requirement.AttributeLink">
+                        value="org.topcased.requirement.ObjectAttribute">
                   </instanceof>
                </iterate>
             </with>
@@ -1008,7 +1008,7 @@
                         <iterate
                               ifEmpty="false">
                            <instanceof
-                                 value="org.topcased.requirement.AttributeLink">
+                                 value="org.topcased.requirement.ObjectAttribute">
                            </instanceof>
                         </iterate>
                      </with>
