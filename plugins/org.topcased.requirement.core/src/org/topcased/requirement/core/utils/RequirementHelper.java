@@ -154,7 +154,7 @@ public final class RequirementHelper
                 }
                 else if (ModelAttachmentPolicyManager.getInstance().getModelPolicy(extension) != null) //$NON-NLS-1$
                 {
-                    IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(anyResource.getResourceSet());
+                    IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(extension);
                     if (policy != null)
                     {
                         result = policy.getRequirementProjectFromTargetMainResource(anyResource);
@@ -168,11 +168,27 @@ public final class RequirementHelper
                 }
                 else
                 {
-                    URI uri = URI.createURI(anyResource.getURI().toString() + "di"); //$NON-NLS-1$
-                    Resource diResource = anyResource.getResourceSet().getResource(uri, true);
-                    if (diResource != null)
+                    IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(anyResource.getResourceSet());
+                    if (policy != null)
                     {
-                        result = getRequirementProject(diResource);
+                        result = policy.getRequirementProjectFromTargetMainResource(anyResource);
+                    }
+                    else
+                    {
+                        // no diagram resource in resourceSet ... Try and get
+                        // Topcased resource anyway...
+                        URI uri = URI.createURI(anyResource.getURI().toString() + "di"); //$NON-NLS-1$
+                        Resource diResource = anyResource.getResourceSet().getResource(uri, true);
+                        if (diResource != null)
+                        {
+                            result = getRequirementProject(diResource);
+                        }
+                        else
+                        {
+                            String msg = NLS.bind(Messages.getString("ModelAttachmentPolicyManager.0"), extension);
+                            RequirementCorePlugin.log(msg, Status.ERROR, null);//$NON-NLS-1$
+                            result = null;
+                        }
                     }
                 }
             }
@@ -259,10 +275,10 @@ public final class RequirementHelper
      * In your code if you don't want to write check for read only use this method to throw a specific exception caught
      * by the corresponding command stack to notify the user the resource is read only
      * 
-     * @param globalCmd, the global command where the command will be added
-     * @param toCheck, the concerned resource
-     * @param domain, the editing domain
-     * @param com, the command to add in the compound
+     * @param globalCmd , the global command where the command will be added
+     * @param toCheck , the concerned resource
+     * @param domain , the editing domain
+     * @param com , the command to add in the compound
      * @throws RuntimeException a specific exception caught by the command stack if the resource is read-only
      */
     public static void appendIfCanExecute(CompoundCommand globalCmd, Resource toCheck, EditingDomain domain, Command com)
