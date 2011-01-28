@@ -42,7 +42,7 @@ public class CanCreateRequirementPropertyTester extends PropertyTester
      */
     public boolean test(Object receiver, String property, Object[] args, Object expectedValue)
     {
-        if (receiver instanceof EditPart)
+        if (receiver instanceof EditPart && ((EditPart) receiver).getViewer() != null)
         {
             EditDomain gefDomain = ((EditPart) receiver).getViewer().getEditDomain();
             IEditorPart editor = null;

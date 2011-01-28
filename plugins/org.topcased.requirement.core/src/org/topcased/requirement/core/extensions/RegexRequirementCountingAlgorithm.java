@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.emf.ecore.resource.Resource;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.Requirement;
 import org.topcased.requirement.core.preferences.ComputeRequirementIdentifier;
@@ -25,11 +26,11 @@ import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.AbstractRequirementView;
 
 /**
- * This algorithm is based on non stored index. The getCurrentIndex method iterate on all 
- * the current requirement and return the maximum index + the step.
+ * This algorithm is based on non stored index. The getCurrentIndex method iterate on all the current requirement and
+ * return the maximum index + the step.
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
- *
+ * 
  */
 public class RegexRequirementCountingAlgorithm implements IRequirementCountingAlgorithm
 {
@@ -45,10 +46,10 @@ public class RegexRequirementCountingAlgorithm implements IRequirementCountingAl
     public long getCurrentIndex(Requirement currentRequirement)
     {
         long currentStep = ComputeRequirementIdentifier.getRequirementStep();
-        long max = getMax();
+        long max = getMax(currentRequirement.eResource());
         if (currentStep != step)
         {
-            //We got to be synchronized with the user modifications in the preference page 
+            // We got to be synchronized with the user modifications in the preference page
             nextIndex = nextIndex - step + currentStep;
             step = currentStep;
         }
@@ -65,23 +66,24 @@ public class RegexRequirementCountingAlgorithm implements IRequirementCountingAl
      */
     public void increaseIndexWhenCreateRequirement(Requirement createdRequirement, long index)
     {
-        //No need to implement this as the index is never stored
+        // No need to implement this as the index is never stored
     }
 
     /**
      * Gets the max. compute the max using the format of the requirement
      * 
+     * @param requirementResource the requirement resource
      * @return the max of all the current requirements
      */
-    private static long getMax()
+    private static long getMax(Resource requirementResource)
     {
         long max = 0;
         long result = 0;
-        HierarchicalElement root = RequirementHelper.INSTANCE.getHierarchicalElementRoot();
+        HierarchicalElement root = RequirementHelper.INSTANCE.getHierarchicalElementRoot(RequirementHelper.INSTANCE.getRequirementProject(requirementResource));
         if (root != null)
         {
             Collection<Requirement> requirements = RequirementUtils.getAllCurrents(root.eResource());
-    
+
             for (Requirement req : requirements)
             {
                 int value = getNumberOfCurrent(req);

@@ -189,8 +189,9 @@ public class RequirementDropListener extends AbstractTransferDropTargetListener
 
         event.detail = DND.DROP_COPY;
 
-        if (CurrentRequirementView.getInstance() == null || UpstreamRequirementView.getInstance() == null)
+        if (CurrentRequirementView.getInstance() == null && UpstreamRequirementView.getInstance() == null)
         {
+            // drag and drop must come from at least one of upstream or current requirement view
             event.operations = DND.DROP_NONE;
             event.detail = DND.DROP_NONE;
         }

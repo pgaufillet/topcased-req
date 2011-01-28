@@ -17,8 +17,8 @@ import org.topcased.requirement.core.preferences.ComputeRequirementIdentifier;
 import org.topcased.requirement.core.utils.RequirementHelper;
 
 /**
- * This algorithm attach the counting index on the hierarchical element root of the requirement model.
- * Each current requirement created in whatever container got his index increased
+ * This algorithm attach the counting index on the hierarchical element root of the requirement model. Each current
+ * requirement created in whatever container got his index increased
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  */
@@ -29,7 +29,7 @@ public class DefaultRequirementCountingAlgorithm implements IRequirementCounting
      */
     public long getCurrentIndex(Requirement currentRequirement)
     {
-        HierarchicalElement root = RequirementHelper.INSTANCE.getHierarchicalElementRoot();
+        HierarchicalElement root = RequirementHelper.INSTANCE.getHierarchicalElementRoot(RequirementHelper.INSTANCE.getRequirementProject(currentRequirement.eResource()));
         return root.getNextReqIndex();
     }
 
@@ -39,7 +39,7 @@ public class DefaultRequirementCountingAlgorithm implements IRequirementCounting
      */
     public void increaseIndexWhenCreateRequirement(Requirement createdRequirement, long index)
     {
-        HierarchicalElement root = RequirementHelper.INSTANCE.getHierarchicalElementRoot();
+        HierarchicalElement root = RequirementHelper.INSTANCE.getHierarchicalElementRoot(RequirementHelper.INSTANCE.getRequirementProject(createdRequirement.eResource()));
         index += ComputeRequirementIdentifier.getRequirementStep();
         root.setNextReqIndex(index);
     }
@@ -49,7 +49,7 @@ public class DefaultRequirementCountingAlgorithm implements IRequirementCounting
      */
     public void setFirstIndex(Requirement firstCreatedRequirement)
     {
-        HierarchicalElement root = RequirementHelper.INSTANCE.getHierarchicalElementRoot();
+        HierarchicalElement root = RequirementHelper.INSTANCE.getHierarchicalElementRoot(RequirementHelper.INSTANCE.getRequirementProject(firstCreatedRequirement.eResource()));
         if (root.getNextReqIndex() == 0)
         {
             // First time when the default step value hasn't been put

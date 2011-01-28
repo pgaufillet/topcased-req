@@ -256,8 +256,11 @@ public final class RequirementHelper
                 globalCmd.execute();
             }
 
-            // then the selection is done on the new inserted element(s).
-            currentPage.setSelection(new StructuredSelection(createdRequirements));
+            if (currentPage != null)
+            {
+                // then the selection is done on the new inserted element(s).
+                currentPage.setSelection(new StructuredSelection(createdRequirements));
+            }
 
             return globalCmd.unwrap();
         }
@@ -458,7 +461,7 @@ public final class RequirementHelper
     public CurrentRequirement create(HierarchicalElement target, Requirement upstream, CompoundCommand compoundCmd)
     {
         long index = 0;
-        HierarchicalElement root = RequirementHelper.INSTANCE.getHierarchicalElementRoot();
+        HierarchicalElement root = RequirementHelper.INSTANCE.getHierarchicalElementRoot(getRequirementProject(upstream.eResource()));
         String source = ""; //$NON-NLS-1$
         IRequirementCountingAlgorithm algorithm = RequirementCountingAlgorithmManager.getInstance().getCountingAlgorithm(ComputeRequirementIdentifier.getCurrentAlgorithm());
 
@@ -746,18 +749,36 @@ public final class RequirementHelper
     }
 
     /**
-     * Used by the default counting algorithm because the requirement index is stored on the hierarchical element root
+     * Get the root of hierarchical elements (useful for counting algorithm).
      * 
      * @return the hierarchical element root of the current page model
      */
+    public HierarchicalElement getHierarchicalElementRoot(RequirementProject reqProject)
+    {
+        if (!reqProject.getHierarchicalElement().isEmpty())
+        {
+            return reqProject.getHierarchicalElement().get(0);
+        }
+        return null;
+    }
+
+    /**
+     * Used by the default counting algorithm because the requirement index is stored on the hierarchical element root
+     * 
+     * @return the hierarchical element root of the current page model
+     * @deprecated use {@link #getHierarchicalElementRoot(RequirementProject)} and
+     *             {@link #getRequirementProject(Resource)} instead
+     */
     public HierarchicalElement getHierarchicalElementRoot()
     {
-        if (currentPage != null && currentPage.getModel() instanceof RequirementProject)
+        IEditorPart editor = RequirementUtils.getCurrentEditor();
+        IEditorServices services = SupportingEditorsManager.getInstance().getServices(editor);
+        if (services != null)
         {
-            RequirementProject reqRoot = (RequirementProject) currentPage.getModel();
-            if (!reqRoot.getHierarchicalElement().isEmpty())
+            Resource resource = services.getRequirementsResource(editor);
+            if (resource != null)
             {
-                return reqRoot.getHierarchicalElement().get(0);
+                return getHierarchicalElementRoot(getRequirementProject(resource));
             }
         }
         return null;

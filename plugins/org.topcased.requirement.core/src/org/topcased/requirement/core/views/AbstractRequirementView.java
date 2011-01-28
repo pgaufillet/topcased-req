@@ -23,6 +23,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -296,5 +297,20 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
             }
         }
         return RequirementCorePlugin.getDefault().getPreferenceStore();
+    }
+
+    /**
+     * @see org.eclipse.ui.part.PageBookView#createPartControl(org.eclipse.swt.widgets.Composite)
+     */
+    @Override
+    public void createPartControl(Composite parent)
+    {
+        super.createPartControl(parent);
+        // initialize content from current editor
+        IEditorPart editor = RequirementUtils.getCurrentEditor();
+        if (editor != null)
+        {
+            partActivated(editor);
+        }
     }
 }
