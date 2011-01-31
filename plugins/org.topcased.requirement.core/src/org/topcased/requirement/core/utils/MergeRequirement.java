@@ -318,7 +318,7 @@ public final class MergeRequirement
             {
                 EObject added = ((ModelElementChangeLeftTarget) diff).getLeftElement();
                 // a hierarchical element or an attribute has been added.
-                if (added instanceof UpstreamModel || added instanceof HierarchicalElement || added instanceof ttm.Attribute)
+                if (added instanceof UpstreamModel || added instanceof HierarchicalElement || added instanceof ttm.Attribute || added instanceof ttm.Text)
                 {
                     processImpact(diff, ((ModelElementChangeLeftTarget) diff).getRightParent());
                     // the hierarchical element is marked as added
@@ -344,7 +344,7 @@ public final class MergeRequirement
             {
                 EObject removedElement = ((ModelElementChangeRightTarget) diff).getRightElement();
                 // an attribute has been removed. We need to mark its parent
-                if (removedElement instanceof ttm.Attribute)
+                if (removedElement instanceof ttm.Attribute || removedElement instanceof ttm.Text)
                 {
                     processImpact(diff, removedElement.eContainer());
                     MergeService.merge(diff, true);

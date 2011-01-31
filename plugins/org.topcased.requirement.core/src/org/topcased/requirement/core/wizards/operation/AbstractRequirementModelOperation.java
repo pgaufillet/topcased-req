@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.common.command.UnexecutableCommand;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.osgi.util.NLS;
@@ -34,6 +35,7 @@ import org.topcased.requirement.core.commands.UpdateMonitorCommand;
 import org.topcased.requirement.core.extensions.IEditorServices;
 import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
 import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
+import org.topcased.requirement.core.extensions.SupportingEditorsManager;
 import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.preferences.CurrentPreferenceHelper;
@@ -184,20 +186,19 @@ public abstract class AbstractRequirementModelOperation extends WorkspaceModifyO
             {
                 diagramFile = diagramFile.removeFileExtension().addFileExtension(diagramFile.getFileExtension() + "di"); //$NON-NLS-1$
             }
-            boolean closed = RequirementUtils.closeDiagramEditor(diagramFile);
-
             // Call the EMF comparison service in order to merge/update the current requirement model
-            MergeRequirement.INSTANCE.merge(getRequirementResource(), requirementResourceMerged, monitor);
+            IEditorPart editor = RequirementUtils.getCurrentEditor();
+            IEditorServices services = SupportingEditorsManager.getInstance().getServices(editor);
+            Resource requirementResource2 = null;
+            if (services != null)
+            {
+                EditingDomain domain = services.getEditingDomain(editor);
+                requirementResource2 = domain.getResourceSet().getResource(
+                        URI.createPlatformResourceURI(requirementModelFile.getFullPath().addFileExtension(RequirementResource.FILE_EXTENSION).toString(), true), true);
+            }
+            MergeRequirement.INSTANCE.merge(requirementResource2, requirementResourceMerged, monitor);
             monitor.worked(1);
 
-            // Save the contents of the resource to the file system
-            RequirementUtils.saveResource(getRequirementResource());
-
-            // The diagram is re-opened if needed.
-            if (closed)
-            {
-                RequirementUtils.openDiagramEditor(diagramFile);
-            }
         }
         catch (InterruptedException e)
         {

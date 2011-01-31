@@ -54,21 +54,24 @@ public class RequirementAdapterFactory implements IAdapterFactory
             if (services != null)
             {
                 EditingDomain domain = services.getEditingDomain(editor);
-                IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(domain);
+                if (domain != null)
+                {
+                    IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(domain);
 
-                if (policy != null)
-                {
-                    if (loadRequirementModelWithSpecifiedPolicy(editor, policy))
+                    if (policy != null)
                     {
-                        return getPage(adapterType);
+                        if (loadRequirementModelWithSpecifiedPolicy(editor, policy))
+                        {
+                            return getPage(adapterType);
+                        }
                     }
-                }
-                else
-                {
-                    String extension = domain.getResourceSet().getResources().get(0).getURI().fileExtension();
-                    String msg = NLS.bind(Messages.getString("ModelAttachmentPolicyManager.0"), extension);
-                    RequirementCorePlugin.log(msg, Status.ERROR, null);//$NON-NLS-1$
-                    return null;
+                    else
+                    {
+                        String extension = domain.getResourceSet().getResources().get(0).getURI().fileExtension();
+                        String msg = NLS.bind(Messages.getString("ModelAttachmentPolicyManager.0"), extension);
+                        RequirementCorePlugin.log(msg, Status.ERROR, null);//$NON-NLS-1$
+                        return null;
+                    }
                 }
             }
         }
