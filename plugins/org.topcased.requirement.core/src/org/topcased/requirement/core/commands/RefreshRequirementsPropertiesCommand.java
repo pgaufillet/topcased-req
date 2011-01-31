@@ -15,6 +15,7 @@ package org.topcased.requirement.core.commands;
 
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.ui.IEditorPart;
+import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.current.CurrentRequirementView;
 import org.topcased.requirement.core.views.upstream.UpstreamRequirementView;
 
@@ -93,6 +94,11 @@ public class RefreshRequirementsPropertiesCommand
      */
     protected static void refresh(IEditorPart editor)
     {
+        if (editor.getAdapter(org.eclipse.emf.edit.domain.EditingDomain.class) == null)
+        {
+            // editor is disposed, take current editor instead
+            editor = RequirementUtils.getCurrentEditor();
+        }
         // Notify views that the diagram property has changed
         ((CurrentRequirementView) CurrentRequirementView.getInstance()).partActivated(editor);
         ((UpstreamRequirementView) UpstreamRequirementView.getInstance()).partActivated(editor);
