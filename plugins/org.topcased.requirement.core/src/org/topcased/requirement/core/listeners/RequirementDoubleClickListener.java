@@ -72,7 +72,7 @@ public class RequirementDoubleClickListener implements IDoubleClickListener
         ChooseDialog chooseDialog = new ChooseDialog(Display.getCurrent().getActiveShell(), content.toArray());
         chooseDialog.setLabelProvider(new AdapterFactoryLabelProvider(RequirementUtils.getAdapterFactory()));
         chooseDialog.setAdvancedLabelProvider(new AdvancedRequirementLabelProvider(RequirementUtils.getAdapterFactory()));
-        if (chooseDialog.open() == Dialog.OK)
+        if (chooseDialog.open() == Dialog.OK && chooseDialog.getResult().length > 0)
         {
             Object theResult = chooseDialog.getResult()[0];
             EditingDomain domain = AdapterFactoryEditingDomain.getEditingDomainFor((ObjectAttribute) firstElement);
