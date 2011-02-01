@@ -16,6 +16,7 @@ import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.State;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -62,7 +63,14 @@ public class FlatHandler extends AbstractHandlerWithState
         if (page != null && !page.getViewer().getControl().isDisposed())
         {
             page.getUpstreamRequirementContentProvider().setIsFlat(isFlat);
-            page.getViewer().refresh();
+            if (page.getViewer() instanceof StructuredViewer)
+            {
+                ((StructuredViewer) page.getViewer()).refresh(false);
+            }
+            else
+            {
+                page.getViewer().refresh();
+            }
         }
     }
 

@@ -112,7 +112,7 @@ public class UpstreamRequirementLabelProvider extends AdapterFactoryLabelProvide
                 return defaultFont;
             }
         }
-        return super.getFont(element);
+        return defaultFont;
     }
 
     /**
@@ -140,7 +140,18 @@ public class UpstreamRequirementLabelProvider extends AdapterFactoryLabelProvide
                 return color;
             }
         }
-        return super.getForeground(element);
+        return Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
+    }
+
+    /**
+     * Get the white background color
+     * 
+     * @param object the labeled object
+     */
+    @Override
+    public Color getBackground(Object object)
+    {
+        return Display.getDefault().getSystemColor(SWT.COLOR_WHITE);
     }
 
     /**

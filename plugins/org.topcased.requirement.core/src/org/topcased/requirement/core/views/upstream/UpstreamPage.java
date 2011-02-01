@@ -108,6 +108,7 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
         mainComposite.setLayout(mainLayout);
 
         viewer = new TreeViewer(mainComposite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
+        viewer.setUseHashlookup(true);
         viewer.getTree().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         viewer.setContentProvider(ctPvd = new UpstreamRequirementContentProvider(RequirementUtils.getAdapterFactory()));
 
