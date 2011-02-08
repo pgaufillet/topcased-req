@@ -461,13 +461,14 @@ public final class RequirementHelper
     public CurrentRequirement create(HierarchicalElement target, Requirement upstream, CompoundCommand compoundCmd)
     {
         long index = 0;
-        HierarchicalElement root = RequirementHelper.INSTANCE.getHierarchicalElementRoot(getRequirementProject(upstream.eResource()));
+        HierarchicalElement root = null;
         String source = ""; //$NON-NLS-1$
         IRequirementCountingAlgorithm algorithm = RequirementCountingAlgorithmManager.getInstance().getCountingAlgorithm(ComputeRequirementIdentifier.getCurrentAlgorithm());
 
         // Handle the create from upstream case
         if (upstream != null)
         {
+        	root = RequirementHelper.INSTANCE.getHierarchicalElementRoot(getRequirementProject(upstream.eResource()));
             source = upstream.getIdent();
         }
 
