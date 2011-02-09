@@ -2,7 +2,7 @@
 <feature
       id="org.topcased.requirement.papyrus.feature"
       label="%featureName"
-      version="4.3.0.qualifier"
+      version="4.3.1.qualifier"
       provider-name="%providerName">
 
    <description url="%optionalURL">
@@ -20,9 +20,9 @@
    <requires>
       <import plugin="org.eclipse.papyrus.diagram.common"/>
       <import plugin="org.eclipse.papyrus.tabbedproperties.core"/>
-      <import feature="org.topcased.requirement.feature" version="4.3.0" match="greaterOrEqual"/>
       <import plugin="org.topcased.requirement.core"/>
       <import feature="org.eclipse.papyrus.backbone"/>
+      <import feature="org.topcased.requirement.core.feature" version="4.3.1" match="greaterOrEqual"/>
    </requires>
 
    <plugin
