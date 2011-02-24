@@ -14,7 +14,7 @@ package org.topcased.requirement.core.dnd;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -246,7 +246,7 @@ public class RequirementDropListener extends AbstractTransferDropTargetListener
         if (object instanceof IStructuredSelection)
         {
             Collection< ? > selection = ((IStructuredSelection) object).toList();
-            Set<Object> sortedSelection = new HashSet<Object>();
+            Set<Object> sortedSelection = new LinkedHashSet<Object>();
             for (Object obj : selection)
             {
                 // this selection comes from the upstream view. It means that all requirements need to be extracted

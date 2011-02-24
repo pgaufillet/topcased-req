@@ -4,7 +4,7 @@ Bundle-Name: %pluginName
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-SymbolicName: org.topcased.requirement.core;singleton:=true
-Bundle-Version: 3.3.2.qualifier
+Bundle-Version: 3.3.3.qualifier
 Bundle-Activator: org.topcased.requirement.core.internal.RequirementCorePlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -14,8 +14,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.expressions,
  org.topcased.requirement.common;visibility:=reexport,
  org.topcased.tabbedproperties;visibility:=reexport,
- org.topcased.modeler,
- org.eclipse.papyrus.documentation.view
+ org.topcased.modeler
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.topcased.requirement.core.commands,
