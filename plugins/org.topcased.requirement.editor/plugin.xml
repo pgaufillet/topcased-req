@@ -14,13 +14,14 @@
 
    <extension point="org.eclipse.ui.newWizards">
       <category
-            id="org.eclipse.emf.ecore.Wizard.category.ID"
-            name="%_UI_Wizard_category"/>
+            id="org.topcased.facilities.newModels"
+            name="Topcased Models"
+            parentCategory="org.topcased.facilities.newWizards"/>
       <wizard
             id="org.topcased.requirement.presentation.RequirementModelWizardID"
             name="%_UI_RequirementModelWizard_label"
             class="org.topcased.requirement.presentation.RequirementModelWizard"
-            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            category="org.topcased.facilities.newWizards/org.topcased.facilities.newModels"
             icon="platform:/plugin/org.topcased.requirement/icons/full/obj16/RequirementModelFile.gif">
          <description>%_UI_RequirementModelWizard_description</description>
          <selection class="org.eclipse.core.resources.IResource"/>
