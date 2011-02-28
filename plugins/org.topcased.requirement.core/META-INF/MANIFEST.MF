@@ -14,7 +14,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.expressions,
  org.topcased.requirement.common;visibility:=reexport,
  org.topcased.tabbedproperties;visibility:=reexport,
- org.topcased.modeler
+ org.topcased.modeler,
+ org.eclipse.papyrus.documentation.view
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.topcased.requirement.core.commands,
