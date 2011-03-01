@@ -12,10 +12,10 @@ package org.topcased.requirement.core.wizards.operation;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.command.Command;
@@ -26,9 +26,10 @@ import org.topcased.requirement.core.commands.UpdateMonitorCommand;
 import org.topcased.requirement.core.extensions.IRequirementTransformation;
 import org.topcased.requirement.core.extensions.RequirementTransformationManager;
 import org.topcased.requirement.core.internal.Messages;
-import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.util.RequirementResource;
+
+import ttm.Document;
 
 /**
  * 
@@ -46,7 +47,11 @@ public class MergeRequirementModelOperation extends AbstractRequirementModelOper
     private static final String MODEL_TMP = "tmp"; //$NON-NLS-1$
 
     private IFile sourceModelFile; // requirement model already created or not
-
+    
+    private Map<Document,Document> documentsToMerge;
+    
+    private boolean isPartialImport;
+    
     /**
      * The constructor
      * 
@@ -54,10 +59,12 @@ public class MergeRequirementModelOperation extends AbstractRequirementModelOper
      * @param sourceFile
      * @param destFile
      */
-    public MergeRequirementModelOperation(IFile targetFile, IFile sourceFile, IFile reqFile)
+    public MergeRequirementModelOperation(IFile targetFile, IFile sourceFile, IFile reqFile, Map<Document,Document> docs, boolean isPartialImport)
     {
         super(targetFile, reqFile);
         sourceModelFile = sourceFile;
+        documentsToMerge = docs;
+        this.isPartialImport = isPartialImport;
     }
 
     /**
@@ -70,22 +77,6 @@ public class MergeRequirementModelOperation extends AbstractRequirementModelOper
         if (RequirementResource.FILE_EXTENSION.equals(sourceModelFile.getFileExtension()))
         {
             Command startTaskCmd = UpdateMonitorCommand.getCommand(monitor, 0, Messages.getString("MergeRequirementModelOperation.0"), 0, null); //$NON-NLS-1$
-            final IPath mergePath = requirementModelFile.getFullPath().addFileExtension(MODEL_TMP);
-            Command rename = new CommandStub()
-            {
-                public void redo()
-                {
-                    // rename the file from the name given in the dialog and temporally copy it next to the target model
-                    try
-                    {
-                        sourceModelFile.copy(mergePath.addFileExtension(RequirementResource.FILE_EXTENSION), true, monitor);
-                    }
-                    catch (CoreException e)
-                    {
-                        RequirementCorePlugin.log(e);
-                    }
-                }
-            };
             Command worked1Cmd = UpdateMonitorCommand.getCommand(monitor, 1, 0);
 
             Command merge = new CommandStub()
@@ -93,10 +84,10 @@ public class MergeRequirementModelOperation extends AbstractRequirementModelOper
                 public void redo()
                 {
                     // Merge the existing requirement model
-                    mergeRequirementModel(mergePath, monitor);
+                    mergeRequirementModel(monitor);
                 }
             };
-            return Arrays.asList(startTaskCmd, rename, worked1Cmd, merge);
+            return Arrays.asList(startTaskCmd, worked1Cmd, merge);
 
         }
         else
@@ -126,7 +117,7 @@ public class MergeRequirementModelOperation extends AbstractRequirementModelOper
                 public void redo()
                 {
                     // Merge the existing requirement model
-                    mergeRequirementModel(mergePath, monitor);
+                    mergeRequirementModel(monitor);
                 }
             };
             return Arrays.asList(startTaskCmd, transform, worked1Cmd, merge);
@@ -159,24 +150,13 @@ public class MergeRequirementModelOperation extends AbstractRequirementModelOper
      * 
      * @param monitor The progress monitor to use
      */
-    protected void mergeRequirementModel(IPath mergePath, IProgressMonitor monitor)
+    protected void mergeRequirementModel(IProgressMonitor monitor)
     {
         monitor.beginTask(Messages.getString("MergeRequirementModelOperation.2"), 3); //$NON-NLS-1$      
 
-        // Get the resource to update/merge
-        Resource requirementResourceMerged = RequirementUtils.getResource(mergePath.addFileExtension(RequirementResource.FILE_EXTENSION));
-
-        // Add the initial model object to the contents
-        createInitialModel(requirementResourceMerged);
         monitor.worked(1);
 
         // merge operation
-        mergeOperation(requirementResourceMerged, monitor);
-
-        // Delete the temporary model
-        monitor.subTask(Messages.getString("MergeRequirementModelOperation.3")); //$NON-NLS-1$
-        Resource toDelete = RequirementUtils.getResource(mergePath.addFileExtension(RequirementResource.FILE_EXTENSION));
-        RequirementUtils.deleteResource(toDelete);
-        monitor.worked(1);
+        mergeOperation(documentsToMerge, isPartialImport, monitor);
     }
 }

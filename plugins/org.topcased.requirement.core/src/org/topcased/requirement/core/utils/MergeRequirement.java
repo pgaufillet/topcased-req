@@ -43,6 +43,7 @@ import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.topcased.facilities.util.EMFMarkerUtil;
 import org.topcased.requirement.Attribute;
@@ -54,6 +55,7 @@ import org.topcased.requirement.Requirement;
 import org.topcased.requirement.UpstreamModel;
 import org.topcased.requirement.core.extensions.IMergeRequirementProcessor;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
+import org.topcased.requirement.core.utils.ContainerAssigner.ContainerAssignerFactory;
 
 import ttm.Document;
 import ttm.HierarchicalElement;
@@ -168,8 +170,62 @@ public final class MergeRequirement
         processMoved();
         processAdded();
         processModified();
-        processDeleted();
+        processDeleted(false);
 
+    }
+
+    public void merge(Map<Document, Document> documentsToMerge, Resource current, boolean isPartialImport, IProgressMonitor monitor) throws InterruptedException
+    {
+        // resets the three lists
+        moves.clear();
+        additions.clear();
+        changes.clear();
+        deletions.clear();
+        deletedDoc = null;
+
+        // Call the EMF comparison service
+        Map<String, Object> options = new HashMap<String, Object>();
+        options.put(MatchOptions.OPTION_IGNORE_ID, false);
+        options.put(MatchOptions.OPTION_IGNORE_XMI_ID, true);
+        options.put(MatchOptions.OPTION_PROGRESS_MONITOR, monitor);
+        List<Document> upstreamDocuments = RequirementUtils.getUpstreamDocuments(current);
+        for (int i = 0; i < upstreamDocuments.size(); i++)
+        {
+            Document d = upstreamDocuments.get(i);
+            for (Document d2 : documentsToMerge.keySet())
+            {
+                if (d.getIdent().equals(d2.getIdent()))
+                {
+                    // build the map
+                    buildImpactRequirementMap(d.eResource());
+
+                    Document currentRoot = d;
+                    Document mergeRoot = documentsToMerge.get(d2);
+
+                    ContainerAssignerFactory factory = new ContainerAssignerFactory();
+                    ContainerAssigner container1 = factory.create(mergeRoot);
+                    Resource r1dummy = new XMIResourceImpl();
+                    r1dummy.getContents().add(mergeRoot);
+
+                    ContainerAssigner container2 = factory.create(currentRoot);
+                    Resource r2dummy = new XMIResourceImpl();
+                    r2dummy.getContents().add(currentRoot);
+
+                    MatchModel match = MatchService.doMatch(mergeRoot, currentRoot, options);
+                    DiffModel diff = DiffService.doDiff(match);
+                    for (DiffElement aDifference : diff.getOwnedElements())
+                    {
+                        buildDifferenceLists(aDifference);
+                    }
+                    container1.backup();
+                    container2.backup();
+                }
+            }
+        }
+        processMoved();
+        processAdded();
+        processModified();
+        processDeleted(isPartialImport);
     }
 
     /**
@@ -336,7 +392,7 @@ public final class MergeRequirement
     /**
      * Processes 'deletion' operations.
      */
-    private void processDeleted()
+    private void processDeleted(boolean isPartialImport)
     {
         for (DiffElement diff : deletions)
         {
@@ -359,7 +415,7 @@ public final class MergeRequirement
                     }
                     MergeService.merge(diff, true);
                 }
-                else if (removedElement instanceof ttm.Requirement)
+                else if (removedElement instanceof ttm.Requirement && !isPartialImport)
                 {
                     // the element is marked as deleted
                     processImpact(diff, removedElement);
@@ -470,4 +526,5 @@ public final class MergeRequirement
         }
         deletedDoc.getChildren().add(element);
     }
+
 }

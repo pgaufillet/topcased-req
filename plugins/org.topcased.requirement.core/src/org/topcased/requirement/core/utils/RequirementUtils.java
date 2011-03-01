@@ -1008,4 +1008,24 @@ public final class RequirementUtils
     {
         return DELETED_DOCUMENT_PATTERN.matcher(ident).matches();
     }
+
+    public static Set<CurrentRequirement> getLinkedCurrentRequirements(ttm.Requirement upstreamReq)
+    {
+        Set<CurrentRequirement> currentReqs = new HashSet<CurrentRequirement>();
+        if (upstreamReq.eResource() != null)
+        {
+            for (Setting setting : getCrossReferences(upstreamReq))
+            {
+                if (setting.getEObject() instanceof AttributeLink)
+                {
+                    AttributeLink attr = (AttributeLink) setting.getEObject();
+                    if (attr.eContainer() instanceof CurrentRequirement)
+                    {
+                        currentReqs.add((CurrentRequirement) attr.eContainer());
+                    }
+                }
+            }
+        }
+        return currentReqs;
+    }
 }

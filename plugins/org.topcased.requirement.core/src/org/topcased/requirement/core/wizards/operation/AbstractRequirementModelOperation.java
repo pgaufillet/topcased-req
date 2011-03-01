@@ -13,6 +13,7 @@ package org.topcased.requirement.core.wizards.operation;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -42,6 +43,8 @@ import org.topcased.requirement.core.preferences.CurrentPreferenceHelper;
 import org.topcased.requirement.core.utils.MergeRequirement;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.util.RequirementResource;
+
+import ttm.Document;
 
 /**
  * 
@@ -77,6 +80,10 @@ public abstract class AbstractRequirementModelOperation extends WorkspaceModifyO
     {
         targetModelFile = targetFile;
         requirementModelFile = reqFile;
+    }
+    
+    public AbstractRequirementModelOperation() {
+        
     }
 
     /**
@@ -175,7 +182,7 @@ public abstract class AbstractRequirementModelOperation extends WorkspaceModifyO
      * 
      * Process the merge operation
      */
-    protected void mergeOperation(Resource requirementResourceMerged, IProgressMonitor monitor)
+    protected void mergeOperation(Map<Document,Document> documentsToMerge,boolean isPartialImport, IProgressMonitor monitor)
     {
         monitor.subTask(Messages.getString("AbstractRequirementModelOperation.1")); //$NON-NLS-1$
         try
@@ -196,7 +203,10 @@ public abstract class AbstractRequirementModelOperation extends WorkspaceModifyO
                 requirementResource2 = domain.getResourceSet().getResource(
                         URI.createPlatformResourceURI(requirementModelFile.getFullPath().addFileExtension(RequirementResource.FILE_EXTENSION).toString(), true), true);
             }
-            MergeRequirement.INSTANCE.merge(requirementResource2, requirementResourceMerged, monitor);
+            MergeRequirement.INSTANCE.merge(documentsToMerge, requirementResource2,isPartialImport,monitor);
+            RequirementProject rp = RequirementUtils.getRequirementProject(requirementResource2);
+            rp.setIdentifier(projectName);
+            rp.setShortDescription(projectDescription);
             monitor.worked(1);
 
         }
@@ -206,7 +216,7 @@ public abstract class AbstractRequirementModelOperation extends WorkspaceModifyO
         }
         monitor.worked(1);
     }
-
+    
     /**
      * Updates the RequirementProject object in the requirement model
      * 

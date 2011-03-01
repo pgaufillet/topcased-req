@@ -45,13 +45,15 @@ public abstract class AbstractRequirementModelWizard extends Wizard implements I
 
     protected boolean existingRequirementModel = false;
 
-    protected RequirementWizardPage page;
+    protected MergeRequirementModelWizardPage pageMerge;
 
     protected String projectName;
 
     protected String projectDescription;
 
     protected boolean toMerge = false;
+
+    protected RequirementWizardPage page;
 
     /**
      * Constructor
@@ -84,8 +86,14 @@ public abstract class AbstractRequirementModelWizard extends Wizard implements I
                 alreadyAttachedRequirementPath = requirementFile.getFullPath();
             }
         }
-        page = new RequirementWizardPage(selection, alreadyAttachedRequirementPath, toMerge);
-        addPage(page);
+        if(toMerge) {
+            pageMerge = new MergeRequirementModelWizardPage(selection, alreadyAttachedRequirementPath);
+            addPage(pageMerge);
+        }
+        else {
+            page = new RequirementWizardPage(selection, alreadyAttachedRequirementPath, toMerge);
+            addPage(page);
+        }
     }
 
     /**
@@ -97,10 +105,17 @@ public abstract class AbstractRequirementModelWizard extends Wizard implements I
         super.createPageControls(pageContainer);
         if (existingRequirementModel)
         {
-            // updates fields with values given in the constructor
-            page.setProjectFd(projectName != null ? projectName : ""); //$NON-NLS-1$
-            page.setProjectDescrFd(projectDescription != null ? projectDescription : ""); //$NON-NLS-1$
-            page.getButton().setEnabled(false);
+            if(page != null) {
+                // updates fields with values given in the constructor
+                page.setProjectFd(projectName != null ? projectName : ""); //$NON-NLS-1$
+                page.setProjectDescrFd(projectDescription != null ? projectDescription : ""); //$NON-NLS-1$
+                page.getButton().setEnabled(false);
+            }
+            if(pageMerge != null) {
+                // updates fields with values given in the constructor
+                pageMerge.setProjectFd(projectName != null ? projectName : ""); //$NON-NLS-1$
+                pageMerge.setProjectDescrFd(projectDescription != null ? projectDescription : ""); //$NON-NLS-1$
+            }
         }
     }
 
@@ -111,10 +126,16 @@ public abstract class AbstractRequirementModelWizard extends Wizard implements I
     public boolean performFinish()
     {
         Boolean result = false;
-        if (page.isPageComplete())
+        if (page!= null && page.isPageComplete())
         {
             projectName = page.getProjectFd();
             projectDescription = page.getProjectDescrFd();
+            result = createModelFile();
+        }
+        if (pageMerge!= null && pageMerge.isPageComplete())
+        {
+            projectName = pageMerge.getProjectFd();
+            projectDescription = pageMerge.getProjectDescrFd();
             result = createModelFile();
         }
         return result;
@@ -139,7 +160,7 @@ public abstract class AbstractRequirementModelWizard extends Wizard implements I
         try
         {
             AbstractRequirementModelOperation operation = null;
-            if (page.getEmptySource())
+            if (page!= null && page.getEmptySource())
             {
                 // Do the work within an operation.
                 operation = new EmptyRequirementModelOperation(page.getTargetModelFile(), page.getDestModelFile());

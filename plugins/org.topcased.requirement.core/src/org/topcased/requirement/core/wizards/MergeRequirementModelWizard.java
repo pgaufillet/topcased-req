@@ -54,6 +54,6 @@ public class MergeRequirementModelWizard extends AbstractRequirementModelWizard
     @Override
     protected AbstractRequirementModelOperation getOperation()
     {
-        return new MergeRequirementModelOperation(page.getTargetModelFile(), page.getSourceModelFile(), page.getDestModelFile());
+        return new MergeRequirementModelOperation(pageMerge.getTargetModelFile(), pageMerge.getSourceModelFile(), pageMerge.getDestModelFile(),pageMerge.getDocumentsToMerge(), pageMerge.isPartialImport());
     }
 }
