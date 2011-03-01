@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.ui.AbstractSourceProvider;
+import org.eclipse.ui.ISourceProviderListener;
 
 /**
  * A Source provider to define commands activation. There is two variables : hasRequirementModel who will notify
@@ -40,6 +41,22 @@ public class RequirementModelSourceProvider extends AbstractSourceProvider
     public RequirementModelSourceProvider()
     {
         currentState = new HashMap<String, Boolean>();
+        // add listener to update the current state
+        addSourceProviderListener(new ISourceProviderListener()
+        {
+            
+            public void sourceChanged(int arg0, String arg1, Object arg2)
+            {
+                if(arg2 instanceof Boolean){
+                    currentState.put(arg1, (Boolean) arg2);
+                }
+            }
+            
+            public void sourceChanged(int arg0, Map arg1)
+            {
+                currentState.putAll(arg1);
+            }
+        });
     }
 
     /**

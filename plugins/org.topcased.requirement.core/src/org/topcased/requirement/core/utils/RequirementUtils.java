@@ -97,13 +97,13 @@ public final class RequirementUtils
     private static final String DELETED_PREFIX = "deleted_";//$NON-NLS-1$
 
     /** Pattern for detecting ident of deleted documents */
-    private static final Pattern DELETED_DOCUMENT_PATTERN = Pattern.compile(DELETED_PREFIX.concat("\\d\\d\\d\\d-\\d\\d-\\d\\d"));//$NON-NLS-1$
+    private static final Pattern DELETED_DOCUMENT_PATTERN = Pattern.compile(DELETED_PREFIX.concat("\\d\\d\\d\\d-\\d\\d-\\d\\d(_\\d\\d-\\d\\d)?"));//$NON-NLS-1$
 
     /** Format string for constructing ident of deleted documents */
     private static final String DELETED_DOCUMENT_IDENT_FORMAT = DELETED_PREFIX.concat("%s");
 
     /** Date format for constructing ident of deleted documents */
-    private static final String DELETED_DOCUMENT_DATE_FORMAT = "yyyy-MM-dd";
+    private static final String DELETED_DOCUMENT_DATE_FORMAT = "yyyy-MM-dd_HH-mm";
 
     /**
      * The shared adapter factory
@@ -813,7 +813,7 @@ public final class RequirementUtils
      */
     public static void fireIsImpactedVariableChanged()
     {
-        Boolean isImpacted = true;
+        Boolean noRequirementImpacted = true;
 
         IEditorServices services = getSpecificServices(null);
 
@@ -834,11 +834,11 @@ public final class RequirementUtils
                     if (aReq instanceof CurrentRequirement && ((CurrentRequirement) aReq).isImpacted())
                     {
                         // action must be disabled.
-                        isImpacted = false;
+                        noRequirementImpacted = false;
                         break;
                     }
                 }
-                myPro.setIsImpactedState(isImpacted);
+                myPro.setIsImpactedState(noRequirementImpacted);
             }
         }
 

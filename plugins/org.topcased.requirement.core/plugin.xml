@@ -104,12 +104,6 @@
                         value="true">
                   </equals>
                </with>
-               <with
-                     variable="requirementActionsEnablement.isImpacted">
-                  <equals
-                        value="true">
-                  </equals>
-               </with>
             </and>
          </activeWhen>
       </handler>
