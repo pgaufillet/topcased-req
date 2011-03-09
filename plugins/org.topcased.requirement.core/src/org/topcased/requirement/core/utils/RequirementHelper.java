@@ -176,7 +176,7 @@ public final class RequirementHelper
                     else
                     {
                         // no policy, load and get the .requirement nearby file
-                        URI uri = URI.createURI(anyResource.getURI().trimFileExtension().toString() + "." + RequirementResource.FILE_EXTENSION); //$NON-NLS-1$
+                        URI uri = URI.createURI(anyResource.getURI().trimFileExtension().appendFileExtension(RequirementResource.FILE_EXTENSION).toString());
                         Resource reqResource = anyResource.getResourceSet().getResource(uri, true);
                         if (reqResource != null)
                         {
