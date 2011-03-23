@@ -11,6 +11,8 @@
 package org.topcased.requirement.core.decorators;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gef.DefaultEditDomain;
+import org.eclipse.gef.EditDomain;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gmf.runtime.common.core.service.AbstractProvider;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
@@ -21,6 +23,7 @@ import org.eclipse.ui.IEditorPart;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.core.extensions.IEditorServices;
 import org.topcased.requirement.core.extensions.SupportingEditorsManager;
+import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
 public class CurrentReqEditPartDecoratorProvider extends AbstractProvider implements IDecoratorProvider
@@ -36,12 +39,28 @@ public class CurrentReqEditPartDecoratorProvider extends AbstractProvider implem
             IDecoratorTarget decoratorTarget = ((CreateDecoratorsOperation) operation).getDecoratorTarget();
             GraphicalEditPart editPart = (GraphicalEditPart) decoratorTarget.getAdapter(GraphicalEditPart.class);
             IEditorPart editor = RequirementUtils.getCurrentEditor();
+            boolean loadRequirementsFirst = false;
+            if (editor == null)
+            {
+                // editor is being started. No problem, we can acces it through the editing domain
+                EditDomain dom = editPart.getViewer().getEditDomain();
+                if (dom instanceof DefaultEditDomain)
+                {
+                    editor = ((DefaultEditDomain) dom).getEditorPart();
+                }
+                // ensure requirements are loaded
+                loadRequirementsFirst = true;
+            }
             IEditorServices services = SupportingEditorsManager.getInstance().getServices(editor);
             if (services != null)
             {
                 EObject eobject = services.getEObject(editPart);
                 if (eobject != null)
                 {
+                    if(loadRequirementsFirst){
+                        // ensure requirements are loaded
+                        RequirementHelper.INSTANCE.getRequirementProject(eobject.eResource());
+                    }
                     HierarchicalElement currents = RequirementUtils.getHierarchicalElementFor(eobject);
                     return currents != null && !currents.getRequirement().isEmpty();
                 }

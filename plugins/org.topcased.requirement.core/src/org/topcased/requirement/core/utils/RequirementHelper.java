@@ -171,7 +171,8 @@ public final class RequirementHelper
                     IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(anyResource.getResourceSet());
                     if (policy != null)
                     {
-                        result = policy.getRequirementProjectFromTargetMainResource(anyResource);
+                        Resource mainRes = policy.getLinkedTargetModel(anyResource.getResourceSet());
+                        result = policy.getRequirementProjectFromTargetMainResource(mainRes);
                     }
                     else
                     {

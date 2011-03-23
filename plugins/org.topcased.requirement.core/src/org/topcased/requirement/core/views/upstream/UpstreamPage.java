@@ -17,6 +17,8 @@ import org.eclipse.core.commands.Command;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
+import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.ui.actions.RedoAction;
 import org.eclipse.gef.ui.actions.UndoAction;
 import org.eclipse.jface.action.IMenuListener;
@@ -49,6 +51,7 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.RegistryToggleState;
 import org.topcased.requirement.Attribute;
 import org.topcased.requirement.AttributeLink;
+import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.Requirement;
 import org.topcased.requirement.RequirementPackage;
@@ -63,6 +66,7 @@ import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.listeners.RequirementDoubleClickListener;
 import org.topcased.requirement.core.listeners.UpstreamSelectionChangedListener;
+import org.topcased.requirement.core.preferences.RequirementPreferenceConstants;
 import org.topcased.requirement.core.preferences.UpstreamStylesPreferenceHelper;
 import org.topcased.requirement.core.providers.UpstreamRequirementContentProvider;
 import org.topcased.requirement.core.providers.UpstreamRequirementLabelProvider;
@@ -360,10 +364,24 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
                 if (msg.getEventType() == Notification.ADD)
                 {
                     internalRefresh(msg.getNewValue());
+                    // refresh decorator only if needed
+                    if (msg.getNewValue() instanceof CurrentRequirement)
+                    {
+                        EObject hierElt = ((CurrentRequirement) msg.getNewValue()).eContainer();
+                        if (hierElt instanceof HierarchicalElement)
+                        {
+                            refreshLinkedEditPartsDecorators((HierarchicalElement) hierElt);
+                        }
+                    }
                 }
                 else if (msg.getEventType() == Notification.REMOVE)
                 {
                     internalRefresh(msg.getOldValue());
+                    // refresh decorator only if needed
+                    if (msg.getOldValue() instanceof CurrentRequirement && msg.getNotifier() instanceof HierarchicalElement)
+                    {
+                        refreshLinkedEditPartsDecorators((HierarchicalElement) msg.getNotifier());
+                    }
                 }
                 else if (msg.getEventType() == Notification.SET)
                 {
@@ -372,6 +390,15 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
                         case RequirementPackage.ATTRIBUTE_LINK__VALUE: {
                             internalRefresh(msg.getOldValue());
                             internalRefresh(msg.getNewValue());
+                            // refresh decorator only if needed
+                            if (msg.getNotifier() instanceof AttributeLink)
+                            {
+                                EObject hierElt = ((AttributeLink) msg.getNotifier()).eContainer().eContainer();
+                                if (hierElt instanceof HierarchicalElement)
+                                {
+                                    refreshLinkedEditPartsDecorators((HierarchicalElement) hierElt);
+                                }
+                            }
                             break;
                         }
                         case RequirementPackage.ATTRIBUTE_LINK__PARTIAL: {
@@ -397,12 +424,6 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
             else if (object instanceof Requirement)
             {
                 updateReferencedUpstream((Requirement) object);
-                IEditorPart editor = RequirementUtils.getCurrentEditor();
-                IEditorServices services = SupportingEditorsManager.getInstance().getServices(editor);
-                if (editor != null && services != null)
-                {
-                    services.refreshActiveDiagram(editor);
-                }
             }
             else if (object instanceof HierarchicalElement)
             {
@@ -430,4 +451,39 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
         }
 
     };
+
+    /**
+     * Refresh requirement decorators of related edit parts
+     * 
+     * @param updatedHierachicalElement the hierarchical element which current requirements are modified
+     */
+    protected void refreshLinkedEditPartsDecorators(HierarchicalElement updatedHierachicalElement)
+    {
+        // check if necessary according to preference first
+        if (RequirementCorePlugin.getDefault().getPreferenceStore().getBoolean(RequirementPreferenceConstants.DISPLAY_CURRENT_DECORATOR))
+        {
+            EObject linkedModelElt = updatedHierachicalElement.getElement();
+            if (linkedModelElt != null)
+            {
+                IEditorPart editor = RequirementUtils.getCurrentEditor();
+                IEditorServices services = SupportingEditorsManager.getInstance().getServices(editor);
+                if (editor != null && services != null)
+                {
+                    EditPartViewer graphViewer = services.getGraphicalViewer(editor);
+                    for (Object part : graphViewer.getEditPartRegistry().values())
+                    {
+                        if (part instanceof EditPart)
+                        {
+                            EditPart editPart = (EditPart) part;
+                            if (linkedModelElt.equals(services.getEObject(editPart)))
+                            {
+                                // notify the edit part to refresh decorators
+                                editPart.addNotify();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
