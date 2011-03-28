@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.topcased.requirement.ecore.feature"
+      label="%featureName"
+      version="4.3.1.qualifier"
+      provider-name="%providerName">
+
+   <description url="%optionalURL">
+      %description
+   </description>
+
+   <copyright url="%copyrightURL">
+      %copyright
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <requires>
+      <import plugin="org.topcased.requirement.core"/>
+      <import plugin="org.eclipse.emf.ecoretools.diagram"/>
+      <import plugin="org.eclipse.emf.ecoretools.tabbedproperties"/>
+      <import plugin="org.eclipse.gmf.runtime.emf.type.core"/>
+      <import plugin="org.eclipse.gmf.runtime.diagram.ui.resources.editor"/>
+      <import plugin="org.eclipse.gmf.runtime.diagram.ui"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.gmf.runtime.common.core"/>
+   </requires>
+
+   <plugin
+         id="org.topcased.requirement.bundle.ecore"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
