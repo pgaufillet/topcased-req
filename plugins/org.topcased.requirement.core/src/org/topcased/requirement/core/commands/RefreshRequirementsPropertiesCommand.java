@@ -100,7 +100,15 @@ public class RefreshRequirementsPropertiesCommand
             editor = RequirementUtils.getCurrentEditor();
         }
         // Notify views that the diagram property has changed
-        ((CurrentRequirementView) CurrentRequirementView.getInstance()).partActivated(editor);
-        ((UpstreamRequirementView) UpstreamRequirementView.getInstance()).partActivated(editor);
+        CurrentRequirementView currentRequirementView = (CurrentRequirementView) CurrentRequirementView.getInstance();
+        if (currentRequirementView != null)
+        {
+            currentRequirementView.partActivated(editor);
+        }
+        UpstreamRequirementView upstreamRequirementView = (UpstreamRequirementView) UpstreamRequirementView.getInstance();
+        if (upstreamRequirementView != null)
+        {
+            upstreamRequirementView.partActivated(editor);
+        }
     }
 }
