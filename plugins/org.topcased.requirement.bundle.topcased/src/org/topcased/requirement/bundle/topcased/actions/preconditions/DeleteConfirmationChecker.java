@@ -24,8 +24,8 @@ import org.topcased.modeler.dialogs.ConfirmationDialog;
 import org.topcased.modeler.editor.Modeler;
 import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.HierarchicalElement;
-import org.topcased.requirement.bundle.topcased.Activator;
 import org.topcased.requirement.bundle.topcased.internal.Messages;
+import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.preferences.RequirementPreferenceConstants;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
@@ -51,7 +51,7 @@ public class DeleteConfirmationChecker implements ActionConditionChecker
         if (hasRequirements)
         {
             ConfirmationDialog dialog = new ConfirmationDialog(Display.getCurrent().getActiveShell(), Messages.getString("DeleteModelObjectAction.CmdLabel"),
-                    Messages.getString("DeleteModelObjectAction.ConfirmMessage"), Activator.getDefault().getPreferenceStore(), RequirementPreferenceConstants.DELETE_MODEL_WITHOUT_CONFIRM);
+                    Messages.getString("DeleteModelObjectAction.ConfirmMessage"), RequirementCorePlugin.getDefault().getPreferenceStore(), RequirementPreferenceConstants.DELETE_MODEL_WITHOUT_CONFIRM);
             int result = dialog.open();
             return result == Window.OK;
         }

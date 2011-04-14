@@ -36,17 +36,23 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.DuplicateElementsRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.IEditCommandRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.MoveRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.SetRequest;
+import org.eclipse.jface.window.Window;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.RequirementPackage;
+import org.topcased.requirement.bundle.ecore.internal.Messages;
+import org.topcased.requirement.bundle.ecore.utils.ConfirmationDialog;
 import org.topcased.requirement.core.commands.CommandStub;
 import org.topcased.requirement.core.commands.MoveHierarchicalElementCommand;
 import org.topcased.requirement.core.commands.PasteHierarchicalElementCommand;
 import org.topcased.requirement.core.commands.RemoveRequirementCommand;
 import org.topcased.requirement.core.commands.RenameRequirementCommand;
+import org.topcased.requirement.core.internal.RequirementCorePlugin;
+import org.topcased.requirement.core.preferences.RequirementPreferenceConstants;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
@@ -78,8 +84,21 @@ public class EObjectHelperAdvice extends AbstractEditHelperAdvice
                     @Override
                     public void execute()
                     {
-                        RemoveRequirementCommand removeReqCmd = new RemoveRequirementCommand(domain, eobject);
-                        removeReqCmd.execute();
+                        boolean canContinue = true;
+                        HierarchicalElement hierarchicalElement = RequirementUtils.getHierarchicalElementFor(eobject);
+                        if (hierarchicalElement != null && !hierarchicalElement.eContents().isEmpty())
+                        {
+                            ConfirmationDialog dialog = new ConfirmationDialog(Display.getCurrent().getActiveShell(), Messages.getString("DeleteModelObjectAction.CmdLabel"),
+                                    Messages.getString("DeleteModelObjectAction.ConfirmMessage"), RequirementCorePlugin.getDefault().getPreferenceStore(),
+                                    RequirementPreferenceConstants.DELETE_MODEL_WITHOUT_CONFIRM);
+                            int result = dialog.open();
+                            canContinue = result != Window.OK;
+                        }
+                        if (canContinue)
+                        {
+                            RemoveRequirementCommand removeReqCmd = new RemoveRequirementCommand(domain, eobject);
+                            removeReqCmd.execute();
+                        }
                     }
 
                     public void redo()

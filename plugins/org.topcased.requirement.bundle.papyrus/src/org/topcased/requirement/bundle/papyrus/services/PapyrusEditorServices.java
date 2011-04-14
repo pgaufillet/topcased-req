@@ -33,6 +33,8 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.RollbackException;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
+import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
@@ -140,12 +142,16 @@ public class PapyrusEditorServices implements IEditorServices
      */
     public EObject getEObject(EditPart part)
     {
+        EObject element = null;
         if (part instanceof GraphicalEditPart)
         {
-            EObject element = ((GraphicalEditPart) part).resolveSemanticElement();
-            return element;
+            element = ((GraphicalEditPart) part).resolveSemanticElement();
         }
-        return null;
+        else if (part instanceof ConnectionEditPart)
+        {
+            element = ((ConnectionEditPart) part).resolveSemanticElement();
+        }
+        return element;
     }
 
     /**
@@ -156,10 +162,10 @@ public class PapyrusEditorServices implements IEditorServices
      */
     public boolean canCreateRequirement(EditPart part)
     {
-        if (part instanceof GraphicalEditPart)
+        if (part instanceof AbstractGraphicalEditPart)
         {
             // do not accept diagram
-            return !(part instanceof DiagramEditPart || ((GraphicalEditPart) part).getModel() instanceof Diagram);
+            return !(part instanceof DiagramEditPart || ((AbstractGraphicalEditPart) part).getModel() instanceof Diagram);
         }
         return false;
     }
