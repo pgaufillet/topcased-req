@@ -55,7 +55,10 @@ public class CurrentReqEditPartDecoratorProvider extends AbstractProvider implem
             if (services != null)
             {
                 EObject eobject = services.getEObject(editPart);
-                if (eobject != null)
+                // this is the main element's edit part only if its parent part does not point the same element
+                boolean isMainEditPart = editPart.getParent() == null;
+                isMainEditPart |= eobject != null && !eobject.equals(services.getEObject(editPart.getParent()));
+                if (eobject != null && isMainEditPart)
                 {
                     if(loadRequirementsFirst){
                         // ensure requirements are loaded

@@ -25,7 +25,7 @@ import org.topcased.modeler.editor.Modeler;
 import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.bundle.topcased.internal.Messages;
-import org.topcased.requirement.core.internal.RequirementCorePlugin;
+import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.preferences.RequirementPreferenceConstants;
 import org.topcased.requirement.core.utils.RequirementUtils;
 

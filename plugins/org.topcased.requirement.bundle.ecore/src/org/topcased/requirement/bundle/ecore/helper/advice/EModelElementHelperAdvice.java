@@ -47,12 +47,12 @@ import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.RequirementPackage;
 import org.topcased.requirement.bundle.ecore.internal.Messages;
 import org.topcased.requirement.bundle.ecore.utils.ConfirmationDialog;
+import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.commands.CommandStub;
 import org.topcased.requirement.core.commands.MoveHierarchicalElementCommand;
 import org.topcased.requirement.core.commands.PasteHierarchicalElementCommand;
 import org.topcased.requirement.core.commands.RemoveRequirementCommand;
 import org.topcased.requirement.core.commands.RenameRequirementCommand;
-import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.preferences.RequirementPreferenceConstants;
 import org.topcased.requirement.core.utils.RequirementUtils;
 

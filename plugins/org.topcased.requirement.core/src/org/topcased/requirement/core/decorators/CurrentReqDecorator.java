@@ -29,7 +29,7 @@ import org.topcased.requirement.Attribute;
 import org.topcased.requirement.AttributeLink;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.Requirement;
-import org.topcased.requirement.core.internal.RequirementCorePlugin;
+import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.preferences.RequirementPreferenceConstants;
 import org.topcased.requirement.core.utils.RequirementUtils;
 

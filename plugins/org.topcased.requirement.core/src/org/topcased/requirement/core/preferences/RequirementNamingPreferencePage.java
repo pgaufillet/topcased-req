@@ -36,11 +36,11 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.topcased.facilities.preferences.AbstractTopcasedPreferencePage;
+import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.extensions.IRequirementIdentifierVariables;
 import org.topcased.requirement.core.extensions.RequirementCountingAlgorithmManager;
 import org.topcased.requirement.core.extensions.RequirementIdentifierVariablesManager;
 import org.topcased.requirement.core.internal.Messages;
-import org.topcased.requirement.core.internal.RequirementCorePlugin;
 
 /**
  * Manages the preference store for the Requirements naming's format

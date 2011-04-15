@@ -47,7 +47,7 @@ import org.topcased.requirement.core.commands.MoveHierarchicalElementCommand;
 import org.topcased.requirement.core.commands.PasteHierarchicalElementCommand;
 import org.topcased.requirement.core.commands.RemoveRequirementCommand;
 import org.topcased.requirement.core.commands.RenameRequirementCommand;
-import org.topcased.requirement.core.internal.RequirementCorePlugin;
+import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.preferences.RequirementPreferenceConstants;
 import org.topcased.requirement.core.utils.RequirementUtils;
 

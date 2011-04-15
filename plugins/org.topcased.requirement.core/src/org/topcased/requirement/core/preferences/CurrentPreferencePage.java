@@ -13,9 +13,9 @@
 package org.topcased.requirement.core.preferences;
 
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Vector;
-import java.util.Map.Entry;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
@@ -36,8 +36,8 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.internal.Messages;
-import org.topcased.requirement.core.internal.RequirementCorePlugin;
 
 /**
  * Manages the preference store for the current requirement

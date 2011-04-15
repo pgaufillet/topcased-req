@@ -27,7 +27,7 @@ import org.topcased.requirement.RequirementPackage;
 import org.topcased.requirement.SpecialChapter;
 import org.topcased.requirement.TextAttribute;
 import org.topcased.requirement.UpstreamModel;
-import org.topcased.requirement.core.internal.RequirementCorePlugin;
+import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.preferences.UpstreamPreferenceHelper;
 
 import ttm.Document;

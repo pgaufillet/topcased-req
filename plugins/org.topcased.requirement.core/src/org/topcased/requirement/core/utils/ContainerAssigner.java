@@ -2,7 +2,7 @@ package org.topcased.requirement.core.utils;
 
 import org.eclipse.core.runtime.IStatus;
 import org.topcased.requirement.UpstreamModel;
-import org.topcased.requirement.core.internal.RequirementCorePlugin;
+import org.topcased.requirement.core.RequirementCorePlugin;
 
 import ttm.Document;
 

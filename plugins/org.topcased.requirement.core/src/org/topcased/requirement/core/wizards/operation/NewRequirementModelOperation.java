@@ -26,6 +26,7 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IEditorPart;
 import org.topcased.requirement.RequirementProject;
+import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.commands.CommandStub;
 import org.topcased.requirement.core.commands.UpdateMonitorCommand;
 import org.topcased.requirement.core.extensions.IEditorServices;
@@ -35,7 +36,6 @@ import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
 import org.topcased.requirement.core.extensions.RequirementTransformationManager;
 import org.topcased.requirement.core.handlers.UnlinkRequirementModelHandler;
 import org.topcased.requirement.core.internal.Messages;
-import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.util.RequirementResource;
 

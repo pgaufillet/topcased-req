@@ -9,7 +9,7 @@
  * Contributors : Maxime AUDRAIN (CS) - initial API and implementation
  * 
  *****************************************************************************/
-package org.topcased.requirement.core.internal;
+package org.topcased.requirement.core;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;

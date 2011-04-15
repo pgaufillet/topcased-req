@@ -48,7 +48,7 @@ import org.topcased.requirement.core.commands.MoveAttributeCommand;
 import org.topcased.requirement.core.commands.RemoveAttributeCommand;
 import org.topcased.requirement.core.commands.RenameAttributeCommand;
 import org.topcased.requirement.core.internal.Messages;
-import org.topcased.requirement.core.internal.RequirementCorePlugin;
+import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.utils.RequirementHelper;
 
 /**

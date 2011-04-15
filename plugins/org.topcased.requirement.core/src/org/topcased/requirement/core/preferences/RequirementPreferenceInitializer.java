@@ -14,7 +14,7 @@ package org.topcased.requirement.core.preferences;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.topcased.requirement.core.internal.RequirementCorePlugin;
+import org.topcased.requirement.core.RequirementCorePlugin;
 
 /**
  * This class contributes to the <code>org.eclipse.core.runtime.preferences</code> extension point.

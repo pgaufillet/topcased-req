@@ -48,7 +48,7 @@ import org.topcased.requirement.ObjectAttribute;
 import org.topcased.requirement.Requirement;
 import org.topcased.requirement.TextAttribute;
 import org.topcased.requirement.core.internal.Messages;
-import org.topcased.requirement.core.internal.RequirementCorePlugin;
+import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.preferences.CurrentPreferenceHelper;
 import org.topcased.requirement.core.utils.LabelHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;

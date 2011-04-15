@@ -25,7 +25,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.topcased.facilities.extensions.AbstractExtensionManager;
-import org.topcased.requirement.core.internal.RequirementCorePlugin;
+import org.topcased.requirement.core.RequirementCorePlugin;
 
 /**
  * Defines the manager of the extension point "modelAttachmentPolicy" which provides the way to link, unlink, update a

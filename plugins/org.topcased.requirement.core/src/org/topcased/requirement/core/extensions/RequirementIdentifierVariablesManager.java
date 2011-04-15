@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.topcased.facilities.extensions.AbstractExtensionManager;
-import org.topcased.requirement.core.internal.RequirementCorePlugin;
+import org.topcased.requirement.core.RequirementCorePlugin;
 
 /**
  * Define the manager of the extension point "requirementIdentifierDefinition" who provide the way to change the count

@@ -40,7 +40,7 @@ import org.topcased.requirement.AttributesType;
 import org.topcased.requirement.ConfiguratedAttribute;
 import org.topcased.requirement.core.filters.UpdateAttributeConfigurationFilter;
 import org.topcased.requirement.core.internal.Messages;
-import org.topcased.requirement.core.internal.RequirementCorePlugin;
+import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.preferences.CurrentPreferenceHelper;
 import org.topcased.requirement.core.providers.CurrentRequirementLabelProvider;
 import org.topcased.requirement.core.utils.RequirementUtils;

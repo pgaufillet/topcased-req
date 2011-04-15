@@ -39,8 +39,8 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
 import org.topcased.requirement.common.utils.JFaceUtils;
+import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.extensions.internal.UpstreamCombinedStyle;
-import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.preferences.UpstreamStylesPreferenceHelper;
 
 import ttm.Requirement;

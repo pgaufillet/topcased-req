@@ -23,7 +23,7 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EObject;
 import org.topcased.facilities.extensions.AbstractExtensionManager;
-import org.topcased.requirement.core.internal.RequirementCorePlugin;
+import org.topcased.requirement.core.RequirementCorePlugin;
 
 /**
  * Define the manager of the extension point "dropRestriction" who can disable drop on modeler objects specified in the

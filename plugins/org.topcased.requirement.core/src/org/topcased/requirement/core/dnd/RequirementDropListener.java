@@ -45,7 +45,7 @@ import org.topcased.requirement.core.extensions.SpecificDropActionDescriptor;
 import org.topcased.requirement.core.extensions.SpecificDropActionManager;
 import org.topcased.requirement.core.extensions.SupportingEditorsManager;
 import org.topcased.requirement.core.internal.Messages;
-import org.topcased.requirement.core.internal.RequirementCorePlugin;
+import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.current.CurrentRequirementView;

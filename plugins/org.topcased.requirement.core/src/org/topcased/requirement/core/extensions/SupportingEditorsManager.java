@@ -27,8 +27,8 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.ui.IEditorPart;
 import org.topcased.facilities.extensions.AbstractExtensionManager;
+import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.extensions.internal.Priority;
-import org.topcased.requirement.core.internal.RequirementCorePlugin;
 
 /**
  * Manager of the extension point used to declare the editors supporting the attachment of requirements.

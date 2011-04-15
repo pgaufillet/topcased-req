@@ -55,6 +55,7 @@ import org.eclipse.ui.views.markers.MarkerItem;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.Requirement;
 import org.topcased.requirement.RequirementProject;
+import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.dnd.DragSourceCurrentAdapter;
 import org.topcased.requirement.core.dnd.DropTargetCurrentAdapter;
 import org.topcased.requirement.core.dnd.RequirementTransfer;
@@ -62,7 +63,6 @@ import org.topcased.requirement.core.filters.CurrentViewFilterFromUpstreamSelect
 import org.topcased.requirement.core.filters.RequirementFilter;
 import org.topcased.requirement.core.handlers.ICommandConstants;
 import org.topcased.requirement.core.handlers.LinkWithEditorHandler;
-import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.listeners.RequirementDoubleClickListener;
 import org.topcased.requirement.core.listeners.UpstreamSelectionChangedListener;
 import org.topcased.requirement.core.providers.CurrentRequirementContentProvider;

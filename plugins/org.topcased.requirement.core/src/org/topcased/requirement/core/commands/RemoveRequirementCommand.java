@@ -57,7 +57,10 @@ public class RemoveRequirementCommand extends CompoundCommand
         super(Messages.getString("RemoveRequirementCommand.0")); //$NON-NLS-1$
         editingDomain = domain;
         selected = new ArrayList<EObject>();
-        selected.add(deleted);
+        if (deleted != null)
+        {
+            selected.add(deleted);
+        }
         initializeCommands();
     }
 

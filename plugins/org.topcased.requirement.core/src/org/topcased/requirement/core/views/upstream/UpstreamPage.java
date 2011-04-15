@@ -55,6 +55,7 @@ import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.Requirement;
 import org.topcased.requirement.RequirementPackage;
+import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.dnd.DragSourceUpstreamAdapter;
 import org.topcased.requirement.core.dnd.RequirementTransfer;
 import org.topcased.requirement.core.extensions.IEditorServices;
@@ -63,7 +64,6 @@ import org.topcased.requirement.core.filters.CurrentViewFilterFromUpstreamSelect
 import org.topcased.requirement.core.filters.RequirementFilter;
 import org.topcased.requirement.core.handlers.ICommandConstants;
 import org.topcased.requirement.core.internal.Messages;
-import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.listeners.RequirementDoubleClickListener;
 import org.topcased.requirement.core.listeners.UpstreamSelectionChangedListener;
 import org.topcased.requirement.core.preferences.RequirementPreferenceConstants;

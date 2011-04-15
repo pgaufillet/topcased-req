@@ -364,7 +364,7 @@ public class RequirementWizardPage extends WizardPage
         {
             if (!ModelAttachmentPolicyManager.getInstance().isEnableFor(getTargetModelFile().getFileExtension()))
             {
-                if (!getTargetModelFile().getFileExtension().endsWith("di")) //$NON-NLS-1$
+                if (!getTargetModelFile().getFileExtension().endsWith("di")&&!getTargetModelFile().getFileExtension().endsWith("diag")) //$NON-NLS-1$
                 {
                     message = Messages.getString("RequirementWizardPage.1"); //$NON-NLS-1$
                 }

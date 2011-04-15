@@ -26,9 +26,9 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.topcased.facilities.preferences.AbstractTopcasedPreferencePage;
+import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.extensions.internal.UpstreamStyle;
 import org.topcased.requirement.core.internal.Messages;
-import org.topcased.requirement.core.internal.RequirementCorePlugin;
 
 /**
  * Manage preferences related to Upstream View styles setting.<br>

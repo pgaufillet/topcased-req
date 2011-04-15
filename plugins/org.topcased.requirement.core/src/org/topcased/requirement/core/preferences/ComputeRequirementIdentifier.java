@@ -19,9 +19,9 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.HierarchicalElement;
+import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.extensions.IRequirementIdentifierVariables;
 import org.topcased.requirement.core.extensions.RequirementIdentifierVariablesManager;
-import org.topcased.requirement.core.internal.RequirementCorePlugin;
 import org.topcased.requirement.core.views.AbstractRequirementView;
 
 /**

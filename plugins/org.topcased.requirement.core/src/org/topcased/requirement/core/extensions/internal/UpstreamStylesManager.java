@@ -21,8 +21,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.topcased.facilities.extensions.AbstractExtensionManager;
+import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.extensions.UpstreamStyleEvaluator;
-import org.topcased.requirement.core.internal.RequirementCorePlugin;
 
 public class UpstreamStylesManager extends AbstractExtensionManager
 {
