@@ -5,7 +5,7 @@ Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-SymbolicName: org.topcased.requirement.core;singleton:=true
 Bundle-Version: 3.3.3.qualifier
-Bundle-Activator: org.topcased.requirement.core.internal.RequirementCorePlugin
+Bundle-Activator: org.topcased.requirement.core.RequirementCorePlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.topcased.requirement;visibility:=reexport,
