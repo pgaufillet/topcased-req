@@ -75,10 +75,11 @@ public class MergeRequirementModelWizardPage extends WizardPage
      * Groups
      */
     private Group mainGroup;
+
     private Group docsGroup;
-    
+
     private Image folderImg;
-    
+
     private ResourceSet resourceSet = new ResourceSetImpl();
 
     /*
@@ -92,13 +93,16 @@ public class MergeRequirementModelWizardPage extends WizardPage
     private Text importModelFd;
 
     private Button importModelBt;
-    
+
     /*
      * Documents list
      */
     List<Button> buttonsCheck = new ArrayList<Button>();
+
     List<Text> documentsTexts = new ArrayList<Text>();
+
     List<Button> documentsButtons = new ArrayList<Button>();
+
     List<Combo> documentsCombos = new ArrayList<Combo>();
 
     /*
@@ -110,14 +114,14 @@ public class MergeRequirementModelWizardPage extends WizardPage
      * Project
      */
     private Text projectFd;
+
     private Text projectDescrFd;
-    
+
     private Button checkAllBt;
-    
+
     private Button partialImportBt;
-    
+
     private List<Document> inputDocuments;
-    
 
     private ModifyListener validationListener = new ModifyListener()
     {
@@ -167,7 +171,7 @@ public class MergeRequirementModelWizardPage extends WizardPage
     {
         Composite mainComp = new Composite(parent, SWT.NONE);
         mainComp.setLayout(new GridLayout());
-        mainComp.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false,1,1));
+        mainComp.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 1, 1));
         mainComp.setFont(parent.getFont());
 
         createDialog(mainComp);
@@ -181,7 +185,7 @@ public class MergeRequirementModelWizardPage extends WizardPage
         hookListeners();
 
         initialize();
-        
+
         getShell().pack();
     }
 
@@ -194,7 +198,7 @@ public class MergeRequirementModelWizardPage extends WizardPage
     {
         mainGroup = new Group(parent, SWT.NONE);
         mainGroup.setLayout(new GridLayout(3, false));
-        mainGroup.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false,1,1));
+        mainGroup.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 1, 1));
 
         /*
          * Selection of the existing model file
@@ -206,75 +210,77 @@ public class MergeRequirementModelWizardPage extends WizardPage
         modelText.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 2, 1));
         modelText.setEditable(false);
 
-    	/**
-    	 * Documents group
-    	 */
-    	docsGroup = new Group(mainGroup, SWT.NONE);
-    	docsGroup.setText(Messages.getString("RequirementWizardPage.26"));
-    	docsGroup.setLayout(new GridLayout(4, false));
-    	docsGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 4, 1));
-    	
-    	/*
-    	 * Selection of the requirement to import for all documents
-    	 */
-    	checkAllBt = new Button(docsGroup, SWT.CHECK);
-    	checkAllBt.setText(Messages.getString("RequirementWizardPage.25"));
-    	checkAllBt.setToolTipText(Messages.getString("RequirementWizardPage.tooltip.selectAll.chk"));
-    	checkAllBt.setSelection(true);
-    	
-    	importModelFd = new Text(docsGroup, SWT.BORDER);
-    	importModelFd.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 1, 1));
-    	importModelFd.setEditable(false);
-    	
-    	importModelBt = new Button(docsGroup, SWT.PUSH);
-    	importModelBt.setImage(folderImg);
-    	importModelBt.setLayoutData(new GridData(SWT.NONE, SWT.NONE, false, false, 2, 1));
-    	importModelBt.setToolTipText(Messages.getString("RequirementWizardPage.tooltip.selectAll.browse")); //$NON-NLS-1$
-    	
-    	Label separatorDocs = new Label(docsGroup, SWT.SEPARATOR|SWT.HORIZONTAL);
-    	separatorDocs.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 4, 1));
-    	
-    	Label initialDocLbl = new Label(docsGroup, SWT.NONE);
-    	initialDocLbl.setText(Messages.getString("RequirementWizardPage.22"));
-    	
-    	Label requirementModelLbl = new Label(docsGroup, SWT.NONE);
-    	requirementModelLbl.setText(Messages.getString("RequirementWizardPage.23"));
-    	requirementModelLbl.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
-        
+        /**
+         * Documents group
+         */
+        docsGroup = new Group(mainGroup, SWT.NONE);
+        docsGroup.setText(Messages.getString("RequirementWizardPage.26"));
+        docsGroup.setLayout(new GridLayout(4, false));
+        docsGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 4, 1));
+
+        /*
+         * Selection of the requirement to import for all documents
+         */
+        checkAllBt = new Button(docsGroup, SWT.CHECK);
+        checkAllBt.setText(Messages.getString("RequirementWizardPage.25"));
+        checkAllBt.setToolTipText(Messages.getString("RequirementWizardPage.tooltip.selectAll.chk"));
+        checkAllBt.setSelection(true);
+
+        importModelFd = new Text(docsGroup, SWT.BORDER);
+        importModelFd.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 1, 1));
+        importModelFd.setEditable(false);
+
+        importModelBt = new Button(docsGroup, SWT.PUSH);
+        importModelBt.setImage(folderImg);
+        importModelBt.setLayoutData(new GridData(SWT.NONE, SWT.NONE, false, false, 2, 1));
+        importModelBt.setToolTipText(Messages.getString("RequirementWizardPage.tooltip.selectAll.browse")); //$NON-NLS-1$
+
+        Label separatorDocs = new Label(docsGroup, SWT.SEPARATOR | SWT.HORIZONTAL);
+        separatorDocs.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 4, 1));
+
+        Label initialDocLbl = new Label(docsGroup, SWT.NONE);
+        initialDocLbl.setText(Messages.getString("RequirementWizardPage.22"));
+
+        Label requirementModelLbl = new Label(docsGroup, SWT.NONE);
+        requirementModelLbl.setText(Messages.getString("RequirementWizardPage.23"));
+        requirementModelLbl.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
+
         Label newDocument = new Label(docsGroup, SWT.NONE);
         newDocument.setText(Messages.getString("RequirementWizardPage.24"));
-        
+
         IFile f = ResourcesPlugin.getWorkspace().getRoot().getFile(ALREADY_ATTACHED_REQUIREMENT);
         URI fileURI = URI.createPlatformResourceURI(f.getFullPath().toString(), true);
-        Resource r = resourceSet.getResource(fileURI,true);
-    	
-    	inputDocuments = RequirementUtils.getUpstreamDocuments(r);
-    	
-    	for(Document d : inputDocuments) {
-    	    // Don't take deleted documents
-    	    if(!RequirementUtils.isDeletedDocumentIdent(d.getIdent())) {
-        	    //Check button
-        	    Button docBt = new Button(docsGroup, SWT.CHECK);
-        	    docBt.setText(d.getIdent());
-        	    docBt.setSelection(true);
-        	    docBt.addSelectionListener(selectionListener);
-        	    docBt.setToolTipText(Messages.getString("RequirementWizardPage.tooltip.initialDocument"));
-        	    buttonsCheck.add(docBt);
-        	    //Requirement file
-        	    Text t = new Text(docsGroup, SWT.BORDER);
-        	    t.setEditable(false);
-        	    documentsTexts.add(t);
-        	    Button b = new Button(docsGroup, SWT.PUSH);
-        	    b.setImage(folderImg);
-        	    b.setToolTipText(Messages.getString("RequirementWizardPage.tooltip.requirementModel"));
-        	    documentsButtons.add(b);
-        	    //Document choice
-        	    Combo c = new Combo(docsGroup, SWT.READ_ONLY);
-        	    c.setToolTipText(Messages.getString("RequirementWizardPage.tooltip.newDocument"));
-        	    documentsCombos.add(c);
-    	    }
-    	}
-    	
+        Resource r = resourceSet.getResource(fileURI, true);
+
+        inputDocuments = RequirementUtils.getUpstreamDocuments(r);
+
+        for (Document d : inputDocuments)
+        {
+            // Don't take deleted documents
+            if (!RequirementUtils.isDeletedDocumentIdent(d.getIdent()))
+            {
+                // Check button
+                Button docBt = new Button(docsGroup, SWT.CHECK);
+                docBt.setText(d.getIdent());
+                docBt.setSelection(true);
+                docBt.addSelectionListener(selectionListener);
+                docBt.setToolTipText(Messages.getString("RequirementWizardPage.tooltip.initialDocument"));
+                buttonsCheck.add(docBt);
+                // Requirement file
+                Text t = new Text(docsGroup, SWT.BORDER);
+                t.setEditable(false);
+                documentsTexts.add(t);
+                Button b = new Button(docsGroup, SWT.PUSH);
+                b.setImage(folderImg);
+                b.setToolTipText(Messages.getString("RequirementWizardPage.tooltip.requirementModel"));
+                documentsButtons.add(b);
+                // Document choice
+                Combo c = new Combo(docsGroup, SWT.READ_ONLY);
+                c.setToolTipText(Messages.getString("RequirementWizardPage.tooltip.newDocument"));
+                documentsCombos.add(c);
+            }
+        }
+
         /*
          * Model requirement name
          */
@@ -306,11 +312,11 @@ public class MergeRequirementModelWizardPage extends WizardPage
         projectDescrFd = new Text(mainGroup, SWT.BORDER);
         projectDescrFd.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 2, 1));
 
-        Label separatorImport = new Label(mainGroup, SWT.SEPARATOR|SWT.HORIZONTAL);
+        Label separatorImport = new Label(mainGroup, SWT.SEPARATOR | SWT.HORIZONTAL);
         separatorImport.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 3, 1));
-        
+
         /*
-         * Partial import 
+         * Partial import
          */
         partialImportBt = new Button(mainGroup, SWT.CHECK);
         partialImportBt.setText(Messages.getString("RequirementWizardPage.21")); //$NON-NLS-1$
@@ -331,7 +337,8 @@ public class MergeRequirementModelWizardPage extends WizardPage
         {
             public void widgetSelected(SelectionEvent e)
             {
-                for(Button b : buttonsCheck) {
+                for (Button b : buttonsCheck)
+                {
                     b.setSelection(checkAllBt.getSelection());
                 }
                 dialogChanged();
@@ -346,36 +353,40 @@ public class MergeRequirementModelWizardPage extends WizardPage
                 dialogChanged();
             }
         });
-        
+
         // Check document buttons
-        for(final Button b : buttonsCheck) {
+        for (final Button b : buttonsCheck)
+        {
             b.addSelectionListener(new SelectionAdapter()
             {
                 public void widgetSelected(SelectionEvent e)
                 {
-                    if(!b.getSelection()) {
+                    if (!b.getSelection())
+                    {
                         checkAllBt.setSelection(false);
                     }
                     dialogChanged();
                 }
             });
         }
-        
-        //Documents buttons
-        for(final Button b : documentsButtons) {
+
+        // Documents buttons
+        for (final Button b : documentsButtons)
+        {
             b.addSelectionListener(new SelectionAdapter()
             {
                 public void widgetSelected(SelectionEvent e)
                 {
                     int index = documentsButtons.indexOf(b);
-                    handleDocumentRequirementChoose(index,buttonsCheck.get(index).getText());
+                    handleDocumentRequirementChoose(index, buttonsCheck.get(index).getText());
                     dialogChanged();
                 }
             });
         }
-        
-        //Combos
-        for(final Combo c : documentsCombos) {
+
+        // Combos
+        for (final Combo c : documentsCombos)
+        {
             c.addSelectionListener(new SelectionAdapter()
             {
                 public void widgetSelected(SelectionEvent e)
@@ -400,7 +411,7 @@ public class MergeRequirementModelWizardPage extends WizardPage
             }
         });
     }
-    
+
     private void handleDocumentRequirementChoose(int index, String documentToUpdate)
     {
         ResourceSelectionDialog dialog = new ResourceSelectionDialog(getShell(), ResourcesPlugin.getWorkspace().getRoot(), Messages.getString("RequirementWizardPage.12")); //$NON-NLS-1$
@@ -419,29 +430,35 @@ public class MergeRequirementModelWizardPage extends WizardPage
             }
         }
     }
-    
+
     /**
      * Get all documents for the file
+     * 
      * @param file
      * @return all documents
      */
-    private List<Document> getDocuments(IFile file) {
+    private List<Document> getDocuments(IFile file)
+    {
         Resource r = getResource(file.getFullPath().toString());
         return RequirementUtils.getUpstreamDocuments(r);
     }
 
     /**
      * Add the combos texts
+     * 
      * @param documentToUpdate, the name of the document to update
      * @param c, the combo to update
      * @param documents the documents list of selected resource
      */
     private void addCombosTextsAndSelection(String documentToUpdate, Combo c, List<Document> documents)
     {
-        for(int i =0; i<documents.size(); i++) {
-            if(!RequirementUtils.isDeletedDocumentIdent(documents.get(i).getIdent())) {
-                c.add(documents.get(i).getIdent(), i);
-                if(documents.get(i).getIdent().equals(documentToUpdate)) {
+        for (int i = 0; i < documents.size(); i++)
+        {
+            if (!RequirementUtils.isDeletedDocumentIdent(documents.get(i).getIdent()))
+            {
+                c.add(documents.get(i).getIdent());
+                if (documents.get(i).getIdent().equals(documentToUpdate))
+                {
                     c.select(i);
                 }
             }
@@ -504,14 +521,17 @@ public class MergeRequirementModelWizardPage extends WizardPage
 
     /**
      * If I select a file in the "select all document", all documents file must be change with this file
+     * 
      * @param file, the file to change
      */
     private void changeAllDocumentsFile(IFile file)
     {
-        for(Text t : documentsTexts) {
+        for (Text t : documentsTexts)
+        {
             t.setText(file.getFullPath().toString());
         }
-        for(int i = 0; i< documentsCombos.size(); i++) {
+        for (int i = 0; i < documentsCombos.size(); i++)
+        {
             documentsCombos.get(i).removeAll();
             addCombosTextsAndSelection(buttonsCheck.get(i).getText(), documentsCombos.get(i), getDocuments(file));
         }
@@ -590,18 +610,23 @@ public class MergeRequirementModelWizardPage extends WizardPage
             return false;
         }
         boolean allButtonUnchecked = true;
-        for(Button b : buttonsCheck) {
-            if(b.getSelection()) {
-                if("".equals(documentsTexts.get(buttonsCheck.indexOf(b)).getText())) {
+        for (Button b : buttonsCheck)
+        {
+            if (b.getSelection())
+            {
+                if ("".equals(documentsTexts.get(buttonsCheck.indexOf(b)).getText()))
+                {
                     return false;
                 }
-                if(documentsCombos.get(buttonsCheck.indexOf(b)).getSelectionIndex() == -1) {
+                if (documentsCombos.get(buttonsCheck.indexOf(b)).getSelectionIndex() == -1)
+                {
                     return false;
                 }
                 allButtonUnchecked = false;
             }
         }
-        if(allButtonUnchecked) {
+        if (allButtonUnchecked)
+        {
             return false;
         }
         return true;
@@ -718,29 +743,36 @@ public class MergeRequirementModelWizardPage extends WizardPage
     {
         return importModelFd.getText();
     }
-    
+
     /**
      * Return if the update is partial
+     * 
      * @return true if is partial import
      */
     protected boolean isPartialImport()
     {
         return partialImportBt.getSelection();
     }
-    
+
     /**
      * Return all documents to merge, key are older documents and value new documents
+     * 
      * @return documents to merge
      */
-    protected Map<Document,Document> getDocumentsToMerge() {
+    protected Map<Document, Document> getDocumentsToMerge()
+    {
         Map<Document, Document> docsToMerge = new HashMap<Document, Document>();
-        for(Button b : buttonsCheck) {
-            if(b.getSelection()) {
+        for (Button b : buttonsCheck)
+        {
+            if (b.getSelection())
+            {
                 int index = buttonsCheck.indexOf(b);
                 String fileToMerge = documentsTexts.get(index).getText();
                 List<Document> docs = RequirementUtils.getUpstreamDocuments(getResource(fileToMerge));
-                for(Document d : docs) {
-                    if(d.getIdent().equals(documentsCombos.get(index).getText())) {
+                for (Document d : docs)
+                {
+                    if (d.getIdent().equals(documentsCombos.get(index).getText()))
+                    {
                         docsToMerge.put(inputDocuments.get(index), d);
                     }
                 }
@@ -748,13 +780,15 @@ public class MergeRequirementModelWizardPage extends WizardPage
         }
         return docsToMerge;
     }
-    
+
     /**
      * Get the resource for the file
+     * 
      * @param file
      * @return file resource
      */
-    private Resource getResource(String file) {
+    private Resource getResource(String file)
+    {
         URI fileURI = URI.createPlatformResourceURI(file, true);
         return resourceSet.getResource(fileURI, true);
     }
