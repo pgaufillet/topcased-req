@@ -25,7 +25,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.mwe.core.WorkflowRunner;
+
+import org.eclipse.emf.mwe.core.WorkflowEngine;
 import org.eclipse.emf.mwe.core.issues.Issues;
 import org.eclipse.emf.mwe.core.issues.IssuesImpl;
 import org.topcased.requirement.traceabilitymatrix.Activator;
@@ -68,10 +69,10 @@ public class CSVFileGenerator {
 				.getResource(WORKFLOW_PATH).getPath();
 
 		// launch the workflow
-		final WorkflowRunner wf = new WorkflowRunner();
-		wf.prepare(workflowFile, null, getProperties());
+		final WorkflowEngine we = new WorkflowEngine();
+		we.prepare(workflowFile, null, getProperties());
 		final Issues issues = new IssuesImpl();
-		final boolean ok = wf.executeWorkflow(null, issues);
+		final boolean ok = we.executeWorkflow(null, issues);
 		if (!ok) {
 			String lError = ".";
 			if (issues.hasErrors()) {
