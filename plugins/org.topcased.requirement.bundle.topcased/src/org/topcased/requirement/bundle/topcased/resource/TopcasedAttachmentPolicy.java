@@ -163,22 +163,25 @@ public class TopcasedAttachmentPolicy implements IModelAttachmentPolicy
      */
     public RequirementProject getRequirementProjectFromTargetMainResource(Resource mainResource)
     {
-        EObject content = mainResource.getContents().get(0);
-        if (content instanceof Diagrams)
-        {
-            Diagrams diagram = (Diagrams) content;
-            String resourcePath = getRequirementResourcePath(diagram);
-            if (!"".equals(resourcePath) && diagram.eResource() != null && diagram.eResource().getResourceSet() != null)
-            {
-                URI uri = URI.createURI(resourcePath).trimFragment().resolve(diagram.eResource().getURI());
-                Resource reqResource = diagram.eResource().getResourceSet().getResource(uri, true);
-                if (!reqResource.getContents().isEmpty())
-                {
-                    return (RequirementProject) reqResource.getContents().get(0);
-                }
-            }
-        }
-        return null;
+    	if (mainResource != null && mainResource.getContents() != null && !mainResource.getContents().isEmpty())
+    	{
+    		EObject content = mainResource.getContents().get(0);
+    		if (content instanceof Diagrams)
+    		{
+    			Diagrams diagram = (Diagrams) content;
+    			String resourcePath = getRequirementResourcePath(diagram);
+    			if (!"".equals(resourcePath) && diagram.eResource() != null && diagram.eResource().getResourceSet() != null)
+    			{
+    				URI uri = URI.createURI(resourcePath).trimFragment().resolve(diagram.eResource().getURI());
+    				Resource reqResource = diagram.eResource().getResourceSet().getResource(uri, true);
+    				if (!reqResource.getContents().isEmpty())
+    				{
+    					return (RequirementProject) reqResource.getContents().get(0);
+    				}
+    			}
+    		}
+    	}
+    	return null;
     }
 
     /**
