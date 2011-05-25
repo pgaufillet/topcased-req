@@ -34,8 +34,7 @@
                style="push">
             <visibleWhen
                   checkEnabled="false">
-               <and>
-                  <with
+                   <with
                         variable="selection">
                      <iterate
                            ifEmpty="false">
@@ -53,13 +52,6 @@
                            value="(1-">
                      </count>
                   </with>
-                  <with
-                        variable="activePartId">
-                     <equals
-                           value="org.topcased.ui.navigator.view">
-                     </equals>
-                  </with>
-               </and>
             </visibleWhen>
          </command>
       </menuContribution>
