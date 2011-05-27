@@ -9,6 +9,7 @@
  *
  * Contributors:
  *  Vincent Hemery (Atos Origin}) {vincent.hemery@atosorigin.com} - Initial API and implementation
+ *	David Ribeiro (Atos Origin}) {david.ribeirocampelo@atosorigin.com}
  *
  *****************************************************************************/
 package org.topcased.requirement.bundle.papyrus.helper.advice;
@@ -18,6 +19,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.command.AbstractCommand;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClassifier;
@@ -27,7 +33,10 @@ import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
+import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelperAdvice;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DuplicateElementsRequest;
@@ -41,13 +50,14 @@ import org.eclipse.papyrus.diagram.common.command.wrappers.EMFtoGMFCommandWrappe
 import org.eclipse.swt.widgets.Display;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.RequirementPackage;
+import org.topcased.requirement.bundle.papyrus.Activator;
 import org.topcased.requirement.bundle.papyrus.internal.Messages;
+import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.commands.CommandStub;
 import org.topcased.requirement.core.commands.MoveHierarchicalElementCommand;
 import org.topcased.requirement.core.commands.PasteHierarchicalElementCommand;
 import org.topcased.requirement.core.commands.RemoveRequirementCommand;
 import org.topcased.requirement.core.commands.RenameRequirementCommand;
-import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.preferences.RequirementPreferenceConstants;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
@@ -81,19 +91,21 @@ public class EObjectHelperAdvice extends AbstractEditHelperAdvice
      */
     protected ICommand getBeforeDestroyElementCommand(DestroyElementRequest request)
     {
-        // FIXME ask user to confirm deletion like in Topcased
         IMultiDiagramEditor editor = EditorUtils.getMultiDiagramEditor();
-        if (editor != null)
+        // check parameter to avoid executing twice
+        if (editor != null && request.getParameter(DestroyElementRequest.INITIAL_ELEMENT_TO_DESTROY_PARAMETER) != null)
         {
             Object editingdomain = editor.getAdapter(EditingDomain.class);
-            if (editingdomain instanceof EditingDomain)
+            if (editingdomain instanceof TransactionalEditingDomain)
             {
-                final EditingDomain domain = (EditingDomain) editingdomain;
+                // ask user to confirm deletion
+                final TransactionalEditingDomain domain = (TransactionalEditingDomain) editingdomain;
                 final EObject eobject = request.getElementToDestroy();
-                AbstractCommand deleteCmd = new CommandStub()
+                AbstractTransactionalCommand deleteCmdWithCancel = new AbstractTransactionalCommand(domain, Messages.getString("DeleteModelObjectAction.CmdLabel"), null)
                 {
+
                     @Override
-                    public void execute()
+                    protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable adapt) throws ExecutionException
                     {
                         boolean canContinue = true;
                         HierarchicalElement hierarchicalElement = RequirementUtils.getHierarchicalElementFor(eobject);
@@ -103,13 +115,35 @@ public class EObjectHelperAdvice extends AbstractEditHelperAdvice
                                     Messages.getString("DeleteModelObjectAction.ConfirmMessage"), RequirementCorePlugin.getDefault().getPreferenceStore(),
                                     RequirementPreferenceConstants.DELETE_MODEL_WITHOUT_CONFIRM);
                             int result = dialog.open();
-                            canContinue = result != Window.OK;
+                            canContinue = result == Window.OK;
                         }
                         if (canContinue)
                         {
                             RemoveRequirementCommand removeReqCmd = new RemoveRequirementCommand(domain, eobject);
                             removeReqCmd.execute();
+                            return new CommandResult(new Status(IStatus.OK, Activator.PLUGIN_ID, Messages.getString("DeleteModelObjectAction.CmdLabel")));
                         }
+                        else
+                        {
+                            return new CommandResult(new Status(IStatus.CANCEL, Activator.PLUGIN_ID, Messages.getString("DeleteModelObjectAction.CmdLabel")));
+                        }
+                    }
+                };
+                return deleteCmdWithCancel;
+            }
+            else if (editingdomain instanceof EditingDomain)
+            {
+                // Should not happen, but better take precautions.
+                // Do not ask user to confirm deletion, as we do not know how to cancel
+                final EditingDomain domain = (EditingDomain) editingdomain;
+                final EObject eobject = request.getElementToDestroy();
+                AbstractCommand deleteCmd = new CommandStub()
+                {
+                    @Override
+                    public void execute()
+                    {
+                        RemoveRequirementCommand removeReqCmd = new RemoveRequirementCommand(domain, eobject);
+                        removeReqCmd.execute();
                     }
 
                     public void redo()
