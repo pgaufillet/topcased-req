@@ -257,7 +257,9 @@ public class EObjectHelperAdvice extends AbstractEditHelperAdvice
                 if (!oldNameValue.equals(newNameValue))
                 {
                     RenameRequirementCommand cmd = new RenameRequirementCommand(namedElt, oldNameValue, newNameValue);
-                    return new EMFtoGMFCommandWrapper(cmd);
+                    if(!cmd.isEmpty()) {
+                        return new EMFtoGMFCommandWrapper(cmd);
+                    }
                 }
             }
         }
@@ -288,7 +290,9 @@ public class EObjectHelperAdvice extends AbstractEditHelperAdvice
                     if (!oldNameValue.equals(newNameValue))
                     {
                         RenameRequirementCommand cmd = new RenameRequirementCommand(namedElt, oldNameValue, newNameValue);
-                        return new EMFtoGMFCommandWrapper(cmd);
+                        if(!cmd.isEmpty()) {
+                        	return new EMFtoGMFCommandWrapper(cmd);
+                        }
                     }
                 }
 
