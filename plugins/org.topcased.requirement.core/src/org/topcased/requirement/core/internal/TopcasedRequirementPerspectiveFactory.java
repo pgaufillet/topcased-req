@@ -10,10 +10,10 @@
  **********************************************************************************************************************/
 package org.topcased.requirement.core.internal;
 
+import org.eclipse.papyrus.documentation.view.DocView;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
-import org.topcased.modeler.documentation.DocView;
 import org.topcased.requirement.core.views.current.CurrentRequirementView;
 import org.topcased.requirement.core.views.upstream.UpstreamRequirementView;
 
