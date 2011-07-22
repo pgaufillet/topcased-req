@@ -186,6 +186,7 @@ public class MergeRequirementModelWizardPage extends WizardPage
 
         initialize();
 
+        getShell().setMinimumSize(mainComp.getSize());
         getShell().pack();
     }
 
