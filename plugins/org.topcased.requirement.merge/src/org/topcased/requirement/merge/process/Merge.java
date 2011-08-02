@@ -55,7 +55,9 @@ import org.topcased.requirement.TrashChapter;
 import org.topcased.requirement.UntracedChapter;
 import org.topcased.requirement.UpstreamModel;
 import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
+import org.topcased.requirement.core.extensions.IRequirementFactoryProvider;
 import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
+import org.topcased.requirement.merge.Activator;
 import org.topcased.requirement.merge.utils.Couple;
 import org.topcased.requirement.util.RequirementResource;
 
@@ -96,10 +98,20 @@ public class Merge
     {
         try
         {
+        	final IProgressMonitor old = monitor ;
+        	long time = System.currentTimeMillis() ;
+        	if (Activator.getDefault().shouldTrace())
+            {
+        		Activator.getDefault().log("Debut process ---");
+            }
             thisMonitor = monitor;
             if (thisMonitor == null)
             {
                 thisMonitor = new NullProgressMonitor();
+            }
+            if (Activator.getDefault().shouldTrace())
+            {
+            	thisMonitor = new TimeProgressMonitor(time, thisMonitor);
             }
             thisMonitor.beginTask("Process Filter", 7);
             this.getRequirementsFile();
@@ -119,7 +131,11 @@ public class Merge
                 this.filter();
                 thisMonitor.worked(1);
                 this.save();
-
+                if (Activator.getDefault().shouldTrace())
+                {
+                	time = System.currentTimeMillis() - time ;
+                	Activator.getDefault().log("FIN : " + time);
+                }
             }
         }
         catch (Exception e)
@@ -209,13 +225,14 @@ public class Merge
             // Get the diagram
             String file = it.next();
             URI uri = URI.createURI(file);
-            EObject eobject = new ResourceSetImpl().getResource(uri, true).getContents().get(0);
+            IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(uri.fileExtension());
+            ResourceSet resourceSetImpl = createResourceSet(policy);
+			EObject eobject = resourceSetImpl.getResource(uri, true).getContents().get(0);
 
             // if (eobject instanceof Diagrams)
             {
                 RequirementProject project = null;
                 // Diagrams diagram = (Diagrams) eobject;
-                IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(uri.fileExtension());
 
                 // Get the associated requirement model
                 if (policy != null)
@@ -226,8 +243,8 @@ public class Merge
                 if (project != null)
                 {
                     // get the associate model
-                    URI uriDiagram = URI.createURI(file.substring(0, file.length() - 2));
-                    EObject eobjectModel = new ResourceSetImpl().getResource(uriDiagram, true).getContents().get(0);
+//                    URI uriDiagram = URI.createURI(file.substring(0, file.length() - 2));
+                    EObject eobjectModel = getModelObject(project);
 
                     // Create a new Triplet
                     Couple t = new Couple(eobjectModel, project, inputs.get(file));
@@ -240,14 +257,50 @@ public class Merge
 
     }
 
-    public void initRequirementFile()
+    protected EObject getModelObject(RequirementProject project) {
+    	// FIXME when generic methods will exist
+    	for (Iterator<EObject> i = EcoreUtil.getAllProperContents(project, false) ; i.hasNext() ; )
+    	{
+    		EObject next = i.next();
+			if (next instanceof HierarchicalElement) {
+				HierarchicalElement h = (HierarchicalElement) next;
+				EObject element = h.getElement();
+				if (element != null && element.eResource() != null)
+				{
+					Resource eResource = project.eResource();
+					if (eResource != null && eResource.getURI() != null && element.eResource().getURI() != null)
+					{
+						if (eResource.getURI().trimFileExtension().equals(element.eResource().getURI().trimFileExtension()))
+						{
+							return element.eResource().getContents().get(0);
+						}
+					}
+				}
+			}
+    	}
+		return null;
+	}
+
+	public void initRequirementFile()
     {
         requirementProject = factory.createRequirementProject();
-        ResourceSet set = new ResourceSetImpl();
+        ResourceSet set = createResourceSet(null);
         Resource r = set.createResource(URI.createURI(output));
         r.getContents().add(requirementProject);
 
     }
+
+	private ResourceSet createResourceSet(IModelAttachmentPolicy policy) {
+		if (policy instanceof IRequirementFactoryProvider)
+		{
+			IRequirementFactoryProvider provider = (IRequirementFactoryProvider) policy;
+			if (provider.provides(ResourceSet.class))
+			{
+				return provider.create(ResourceSet.class);
+			}
+		}
+		return new ResourceSetImpl();
+	}
 
     public void initAttributeUpstream()
     {
@@ -468,7 +521,7 @@ public class Merge
                     {
                         element = (EObject) hier.eGet(RequirementPackage.Literals.HIERARCHICAL_ELEMENT__ELEMENT, true);
                     }
-                    if (element != null && !element.eIsProxy() && hier.getElement().eResource().getURI().equals(t.getModel().eResource().getURI()))
+                    if (element != null && !element.eIsProxy())
                     {
                         HierarchicalElement hierToAdd = get(hier.getElement());
                         if (hierToAdd != null)
@@ -538,5 +591,56 @@ public class Merge
         }
         return null;
     }
+    
+    private class TimeProgressMonitor implements IProgressMonitor 
+    {
+    	private final long time;
+		private final IProgressMonitor old;
+		private int sum = 0 ;
 
+		public TimeProgressMonitor (long time, IProgressMonitor old)
+    	{
+			this.time = time;
+			this.old = old;
+    		
+    	}
+		public void worked(int work) {
+			old.worked(work);
+			sum++;
+			long newTime = System.currentTimeMillis() - time ;
+			Activator.getDefault().log("-- step : " + sum + " / " + newTime);
+		}
+		
+		public void subTask(String name) {
+			old.subTask(name);
+		}
+		
+		public void setTaskName(String name) {
+			old.setTaskName(name);
+			long newTime = System.currentTimeMillis() - time ;
+			Activator.getDefault().log("-- debut task : " + name + " / " + newTime);
+		}
+		
+		public void setCanceled(boolean value) {
+			old.setCanceled(value);
+		}
+		
+		public boolean isCanceled() {
+			return old.isCanceled();
+		}
+		
+		public void internalWorked(double work) {
+			old.internalWorked(work);
+		}
+		
+		public void done() {
+			old.done();
+		}
+		
+		public void beginTask(String name, int totalWork) {
+			old.beginTask(name, totalWork);
+			long newTime = System.currentTimeMillis() - time ;
+			System.out.println("-- debut task : " + name + " / " + newTime);
+		}
+    }
 }

@@ -23,6 +23,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.papyrus.core.utils.DiResourceSet;
 import org.eclipse.papyrus.resource.IModel;
 import org.eclipse.papyrus.resource.ModelException;
 import org.eclipse.papyrus.resource.ModelSet;
@@ -31,6 +32,7 @@ import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.bundle.papyrus.commands.LinkRequirementModelCommand;
 import org.topcased.requirement.bundle.papyrus.commands.UnlinkRequirementModelCommand;
 import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
+import org.topcased.requirement.core.extensions.IRequirementFactoryProvider;
 
 /**
  * Defines the specific policy for requirement attachment of Papyrus diagram models
@@ -38,7 +40,7 @@ import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
  * @author vhemery
  * @see IModelAttachmentPolicy
  */
-public class PapyrusAttachmentPolicy implements IModelAttachmentPolicy
+public class PapyrusAttachmentPolicy implements IModelAttachmentPolicy, IRequirementFactoryProvider
 {
 
     /**
@@ -147,4 +149,20 @@ public class PapyrusAttachmentPolicy implements IModelAttachmentPolicy
     {
         return parentElt == null;
     }
+
+	/* (non-Javadoc)
+	 * @see org.topcased.requirement.core.extensions.IRequirementFactoryProvider#create(java.lang.Class)
+	 * FIXME when service utils are true utilities
+	 */
+	public <T> T create(Class<T> type) {
+		if (type.isAssignableFrom(ResourceSet.class))
+		{
+			return (T) new DiResourceSet() ;
+		}
+		return null;
+	}
+
+	public boolean provides(Class<?> type) {
+		return type.isAssignableFrom(ResourceSet.class);
+	}
 }

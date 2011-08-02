@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -77,13 +78,22 @@ public class MergeRequirementWizard extends Wizard
             for (Iterator<?> iterator = selection.iterator(); iterator.hasNext();)
             {
                 Object o = iterator.next();
+                IFile f = null ;
                 if (o instanceof IFile)
                 {
-                    IFile f = (IFile) o;
-                    if (f.getLocation().getFileExtension().toLowerCase().endsWith("di"))
-                    {
-                        inputs.add(f.getLocationURI().toString());
-                    }
+                	f = (IFile) o;
+                }
+                else
+                {
+                	Object adapter = Platform.getAdapterManager().getAdapter(o, IFile.class);
+					if (adapter != null)
+                	{
+                		f  = (IFile) adapter ;
+                	}
+                }
+                if (f.getLocation().getFileExtension().toLowerCase().endsWith("di"))
+                {
+                	inputs.add(f.getLocationURI().toString());
                 }
             }
             page = new MergeRequirementWizardPage("Match Document", inputs);
