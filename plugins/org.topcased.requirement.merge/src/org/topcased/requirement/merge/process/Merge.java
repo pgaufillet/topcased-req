@@ -618,7 +618,7 @@ public class Merge
 		public void setTaskName(String name) {
 			old.setTaskName(name);
 			long newTime = System.currentTimeMillis() - time ;
-			Activator.getDefault().log("-- debut task : " + name + " / " + newTime);
+			Activator.getDefault().log("-- start task : " + name + " / " + newTime);
 		}
 		
 		public void setCanceled(boolean value) {
