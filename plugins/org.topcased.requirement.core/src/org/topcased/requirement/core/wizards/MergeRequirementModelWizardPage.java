@@ -67,7 +67,7 @@ public class MergeRequirementModelWizardPage extends WizardPage
 
     private static final String DEFAULT_MODEL_NAME = "My"; //$NON-NLS-1$
 
-    private static IPath ALREADY_ATTACHED_REQUIREMENT;
+    private Resource alreadyAttachedRequirement;
 
     private IStructuredSelection selection;
 
@@ -144,7 +144,7 @@ public class MergeRequirementModelWizardPage extends WizardPage
      * 
      * @param pageName
      */
-    public MergeRequirementModelWizardPage(IStructuredSelection selection, IPath alreadyAttachedRequirementPath)
+    public MergeRequirementModelWizardPage(IStructuredSelection selection, Resource alreadyAttachedRequirementResource)
     {
         super("wizardPage"); //$NON-NLS-1$
         this.selection = selection;
@@ -153,13 +153,13 @@ public class MergeRequirementModelWizardPage extends WizardPage
         setDescription(Messages.getString("RequirementWizardPage.merge.desc")); //$NON-NLS-1$
 
         // Is this diagram already attached?
-        if (alreadyAttachedRequirementPath != null)
+        if (alreadyAttachedRequirementResource != null)
         {
-            ALREADY_ATTACHED_REQUIREMENT = alreadyAttachedRequirementPath;
+            alreadyAttachedRequirement = alreadyAttachedRequirementResource;
         }
         else
         {
-            ALREADY_ATTACHED_REQUIREMENT = null;
+            alreadyAttachedRequirement = null;
         }
         folderImg = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER);
     }
@@ -248,12 +248,8 @@ public class MergeRequirementModelWizardPage extends WizardPage
 
         Label newDocument = new Label(docsGroup, SWT.NONE);
         newDocument.setText(Messages.getString("RequirementWizardPage.24"));
-
-        IFile f = ResourcesPlugin.getWorkspace().getRoot().getFile(ALREADY_ATTACHED_REQUIREMENT);
-        URI fileURI = URI.createPlatformResourceURI(f.getFullPath().toString(), true);
-        Resource r = resourceSet.getResource(fileURI, true);
-
-        inputDocuments = RequirementUtils.getUpstreamDocuments(r);
+        
+        inputDocuments = RequirementUtils.getUpstreamDocuments(alreadyAttachedRequirement);
 
         for (Document d : inputDocuments)
         {
@@ -290,7 +286,7 @@ public class MergeRequirementModelWizardPage extends WizardPage
 
         requirementNameFd = new Text(mainGroup, SWT.BORDER);
         requirementNameFd.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 2, 1));
-        if (ALREADY_ATTACHED_REQUIREMENT != null)
+        if (alreadyAttachedRequirement != null)
         {
             requirementNameFd.setEditable(false);
         }
@@ -447,8 +443,8 @@ public class MergeRequirementModelWizardPage extends WizardPage
     /**
      * Add the combos texts
      * 
-     * @param documentToUpdate, the name of the document to update
-     * @param c, the combo to update
+     * @param documentToUpdate , the name of the document to update
+     * @param c , the combo to update
      * @param documents the documents list of selected resource
      */
     private void addCombosTextsAndSelection(String documentToUpdate, Combo c, List<Document> documents)
@@ -505,15 +501,16 @@ public class MergeRequirementModelWizardPage extends WizardPage
                 modelText.setText(targetModelFile);
             }
 
-            if (ALREADY_ATTACHED_REQUIREMENT == null)
+            if (alreadyAttachedRequirement == null)
             {
                 name = ((IFile) obj).getLocation().removeFileExtension().lastSegment();
             }
             else
             {
-                name = ALREADY_ATTACHED_REQUIREMENT.removeFileExtension().lastSegment();
-                importModelFd.setText(ALREADY_ATTACHED_REQUIREMENT.toString());
-                changeAllDocumentsFile(ResourcesPlugin.getWorkspace().getRoot().getFile(ALREADY_ATTACHED_REQUIREMENT));
+                name = alreadyAttachedRequirement.getURI().trimFileExtension().lastSegment();
+                Path path = new Path(alreadyAttachedRequirement.getURI().toPlatformString(true));
+                importModelFd.setText(path.toString());
+                changeAllDocumentsFile(ResourcesPlugin.getWorkspace().getRoot().getFile(path));
             }
         }
         requirementNameFd.setText(name);
@@ -523,7 +520,7 @@ public class MergeRequirementModelWizardPage extends WizardPage
     /**
      * If I select a file in the "select all document", all documents file must be change with this file
      * 
-     * @param file, the file to change
+     * @param file , the file to change
      */
     private void changeAllDocumentsFile(IFile file)
     {
@@ -574,7 +571,13 @@ public class MergeRequirementModelWizardPage extends WizardPage
                 }
             }
         }
-        if (importModelFd.getText().equals(ALREADY_ATTACHED_REQUIREMENT) && !ALREADY_ATTACHED_REQUIREMENT.equals("")) //$NON-NLS-1$
+        String path = "";
+        if (alreadyAttachedRequirement != null)
+        {
+            path = new Path(alreadyAttachedRequirement.getURI().toPlatformString(true)).toString();
+        }
+
+        if (importModelFd.getText().equals(path) && !"".equals(path)) //$NON-NLS-1$
         {
             setMessage(Messages.getString("RequirementWizardPage.20"), INFORMATION); //$NON-NLS-1$
         }
@@ -791,6 +794,11 @@ public class MergeRequirementModelWizardPage extends WizardPage
     private Resource getResource(String file)
     {
         URI fileURI = URI.createPlatformResourceURI(file, true);
+        // ensure resource is not the original req one before loading it
+        if (alreadyAttachedRequirement.getURI().equals(fileURI))
+        {
+            return alreadyAttachedRequirement;
+        }
         return resourceSet.getResource(fileURI, true);
     }
 

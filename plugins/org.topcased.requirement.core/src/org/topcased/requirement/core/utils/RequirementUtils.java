@@ -369,7 +369,7 @@ public final class RequirementUtils
     }
 
     /**
-     * Get a resource from a file
+     * Get a resource from a file and load it
      * 
      * @param file The model path
      * @return the resource

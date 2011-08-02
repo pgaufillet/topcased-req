@@ -41,6 +41,9 @@ import org.topcased.requirement.core.wizards.operation.EmptyRequirementModelOper
  */
 public abstract class AbstractRequirementModelWizard extends Wizard implements INewWizard
 {
+    /**
+     * selection which wizard have been initialized with. This may contain IFiles or Resources
+     */
     protected IStructuredSelection selection;
 
     protected boolean existingRequirementModel = false;
@@ -74,23 +77,26 @@ public abstract class AbstractRequirementModelWizard extends Wizard implements I
     @Override
     public void addPages()
     {
+        Resource alreadyAttachedRequirementResource = null;
         IPath alreadyAttachedRequirementPath = null;
         IEditorPart editor = RequirementUtils.getCurrentEditor();
         IEditorServices services = RequirementUtils.getSpecificServices(editor);
         if (services != null)
         {
-            Resource requirementResource = RequirementUtils.getRequirementModel(services.getEditingDomain(editor));
-            if (requirementResource != null)
+            alreadyAttachedRequirementResource = RequirementUtils.getRequirementModel(services.getEditingDomain(editor));
+            if (alreadyAttachedRequirementResource != null)
             {
-                IFile requirementFile = RequirementUtils.getFile(requirementResource);
+                IFile requirementFile = RequirementUtils.getFile(alreadyAttachedRequirementResource);
                 alreadyAttachedRequirementPath = requirementFile.getFullPath();
             }
         }
-        if(toMerge) {
-            pageMerge = new MergeRequirementModelWizardPage(selection, alreadyAttachedRequirementPath);
+        if (toMerge)
+        {
+            pageMerge = new MergeRequirementModelWizardPage(selection, alreadyAttachedRequirementResource);
             addPage(pageMerge);
         }
-        else {
+        else
+        {
             page = new RequirementWizardPage(selection, alreadyAttachedRequirementPath, toMerge);
             addPage(page);
         }
@@ -105,13 +111,15 @@ public abstract class AbstractRequirementModelWizard extends Wizard implements I
         super.createPageControls(pageContainer);
         if (existingRequirementModel)
         {
-            if(page != null) {
+            if (page != null)
+            {
                 // updates fields with values given in the constructor
                 page.setProjectFd(projectName != null ? projectName : ""); //$NON-NLS-1$
                 page.setProjectDescrFd(projectDescription != null ? projectDescription : ""); //$NON-NLS-1$
                 page.getButton().setEnabled(false);
             }
-            if(pageMerge != null) {
+            if (pageMerge != null)
+            {
                 // updates fields with values given in the constructor
                 pageMerge.setProjectFd(projectName != null ? projectName : ""); //$NON-NLS-1$
                 pageMerge.setProjectDescrFd(projectDescription != null ? projectDescription : ""); //$NON-NLS-1$
@@ -126,13 +134,13 @@ public abstract class AbstractRequirementModelWizard extends Wizard implements I
     public boolean performFinish()
     {
         Boolean result = false;
-        if (page!= null && page.isPageComplete())
+        if (page != null && page.isPageComplete())
         {
             projectName = page.getProjectFd();
             projectDescription = page.getProjectDescrFd();
             result = createModelFile();
         }
-        if (pageMerge!= null && pageMerge.isPageComplete())
+        if (pageMerge != null && pageMerge.isPageComplete())
         {
             projectName = pageMerge.getProjectFd();
             projectDescription = pageMerge.getProjectDescrFd();
@@ -142,6 +150,10 @@ public abstract class AbstractRequirementModelWizard extends Wizard implements I
     }
 
     /**
+     * Initialize the wizard
+     * 
+     * @param pWorkbench the workbench
+     * @param pSelection the selected model file. This should contain IFile objects.
      * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
      *      org.eclipse.jface.viewers.IStructuredSelection)
      */
@@ -160,7 +172,7 @@ public abstract class AbstractRequirementModelWizard extends Wizard implements I
         try
         {
             AbstractRequirementModelOperation operation = null;
-            if (page!= null && page.getEmptySource())
+            if (page != null && page.getEmptySource())
             {
                 // Do the work within an operation.
                 operation = new EmptyRequirementModelOperation(page.getTargetModelFile(), page.getDestModelFile());
