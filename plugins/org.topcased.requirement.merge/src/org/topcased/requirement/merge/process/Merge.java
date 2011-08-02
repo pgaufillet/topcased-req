@@ -102,7 +102,7 @@ public class Merge
         	long time = System.currentTimeMillis() ;
         	if (Activator.getDefault().shouldTrace())
             {
-        		Activator.getDefault().log("Debut process ---");
+        		Activator.getDefault().log("Start process ---");
             }
             thisMonitor = monitor;
             if (thisMonitor == null)
@@ -134,7 +134,7 @@ public class Merge
                 if (Activator.getDefault().shouldTrace())
                 {
                 	time = System.currentTimeMillis() - time ;
-                	Activator.getDefault().log("FIN : " + time);
+                	Activator.getDefault().log("End : " + time);
                 }
             }
         }
