@@ -37,6 +37,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.emf.edit.command.DeleteCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
@@ -71,7 +72,7 @@ public class Merge
 
     private RequirementFactory factory = RequirementFactory.eINSTANCE;
 
-    private Map<EObject, HierarchicalElement> objectsCreated = new HashMap<EObject, HierarchicalElement>();
+    private Map<String, HierarchicalElement> objectsCreated = new HashMap<String, HierarchicalElement>();
 
     private String output;
 
@@ -100,7 +101,6 @@ public class Merge
     {
         try
         {
-        	final IProgressMonitor old = monitor ;
         	long time = System.currentTimeMillis() ;
         	if (Activator.getDefault().shouldTrace())
             {
@@ -450,7 +450,10 @@ public class Merge
     {
         HierarchicalElement h = factory.createHierarchicalElement();
         h.setElement(object);
-        objectsCreated.put(object, h);
+        if (object.eResource() instanceof XMIResource) {
+        	XMIResource res = (XMIResource) object.eResource();
+        	objectsCreated.put(res.getID(object), h);
+		}
         return h;
     }
 
@@ -554,13 +557,11 @@ public class Merge
 
     private HierarchicalElement get(EObject samElement)
     {
-        for (EObject o : objectsCreated.keySet())
-        {
-            if (EcoreUtil.equals(o, samElement))
-            {
-                return objectsCreated.get(o);
-            }
-        }
+    	if (samElement.eResource() instanceof XMIResource)
+    	{
+    		String id = ((XMIResource)samElement.eResource()).getID(samElement);
+    		return objectsCreated.get(id);
+    	}
         return null;
     }
 
