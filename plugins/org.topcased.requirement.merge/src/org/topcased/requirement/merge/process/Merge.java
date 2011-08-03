@@ -80,6 +80,8 @@ public class Merge
     private ProblemChapter theProblemChapter;
 
     private UntracedChapter theUntracedChapter;
+    
+    private ResourceSet resourceSet = null ;
 
     public Merge(Map<String, Boolean> inputs, String output)
     {
@@ -238,6 +240,15 @@ public class Merge
                 if (policy != null)
                 {
                     project = policy.getRequirementProjectFromTargetMainResource(eobject.eResource());
+                    // FIXME whenpolicy will not be bugged
+                    if (!project.eResource().getURI().trimFileExtension().equals(eobject.eResource().getURI().trimFileExtension()))
+                    {
+                    	Resource resource = resourceSetImpl.getResource(eobject.eResource().getURI().trimFileExtension().appendFileExtension("requirement"), true);
+                    	if (resource != null && resource.getContents().size() > 0)
+                    	{
+                    		project = (RequirementProject) resource.getContents().get(0);
+                    	}
+                    }
                 }
 
                 if (project != null)
@@ -291,15 +302,22 @@ public class Merge
     }
 
 	private ResourceSet createResourceSet(IModelAttachmentPolicy policy) {
-		if (policy instanceof IRequirementFactoryProvider)
+		if (resourceSet == null)
 		{
-			IRequirementFactoryProvider provider = (IRequirementFactoryProvider) policy;
-			if (provider.provides(ResourceSet.class))
+			if (policy instanceof IRequirementFactoryProvider)
 			{
-				return provider.create(ResourceSet.class);
+				IRequirementFactoryProvider provider = (IRequirementFactoryProvider) policy;
+				if (provider.provides(ResourceSet.class))
+				{
+					resourceSet = provider.create(ResourceSet.class);
+				}
+			}
+			if (resourceSet == null)
+			{
+				resourceSet = new ResourceSetImpl();
 			}
 		}
-		return new ResourceSetImpl();
+		return resourceSet;
 	}
 
     public void initAttributeUpstream()
@@ -608,7 +626,7 @@ public class Merge
 			old.worked(work);
 			sum++;
 			long newTime = System.currentTimeMillis() - time ;
-			Activator.getDefault().log("-- step : " + sum + " / " + newTime);
+			Activator.getDefault().log("-- step : " + sum + " / " + newTime + " | " + Runtime.getRuntime().freeMemory());
 		}
 		
 		public void subTask(String name) {
@@ -618,7 +636,7 @@ public class Merge
 		public void setTaskName(String name) {
 			old.setTaskName(name);
 			long newTime = System.currentTimeMillis() - time ;
-			Activator.getDefault().log("-- start task : " + name + " / " + newTime);
+			Activator.getDefault().log("-- start task : " + name + " / " + newTime + " | " + Runtime.getRuntime().freeMemory());
 		}
 		
 		public void setCanceled(boolean value) {
@@ -640,7 +658,7 @@ public class Merge
 		public void beginTask(String name, int totalWork) {
 			old.beginTask(name, totalWork);
 			long newTime = System.currentTimeMillis() - time ;
-			System.out.println("-- debut task : " + name + " / " + newTime);
+			System.out.println("-- debut task : " + name + " / " + newTime + " | " + Runtime.getRuntime().freeMemory());
 		}
     }
 }
