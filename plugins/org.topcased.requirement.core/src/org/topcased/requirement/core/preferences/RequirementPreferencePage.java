@@ -45,6 +45,9 @@ public class RequirementPreferencePage extends PreferencePage implements IWorkbe
     
     /** the field to edit whether a deleting a model element with requirements need confirmation */
     private BooleanFieldEditor displayCurrentReqDecorator;
+    
+    /** the field to display or not a message dialog at the end of import requirement wizard. */
+    private BooleanFieldEditor displayMessageDialogImportRequirement;
 
     /**
      * Constructor
@@ -94,9 +97,22 @@ public class RequirementPreferencePage extends PreferencePage implements IWorkbe
                 fieldsContainer2);
         displayCurrentReqDecorator.setPreferenceStore(preferenceStore);
         
+        Group group3 = new Group(parentComposite, SWT.SHADOW_ETCHED_OUT);
+        group3.setLayout(new GridLayout());
+        group3.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        group3.setText("Import requirement");
+        
+        Composite fieldsContainer3 = new Composite(group3, SWT.NONE);
+        fieldsContainer3.setLayout(new GridLayout());
+        fieldsContainer3.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        
+        displayMessageDialogImportRequirement = new BooleanFieldEditor(RequirementPreferenceConstants.IMPORT_REQUIREMENT_WITHOUT_DIALOG, "Do not display a message dialog at the end of import requirement wizard", fieldsContainer3);
+        displayMessageDialogImportRequirement.setPreferenceStore(preferenceStore);
+        
         // load preferences to fields
         deleteModelElements.load();
         displayCurrentReqDecorator.load();
+        displayMessageDialogImportRequirement.load();
 
         return parentComposite;
     }
@@ -110,6 +126,7 @@ public class RequirementPreferencePage extends PreferencePage implements IWorkbe
     {
         deleteModelElements.loadDefault();
         displayCurrentReqDecorator.loadDefault();
+        displayMessageDialogImportRequirement.loadDefault();
         super.performDefaults();
     }
 
@@ -122,6 +139,7 @@ public class RequirementPreferencePage extends PreferencePage implements IWorkbe
     {
         deleteModelElements.store();
         displayCurrentReqDecorator.store();
+        displayMessageDialogImportRequirement.store();
         return super.performOk();
     }
 

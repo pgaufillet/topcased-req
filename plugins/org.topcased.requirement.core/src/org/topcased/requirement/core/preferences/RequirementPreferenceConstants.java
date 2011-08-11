@@ -17,4 +17,5 @@ public final class RequirementPreferenceConstants
 {
     public static final String DELETE_MODEL_WITHOUT_CONFIRM = "confirmDeleteModelWithRequirements"; //$NON-NLS-1$
     public static final String DISPLAY_CURRENT_DECORATOR = "displayCurrentDecorator"; //$NON-NLS-1$
+    public static final String IMPORT_REQUIREMENT_WITHOUT_DIALOG = "importRequirementWithoutDialog"; //$NON-NLS-1$
 }

@@ -34,8 +34,12 @@ import org.eclipse.emf.ecore.EModelElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IImportWizard;
@@ -47,7 +51,9 @@ import org.topcased.doc2model.parser.Doc2ModelParser;
 import org.topcased.doc2model.parser.ProgressionObserver;
 import org.topcased.requirement.RequirementFactory;
 import org.topcased.requirement.RequirementProject;
+import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.preferences.CurrentPreferenceHelper;
+import org.topcased.requirement.core.preferences.RequirementPreferenceConstants;
 import org.topcased.requirement.document.Activator;
 import org.topcased.requirement.document.doc2model.Doc2ModelCreator;
 import org.topcased.requirement.document.elements.Attribute;
@@ -301,6 +307,11 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
         }
         Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageMapping.PREFERENCE_FOR_LIST_MAPPING, page3.getListMappingPref());
 
+        IPreferenceStore preferenceStorePlugIn = RequirementCorePlugin.getDefault().getPreferenceStore();
+        if(!preferenceStorePlugIn.getBoolean(RequirementPreferenceConstants.IMPORT_REQUIREMENT_WITHOUT_DIALOG)) {
+            MessageDialog dialog = new MessageDialog(getShell(), "Information", null, "The .requirement file is generated in : " + currentFileSystem.getPath(), MessageDialog.INFORMATION, new String[] {IDialogConstants.OK_LABEL}, Window.OK);
+            dialog.open();
+        }
         return true;
     }
 

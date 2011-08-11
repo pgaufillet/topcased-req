@@ -49,5 +49,6 @@ public class RequirementPreferenceInitializer extends AbstractPreferenceInitiali
         store.setDefault(RequirementNamingConstants.REQUIREMENT_STEP_INDEX, RequirementNamingConstants.DEFAULT_INDEX_STEP);
         store.setDefault(RequirementNamingConstants.REQUIREMENT_COUNTING_ALGORITHM, RequirementNamingConstants.DEFAULT_COUNTING_ALGORITHM);
         store.setDefault(RequirementPreferenceConstants.DISPLAY_CURRENT_DECORATOR, false);
+        store.setDefault(RequirementPreferenceConstants.IMPORT_REQUIREMENT_WITHOUT_DIALOG, false);
     }
 }
