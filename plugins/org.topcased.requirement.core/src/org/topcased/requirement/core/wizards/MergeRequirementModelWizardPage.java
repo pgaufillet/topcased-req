@@ -47,6 +47,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ResourceSelectionDialog;
+import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
 import org.topcased.requirement.core.extensions.RequirementTransformationManager;
 import org.topcased.requirement.core.internal.Messages;
@@ -65,6 +66,9 @@ import ttm.Document;
 public class MergeRequirementModelWizardPage extends WizardPage
 {
 
+    /** The Constant PREFERENCE for is partial */
+    public static final String PREFERENCE_FOR_IS_PARTIAL = "isPartial_updateReq"; //$NON-NLS-1$
+    
     private static final String DEFAULT_MODEL_NAME = "My"; //$NON-NLS-1$
 
     private Resource alreadyAttachedRequirement;
@@ -514,6 +518,11 @@ public class MergeRequirementModelWizardPage extends WizardPage
             }
         }
         requirementNameFd.setText(name);
+        
+        // Get is partial preference
+        boolean isPartial = RequirementCorePlugin.getDefault().getPreferenceStore().getBoolean(PREFERENCE_FOR_IS_PARTIAL);
+        partialImportBt.setSelection(isPartial);
+        
         setPageComplete(false);
     }
 
