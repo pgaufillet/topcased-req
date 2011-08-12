@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -26,8 +28,10 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.diff.merge.service.MergeService;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
@@ -42,7 +46,9 @@ import org.eclipse.emf.compare.match.MatchOptions;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.topcased.facilities.util.EMFMarkerUtil;
@@ -482,11 +488,17 @@ public final class MergeRequirement
                     if (linkTo.eContainer() != null && linkTo.eContainer() instanceof CurrentRequirement)
                     {
                         CurrentRequirement currentReq = (CurrentRequirement) linkTo.eContainer();
+                        Document d = getDocument(currentReq); 
                         currentReq.setImpacted(true);
                         // the information is logged
                         String requirement = factory.getText(currentReq);
                         String reason = factory.getText(diff);
-                        EMFMarkerUtil.addMarkerFor(linkTo, requirement + " : " + reason, IMarker.SEVERITY_WARNING); //$NON-NLS-1$
+                        if(d != null) {
+                            addMarkerFor(linkTo, requirement + " : " + reason, IMarker.SEVERITY_WARNING, d); //$NON-NLS-1$
+                        }
+                        else {
+                            EMFMarkerUtil.addMarkerFor(linkTo, requirement + " : " + reason, IMarker.SEVERITY_WARNING); //$NON-NLS-1$
+                        }
                     }
                 }
                 catch (CoreException e)
@@ -500,13 +512,67 @@ public final class MergeRequirement
             try
             {
                 String infoMsg = factory.getText(diff);
-                EMFMarkerUtil.addMarkerFor(element, infoMsg, IMarker.SEVERITY_INFO);
+                Document document = getDocument(element);
+                if(document != null) {
+                    addMarkerFor(element, infoMsg, IMarker.SEVERITY_INFO, document);
+                }
+                else {
+                    EMFMarkerUtil.addMarkerFor(element, infoMsg, IMarker.SEVERITY_INFO);
+                }
             }
             catch (CoreException e)
             {
                 RequirementCorePlugin.log("Information message cannot be logged", IStatus.ERROR, e); //$NON-NLS-1$
             }
         }
+    }
+    
+    /**
+     * Get the upstream requirement with the link attribute of the current requirement
+     * @param element the current requirement
+     * @return the upstream requirement link to the element
+     */
+    private ttm.Requirement getUpstreamRequirement(Requirement element) {
+        List<Attribute> atts = element.getAttribute();
+        for(Attribute a : atts) {
+            if(a instanceof AttributeLink) {
+                AttributeLink link = (AttributeLink)a;
+                Object o = link.getValue();
+                if(o instanceof ttm.Requirement) {
+                    return (ttm.Requirement) o;
+                }
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Get the document of the element, element can be current requirement, upstream requirement or document
+     * @param element the element from which found document
+     * @return the document of element
+     */
+    private Document getDocument(EObject element) {
+        ttm.Requirement upstream = null;
+        Document d = null;
+        if(element instanceof Requirement) {
+            upstream = getUpstreamRequirement((Requirement) element);
+        }
+        if(element instanceof ttm.Requirement) {
+            upstream = (ttm.Requirement) element;
+        }
+        if(upstream != null) {
+            EObject parent = upstream.eContainer();
+            while(parent != null && !(parent instanceof Document)) {
+                parent = parent.eContainer();
+            }
+            if(parent instanceof Document) {
+                d = (Document) parent;
+            }
+        }
+        if(element instanceof Document) {
+            d = (Document) element;
+        }
+        return d;
     }
 
     /**
@@ -525,6 +591,62 @@ public final class MergeRequirement
             model.getDocuments().add(deletedDoc);
         }
         deletedDoc.getChildren().add(element);
+    }
+    
+    /**
+     * Add marker for element toLog with document impacted at location
+     * @param toLog the element impacted
+     * @param message the message
+     * @param severity the severity
+     * @param d the document impacted
+     * @throws CoreException if cannot create marker
+     */
+    private void addMarkerFor(EObject toLog, String message, int severity, Document d) throws CoreException
+    {
+        // find the concerned element.
+        IResource resource = findResourceFor(toLog.eResource());
+        if (resource != null)
+        {
+            IMarker marker = resource.createMarker(EValidator.MARKER);
+            marker.setAttribute(IMarker.SEVERITY, severity);
+            marker.setAttribute(EValidator.URI_ATTRIBUTE, EcoreUtil.getURI(toLog).toString());
+            marker.setAttribute(IMarker.MESSAGE, message);
+            marker.setAttribute(IMarker.LOCATION, d.getIdent());
+        }
+        else
+        {
+            StringBuffer uriMessage = new StringBuffer() ;
+            int error = IStatus.ERROR;
+            if (toLog.eResource() != null && toLog.eResource().getURI() != null)
+            {
+                URI uri = toLog.eResource().getURI();
+                uriMessage.append(" : ").append(uri.toString());
+                if (!(uri.isFile() || uri.isPlatform()))
+                {
+                    error = IStatus.WARNING ;
+                }
+            }
+            IStatus status = new Status(error, RequirementCorePlugin.PLUGIN_ID,error, "Cannot create marker from a null resource" + uriMessage.toString(),null); //$NON-NLS-1$
+            throw new CoreException(status);
+        }
+    }
+    
+    /**
+     * Find resource for toResolve
+     * @param toResolve the resource to find
+     * @return the resource find or null
+     */
+    private static IResource findResourceFor(Resource toResolve)
+    {
+        if(toResolve != null)
+        {
+            String relativePath = toResolve.getURI().toPlatformString(true);
+            if (relativePath != null)
+            {
+                return ResourcesPlugin.getWorkspace().getRoot().findMember(relativePath);
+            }
+        }
+        return null;
     }
 
 }
