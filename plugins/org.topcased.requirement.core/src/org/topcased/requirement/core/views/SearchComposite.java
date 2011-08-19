@@ -58,18 +58,59 @@ public abstract class SearchComposite extends Composite
 
         final Text textFilter = new Text(this, SWT.BORDER | SWT.FILL);
         textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+
+        /*
+         * Global accelerator are overridden for copy, paste and cut (CTRL+C or CTRL+INSERT, CTRL+V or SHIFT+INSERT, and
+         * CTRL+X or SHIFT+DELETE). Hence, we need to call Text.copy(), Text.paste() and Text.cut() manually when the
+         * text widget has focus.
+         */
         textFilter.addKeyListener(new KeyAdapter()
         {
             @Override
             public void keyReleased(KeyEvent ke)
             {
+                // enter => activate filter search
                 if (ke.character == SWT.CR || ke.character == SWT.KEYPAD_CR)
                 {
                     doFilter(textFilter);
                 }
+                // CTRL + ?
+                else if ((ke.stateMask & SWT.CTRL) != 0)
+                {
+                    // copy (CTRL+C or CTRL+INSERT)
+                    if (ke.keyCode == 'c' || ke.keyCode == SWT.INSERT)
+                    {
+                        textFilter.copy();
+                    }
+                    // paste (CTRL+V)
+                    else if (ke.keyCode == 'v')
+                    {
+                        textFilter.paste();
+                    }
+                    // cut (CTRL+X)
+                    else if (ke.keyCode == 'x')
+                    {
+                        textFilter.cut();
+                    }
+                }
+                // SHIFT + ?
+                else if ((ke.stateMask & SWT.SHIFT) != 0)
+                {
+                    // paste (SHIFT+INSERT)
+                    if (ke.keyCode == SWT.INSERT)
+                    {
+                        textFilter.paste();
+                    }
+                    // cut (SHIFT+DELETE)
+                    else if (ke.keyCode == SWT.DEL)
+                    {
+                        textFilter.cut();
+                    }
+                }
             }
 
         });
+
 
         final Button btn = new Button(this, SWT.PUSH);
         btn.setLayoutData(new GridData(SWT.NONE, SWT.CENTER, false, false));

@@ -1610,11 +1610,30 @@
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="DEL">
       </key>
+      <!-- Copy, Cut, Paste commands are all overridden in both views, so that search text can behave the same way in all situations -->
       <key
             commandId="org.topcased.requirement.core.cut"
             contextId="org.topcased.requirement.core.currentView"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+X">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.cut"
+            contextId="org.topcased.requirement.core.currentView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M2+DEL">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.cut"
+            contextId="org.topcased.requirement.core.upstreamView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+X">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.cut"
+            contextId="org.topcased.requirement.core.upstreamView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M2+DEL">
       </key>
       <key
             commandId="org.topcased.requirement.core.copy"
@@ -1623,10 +1642,46 @@
             sequence="M1+C">
       </key>
       <key
+            commandId="org.topcased.requirement.core.copy"
+            contextId="org.topcased.requirement.core.currentView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+INSERT">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.copy"
+            contextId="org.topcased.requirement.core.upstreamView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+C">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.copy"
+            contextId="org.topcased.requirement.core.upstreamView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+INSERT">
+      </key>
+      <key
             commandId="org.topcased.requirement.core.paste"
             contextId="org.topcased.requirement.core.currentView"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M1+V">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.paste"
+            contextId="org.topcased.requirement.core.currentView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M2+INSERT">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.paste"
+            contextId="org.topcased.requirement.core.upstreamView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+V">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.paste"
+            contextId="org.topcased.requirement.core.upstreamView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M2+INSERT">
       </key>
       <key
             commandId="org.topcased.requirement.core.updateAttribute"

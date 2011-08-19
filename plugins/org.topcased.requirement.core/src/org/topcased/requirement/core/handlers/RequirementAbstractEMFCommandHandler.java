@@ -24,6 +24,9 @@ import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.IEditorPart;
 import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.extensions.IEditorServices;
@@ -52,6 +55,16 @@ public abstract class RequirementAbstractEMFCommandHandler extends AbstractHandl
      */
     public Object execute(ExecutionEvent event) throws ExecutionException
     {
+        Object trigger = event.getTrigger();
+        if (trigger instanceof Event)
+        {
+            Widget srcWidget = ((Event) trigger).widget;
+            if (srcWidget instanceof Text)
+            {
+                // command initiated from search widget, which should not trigger such commands
+                return null;
+            }
+        }
         IEditorPart editor = RequirementUtils.getCurrentEditor();
         IEditorServices services = SupportingEditorsManager.getInstance().getServices(editor);
         if (services != null)
