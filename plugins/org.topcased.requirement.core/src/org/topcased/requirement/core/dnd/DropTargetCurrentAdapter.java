@@ -279,6 +279,7 @@ public class DropTargetCurrentAdapter extends EditingDomainViewerDropAdapter
         // For all the sources --> execute an EMF command
         for (Object currSrc : source)
         {
+            // Drag & drop an upstream requirement to ?
             if (currSrc instanceof Requirement)
             {
                 Requirement upstreamReq = (Requirement) currSrc;
@@ -295,44 +296,56 @@ public class DropTargetCurrentAdapter extends EditingDomainViewerDropAdapter
                     HierarchicalElement hierarchicalElt = (HierarchicalElement) target;
                     addUpstreamToHierarchicalElementCommand(upstreamReq, hierarchicalElt);
                 }
-                // Drag & drop upstream requirement to a current requirement
+                // Drag & drop an upstream requirement to a current requirement
                 else if (target instanceof CurrentRequirement)
                 {
                     CurrentRequirement currentReq = (CurrentRequirement) target;
                     addUpstreamToCurrentRequirementCommand(upstreamReq, currentReq);
                 }
-                // Drag & drop upstream requirement to an ObjectAttribute (AttributeLink or ObjectAttribute but not
+                // Drag & drop an upstream requirement to an ObjectAttribute (AttributeLink or ObjectAttribute but not
                 // AttributeAllocate)
-                else if (target instanceof ObjectAttribute)
+                else if (target instanceof ObjectAttribute && !(target instanceof AttributeAllocate))
                 {
                     ObjectAttribute attribute = (ObjectAttribute) target;
                     addRequirementToObjectAttributeCommand(upstreamReq, attribute);
                 }
             }
-            // Drag & drop a current requirement to a hierarchical element
+            // Drag & drop a current requirement to ?
             else if (currSrc instanceof org.topcased.requirement.Requirement)
             {
-                // represents a drag and drop operation outside the current container
                 org.topcased.requirement.Requirement requirement = (org.topcased.requirement.Requirement) currSrc;
+                // Drag & drop a current requirement to a hierarchical element
+                // Represents a drag and drop operation outside the current container
                 if (target instanceof HierarchicalElement)
                 {
                     HierarchicalElement hierarchicalElement = (HierarchicalElement) target;
                     addDragAndDropCommand(requirement, hierarchicalElement, event);
                 }
+                // Drag & drop a current requirement to a current requirement
                 // represents a move operation inside the same container
                 else if (target instanceof org.topcased.requirement.Requirement)
                 {
                     org.topcased.requirement.Requirement requirementTarget = (org.topcased.requirement.Requirement) target;
                     addMoveRequirementCommand(requirement, requirementTarget);
                 }
+                // Drag & drop a current requirement to an ObjectAttribute (not AttributeLink nor AttributeAllocate)
+                else if (target instanceof ObjectAttribute && !(target instanceof AttributeAllocate) && !(target instanceof AttributeLink))
+                {
+                    ObjectAttribute attribute = (ObjectAttribute) target;
+                    addRequirementToObjectAttributeCommand(requirement, attribute);
+                }
             }
-            // Drag & drop upstream requirement to an ObjectAttribute (AttributeLink or ObjectAttribute but not
-            // AttributeAllocate)
-            else if (currSrc instanceof CurrentRequirement && target instanceof ObjectAttribute)
+            // Drag & drop of any object to ?
+            else if (currSrc instanceof EObject)
             {
-                CurrentRequirement currentReq = (CurrentRequirement) currSrc;
-                ObjectAttribute attribute = (ObjectAttribute) target;
-                addRequirementToObjectAttributeCommand(currentReq, attribute);
+                EObject eObj = (EObject) currSrc;
+                // Drag & drop a current requirement to an ObjectAttribute (ObjectAttribute or AttributeAllocate but not
+                // AttributeLink)
+                if (target instanceof ObjectAttribute && !(target instanceof AttributeLink))
+                {
+                    ObjectAttribute attribute = (ObjectAttribute) target;
+                    addRequirementToObjectAttributeCommand(eObj, attribute);
+                }
             }
             monitor.worked(1);
         }
@@ -375,7 +388,7 @@ public class DropTargetCurrentAdapter extends EditingDomainViewerDropAdapter
     {
         CurrentRequirement current = RequirementHelper.INSTANCE.create(specialChapter, upstreamReq);
         Command addCmd = AddCommand.create(domain, specialChapter, RequirementPackage.eINSTANCE.getSpecialChapter_Requirement(), current);
-        getCommand().appendAndExecute(addCmd);
+        getCommand().appendIfCanExecute(addCmd);
         toSelect.add(current);
     }
 
@@ -416,7 +429,7 @@ public class DropTargetCurrentAdapter extends EditingDomainViewerDropAdapter
             }
             // commands are created and executed on the heap otherwise it more difficult to compute the index...
             Command addCmd = AddCommand.create(domain, currentReq, RequirementPackage.eINSTANCE.getRequirement_Attribute(), toInsert, indexToInsert + 1);
-            getCommand().appendAndExecute(addCmd);
+            getCommand().appendIfCanExecute(addCmd);
         }
         toSelect.addAll(attLinks);
     }
@@ -431,7 +444,7 @@ public class DropTargetCurrentAdapter extends EditingDomainViewerDropAdapter
     {
         // the target AttributeLink is updated
         Command setCmd = SetCommand.create(domain, target, RequirementPackage.eINSTANCE.getObjectAttribute_Value(), source);
-        getCommand().appendAndExecute(setCmd);
+        getCommand().appendIfCanExecute(setCmd);
         toSelect.add(target);
     }
 
@@ -470,15 +483,37 @@ public class DropTargetCurrentAdapter extends EditingDomainViewerDropAdapter
             requirements = ((SpecialChapter) target.eContainer()).getRequirement();
             reference = RequirementPackage.eINSTANCE.getSpecialChapter_Requirement();
         }
-        int indexTarget = ECollections.indexOf(requirements, target, 0);
         int indexSource = ECollections.indexOf(requirements, source, 0);
+        int indexTarget = ECollections.indexOf(requirements, target, 0);
+        // index gap with multiple moves are tricky...
+        int newIndexTarget = indexTarget;
         if (indexSource <= indexTarget)
         {
+            // move element down : it has moved upper for each previously moved element (which was above)
             List< ? > tempList = Arrays.asList(this.source.toArray());
-            indexTarget += tempList.indexOf(source);
+            indexSource -= tempList.indexOf(source);
         }
-        Command moveCmd = MoveCommand.create(domain, target.eContainer(), reference, source, indexTarget);
-        getCommand().appendAndExecute(moveCmd);
+        else
+        {
+            // move element up
+            List< ? > tempList = Arrays.asList(this.source.toArray());
+            if (tempList.size() > 1)
+            {
+                // difficult case : element must be inserted after the previous elements also moved up. Elements moved
+                // down do not mess with the index, but we must insert just after them.
+                for (int index = tempList.indexOf(source); index >= 0 && ECollections.indexOf(requirements, tempList.get(index), 0) > indexTarget; index--)
+                {
+                    newIndexTarget++;
+                }
+                if (ECollections.indexOf(requirements, tempList.get(0), 0) > indexTarget)
+                {
+                    // all moved elements are located after target, hence we want to insert before targeted
+                    newIndexTarget--;
+                }
+            }
+        }
+        Command moveCmd = new MoveCommand(domain, target.eContainer(), reference, indexSource, newIndexTarget);
+        getCommand().appendIfCanExecute(moveCmd);
         toSelect.add(source);
     }
 
