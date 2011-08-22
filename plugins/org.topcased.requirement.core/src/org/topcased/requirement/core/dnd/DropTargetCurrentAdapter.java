@@ -50,8 +50,8 @@ import org.topcased.requirement.ProblemChapter;
 import org.topcased.requirement.RequirementPackage;
 import org.topcased.requirement.SpecialChapter;
 import org.topcased.requirement.UntracedChapter;
-import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.RequirementCorePlugin;
+import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.views.current.CurrentPage;
@@ -95,12 +95,30 @@ public class DropTargetCurrentAdapter extends EditingDomainViewerDropAdapter
     }
 
     /**
+     * Add drag 'n drop feedback and scroll feedback, so that elements can be more easily dropped on another element in
+     * the same view.
+     * 
+     * @param event the drop event to complete
+     */
+    private void setFeedback(DropTargetEvent event)
+    {
+        // expandEnabled
+        event.feedback |= DND.FEEDBACK_EXPAND;
+        // scrollEnabled
+        event.feedback |= DND.FEEDBACK_SCROLL;
+    }
+
+    /**
      * @see org.eclipse.emf.edit.ui.dnd.EditingDomainViewerDropAdapter#dragOver(org.eclipse.swt.dnd.DropTargetEvent)
      */
     @Override
     public void dragOver(DropTargetEvent event)
     {
         Object target = extractDropTarget(event.item);
+
+        // set the feedback
+        setFeedback(event);
+
         Collection< ? > source = extractDragSource(event.getSource());
         // use only the first to perform tests
         Object firstSrc = source.toArray()[0];
