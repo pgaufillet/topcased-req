@@ -91,7 +91,7 @@ public class MergeRequirementWizard extends Wizard
                 		f  = (IFile) adapter ;
                 	}
                 }
-                if (f.getLocation().getFileExtension().toLowerCase().endsWith("di"))
+                if (f != null && f.getLocation().getFileExtension().toLowerCase().endsWith("di"))
                 {
                 	inputs.add(f.getLocationURI().toString());
                 }
