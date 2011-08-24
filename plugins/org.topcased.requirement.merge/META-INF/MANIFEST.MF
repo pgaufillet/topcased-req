@@ -17,3 +17,6 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
+Export-Package: org.topcased.requirement.merge.process,
+ org.topcased.requirement.merge.testers,
+ org.topcased.requirement.merge.ui
