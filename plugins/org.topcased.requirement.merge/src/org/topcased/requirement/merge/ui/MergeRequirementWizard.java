@@ -21,6 +21,7 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -82,7 +83,7 @@ public class MergeRequirementWizard extends Wizard
                 IFile f = CanMergePropertyTester.getIFile(o);
                 if (f != null && f.getLocation().getFileExtension().toLowerCase().endsWith("di"))
                 {
-                	inputs.add(f.getLocationURI().toString());
+                	inputs.add(URI.createPlatformResourceURI(f.getFullPath().toString(),true).toString());
                 }
             }
             page = new MergeRequirementWizardPage("Match Document", inputs);
