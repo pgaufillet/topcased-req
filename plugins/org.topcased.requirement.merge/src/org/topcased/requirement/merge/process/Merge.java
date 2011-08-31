@@ -35,9 +35,12 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
 import org.eclipse.emf.ecore.xmi.XMIResource;
+import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.edit.command.DeleteCommand;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
@@ -73,6 +76,11 @@ public class Merge
     private RequirementFactory factory = RequirementFactory.eINSTANCE;
 
     private Map<String, HierarchicalElement> objectsCreated = new HashMap<String, HierarchicalElement>();
+    
+    private Map<EObject, EObject> correspondances = new HashMap<EObject, EObject>();
+    private Map<String, EObject> reqCorrespondances = new HashMap<String, EObject>();
+    
+    private LinkedList<AssignPPA> ppas = new LinkedList<Merge.AssignPPA>();
 
     private String output;
 
@@ -115,23 +123,61 @@ public class Merge
             {
             	thisMonitor = new TimeProgressMonitor(time, thisMonitor);
             }
-            thisMonitor.beginTask("Process Filter", 7);
+            thisMonitor.beginTask("Process Filter", 8);
+            if (thisMonitor.isCanceled())
+            {
+            	return ;
+            }
             this.getRequirementsFile();
             thisMonitor.worked(1);
             if (models.size() > 0)
             {
+            	if (thisMonitor.isCanceled())
+                {
+                	return ;
+                }
                 this.initRequirementFile();
                 thisMonitor.worked(1);
+                if (thisMonitor.isCanceled())
+                {
+                	return ;
+                }
                 this.initAttributeUpstream();
                 thisMonitor.worked(1);
+                if (thisMonitor.isCanceled())
+                {
+                	return ;
+                }
                 this.mergeOtherCategory();
                 thisMonitor.worked(1);
+                if (thisMonitor.isCanceled())
+                {
+                	return ;
+                }
                 this.initStructureRequirment();
                 thisMonitor.worked(1);
+                if (thisMonitor.isCanceled())
+                {
+                	return ;
+                }
                 this.copyRequirement();
                 thisMonitor.worked(1);
+                if (thisMonitor.isCanceled())
+                {
+                	return ;
+                }
+                this.assignPpa();
+                thisMonitor.worked(1);
+                if (thisMonitor.isCanceled())
+                {
+                	return ;
+                }
                 this.filter();
                 thisMonitor.worked(1);
+                if (thisMonitor.isCanceled())
+                {
+                	return ;
+                }
                 this.save();
                 if (Activator.getDefault().shouldTrace())
                 {
@@ -150,7 +196,14 @@ public class Merge
         }
     }
 
-    private void filter()
+    private void assignPpa() {
+    	for (AssignPPA ppa : ppas)
+    	{
+    		ppa.run();
+    	}
+	}
+
+	private void filter()
     {
         AdapterFactoryEditingDomain domain = new AdapterFactoryEditingDomain(new ReflectiveItemProviderAdapterFactory(), new BasicCommandStack());
         CompoundCommand command = new CompoundCommand();
@@ -243,10 +296,17 @@ public class Merge
                     // FIXME whenpolicy will not be bugged
                     if (!project.eResource().getURI().trimFileExtension().equals(eobject.eResource().getURI().trimFileExtension()))
                     {
-                    	Resource resource = resourceSetImpl.getResource(eobject.eResource().getURI().trimFileExtension().appendFileExtension("requirement"), true);
-                    	if (resource != null && resource.getContents().size() > 0)
+                    	try
                     	{
-                    		project = (RequirementProject) resource.getContents().get(0);
+                    		Resource resource = resourceSetImpl.getResource(eobject.eResource().getURI().trimFileExtension().appendFileExtension("requirement"), true);
+                    		if (resource != null && resource.getContents().size() > 0)
+                    		{
+                    			project = (RequirementProject) resource.getContents().get(0);
+                    		}
+                    	}
+                    	catch (Exception e)
+                    	{
+                    		Activator.getDefault().log("no requirement found for " + project.eResource().getURI().toString());
                     	}
                     }
                 }
@@ -314,32 +374,77 @@ public class Merge
 			}
 			if (resourceSet == null)
 			{
-				resourceSet = new ResourceSetImpl();
+				resourceSet = new ResourceSetImpl()
+				{
+					@Override
+					public Resource getResource(URI uri, boolean loadOnDemand) {
+						Resource r = super.getResource(uri, loadOnDemand);
+						if (r instanceof ResourceImpl)
+						{
+							ResourceImpl impl = (ResourceImpl) r ;
+							if (impl.getIntrinsicIDToEObjectMap() == null)
+							{
+								impl.setIntrinsicIDToEObjectMap(new HashMap<String, EObject>());
+							}
+						}
+						return r ;
+					}
+				};
 			}
+			resourceSet.getLoadOptions().put(XMLResource.OPTION_DISABLE_NOTIFY, true);
+			resourceSet.getLoadOptions().put(XMLResource.OPTION_DEFER_IDREF_RESOLUTION, true);
+			resourceSet.getLoadOptions().put(XMLResource.OPTION_DEFER_ATTACHMENT, true);
 		}
 		return resourceSet;
 	}
+	
+	public <T> T copy (EObject eObject)
+	{
+		return copy2(eObject);
+	}
 
-    public void initAttributeUpstream()
+    private <T> T copy2(EObject eObject) {
+    	Copier copier = new Copier()
+    	{
+			@Override
+			public EObject copy(EObject eObject) {
+				EObject result = super.copy(eObject);
+				if (eObject instanceof ttm.Requirement)
+				{
+					ttm.Requirement req = (ttm.Requirement)eObject;
+					EObject previousValue = reqCorrespondances.put(req.getIdent(), result);
+				}
+				correspondances.put(eObject, result);
+				return result ;
+			}
+    	};
+        EObject result = copier.copy(eObject);
+        copier.copyReferences();
+        
+        @SuppressWarnings("unchecked")T t = (T)result;
+        return t;
+	}
+
+	public void initAttributeUpstream()
     {
         // Add upstream model
-        requirementProject.setUpstreamModel((UpstreamModel) EcoreUtil.copy(models.get(0).getRequirement().getUpstreamModel()));
-
+        requirementProject.setUpstreamModel((UpstreamModel) copy(models.get(0).getRequirement().getUpstreamModel()));
+        
         // Add attribute configuration
-        requirementProject.setAttributeConfiguration((AttributeConfiguration) EcoreUtil.copy(models.get(0).getRequirement().getAttributeConfiguration()));
+        requirementProject.setAttributeConfiguration((AttributeConfiguration) copy(models.get(0).getRequirement().getAttributeConfiguration()));
 
         // Add problemChapter folder
-        theProblemChapter = (ProblemChapter) EcoreUtil.copy(getProblemChapter(models.get(0).getRequirement()));
+        theProblemChapter = (ProblemChapter) copy(getProblemChapter(models.get(0).getRequirement()));
         theProblemChapter.getRequirement().clear();
         requirementProject.getChapter().add(theProblemChapter);
 
         // Add TrashChapter folder
-        TrashChapter theTrashChapter = (TrashChapter) EcoreUtil.copy(getTrashChapter(models.get(0).getRequirement()));
+        TrashChapter theTrashChapter = (TrashChapter) copy(getTrashChapter(models.get(0).getRequirement()));
         theTrashChapter.getRequirement().clear();
         requirementProject.getChapter().add(theTrashChapter);
 
         // Add UntracedChapter folder
-        theUntracedChapter = (UntracedChapter) EcoreUtil.copy(getUntracedChapter(models.get(0).getRequirement()));
+        theUntracedChapter = (UntracedChapter) copy(getUntracedChapter(models.get(0).getRequirement()));
         theUntracedChapter.getRequirement().clear();
         requirementProject.getChapter().add(theUntracedChapter);
 
@@ -528,7 +633,7 @@ public class Merge
 
     private void addRequirements(Couple t)
     {
-        for (TreeIterator<EObject> i = t.getRequirement().eAllContents(); i.hasNext();)
+        for (TreeIterator<EObject> i = EcoreUtil.getAllContents(t.getRequirement(),true); i.hasNext();)
         {
             EObject tmp = i.next();
             if (tmp instanceof CurrentRequirement)
@@ -559,22 +664,26 @@ public class Merge
     {
     	if (samElement.eResource() instanceof XMIResource)
     	{
-    		String id = ((XMIResource)samElement.eResource()).getID(samElement);
+    		String id = getID(samElement);
     		return objectsCreated.get(id);
     	}
         return null;
     }
 
+	private String getID(EObject samElement) {
+		return ((XMIResource)samElement.eResource()).getID(samElement);
+	}
+
     private void copyAndAdd(CurrentRequirement current, HierarchicalElement hierToAdd)
     {
-        Requirement copy = (Requirement) EcoreUtil.copy(current);
+        Requirement copy = (Requirement) copy(current);
         hierToAdd.getRequirement().add(copy);
         assignLink(copy);
     }
 
     private void copyAndAdd(Requirement current, SpecialChapter chapter)
     {
-        Requirement copy = (Requirement) EcoreUtil.copy(current);
+        Requirement copy = (Requirement) copy(current);
         chapter.getRequirement().add(copy);
         assignLink(copy);
     }
@@ -591,25 +700,27 @@ public class Merge
                     Resource resource = link.getValue().eResource();
                     if (RequirementResource.FILE_EXTENSION.equals(resource.getURI().fileExtension()) && resource != copy.eResource())
                     {
-                        link.setValue(getEquivalent(copy.eResource(), link.getValue()));
+                    	AssignPPA ppa = new AssignPPA(link.getValue(), link);
+                    	ppas.add(ppa);
+//                        link.setValue(getEquivalent(copy.eResource(), link.getValue()));
                     }
                 }
             }
         }
     }
 
-    private EObject getEquivalent(Resource resource, EObject value)
-    {
-        for (TreeIterator<EObject> i = resource.getAllContents(); i.hasNext();)
-        {
-            EObject tmp = i.next();
-            if (EcoreUtil.equals(value, tmp))
-            {
-                return tmp;
-            }
-        }
-        return null;
-    }
+//    private EObject getEquivalent(Resource resource, EObject value)
+//    {
+//        for (TreeIterator<EObject> i = resource.getAllContents(); i.hasNext();)
+//        {
+//            EObject tmp = i.next();
+//            if (EcoreUtil.equals(value, tmp))
+//            {
+//                return tmp;
+//            }
+//        }
+//        return null;
+//    }
     
     private class TimeProgressMonitor implements IProgressMonitor 
     {
@@ -661,5 +772,32 @@ public class Merge
 			long newTime = System.currentTimeMillis() - time ;
 			System.out.println("-- debut task : " + name + " / " + newTime + " | " + Runtime.getRuntime().freeMemory());
 		}
+    }
+    
+    protected class AssignPPA 
+    {
+		private final EObject reference;
+		private final AttributeLink newOne;
+
+		public AssignPPA (EObject reference, AttributeLink newOne)
+    	{
+			this.reference = reference;
+			this.newOne = newOne;
+    	}
+    	
+    	public void run ()
+    	{
+    		EObject get = correspondances.get(reference);
+    		if (get == null && reference instanceof ttm.Requirement)
+    		{
+    			get = reqCorrespondances.get(((ttm.Requirement)reference).getIdent());
+    		}
+    		if (get == null)
+    		{
+    			Activator.getDefault().log("no correspondance found for " + newOne.toString());
+    		}
+    		newOne.setValue(get);
+    		
+    	}
     }
 }

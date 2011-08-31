@@ -34,7 +34,7 @@ public class Couple
         super();
         this.model = model;
         // resolve models to get external references
-        EcoreUtil.resolveAll(model.eResource().getResourceSet());
+        EcoreUtil.resolveAll(model.eResource());
         // this.di = di;
         this.requirement = requirement;
         this.isSubModel = isSubModel;

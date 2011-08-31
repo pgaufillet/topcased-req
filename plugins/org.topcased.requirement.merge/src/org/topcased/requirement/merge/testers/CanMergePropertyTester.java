@@ -11,8 +11,12 @@
  *****************************************************************************/
 package org.topcased.requirement.merge.testers;
 
+import java.util.Collection;
+
 import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.Platform;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
@@ -31,15 +35,45 @@ public class CanMergePropertyTester extends PropertyTester
      */
     public boolean test(Object receiver, String property, Object[] args, Object expectedValue)
     {
-        if (RequirementUtils.getCurrentEditor() == null)
-        {
-            if (receiver instanceof IFile)
-            {
-                IFile file = (IFile) receiver;
-                return file != null && file.getFileExtension() != null && file.getFileExtension().endsWith("di"); //$NON-NLS-1$
-            }
-        }
-        return false;
+    	IFile iFile = getIFile(receiver);
+		return iFile != null && iFile.getFileExtension() != null && iFile.getFileExtension().endsWith("di") ;
+    }
+    
+    public static IFile getIFile (Object receiver)
+    {
+    	IFile file = null ;
+    	if (receiver instanceof IFile)
+		{
+			file = (IFile) receiver;
+		}
+		if (file == null && receiver instanceof IAdaptable)
+		{
+			IAdaptable adaptable = (IAdaptable) receiver ;
+			file = (IFile) adaptable.getAdapter(IFile.class);
+		}
+		if (file == null)
+		{
+			file = (IFile) Platform.getAdapterManager().getAdapter(receiver, IFile.class);
+		}
+		if (file == null)
+		{
+			Collection<?> collec = (Collection<?>) Platform.getAdapterManager().getAdapter(receiver, Collection.class);
+    		if (collec != null)
+    		{
+    			for (Object o : collec)
+    			{
+    				if (o instanceof IFile) {
+						IFile tmp = (IFile) o;
+						if (tmp.getFileExtension() != null && tmp.getFileExtension().endsWith("di"))
+						{
+							file = tmp ;
+							break ;
+						}
+					}
+    			}
+    		}
+		}
+		return file ;
     }
 
 }

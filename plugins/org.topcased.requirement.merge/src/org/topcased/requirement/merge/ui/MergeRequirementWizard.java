@@ -27,6 +27,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.PlatformUI;
 import org.topcased.requirement.merge.process.Merge;
+import org.topcased.requirement.merge.testers.CanMergePropertyTester;
 
 public class MergeRequirementWizard extends Wizard
 {
@@ -44,7 +45,7 @@ public class MergeRequirementWizard extends Wizard
         boolean ok = true;
         try
         {
-            getContainer().run(false, false, new IRunnableWithProgress()
+            getContainer().run(true, true, new IRunnableWithProgress()
             {
                 public void run(IProgressMonitor monitor)
                 {
@@ -78,19 +79,7 @@ public class MergeRequirementWizard extends Wizard
             for (Iterator<?> iterator = selection.iterator(); iterator.hasNext();)
             {
                 Object o = iterator.next();
-                IFile f = null ;
-                if (o instanceof IFile)
-                {
-                	f = (IFile) o;
-                }
-                else
-                {
-                	Object adapter = Platform.getAdapterManager().getAdapter(o, IFile.class);
-					if (adapter != null)
-                	{
-                		f  = (IFile) adapter ;
-                	}
-                }
+                IFile f = CanMergePropertyTester.getIFile(o);
                 if (f != null && f.getLocation().getFileExtension().toLowerCase().endsWith("di"))
                 {
                 	inputs.add(f.getLocationURI().toString());
