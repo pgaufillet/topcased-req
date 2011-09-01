@@ -52,6 +52,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.domain.IEditingDomainProvider;
@@ -742,6 +743,8 @@ public class RequirementEditor extends MultiPageEditorPart implements IEditingDo
         // Create the editing domain with a special command stack.
         //
         editingDomain = new AdapterFactoryEditingDomain(adapterFactory, commandStack, new HashMap<Resource, Boolean>());
+        editingDomain.getResourceSet().getLoadOptions().put(XMLResource.OPTION_DEFER_IDREF_RESOLUTION, true);
+        editingDomain.getResourceSet().getLoadOptions().put(XMLResource.OPTION_DEFER_ATTACHMENT, true);
     }
 
     /**

@@ -15,7 +15,6 @@ package org.topcased.requirement.merge.process;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -67,7 +66,13 @@ import org.topcased.requirement.util.RequirementResource;
 
 public class Merge
 {
-    private Map<String, Boolean> inputs;
+	private static int NB_MEG_FOR_MEMORY_FREE = 50 ;
+	
+	private static int MEMORY_FREE = NB_MEG_FOR_MEMORY_FREE * 1024 * 1024 ;
+	
+	private static int ONE_MEG = 1 * 1024 * 1024 ;
+	
+	private Map<String, Boolean> inputs;
 
     private Vector<Couple> models;
 
@@ -75,7 +80,7 @@ public class Merge
 
     private RequirementFactory factory = RequirementFactory.eINSTANCE;
 
-    private Map<String, HierarchicalElement> objectsCreated = new HashMap<String, HierarchicalElement>();
+    private Map<String, EObject> objectsCreated = new HashMap<String, EObject>();
     
     private Map<EObject, EObject> correspondances = new HashMap<EObject, EObject>();
     private Map<String, EObject> reqCorrespondances = new HashMap<String, EObject>();
@@ -123,11 +128,12 @@ public class Merge
             {
             	thisMonitor = new TimeProgressMonitor(time, thisMonitor);
             }
-            thisMonitor.beginTask("Process Filter", 8);
+            thisMonitor.beginTask("Merge", 9);
             if (thisMonitor.isCanceled())
             {
             	return ;
             }
+            thisMonitor.subTask("Load models");
             this.getRequirementsFile();
             thisMonitor.worked(1);
             if (models.size() > 0)
@@ -136,12 +142,14 @@ public class Merge
                 {
                 	return ;
                 }
+            	thisMonitor.subTask("Output initialization");
                 this.initRequirementFile();
                 thisMonitor.worked(1);
                 if (thisMonitor.isCanceled())
                 {
                 	return ;
                 }
+                thisMonitor.subTask("Attribute initialization");
                 this.initAttributeUpstream();
                 thisMonitor.worked(1);
                 if (thisMonitor.isCanceled())
@@ -154,36 +162,43 @@ public class Merge
                 {
                 	return ;
                 }
+                thisMonitor.subTask("Structure initialization");
                 this.initStructureRequirment();
                 thisMonitor.worked(1);
                 if (thisMonitor.isCanceled())
                 {
                 	return ;
                 }
+                thisMonitor.subTask("Manage current requirements");
                 this.copyRequirement();
                 thisMonitor.worked(1);
                 if (thisMonitor.isCanceled())
                 {
                 	return ;
                 }
+                thisMonitor.subTask("Assign references");
                 this.assignPpa();
                 thisMonitor.worked(1);
                 if (thisMonitor.isCanceled())
                 {
                 	return ;
                 }
+                thisMonitor.subTask("Filter");
+            	clear();
                 this.filter();
                 thisMonitor.worked(1);
                 if (thisMonitor.isCanceled())
                 {
                 	return ;
                 }
+                thisMonitor.subTask("Save");
                 this.save();
                 if (Activator.getDefault().shouldTrace())
                 {
                 	time = System.currentTimeMillis() - time ;
                 	Activator.getDefault().log("End : " + time);
                 }
+                monitor.worked(1);
             }
         }
         catch (Exception e)
@@ -220,7 +235,7 @@ public class Merge
             command.append(DeleteCommand.create(domain, h));
         }
         domain.getCommandStack().execute(command);
-
+        domain.getCommandStack().flush();
     }
 
     private boolean delete(HierarchicalElement root, AdapterFactoryEditingDomain domain, CompoundCommand command)
@@ -259,7 +274,20 @@ public class Merge
     {
         try
         {
-            requirementProject.eResource().save(Collections.EMPTY_MAP);
+        	ResourceSet set = getResourceSet(null);
+            Map<Object, Object> options = new HashMap<Object, Object>();
+            // augment the time but decrease memory consumption
+            options.put(XMLResource.OPTION_FLUSH_THRESHOLD, getMemoryAvailable());
+            options.put(XMLResource.OPTION_USE_FILE_BUFFER, Boolean.TRUE);
+			requirementProject.eResource().save(options);
+			set.eAdapters().clear();
+            for (int i = 0; i < set.getResources().size(); i++) {
+				try {
+					set.getResources().get(i).unload();
+				} catch (Exception e) {
+				}
+			}
+            set.getResources().clear();
         }
         catch (IOException e)
         {
@@ -267,21 +295,48 @@ public class Merge
         }
     }
 
+	private Integer getMemoryAvailable() {
+		long free = Runtime.getRuntime().freeMemory();
+		if (free > Integer.MAX_VALUE)
+		{
+			return Integer.MAX_VALUE;
+		}
+		if (free - MEMORY_FREE > ONE_MEG)
+		{
+			return (int)(free - MEMORY_FREE) ;
+		}
+		else
+		{
+			return ONE_MEG;
+		}
+	}
+
+	private void clear() {
+		// clear data to free memory
+		this.objectsCreated.clear();
+		this.inputs.clear();
+		this.correspondances.clear();
+		this.reqCorrespondances.clear();
+		this.models.clear();
+		this.theProblemChapter = null ;
+		this.theUntracedChapter = null ;
+		this.ppas.clear();
+	}
+
     public void getRequirementsFile()
     {
         SubProgressMonitor subMonitor = new SubProgressMonitor(thisMonitor, 1);
         Set<String> keys = inputs.keySet();
         Iterator<String> it = keys.iterator();
-        subMonitor.beginTask("Get requirements", keys.size());
         // for each inputs
         while (it.hasNext())
         {
-
             // Get the diagram
             String file = it.next();
             URI uri = URI.createURI(file);
+            subMonitor.subTask("load " + uri.toString());
             IModelAttachmentPolicy policy = ModelAttachmentPolicyManager.getInstance().getModelPolicy(uri.fileExtension());
-            ResourceSet resourceSetImpl = createResourceSet(policy);
+            ResourceSet resourceSetImpl = getResourceSet(policy);
 			EObject eobject = resourceSetImpl.getResource(uri, true).getContents().get(0);
 
             // if (eobject instanceof Diagrams)
@@ -294,7 +349,7 @@ public class Merge
                 {
                     project = policy.getRequirementProjectFromTargetMainResource(eobject.eResource());
                     // FIXME whenpolicy will not be bugged
-                    if (!project.eResource().getURI().trimFileExtension().equals(eobject.eResource().getURI().trimFileExtension()))
+                    if (project != null && project.eResource() != null && !project.eResource().getURI().trimFileExtension().equals(eobject.eResource().getURI().trimFileExtension()))
                     {
                     	try
                     	{
@@ -318,9 +373,18 @@ public class Merge
                     EObject eobjectModel = getModelObject(project);
 
                     // Create a new Triplet
-                    Couple t = new Couple(eobjectModel, project, inputs.get(file));
-                    // Triplet t = new Triplet(eobjectModel, (Diagrams) eobject, project, inputs.get(file));
-                    models.add(t);
+                    if (eobjectModel != null)
+                    {
+                    	Couple t = new Couple(eobjectModel, project, inputs.get(file));
+                    	// Triplet t = new Triplet(eobjectModel, (Diagrams) eobject, project, inputs.get(file));
+                    	models.add(t);
+                    }
+                    else
+                    {
+                    	Activator.getDefault().log("The requirement is not linked to a model : " + project.eResource().getURI().toString());
+                    }
+                    	
+                    	
                 }
             }
             subMonitor.worked(1);
@@ -355,13 +419,13 @@ public class Merge
 	public void initRequirementFile()
     {
         requirementProject = factory.createRequirementProject();
-        ResourceSet set = createResourceSet(null);
+        ResourceSet set = getResourceSet(null);
         Resource r = set.createResource(URI.createURI(output));
         r.getContents().add(requirementProject);
 
     }
 
-	private ResourceSet createResourceSet(IModelAttachmentPolicy policy) {
+	private ResourceSet getResourceSet(IModelAttachmentPolicy policy) {
 		if (resourceSet == null)
 		{
 			if (policy instanceof IRequirementFactoryProvider)
@@ -398,11 +462,42 @@ public class Merge
 		return resourceSet;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public <T> T copy (EObject eObject)
 	{
-		return copy2(eObject);
+		T t = (T) correspondances.get(eObject);
+		if (t == null)
+		{
+			t = (T) objectsCreated.get(getID(eObject));
+		}
+		if (t == null)
+		{
+			if (t instanceof ttm.Requirement) {
+				ttm.Requirement req = (ttm.Requirement) t;
+				EObject eObject2 = reqCorrespondances.get(req.getIdent());
+				if (eObject2 != null)
+				{
+					return (T) eObject2;
+				}
+			}
+			else if (t instanceof CurrentRequirement)
+			{
+				CurrentRequirement req = (CurrentRequirement) t;
+				EObject eObject2 = reqCorrespondances.get(req.getIdentifier());
+				if (eObject2 != null)
+				{
+					return (T) eObject2;
+				}
+			}
+		}
+		if (t == null)
+		{
+			t = copy2(eObject);
+		}
+		return t;
 	}
 
+	
     private <T> T copy2(EObject eObject) {
     	Copier copier = new Copier()
     	{
@@ -414,6 +509,12 @@ public class Merge
 					ttm.Requirement req = (ttm.Requirement)eObject;
 					EObject previousValue = reqCorrespondances.put(req.getIdent(), result);
 				}
+				else if (eObject instanceof CurrentRequirement)
+				{
+					CurrentRequirement req = (CurrentRequirement) eObject;
+					reqCorrespondances.put(req.getIdentifier(), result);
+				}
+				objectsCreated.put(getID(eObject), result);
 				correspondances.put(eObject, result);
 				return result ;
 			}
@@ -427,6 +528,10 @@ public class Merge
 
 	public void initAttributeUpstream()
     {
+		// name and description
+		requirementProject.setIdentifier(models.get(0).getRequirement().getIdentifier());
+		requirementProject.setShortDescription(models.get(0).getRequirement().getIdentifier());
+		
         // Add upstream model
         requirementProject.setUpstreamModel((UpstreamModel) copy(models.get(0).getRequirement().getUpstreamModel()));
         
@@ -665,7 +770,8 @@ public class Merge
     	if (samElement.eResource() instanceof XMIResource)
     	{
     		String id = getID(samElement);
-    		return objectsCreated.get(id);
+    		EObject eObject = objectsCreated.get(id);
+			return (HierarchicalElement) (eObject instanceof HierarchicalElement ? eObject : null);
     	}
         return null;
     }
@@ -797,7 +903,6 @@ public class Merge
     			Activator.getDefault().log("no correspondance found for " + newOne.toString());
     		}
     		newOne.setValue(get);
-    		
     	}
     }
 }
