@@ -33,14 +33,14 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 
 public class MergeRequirementWizardPage extends WizardPage
 {
 
-    private Form form;
+    private ScrolledForm form;
 
     private Composite section;
 
@@ -75,10 +75,10 @@ public class MergeRequirementWizardPage extends WizardPage
         // setImageDescriptor(workbench.getSharedImages().getImageDescriptor(Wizard.DEFAULT_IMAGE));
         this.setDescription("This wizard merge all the requirement models associated to the selected diagrams");
         toolkit = new FormToolkit(composite.getDisplay());
-        form = toolkit.createForm(composite);
+        form = toolkit.createScrolledForm(composite);
         // create the base form
         form.setText("Requirement Merge");
-        toolkit.decorateFormHeading(form);
+        toolkit.decorateFormHeading(form.getForm());
         FillLayout layout = new FillLayout();
         layout.spacing = 5;
         layout.marginHeight = 5;
@@ -161,7 +161,7 @@ public class MergeRequirementWizardPage extends WizardPage
         });
     }
 
-    private Composite createSection(Form mform, String title, int numColumns)
+    private Composite createSection(ScrolledForm mform, String title, int numColumns)
     {
         Section section = toolkit.createSection(mform.getBody(), Section.TITLE_BAR | Section.EXPANDED);
         section.setText(title);
