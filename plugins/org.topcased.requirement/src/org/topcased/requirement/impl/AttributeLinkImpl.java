@@ -15,9 +15,7 @@ import org.topcased.requirement.AttributeLink;
 import org.topcased.requirement.RequirementPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Attribute Link</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Attribute Link</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -31,8 +29,8 @@ public class AttributeLinkImpl extends ObjectAttributeImpl implements AttributeL
 {
     /**
      * The default value of the '{@link #getPartial() <em>Partial</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @see #getPartial()
      * @generated
      * @ordered
@@ -41,8 +39,8 @@ public class AttributeLinkImpl extends ObjectAttributeImpl implements AttributeL
 
     /**
      * The cached value of the '{@link #getPartial() <em>Partial</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @see #getPartial()
      * @generated
      * @ordered
@@ -50,8 +48,7 @@ public class AttributeLinkImpl extends ObjectAttributeImpl implements AttributeL
     protected Boolean partial = PARTIAL_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     protected AttributeLinkImpl()
@@ -60,8 +57,7 @@ public class AttributeLinkImpl extends ObjectAttributeImpl implements AttributeL
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -71,8 +67,7 @@ public class AttributeLinkImpl extends ObjectAttributeImpl implements AttributeL
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public Boolean getPartial()
@@ -81,8 +76,7 @@ public class AttributeLinkImpl extends ObjectAttributeImpl implements AttributeL
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public void setPartial(Boolean newPartial)
@@ -94,8 +88,7 @@ public class AttributeLinkImpl extends ObjectAttributeImpl implements AttributeL
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -110,8 +103,7 @@ public class AttributeLinkImpl extends ObjectAttributeImpl implements AttributeL
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -127,8 +119,7 @@ public class AttributeLinkImpl extends ObjectAttributeImpl implements AttributeL
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -144,8 +135,7 @@ public class AttributeLinkImpl extends ObjectAttributeImpl implements AttributeL
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -160,8 +150,7 @@ public class AttributeLinkImpl extends ObjectAttributeImpl implements AttributeL
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -177,4 +166,4 @@ public class AttributeLinkImpl extends ObjectAttributeImpl implements AttributeL
         return result.toString();
     }
 
-} //AttributeLinkImpl
+} // AttributeLinkImpl

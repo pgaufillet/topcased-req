@@ -12,7 +12,6 @@ import org.eclipse.emf.ecore.xmi.XMLHelper;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.topcased.requirement.util.migration.RequirementMigrationHelper;
 
-
 /**
  * <!-- begin-user-doc --> The <b>Resource </b> associated with the package. <!-- end-user-doc -->
  * 
@@ -21,9 +20,9 @@ import org.topcased.requirement.util.migration.RequirementMigrationHelper;
  */
 public class RequirementResourceImpl extends XMIResourceImpl implements RequirementResource
 {
-    
+
     private RequirementMigrationHelper myMigrationHelper;
-    
+
     /**
      * Creates an instance of the resource. <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
@@ -34,7 +33,7 @@ public class RequirementResourceImpl extends XMIResourceImpl implements Requirem
     {
         super(uri);
     }
-    
+
     /**
      * According to the resource statement, the cache adapter is respectively set or unset.
      * 
@@ -95,7 +94,7 @@ public class RequirementResourceImpl extends XMIResourceImpl implements Requirem
     {
         return true;
     }
-    
+
     /**
      * @see org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl#createXMLHelper()
      * @custom

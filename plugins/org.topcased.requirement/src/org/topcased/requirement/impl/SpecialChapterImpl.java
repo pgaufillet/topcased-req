@@ -15,6 +15,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
+import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
@@ -25,25 +26,23 @@ import org.topcased.requirement.RequirementPackage;
 import org.topcased.requirement.SpecialChapter;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Special Chapter</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Special Chapter</b></em>'. <!-- end-user-doc
+ * -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.topcased.requirement.impl.SpecialChapterImpl#getHierarchicalElement <em>Hierarchical Element</em>}</li>
- *   <li>{@link org.topcased.requirement.impl.SpecialChapterImpl#getRequirement <em>Requirement</em>}</li>
+ * <li>{@link org.topcased.requirement.impl.SpecialChapterImpl#getHierarchicalElement <em>Hierarchical Element</em>}</li>
+ * <li>{@link org.topcased.requirement.impl.SpecialChapterImpl#getRequirement <em>Requirement</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
-public abstract class SpecialChapterImpl extends EObjectImpl implements SpecialChapter
+public abstract class SpecialChapterImpl extends MinimalEObjectImpl.Container implements SpecialChapter
 {
     /**
      * The cached value of the '{@link #getHierarchicalElement() <em>Hierarchical Element</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @see #getHierarchicalElement()
      * @generated
      * @ordered
@@ -51,9 +50,9 @@ public abstract class SpecialChapterImpl extends EObjectImpl implements SpecialC
     protected EList<HierarchicalElement> hierarchicalElement;
 
     /**
-     * The cached value of the '{@link #getRequirement() <em>Requirement</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getRequirement() <em>Requirement</em>}' containment reference list. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getRequirement()
      * @generated
      * @ordered
@@ -61,8 +60,7 @@ public abstract class SpecialChapterImpl extends EObjectImpl implements SpecialC
     protected EList<Requirement> requirement;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     protected SpecialChapterImpl()
@@ -71,8 +69,7 @@ public abstract class SpecialChapterImpl extends EObjectImpl implements SpecialC
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -82,36 +79,33 @@ public abstract class SpecialChapterImpl extends EObjectImpl implements SpecialC
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public EList<HierarchicalElement> getHierarchicalElement()
     {
         if (hierarchicalElement == null)
         {
-            hierarchicalElement = new EObjectContainmentEList<HierarchicalElement>(HierarchicalElement.class, this, RequirementPackage.SPECIAL_CHAPTER__HIERARCHICAL_ELEMENT);
+            hierarchicalElement = new EObjectContainmentEList.Resolving<HierarchicalElement>(HierarchicalElement.class, this, RequirementPackage.SPECIAL_CHAPTER__HIERARCHICAL_ELEMENT);
         }
         return hierarchicalElement;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public EList<Requirement> getRequirement()
     {
         if (requirement == null)
         {
-            requirement = new EObjectContainmentEList<Requirement>(Requirement.class, this, RequirementPackage.SPECIAL_CHAPTER__REQUIREMENT);
+            requirement = new EObjectContainmentEList.Resolving<Requirement>(Requirement.class, this, RequirementPackage.SPECIAL_CHAPTER__REQUIREMENT);
         }
         return requirement;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -128,8 +122,7 @@ public abstract class SpecialChapterImpl extends EObjectImpl implements SpecialC
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -146,8 +139,7 @@ public abstract class SpecialChapterImpl extends EObjectImpl implements SpecialC
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @SuppressWarnings("unchecked")
@@ -169,8 +161,7 @@ public abstract class SpecialChapterImpl extends EObjectImpl implements SpecialC
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -189,8 +180,7 @@ public abstract class SpecialChapterImpl extends EObjectImpl implements SpecialC
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -206,4 +196,4 @@ public abstract class SpecialChapterImpl extends EObjectImpl implements SpecialC
         return super.eIsSet(featureID);
     }
 
-} //SpecialChapterImpl
+} // SpecialChapterImpl

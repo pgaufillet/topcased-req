@@ -5,7 +5,8 @@
     modelDirectory="/org.topcased.requirement/src" editDirectory="/org.topcased.requirement/src"
     modelPluginID="org.topcased.requirement" runtimeJar="true" modelName="Requirement"
     modelPluginClass="" editPluginClass="org.topcased.requirement.provider.RequirementEditPlugin"
-    nonNLSMarkers="true" codeFormatting="true" importerID="org.eclipse.emf.importer.ecore"
+    nonNLSMarkers="true" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    codeFormatting="true" importerID="org.eclipse.emf.importer.ecore" containmentProxies="true"
     complianceLevel="5.0" copyrightFields="false" colorProviders="true" usedGenPackages="platform:/plugin/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore ../../org.topcased.traceability/model/ttm.genmodel#//ttm">
   <foreignModel>requirement.ecore</foreignModel>
   <genPackages prefix="Requirement" basePackage="org.topcased" disposableProviderFactory="true"

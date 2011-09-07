@@ -11,29 +11,29 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.topcased.requirement.AttributeValue;
 import org.topcased.requirement.RequirementPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Attribute Value</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Attribute Value</b></em>'. <!-- end-user-doc
+ * -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.topcased.requirement.impl.AttributeValueImpl#getValue <em>Value</em>}</li>
+ * <li>{@link org.topcased.requirement.impl.AttributeValueImpl#getValue <em>Value</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
-public class AttributeValueImpl extends EObjectImpl implements AttributeValue
+public class AttributeValueImpl extends MinimalEObjectImpl.Container implements AttributeValue
 {
     /**
      * The default value of the '{@link #getValue() <em>Value</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @see #getValue()
      * @generated
      * @ordered
@@ -41,9 +41,9 @@ public class AttributeValueImpl extends EObjectImpl implements AttributeValue
     protected static final String VALUE_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getValue() <em>Value</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getValue() <em>Value</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getValue()
      * @generated
      * @ordered
@@ -51,8 +51,7 @@ public class AttributeValueImpl extends EObjectImpl implements AttributeValue
     protected String value = VALUE_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     protected AttributeValueImpl()
@@ -61,8 +60,7 @@ public class AttributeValueImpl extends EObjectImpl implements AttributeValue
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -72,8 +70,7 @@ public class AttributeValueImpl extends EObjectImpl implements AttributeValue
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public String getValue()
@@ -82,8 +79,7 @@ public class AttributeValueImpl extends EObjectImpl implements AttributeValue
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public void setValue(String newValue)
@@ -95,8 +91,7 @@ public class AttributeValueImpl extends EObjectImpl implements AttributeValue
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -111,8 +106,7 @@ public class AttributeValueImpl extends EObjectImpl implements AttributeValue
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -128,8 +122,7 @@ public class AttributeValueImpl extends EObjectImpl implements AttributeValue
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -145,8 +138,7 @@ public class AttributeValueImpl extends EObjectImpl implements AttributeValue
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -161,8 +153,7 @@ public class AttributeValueImpl extends EObjectImpl implements AttributeValue
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -178,4 +169,4 @@ public class AttributeValueImpl extends EObjectImpl implements AttributeValue
         return result.toString();
     }
 
-} //AttributeValueImpl
+} // AttributeValueImpl

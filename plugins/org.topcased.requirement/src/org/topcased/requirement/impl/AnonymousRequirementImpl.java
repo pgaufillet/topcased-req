@@ -11,9 +11,8 @@ import org.topcased.requirement.AnonymousRequirement;
 import org.topcased.requirement.RequirementPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Anonymous Requirement</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Anonymous Requirement</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * </p>
  *
@@ -22,8 +21,7 @@ import org.topcased.requirement.RequirementPackage;
 public class AnonymousRequirementImpl extends RequirementImpl implements AnonymousRequirement
 {
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     protected AnonymousRequirementImpl()
@@ -32,8 +30,7 @@ public class AnonymousRequirementImpl extends RequirementImpl implements Anonymo
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -42,4 +39,4 @@ public class AnonymousRequirementImpl extends RequirementImpl implements Anonymo
         return RequirementPackage.Literals.ANONYMOUS_REQUIREMENT;
     }
 
-} //AnonymousRequirementImpl
+} // AnonymousRequirementImpl

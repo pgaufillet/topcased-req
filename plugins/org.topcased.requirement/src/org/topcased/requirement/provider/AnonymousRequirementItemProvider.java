@@ -29,10 +29,9 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.topcased.requirement.AnonymousRequirement;
 
-
 /**
- * This is the item provider adapter for a {@link org.topcased.requirement.AnonymousRequirement} object. <!-- begin-user-doc --> <!--
- * end-user-doc -->
+ * This is the item provider adapter for a {@link org.topcased.requirement.AnonymousRequirement} object. <!--
+ * begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
  */

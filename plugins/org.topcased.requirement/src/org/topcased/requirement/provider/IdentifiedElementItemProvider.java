@@ -27,20 +27,18 @@ import org.topcased.requirement.IdentifiedElement;
 import org.topcased.requirement.RequirementPackage;
 import org.topcased.requirement.RequirementPlugin;
 
-
 /**
- * This is the item provider adapter for a {@link org.topcased.requirement.IdentifiedElement} object.
- * <!-- begin-user-doc -->
- * <!-- end-user-doc -->
+ * This is the item provider adapter for a {@link org.topcased.requirement.IdentifiedElement} object. <!--
+ * begin-user-doc --> <!-- end-user-doc -->
+ * 
  * @generated
  */
 public class IdentifiedElementItemProvider extends EModelElementItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider,
         IItemPropertySource, IItemColorProvider
 {
     /**
-     * This constructs an instance from a factory and a notifier.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public IdentifiedElementItemProvider(AdapterFactory adapterFactory)
@@ -49,9 +47,8 @@ public class IdentifiedElementItemProvider extends EModelElementItemProvider imp
     }
 
     /**
-     * This returns the property descriptors for the adapted class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -68,9 +65,8 @@ public class IdentifiedElementItemProvider extends EModelElementItemProvider imp
     }
 
     /**
-     * This adds a property descriptor for the Identifier feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This adds a property descriptor for the Identifier feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected void addIdentifierPropertyDescriptor(Object object)
@@ -81,22 +77,21 @@ public class IdentifiedElementItemProvider extends EModelElementItemProvider imp
     }
 
     /**
-     * This adds a property descriptor for the Short Description feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This adds a property descriptor for the Short Description feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected void addShortDescriptionPropertyDescriptor(Object object)
     {
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-                getString("_UI_IdentifiedElement_shortDescription_feature"), getString("_UI_PropertyDescriptor_description", "_UI_IdentifiedElement_shortDescription_feature",
-                        "_UI_IdentifiedElement_type"), RequirementPackage.Literals.IDENTIFIED_ELEMENT__SHORT_DESCRIPTION, true, false, false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+                getString("_UI_IdentifiedElement_shortDescription_feature"),
+                getString("_UI_PropertyDescriptor_description", "_UI_IdentifiedElement_shortDescription_feature", "_UI_IdentifiedElement_type"),
+                RequirementPackage.Literals.IDENTIFIED_ELEMENT__SHORT_DESCRIPTION, true, false, false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
     }
 
     /**
-     * This returns the label text for the adapted class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -107,10 +102,10 @@ public class IdentifiedElementItemProvider extends EModelElementItemProvider imp
     }
 
     /**
-     * This handles model notifications by calling {@link #updateChildren} to update any cached
-     * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This handles model notifications by calling {@link #updateChildren} to update any cached children and by creating
+     * a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @generated
      */
     @Override
@@ -129,10 +124,9 @@ public class IdentifiedElementItemProvider extends EModelElementItemProvider imp
     }
 
     /**
-     * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-     * that can be created under this object.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be created
+     * under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -142,9 +136,8 @@ public class IdentifiedElementItemProvider extends EModelElementItemProvider imp
     }
 
     /**
-     * Return the resource locator for this item provider's resources.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated NOT
      */
     @Override

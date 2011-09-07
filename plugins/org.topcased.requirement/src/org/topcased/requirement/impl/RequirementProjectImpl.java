@@ -28,9 +28,7 @@ import org.topcased.requirement.SpecialChapter;
 import org.topcased.requirement.UpstreamModel;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Project</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Project</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -47,8 +45,7 @@ public class RequirementProjectImpl extends IdentifiedElementImpl implements Req
 {
     /**
      * The cached value of the '{@link #getHierarchicalElement() <em>Hierarchical Element</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @see #getHierarchicalElement()
      * @generated
      * @ordered
@@ -57,8 +54,7 @@ public class RequirementProjectImpl extends IdentifiedElementImpl implements Req
 
     /**
      * The cached value of the '{@link #getAttributeConfiguration() <em>Attribute Configuration</em>}' containment reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @see #getAttributeConfiguration()
      * @generated
      * @ordered
@@ -67,8 +63,8 @@ public class RequirementProjectImpl extends IdentifiedElementImpl implements Req
 
     /**
      * The cached value of the '{@link #getChapter() <em>Chapter</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc
+     * --> <!-- end-user-doc -->
      * @see #getChapter()
      * @generated
      * @ordered
@@ -76,9 +72,9 @@ public class RequirementProjectImpl extends IdentifiedElementImpl implements Req
     protected EList<SpecialChapter> chapter;
 
     /**
-     * The cached value of the '{@link #getUpstreamModel() <em>Upstream Model</em>}' containment reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getUpstreamModel() <em>Upstream Model</em>}' containment reference. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getUpstreamModel()
      * @generated
      * @ordered
@@ -86,8 +82,7 @@ public class RequirementProjectImpl extends IdentifiedElementImpl implements Req
     protected UpstreamModel upstreamModel;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     protected RequirementProjectImpl()
@@ -96,8 +91,7 @@ public class RequirementProjectImpl extends IdentifiedElementImpl implements Req
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -107,32 +101,56 @@ public class RequirementProjectImpl extends IdentifiedElementImpl implements Req
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public EList<HierarchicalElement> getHierarchicalElement()
     {
         if (hierarchicalElement == null)
         {
-            hierarchicalElement = new EObjectContainmentEList<HierarchicalElement>(HierarchicalElement.class, this, RequirementPackage.REQUIREMENT_PROJECT__HIERARCHICAL_ELEMENT);
+            hierarchicalElement = new EObjectContainmentEList.Resolving<HierarchicalElement>(HierarchicalElement.class, this, RequirementPackage.REQUIREMENT_PROJECT__HIERARCHICAL_ELEMENT);
         }
         return hierarchicalElement;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public AttributeConfiguration getAttributeConfiguration()
+    {
+        if (attributeConfiguration != null && attributeConfiguration.eIsProxy())
+        {
+            InternalEObject oldAttributeConfiguration = (InternalEObject) attributeConfiguration;
+            attributeConfiguration = (AttributeConfiguration) eResolveProxy(oldAttributeConfiguration);
+            if (attributeConfiguration != oldAttributeConfiguration)
+            {
+                InternalEObject newAttributeConfiguration = (InternalEObject) attributeConfiguration;
+                NotificationChain msgs = oldAttributeConfiguration.eInverseRemove(this, EOPPOSITE_FEATURE_BASE - RequirementPackage.REQUIREMENT_PROJECT__ATTRIBUTE_CONFIGURATION, null, null);
+                if (newAttributeConfiguration.eInternalContainer() == null)
+                {
+                    msgs = newAttributeConfiguration.eInverseAdd(this, EOPPOSITE_FEATURE_BASE - RequirementPackage.REQUIREMENT_PROJECT__ATTRIBUTE_CONFIGURATION, null, msgs);
+                }
+                if (msgs != null)
+                    msgs.dispatch();
+                if (eNotificationRequired())
+                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, RequirementPackage.REQUIREMENT_PROJECT__ATTRIBUTE_CONFIGURATION, oldAttributeConfiguration, attributeConfiguration));
+            }
+        }
+        return attributeConfiguration;
+    }
+
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
+    public AttributeConfiguration basicGetAttributeConfiguration()
     {
         return attributeConfiguration;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public NotificationChain basicSetAttributeConfiguration(AttributeConfiguration newAttributeConfiguration, NotificationChain msgs)
@@ -152,8 +170,7 @@ public class RequirementProjectImpl extends IdentifiedElementImpl implements Req
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public void setAttributeConfiguration(AttributeConfiguration newAttributeConfiguration)
@@ -174,32 +191,56 @@ public class RequirementProjectImpl extends IdentifiedElementImpl implements Req
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public EList<SpecialChapter> getChapter()
     {
         if (chapter == null)
         {
-            chapter = new EObjectContainmentEList<SpecialChapter>(SpecialChapter.class, this, RequirementPackage.REQUIREMENT_PROJECT__CHAPTER);
+            chapter = new EObjectContainmentEList.Resolving<SpecialChapter>(SpecialChapter.class, this, RequirementPackage.REQUIREMENT_PROJECT__CHAPTER);
         }
         return chapter;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public UpstreamModel getUpstreamModel()
+    {
+        if (upstreamModel != null && upstreamModel.eIsProxy())
+        {
+            InternalEObject oldUpstreamModel = (InternalEObject) upstreamModel;
+            upstreamModel = (UpstreamModel) eResolveProxy(oldUpstreamModel);
+            if (upstreamModel != oldUpstreamModel)
+            {
+                InternalEObject newUpstreamModel = (InternalEObject) upstreamModel;
+                NotificationChain msgs = oldUpstreamModel.eInverseRemove(this, EOPPOSITE_FEATURE_BASE - RequirementPackage.REQUIREMENT_PROJECT__UPSTREAM_MODEL, null, null);
+                if (newUpstreamModel.eInternalContainer() == null)
+                {
+                    msgs = newUpstreamModel.eInverseAdd(this, EOPPOSITE_FEATURE_BASE - RequirementPackage.REQUIREMENT_PROJECT__UPSTREAM_MODEL, null, msgs);
+                }
+                if (msgs != null)
+                    msgs.dispatch();
+                if (eNotificationRequired())
+                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, RequirementPackage.REQUIREMENT_PROJECT__UPSTREAM_MODEL, oldUpstreamModel, upstreamModel));
+            }
+        }
+        return upstreamModel;
+    }
+
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
+    public UpstreamModel basicGetUpstreamModel()
     {
         return upstreamModel;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public NotificationChain basicSetUpstreamModel(UpstreamModel newUpstreamModel, NotificationChain msgs)
@@ -218,8 +259,7 @@ public class RequirementProjectImpl extends IdentifiedElementImpl implements Req
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public void setUpstreamModel(UpstreamModel newUpstreamModel)
@@ -240,8 +280,7 @@ public class RequirementProjectImpl extends IdentifiedElementImpl implements Req
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -262,8 +301,7 @@ public class RequirementProjectImpl extends IdentifiedElementImpl implements Req
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -274,18 +312,21 @@ public class RequirementProjectImpl extends IdentifiedElementImpl implements Req
             case RequirementPackage.REQUIREMENT_PROJECT__HIERARCHICAL_ELEMENT:
                 return getHierarchicalElement();
             case RequirementPackage.REQUIREMENT_PROJECT__ATTRIBUTE_CONFIGURATION:
-                return getAttributeConfiguration();
+                if (resolve)
+                    return getAttributeConfiguration();
+                return basicGetAttributeConfiguration();
             case RequirementPackage.REQUIREMENT_PROJECT__CHAPTER:
                 return getChapter();
             case RequirementPackage.REQUIREMENT_PROJECT__UPSTREAM_MODEL:
-                return getUpstreamModel();
+                if (resolve)
+                    return getUpstreamModel();
+                return basicGetUpstreamModel();
         }
         return super.eGet(featureID, resolve, coreType);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @SuppressWarnings("unchecked")
@@ -313,8 +354,7 @@ public class RequirementProjectImpl extends IdentifiedElementImpl implements Req
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -339,8 +379,7 @@ public class RequirementProjectImpl extends IdentifiedElementImpl implements Req
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -360,4 +399,4 @@ public class RequirementProjectImpl extends IdentifiedElementImpl implements Req
         return super.eIsSet(featureID);
     }
 
-} //RequirementProjectImpl
+} // RequirementProjectImpl

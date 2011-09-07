@@ -11,9 +11,8 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Attribute Configuration</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Attribute Configuration</b></em>'. <!--
+ * end-user-doc -->
  *
  * <p>
  * The following features are supported:
@@ -33,13 +32,13 @@ public interface AttributeConfiguration extends EObject
      * The list contents are of type {@link org.topcased.requirement.ConfiguratedAttribute}.
      * <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>List Attributes</em>' containment reference list isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of the '<em>List Attributes</em>' containment reference list isn't clear, there really should be
+     * more of a description here...
      * </p>
      * <!-- end-user-doc -->
      * @return the value of the '<em>List Attributes</em>' containment reference list.
      * @see org.topcased.requirement.RequirementPackage#getAttributeConfiguration_ListAttributes()
-     * @model containment="true"
+     * @model containment="true" resolveProxies="true"
      * @generated
      */
     EList<ConfiguratedAttribute> getListAttributes();

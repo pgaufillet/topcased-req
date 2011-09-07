@@ -17,17 +17,14 @@ import org.eclipse.emf.ecore.plugin.EcorePlugin;
 import org.topcased.requirement.*;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model <b>Factory</b>.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model <b>Factory</b>. <!-- end-user-doc -->
  * @generated
  */
 public class RequirementFactoryImpl extends EFactoryImpl implements RequirementFactory
 {
     /**
      * Creates the default factory implementation.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public static RequirementFactory init()
@@ -49,8 +46,7 @@ public class RequirementFactoryImpl extends EFactoryImpl implements RequirementF
 
     /**
      * Creates an instance of the factory.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public RequirementFactoryImpl()
@@ -59,8 +55,7 @@ public class RequirementFactoryImpl extends EFactoryImpl implements RequirementF
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -106,8 +101,7 @@ public class RequirementFactoryImpl extends EFactoryImpl implements RequirementF
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -123,8 +117,7 @@ public class RequirementFactoryImpl extends EFactoryImpl implements RequirementF
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -140,8 +133,7 @@ public class RequirementFactoryImpl extends EFactoryImpl implements RequirementF
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public RequirementProject createRequirementProject()
@@ -151,8 +143,7 @@ public class RequirementFactoryImpl extends EFactoryImpl implements RequirementF
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public HierarchicalElement createHierarchicalElement()
@@ -162,8 +153,7 @@ public class RequirementFactoryImpl extends EFactoryImpl implements RequirementF
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public CurrentRequirement createCurrentRequirement()
@@ -173,8 +163,7 @@ public class RequirementFactoryImpl extends EFactoryImpl implements RequirementF
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public AttributeConfiguration createAttributeConfiguration()
@@ -184,8 +173,7 @@ public class RequirementFactoryImpl extends EFactoryImpl implements RequirementF
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public ConfiguratedAttribute createConfiguratedAttribute()
@@ -195,8 +183,7 @@ public class RequirementFactoryImpl extends EFactoryImpl implements RequirementF
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public AttributeValue createAttributeValue()
@@ -206,8 +193,7 @@ public class RequirementFactoryImpl extends EFactoryImpl implements RequirementF
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public DefaultAttributeValue createDefaultAttributeValue()
@@ -217,8 +203,7 @@ public class RequirementFactoryImpl extends EFactoryImpl implements RequirementF
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public TextAttribute createTextAttribute()
@@ -228,8 +213,7 @@ public class RequirementFactoryImpl extends EFactoryImpl implements RequirementF
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public ObjectAttribute createObjectAttribute()
@@ -239,8 +223,7 @@ public class RequirementFactoryImpl extends EFactoryImpl implements RequirementF
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public UpstreamModel createUpstreamModel()
@@ -250,8 +233,7 @@ public class RequirementFactoryImpl extends EFactoryImpl implements RequirementF
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public AttributeLink createAttributeLink()
@@ -261,8 +243,7 @@ public class RequirementFactoryImpl extends EFactoryImpl implements RequirementF
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public AttributeAllocate createAttributeAllocate()
@@ -272,8 +253,7 @@ public class RequirementFactoryImpl extends EFactoryImpl implements RequirementF
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public UntracedChapter createUntracedChapter()
@@ -283,8 +263,7 @@ public class RequirementFactoryImpl extends EFactoryImpl implements RequirementF
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public ProblemChapter createProblemChapter()
@@ -294,8 +273,7 @@ public class RequirementFactoryImpl extends EFactoryImpl implements RequirementF
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public TrashChapter createTrashChapter()
@@ -305,8 +283,7 @@ public class RequirementFactoryImpl extends EFactoryImpl implements RequirementF
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public AnonymousRequirement createAnonymousRequirement()
@@ -316,8 +293,7 @@ public class RequirementFactoryImpl extends EFactoryImpl implements RequirementF
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public AttributesType createAttributesTypeFromString(EDataType eDataType, String initialValue)
@@ -329,8 +305,7 @@ public class RequirementFactoryImpl extends EFactoryImpl implements RequirementF
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public String convertAttributesTypeToString(EDataType eDataType, Object instanceValue)
@@ -339,8 +314,7 @@ public class RequirementFactoryImpl extends EFactoryImpl implements RequirementF
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public RequirementPackage getRequirementPackage()
@@ -349,8 +323,7 @@ public class RequirementFactoryImpl extends EFactoryImpl implements RequirementF
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @deprecated
      * @generated
      */
@@ -360,4 +333,4 @@ public class RequirementFactoryImpl extends EFactoryImpl implements RequirementF
         return RequirementPackage.eINSTANCE;
     }
 
-} //RequirementFactoryImpl
+} // RequirementFactoryImpl

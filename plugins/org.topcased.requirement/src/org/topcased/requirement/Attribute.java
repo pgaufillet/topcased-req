@@ -9,9 +9,7 @@ package org.topcased.requirement;
 import org.eclipse.emf.ecore.EModelElement;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Attribute</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Attribute</b></em>'. <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
@@ -30,8 +28,7 @@ public interface Attribute extends EModelElement
      * Returns the value of the '<em><b>Name</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>Name</em>' attribute isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of the '<em>Name</em>' attribute isn't clear, there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
      * @return the value of the '<em>Name</em>' attribute.
@@ -43,9 +40,9 @@ public interface Attribute extends EModelElement
     String getName();
 
     /**
-     * Sets the value of the '{@link org.topcased.requirement.Attribute#getName <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Sets the value of the '{@link org.topcased.requirement.Attribute#getName <em>Name</em>}' attribute. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Name</em>' attribute.
      * @see #getName()
      * @generated

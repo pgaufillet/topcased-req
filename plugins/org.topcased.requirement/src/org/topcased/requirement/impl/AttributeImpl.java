@@ -16,9 +16,7 @@ import org.topcased.requirement.Attribute;
 import org.topcased.requirement.RequirementPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Attribute</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Attribute</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -31,9 +29,9 @@ import org.topcased.requirement.RequirementPackage;
 public abstract class AttributeImpl extends EModelElementImpl implements Attribute
 {
     /**
-     * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getName()
      * @generated
      * @ordered
@@ -41,9 +39,9 @@ public abstract class AttributeImpl extends EModelElementImpl implements Attribu
     protected static final String NAME_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getName()
      * @generated
      * @ordered
@@ -51,8 +49,7 @@ public abstract class AttributeImpl extends EModelElementImpl implements Attribu
     protected String name = NAME_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     protected AttributeImpl()
@@ -61,8 +58,7 @@ public abstract class AttributeImpl extends EModelElementImpl implements Attribu
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -72,8 +68,7 @@ public abstract class AttributeImpl extends EModelElementImpl implements Attribu
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public String getName()
@@ -82,8 +77,7 @@ public abstract class AttributeImpl extends EModelElementImpl implements Attribu
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public void setName(String newName)
@@ -95,8 +89,7 @@ public abstract class AttributeImpl extends EModelElementImpl implements Attribu
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -111,8 +104,7 @@ public abstract class AttributeImpl extends EModelElementImpl implements Attribu
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -128,8 +120,7 @@ public abstract class AttributeImpl extends EModelElementImpl implements Attribu
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -145,8 +136,7 @@ public abstract class AttributeImpl extends EModelElementImpl implements Attribu
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -161,8 +151,7 @@ public abstract class AttributeImpl extends EModelElementImpl implements Attribu
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -178,4 +167,4 @@ public abstract class AttributeImpl extends EModelElementImpl implements Attribu
         return result.toString();
     }
 
-} //AttributeImpl
+} // AttributeImpl

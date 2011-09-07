@@ -9,18 +9,17 @@ package org.topcased.requirement;
 import org.eclipse.emf.ecore.EModelElement;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Identified Element</b></em>'.
- * <!-- end-user-doc -->
- *
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Identified Element</b></em>'. <!-- end-user-doc
+ * -->
+ * 
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.topcased.requirement.IdentifiedElement#getIdentifier <em>Identifier</em>}</li>
- *   <li>{@link org.topcased.requirement.IdentifiedElement#getShortDescription <em>Short Description</em>}</li>
+ * <li>{@link org.topcased.requirement.IdentifiedElement#getIdentifier <em>Identifier</em>}</li>
+ * <li>{@link org.topcased.requirement.IdentifiedElement#getShortDescription <em>Short Description</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @see org.topcased.requirement.RequirementPackage#getIdentifiedElement()
  * @model abstract="true"
  * @generated
@@ -31,8 +30,8 @@ public interface IdentifiedElement extends EModelElement
      * Returns the value of the '<em><b>Identifier</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>Identifier</em>' attribute isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of the '<em>Identifier</em>' attribute isn't clear, there really should be more of a description
+     * here...
      * </p>
      * <!-- end-user-doc -->
      * @return the value of the '<em>Identifier</em>' attribute.
@@ -45,8 +44,7 @@ public interface IdentifiedElement extends EModelElement
 
     /**
      * Sets the value of the '{@link org.topcased.requirement.IdentifiedElement#getIdentifier <em>Identifier</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @param value the new value of the '<em>Identifier</em>' attribute.
      * @see #getIdentifier()
      * @generated
@@ -57,8 +55,8 @@ public interface IdentifiedElement extends EModelElement
      * Returns the value of the '<em><b>Short Description</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>Short Description</em>' attribute isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of the '<em>Short Description</em>' attribute isn't clear, there really should be more of a
+     * description here...
      * </p>
      * <!-- end-user-doc -->
      * @return the value of the '<em>Short Description</em>' attribute.
@@ -71,8 +69,7 @@ public interface IdentifiedElement extends EModelElement
 
     /**
      * Sets the value of the '{@link org.topcased.requirement.IdentifiedElement#getShortDescription <em>Short Description</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @param value the new value of the '<em>Short Description</em>' attribute.
      * @see #getShortDescription()
      * @generated

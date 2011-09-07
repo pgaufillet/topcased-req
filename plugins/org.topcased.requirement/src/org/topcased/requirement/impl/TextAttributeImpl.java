@@ -15,9 +15,7 @@ import org.topcased.requirement.RequirementPackage;
 import org.topcased.requirement.TextAttribute;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Text Attribute</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Text Attribute</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -31,8 +29,8 @@ public class TextAttributeImpl extends AttributeImpl implements TextAttribute
 {
     /**
      * The default value of the '{@link #getValue() <em>Value</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @see #getValue()
      * @generated
      * @ordered
@@ -40,9 +38,9 @@ public class TextAttributeImpl extends AttributeImpl implements TextAttribute
     protected static final String VALUE_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getValue() <em>Value</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getValue() <em>Value</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getValue()
      * @generated
      * @ordered
@@ -50,8 +48,7 @@ public class TextAttributeImpl extends AttributeImpl implements TextAttribute
     protected String value = VALUE_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     protected TextAttributeImpl()
@@ -60,8 +57,7 @@ public class TextAttributeImpl extends AttributeImpl implements TextAttribute
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -71,8 +67,7 @@ public class TextAttributeImpl extends AttributeImpl implements TextAttribute
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public String getValue()
@@ -81,8 +76,7 @@ public class TextAttributeImpl extends AttributeImpl implements TextAttribute
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public void setValue(String newValue)
@@ -94,8 +88,7 @@ public class TextAttributeImpl extends AttributeImpl implements TextAttribute
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -110,8 +103,7 @@ public class TextAttributeImpl extends AttributeImpl implements TextAttribute
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -127,8 +119,7 @@ public class TextAttributeImpl extends AttributeImpl implements TextAttribute
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -144,8 +135,7 @@ public class TextAttributeImpl extends AttributeImpl implements TextAttribute
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -160,8 +150,7 @@ public class TextAttributeImpl extends AttributeImpl implements TextAttribute
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -177,4 +166,4 @@ public class TextAttributeImpl extends AttributeImpl implements TextAttribute
         return result.toString();
     }
 
-} //TextAttributeImpl
+} // TextAttributeImpl

@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
@@ -28,9 +29,8 @@ import org.topcased.requirement.DefaultAttributeValue;
 import org.topcased.requirement.RequirementPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Configurated Attribute</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Configurated Attribute</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -43,12 +43,12 @@ import org.topcased.requirement.RequirementPackage;
  *
  * @generated
  */
-public class ConfiguratedAttributeImpl extends EObjectImpl implements ConfiguratedAttribute
+public class ConfiguratedAttributeImpl extends MinimalEObjectImpl.Container implements ConfiguratedAttribute
 {
     /**
-     * The cached value of the '{@link #getDefaultValue() <em>Default Value</em>}' containment reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getDefaultValue() <em>Default Value</em>}' containment reference. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getDefaultValue()
      * @generated
      * @ordered
@@ -56,9 +56,9 @@ public class ConfiguratedAttributeImpl extends EObjectImpl implements Configurat
     protected DefaultAttributeValue defaultValue;
 
     /**
-     * The cached value of the '{@link #getListValue() <em>List Value</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getListValue() <em>List Value</em>}' containment reference list. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getListValue()
      * @generated
      * @ordered
@@ -66,9 +66,9 @@ public class ConfiguratedAttributeImpl extends EObjectImpl implements Configurat
     protected EList<AttributeValue> listValue;
 
     /**
-     * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getName()
      * @generated
      * @ordered
@@ -76,9 +76,9 @@ public class ConfiguratedAttributeImpl extends EObjectImpl implements Configurat
     protected static final String NAME_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getName()
      * @generated
      * @ordered
@@ -86,9 +86,9 @@ public class ConfiguratedAttributeImpl extends EObjectImpl implements Configurat
     protected String name = NAME_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getType() <em>Type</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getType() <em>Type</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getType()
      * @generated
      * @ordered
@@ -96,9 +96,9 @@ public class ConfiguratedAttributeImpl extends EObjectImpl implements Configurat
     protected static final AttributesType TYPE_EDEFAULT = AttributesType.TEXT;
 
     /**
-     * The cached value of the '{@link #getType() <em>Type</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getType() <em>Type</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getType()
      * @generated
      * @ordered
@@ -106,8 +106,7 @@ public class ConfiguratedAttributeImpl extends EObjectImpl implements Configurat
     protected AttributesType type = TYPE_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     protected ConfiguratedAttributeImpl()
@@ -116,8 +115,7 @@ public class ConfiguratedAttributeImpl extends EObjectImpl implements Configurat
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -127,18 +125,43 @@ public class ConfiguratedAttributeImpl extends EObjectImpl implements Configurat
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public DefaultAttributeValue getDefaultValue()
+    {
+        if (defaultValue != null && defaultValue.eIsProxy())
+        {
+            InternalEObject oldDefaultValue = (InternalEObject) defaultValue;
+            defaultValue = (DefaultAttributeValue) eResolveProxy(oldDefaultValue);
+            if (defaultValue != oldDefaultValue)
+            {
+                InternalEObject newDefaultValue = (InternalEObject) defaultValue;
+                NotificationChain msgs = oldDefaultValue.eInverseRemove(this, EOPPOSITE_FEATURE_BASE - RequirementPackage.CONFIGURATED_ATTRIBUTE__DEFAULT_VALUE, null, null);
+                if (newDefaultValue.eInternalContainer() == null)
+                {
+                    msgs = newDefaultValue.eInverseAdd(this, EOPPOSITE_FEATURE_BASE - RequirementPackage.CONFIGURATED_ATTRIBUTE__DEFAULT_VALUE, null, msgs);
+                }
+                if (msgs != null)
+                    msgs.dispatch();
+                if (eNotificationRequired())
+                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, RequirementPackage.CONFIGURATED_ATTRIBUTE__DEFAULT_VALUE, oldDefaultValue, defaultValue));
+            }
+        }
+        return defaultValue;
+    }
+
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
+    public DefaultAttributeValue basicGetDefaultValue()
     {
         return defaultValue;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public NotificationChain basicSetDefaultValue(DefaultAttributeValue newDefaultValue, NotificationChain msgs)
@@ -157,8 +180,7 @@ public class ConfiguratedAttributeImpl extends EObjectImpl implements Configurat
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public void setDefaultValue(DefaultAttributeValue newDefaultValue)
@@ -179,22 +201,20 @@ public class ConfiguratedAttributeImpl extends EObjectImpl implements Configurat
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public EList<AttributeValue> getListValue()
     {
         if (listValue == null)
         {
-            listValue = new EObjectContainmentEList<AttributeValue>(AttributeValue.class, this, RequirementPackage.CONFIGURATED_ATTRIBUTE__LIST_VALUE);
+            listValue = new EObjectContainmentEList.Resolving<AttributeValue>(AttributeValue.class, this, RequirementPackage.CONFIGURATED_ATTRIBUTE__LIST_VALUE);
         }
         return listValue;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public String getName()
@@ -203,8 +223,7 @@ public class ConfiguratedAttributeImpl extends EObjectImpl implements Configurat
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public void setName(String newName)
@@ -216,8 +235,7 @@ public class ConfiguratedAttributeImpl extends EObjectImpl implements Configurat
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public AttributesType getType()
@@ -226,8 +244,7 @@ public class ConfiguratedAttributeImpl extends EObjectImpl implements Configurat
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public void setType(AttributesType newType)
@@ -239,8 +256,7 @@ public class ConfiguratedAttributeImpl extends EObjectImpl implements Configurat
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -257,8 +273,7 @@ public class ConfiguratedAttributeImpl extends EObjectImpl implements Configurat
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -267,7 +282,9 @@ public class ConfiguratedAttributeImpl extends EObjectImpl implements Configurat
         switch (featureID)
         {
             case RequirementPackage.CONFIGURATED_ATTRIBUTE__DEFAULT_VALUE:
-                return getDefaultValue();
+                if (resolve)
+                    return getDefaultValue();
+                return basicGetDefaultValue();
             case RequirementPackage.CONFIGURATED_ATTRIBUTE__LIST_VALUE:
                 return getListValue();
             case RequirementPackage.CONFIGURATED_ATTRIBUTE__NAME:
@@ -279,8 +296,7 @@ public class ConfiguratedAttributeImpl extends EObjectImpl implements Configurat
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @SuppressWarnings("unchecked")
@@ -307,8 +323,7 @@ public class ConfiguratedAttributeImpl extends EObjectImpl implements Configurat
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -333,8 +348,7 @@ public class ConfiguratedAttributeImpl extends EObjectImpl implements Configurat
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -355,8 +369,7 @@ public class ConfiguratedAttributeImpl extends EObjectImpl implements Configurat
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -374,4 +387,4 @@ public class ConfiguratedAttributeImpl extends EObjectImpl implements Configurat
         return result.toString();
     }
 
-} //ConfiguratedAttributeImpl
+} // ConfiguratedAttributeImpl

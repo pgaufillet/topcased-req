@@ -12,15 +12,15 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.topcased.requirement.AttributeValue;
 import org.topcased.requirement.DefaultAttributeValue;
 import org.topcased.requirement.RequirementPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Default Attribute Value</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Default Attribute Value</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -30,12 +30,12 @@ import org.topcased.requirement.RequirementPackage;
  *
  * @generated
  */
-public class DefaultAttributeValueImpl extends EObjectImpl implements DefaultAttributeValue
+public class DefaultAttributeValueImpl extends MinimalEObjectImpl.Container implements DefaultAttributeValue
 {
     /**
-     * The cached value of the '{@link #getValue() <em>Value</em>}' reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getValue() <em>Value</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getValue()
      * @generated
      * @ordered
@@ -43,8 +43,7 @@ public class DefaultAttributeValueImpl extends EObjectImpl implements DefaultAtt
     protected AttributeValue value;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     protected DefaultAttributeValueImpl()
@@ -53,8 +52,7 @@ public class DefaultAttributeValueImpl extends EObjectImpl implements DefaultAtt
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -64,8 +62,7 @@ public class DefaultAttributeValueImpl extends EObjectImpl implements DefaultAtt
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public AttributeValue getValue()
@@ -84,8 +81,7 @@ public class DefaultAttributeValueImpl extends EObjectImpl implements DefaultAtt
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public AttributeValue basicGetValue()
@@ -94,8 +90,7 @@ public class DefaultAttributeValueImpl extends EObjectImpl implements DefaultAtt
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public void setValue(AttributeValue newValue)
@@ -107,8 +102,7 @@ public class DefaultAttributeValueImpl extends EObjectImpl implements DefaultAtt
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -125,8 +119,7 @@ public class DefaultAttributeValueImpl extends EObjectImpl implements DefaultAtt
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -142,8 +135,7 @@ public class DefaultAttributeValueImpl extends EObjectImpl implements DefaultAtt
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -159,8 +151,7 @@ public class DefaultAttributeValueImpl extends EObjectImpl implements DefaultAtt
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -174,4 +165,4 @@ public class DefaultAttributeValueImpl extends EObjectImpl implements DefaultAtt
         return super.eIsSet(featureID);
     }
 
-} //DefaultAttributeValueImpl
+} // DefaultAttributeValueImpl

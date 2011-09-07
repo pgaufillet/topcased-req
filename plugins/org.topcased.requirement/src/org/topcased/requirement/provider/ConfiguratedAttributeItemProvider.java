@@ -36,10 +36,9 @@ import org.topcased.requirement.RequirementFactory;
 import org.topcased.requirement.RequirementPackage;
 import org.topcased.requirement.RequirementPlugin;
 
-
 /**
- * This is the item provider adapter for a {@link org.topcased.requirement.ConfiguratedAttribute} object. <!-- begin-user-doc -->
- * <!-- end-user-doc -->
+ * This is the item provider adapter for a {@link org.topcased.requirement.ConfiguratedAttribute} object. <!--
+ * begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
  */

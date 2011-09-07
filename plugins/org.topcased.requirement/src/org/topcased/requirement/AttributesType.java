@@ -13,10 +13,8 @@ import java.util.List;
 import org.eclipse.emf.common.util.Enumerator;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the literals of the enumeration '<em><b>Attributes Type</b></em>',
- * and utility methods for working with them.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the literals of the enumeration '<em><b>Attributes Type</b></em>', and
+ * utility methods for working with them. <!-- end-user-doc -->
  * @see org.topcased.requirement.RequirementPackage#getAttributesType()
  * @model
  * @generated
@@ -24,8 +22,7 @@ import org.eclipse.emf.common.util.Enumerator;
 public enum AttributesType implements Enumerator {
     /**
      * The '<em><b>Text</b></em>' literal object.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @see #TEXT_VALUE
      * @generated
      * @ordered
@@ -34,8 +31,7 @@ public enum AttributesType implements Enumerator {
 
     /**
      * The '<em><b>Object</b></em>' literal object.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @see #OBJECT_VALUE
      * @generated
      * @ordered
@@ -44,8 +40,7 @@ public enum AttributesType implements Enumerator {
 
     /**
      * The '<em><b>Allocate</b></em>' literal object.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @see #ALLOCATE_VALUE
      * @generated
      * @ordered
@@ -54,8 +49,7 @@ public enum AttributesType implements Enumerator {
 
     /**
      * The '<em><b>Link</b></em>' literal object.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @see #LINK_VALUE
      * @generated
      * @ordered
@@ -66,8 +60,8 @@ public enum AttributesType implements Enumerator {
      * The '<em><b>Text</b></em>' literal value.
      * <!-- begin-user-doc -->
      * <p>
-     * If the meaning of '<em><b>Text</b></em>' literal object isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of '<em><b>Text</b></em>' literal object isn't clear, there really should be more of a description
+     * here...
      * </p>
      * <!-- end-user-doc -->
      * @see #TEXT
@@ -81,8 +75,8 @@ public enum AttributesType implements Enumerator {
      * The '<em><b>Object</b></em>' literal value.
      * <!-- begin-user-doc -->
      * <p>
-     * If the meaning of '<em><b>Object</b></em>' literal object isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of '<em><b>Object</b></em>' literal object isn't clear, there really should be more of a
+     * description here...
      * </p>
      * <!-- end-user-doc -->
      * @see #OBJECT
@@ -96,8 +90,8 @@ public enum AttributesType implements Enumerator {
      * The '<em><b>Allocate</b></em>' literal value.
      * <!-- begin-user-doc -->
      * <p>
-     * If the meaning of '<em><b>Allocate</b></em>' literal object isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of '<em><b>Allocate</b></em>' literal object isn't clear, there really should be more of a
+     * description here...
      * </p>
      * <!-- end-user-doc -->
      * @see #ALLOCATE
@@ -111,8 +105,8 @@ public enum AttributesType implements Enumerator {
      * The '<em><b>Link</b></em>' literal value.
      * <!-- begin-user-doc -->
      * <p>
-     * If the meaning of '<em><b>Link</b></em>' literal object isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of '<em><b>Link</b></em>' literal object isn't clear, there really should be more of a description
+     * here...
      * </p>
      * <!-- end-user-doc -->
      * @see #LINK
@@ -124,16 +118,15 @@ public enum AttributesType implements Enumerator {
 
     /**
      * An array of all the '<em><b>Attributes Type</b></em>' enumerators.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     private static final AttributesType[] VALUES_ARRAY = new AttributesType[] {TEXT, OBJECT, ALLOCATE, LINK,};
 
     /**
      * A public read-only list of all the '<em><b>Attributes Type</b></em>' enumerators.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      */
     public static final List<AttributesType> VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
@@ -159,8 +152,8 @@ public enum AttributesType implements Enumerator {
 
     /**
      * Returns the '<em><b>Attributes Type</b></em>' literal with the specified name.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      */
     public static AttributesType getByName(String name)
@@ -199,30 +192,26 @@ public enum AttributesType implements Enumerator {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     private final int value;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     private final String name;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     private final String literal;
 
     /**
      * Only this class can construct instances.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     private AttributesType(int value, String name, String literal)
@@ -233,8 +222,7 @@ public enum AttributesType implements Enumerator {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public int getValue()
@@ -243,8 +231,7 @@ public enum AttributesType implements Enumerator {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public String getName()
@@ -253,8 +240,7 @@ public enum AttributesType implements Enumerator {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public String getLiteral()
@@ -264,8 +250,8 @@ public enum AttributesType implements Enumerator {
 
     /**
      * Returns the literal value of the enumerator, which is its string representation.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      */
     @Override
@@ -274,4 +260,4 @@ public enum AttributesType implements Enumerator {
         return literal;
     }
 
-} //AttributesType
+} // AttributesType

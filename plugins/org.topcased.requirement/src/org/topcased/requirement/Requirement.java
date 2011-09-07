@@ -9,9 +9,7 @@ package org.topcased.requirement;
 import org.eclipse.emf.common.util.EList;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Requirement</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Requirement</b></em>'. <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
@@ -32,13 +30,13 @@ public interface Requirement extends IdentifiedElement
      * The list contents are of type {@link org.topcased.requirement.Attribute}.
      * <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>Attribute</em>' containment reference list isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of the '<em>Attribute</em>' containment reference list isn't clear, there really should be more of
+     * a description here...
      * </p>
      * <!-- end-user-doc -->
      * @return the value of the '<em>Attribute</em>' containment reference list.
      * @see org.topcased.requirement.RequirementPackage#getRequirement_Attribute()
-     * @model containment="true"
+     * @model containment="true" resolveProxies="true"
      * @generated
      */
     EList<Attribute> getAttribute();
@@ -48,8 +46,8 @@ public interface Requirement extends IdentifiedElement
      * The list contents are of type {@link java.lang.String}.
      * <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>External Resources</em>' attribute list isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of the '<em>External Resources</em>' attribute list isn't clear, there really should be more of a
+     * description here...
      * </p>
      * <!-- end-user-doc -->
      * @return the value of the '<em>External Resources</em>' attribute list.

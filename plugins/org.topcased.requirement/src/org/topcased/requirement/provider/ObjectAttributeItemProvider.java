@@ -30,10 +30,9 @@ import org.eclipse.emf.edit.provider.ViewerNotification;
 import org.topcased.requirement.ObjectAttribute;
 import org.topcased.requirement.RequirementPackage;
 
-
 /**
- * This is the item provider adapter for a {@link org.topcased.requirement.ObjectAttribute} object. <!-- begin-user-doc --> <!--
- * end-user-doc -->
+ * This is the item provider adapter for a {@link org.topcased.requirement.ObjectAttribute} object. <!-- begin-user-doc
+ * --> <!-- end-user-doc -->
  * 
  * @generated
  */

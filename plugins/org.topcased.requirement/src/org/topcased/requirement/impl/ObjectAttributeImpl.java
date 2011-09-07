@@ -17,24 +17,23 @@ import org.topcased.requirement.ObjectAttribute;
 import org.topcased.requirement.RequirementPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Object Attribute</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Object Attribute</b></em>'. <!-- end-user-doc
+ * -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.topcased.requirement.impl.ObjectAttributeImpl#getValue <em>Value</em>}</li>
+ * <li>{@link org.topcased.requirement.impl.ObjectAttributeImpl#getValue <em>Value</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class ObjectAttributeImpl extends AttributeImpl implements ObjectAttribute
 {
     /**
-     * The cached value of the '{@link #getValue() <em>Value</em>}' reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getValue() <em>Value</em>}' reference. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getValue()
      * @generated
      * @ordered
@@ -42,8 +41,7 @@ public class ObjectAttributeImpl extends AttributeImpl implements ObjectAttribut
     protected EObject value;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     protected ObjectAttributeImpl()
@@ -52,8 +50,7 @@ public class ObjectAttributeImpl extends AttributeImpl implements ObjectAttribut
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -63,8 +60,7 @@ public class ObjectAttributeImpl extends AttributeImpl implements ObjectAttribut
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public EObject getValue()
@@ -83,8 +79,7 @@ public class ObjectAttributeImpl extends AttributeImpl implements ObjectAttribut
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public EObject basicGetValue()
@@ -93,8 +88,7 @@ public class ObjectAttributeImpl extends AttributeImpl implements ObjectAttribut
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public void setValue(EObject newValue)
@@ -106,8 +100,7 @@ public class ObjectAttributeImpl extends AttributeImpl implements ObjectAttribut
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -124,8 +117,7 @@ public class ObjectAttributeImpl extends AttributeImpl implements ObjectAttribut
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -141,8 +133,7 @@ public class ObjectAttributeImpl extends AttributeImpl implements ObjectAttribut
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -158,8 +149,7 @@ public class ObjectAttributeImpl extends AttributeImpl implements ObjectAttribut
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -173,4 +163,4 @@ public class ObjectAttributeImpl extends AttributeImpl implements ObjectAttribut
         return super.eIsSet(featureID);
     }
 
-} //ObjectAttributeImpl
+} // ObjectAttributeImpl

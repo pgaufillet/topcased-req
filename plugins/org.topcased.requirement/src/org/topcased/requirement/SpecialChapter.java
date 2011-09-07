@@ -11,9 +11,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Special Chapter</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Special Chapter</b></em>'. <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
@@ -34,13 +32,13 @@ public interface SpecialChapter extends EObject
      * The list contents are of type {@link org.topcased.requirement.HierarchicalElement}.
      * <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>Hierarchical Element</em>' containment reference list isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of the '<em>Hierarchical Element</em>' containment reference list isn't clear, there really should
+     * be more of a description here...
      * </p>
      * <!-- end-user-doc -->
      * @return the value of the '<em>Hierarchical Element</em>' containment reference list.
      * @see org.topcased.requirement.RequirementPackage#getSpecialChapter_HierarchicalElement()
-     * @model containment="true"
+     * @model containment="true" resolveProxies="true"
      * @generated
      */
     EList<HierarchicalElement> getHierarchicalElement();
@@ -50,13 +48,13 @@ public interface SpecialChapter extends EObject
      * The list contents are of type {@link org.topcased.requirement.Requirement}.
      * <!-- begin-user-doc -->
      * <p>
-     * If the meaning of the '<em>Requirement</em>' containment reference list isn't clear,
-     * there really should be more of a description here...
+     * If the meaning of the '<em>Requirement</em>' containment reference list isn't clear, there really should be more
+     * of a description here...
      * </p>
      * <!-- end-user-doc -->
      * @return the value of the '<em>Requirement</em>' containment reference list.
      * @see org.topcased.requirement.RequirementPackage#getSpecialChapter_Requirement()
-     * @model containment="true"
+     * @model containment="true" resolveProxies="true"
      * @generated
      */
     EList<Requirement> getRequirement();

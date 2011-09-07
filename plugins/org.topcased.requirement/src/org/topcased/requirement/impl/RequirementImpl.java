@@ -23,9 +23,7 @@ import org.topcased.requirement.Requirement;
 import org.topcased.requirement.RequirementPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Requirement</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Requirement</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -39,9 +37,9 @@ import org.topcased.requirement.RequirementPackage;
 public abstract class RequirementImpl extends IdentifiedElementImpl implements Requirement
 {
     /**
-     * The cached value of the '{@link #getAttribute() <em>Attribute</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getAttribute() <em>Attribute</em>}' containment reference list. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getAttribute()
      * @generated
      * @ordered
@@ -49,9 +47,9 @@ public abstract class RequirementImpl extends IdentifiedElementImpl implements R
     protected EList<Attribute> attribute;
 
     /**
-     * The cached value of the '{@link #getExternalResources() <em>External Resources</em>}' attribute list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getExternalResources() <em>External Resources</em>}' attribute list. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getExternalResources()
      * @generated
      * @ordered
@@ -59,8 +57,7 @@ public abstract class RequirementImpl extends IdentifiedElementImpl implements R
     protected EList<String> externalResources;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     protected RequirementImpl()
@@ -69,8 +66,7 @@ public abstract class RequirementImpl extends IdentifiedElementImpl implements R
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -80,22 +76,20 @@ public abstract class RequirementImpl extends IdentifiedElementImpl implements R
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public EList<Attribute> getAttribute()
     {
         if (attribute == null)
         {
-            attribute = new EObjectContainmentEList<Attribute>(Attribute.class, this, RequirementPackage.REQUIREMENT__ATTRIBUTE);
+            attribute = new EObjectContainmentEList.Resolving<Attribute>(Attribute.class, this, RequirementPackage.REQUIREMENT__ATTRIBUTE);
         }
         return attribute;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public EList<String> getExternalResources()
@@ -108,8 +102,7 @@ public abstract class RequirementImpl extends IdentifiedElementImpl implements R
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -124,8 +117,7 @@ public abstract class RequirementImpl extends IdentifiedElementImpl implements R
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -142,8 +134,7 @@ public abstract class RequirementImpl extends IdentifiedElementImpl implements R
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @SuppressWarnings("unchecked")
@@ -165,8 +156,7 @@ public abstract class RequirementImpl extends IdentifiedElementImpl implements R
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -185,8 +175,7 @@ public abstract class RequirementImpl extends IdentifiedElementImpl implements R
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -203,8 +192,7 @@ public abstract class RequirementImpl extends IdentifiedElementImpl implements R
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -220,4 +208,4 @@ public abstract class RequirementImpl extends IdentifiedElementImpl implements R
         return result.toString();
     }
 
-} //RequirementImpl
+} // RequirementImpl

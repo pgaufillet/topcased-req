@@ -11,19 +11,17 @@ import org.topcased.requirement.AttributeAllocate;
 import org.topcased.requirement.RequirementPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Attribute Allocate</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Attribute Allocate</b></em>'. <!-- end-user-doc
+ * -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class AttributeAllocateImpl extends ObjectAttributeImpl implements AttributeAllocate
 {
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     protected AttributeAllocateImpl()
@@ -32,8 +30,7 @@ public class AttributeAllocateImpl extends ObjectAttributeImpl implements Attrib
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -42,4 +39,4 @@ public class AttributeAllocateImpl extends ObjectAttributeImpl implements Attrib
         return RequirementPackage.Literals.ATTRIBUTE_ALLOCATE;
     }
 
-} //AttributeAllocateImpl
+} // AttributeAllocateImpl

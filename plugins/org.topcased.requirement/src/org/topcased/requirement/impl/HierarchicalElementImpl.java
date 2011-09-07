@@ -28,9 +28,8 @@ import org.topcased.requirement.Requirement;
 import org.topcased.requirement.RequirementPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Hierarchical Element</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Hierarchical Element</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -48,8 +47,8 @@ public class HierarchicalElementImpl extends IdentifiedElementImpl implements Hi
 {
     /**
      * The cached value of the '{@link #getElement() <em>Element</em>}' reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @see #getElement()
      * @generated
      * @ordered
@@ -57,9 +56,9 @@ public class HierarchicalElementImpl extends IdentifiedElementImpl implements Hi
     protected EObject element;
 
     /**
-     * The cached value of the '{@link #getChildren() <em>Children</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getChildren() <em>Children</em>}' containment reference list. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getChildren()
      * @generated
      * @ordered
@@ -67,9 +66,9 @@ public class HierarchicalElementImpl extends IdentifiedElementImpl implements Hi
     protected EList<HierarchicalElement> children;
 
     /**
-     * The cached value of the '{@link #getRequirement() <em>Requirement</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getRequirement() <em>Requirement</em>}' containment reference list. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getRequirement()
      * @generated
      * @ordered
@@ -97,8 +96,7 @@ public class HierarchicalElementImpl extends IdentifiedElementImpl implements Hi
     protected long nextReqIndex = NEXT_REQ_INDEX_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     protected HierarchicalElementImpl()
@@ -107,8 +105,7 @@ public class HierarchicalElementImpl extends IdentifiedElementImpl implements Hi
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -118,8 +115,7 @@ public class HierarchicalElementImpl extends IdentifiedElementImpl implements Hi
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public EObject getElement()
@@ -138,8 +134,7 @@ public class HierarchicalElementImpl extends IdentifiedElementImpl implements Hi
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public EObject basicGetElement()
@@ -148,8 +143,7 @@ public class HierarchicalElementImpl extends IdentifiedElementImpl implements Hi
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public void setElement(EObject newElement)
@@ -161,23 +155,21 @@ public class HierarchicalElementImpl extends IdentifiedElementImpl implements Hi
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public EList<HierarchicalElement> getChildren()
     {
         if (children == null)
         {
-            children = new EObjectContainmentWithInverseEList<HierarchicalElement>(HierarchicalElement.class, this, RequirementPackage.HIERARCHICAL_ELEMENT__CHILDREN,
+            children = new EObjectContainmentWithInverseEList.Resolving<HierarchicalElement>(HierarchicalElement.class, this, RequirementPackage.HIERARCHICAL_ELEMENT__CHILDREN,
                     RequirementPackage.HIERARCHICAL_ELEMENT__PARENT);
         }
         return children;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public HierarchicalElement getParent()
@@ -188,8 +180,18 @@ public class HierarchicalElementImpl extends IdentifiedElementImpl implements Hi
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * @generated
+     */
+    public HierarchicalElement basicGetParent()
+    {
+        if (eContainerFeatureID() != RequirementPackage.HIERARCHICAL_ELEMENT__PARENT)
+            return null;
+        return (HierarchicalElement) eInternalContainer();
+    }
+
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public NotificationChain basicSetParent(HierarchicalElement newParent, NotificationChain msgs)
@@ -199,8 +201,7 @@ public class HierarchicalElementImpl extends IdentifiedElementImpl implements Hi
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public void setParent(HierarchicalElement newParent)
@@ -223,22 +224,20 @@ public class HierarchicalElementImpl extends IdentifiedElementImpl implements Hi
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public EList<Requirement> getRequirement()
     {
         if (requirement == null)
         {
-            requirement = new EObjectContainmentEList<Requirement>(Requirement.class, this, RequirementPackage.HIERARCHICAL_ELEMENT__REQUIREMENT);
+            requirement = new EObjectContainmentEList.Resolving<Requirement>(Requirement.class, this, RequirementPackage.HIERARCHICAL_ELEMENT__REQUIREMENT);
         }
         return requirement;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public long getNextReqIndex()
@@ -247,8 +246,7 @@ public class HierarchicalElementImpl extends IdentifiedElementImpl implements Hi
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public void setNextReqIndex(long newNextReqIndex)
@@ -260,8 +258,7 @@ public class HierarchicalElementImpl extends IdentifiedElementImpl implements Hi
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @SuppressWarnings("unchecked")
@@ -281,8 +278,7 @@ public class HierarchicalElementImpl extends IdentifiedElementImpl implements Hi
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -301,8 +297,7 @@ public class HierarchicalElementImpl extends IdentifiedElementImpl implements Hi
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -317,8 +312,7 @@ public class HierarchicalElementImpl extends IdentifiedElementImpl implements Hi
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -333,7 +327,9 @@ public class HierarchicalElementImpl extends IdentifiedElementImpl implements Hi
             case RequirementPackage.HIERARCHICAL_ELEMENT__CHILDREN:
                 return getChildren();
             case RequirementPackage.HIERARCHICAL_ELEMENT__PARENT:
-                return getParent();
+                if (resolve)
+                    return getParent();
+                return basicGetParent();
             case RequirementPackage.HIERARCHICAL_ELEMENT__REQUIREMENT:
                 return getRequirement();
             case RequirementPackage.HIERARCHICAL_ELEMENT__NEXT_REQ_INDEX:
@@ -343,8 +339,7 @@ public class HierarchicalElementImpl extends IdentifiedElementImpl implements Hi
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @SuppressWarnings("unchecked")
@@ -375,8 +370,7 @@ public class HierarchicalElementImpl extends IdentifiedElementImpl implements Hi
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -404,8 +398,7 @@ public class HierarchicalElementImpl extends IdentifiedElementImpl implements Hi
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -418,7 +411,7 @@ public class HierarchicalElementImpl extends IdentifiedElementImpl implements Hi
             case RequirementPackage.HIERARCHICAL_ELEMENT__CHILDREN:
                 return children != null && !children.isEmpty();
             case RequirementPackage.HIERARCHICAL_ELEMENT__PARENT:
-                return getParent() != null;
+                return basicGetParent() != null;
             case RequirementPackage.HIERARCHICAL_ELEMENT__REQUIREMENT:
                 return requirement != null && !requirement.isEmpty();
             case RequirementPackage.HIERARCHICAL_ELEMENT__NEXT_REQ_INDEX:
@@ -428,8 +421,7 @@ public class HierarchicalElementImpl extends IdentifiedElementImpl implements Hi
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -445,4 +437,4 @@ public class HierarchicalElementImpl extends IdentifiedElementImpl implements Hi
         return result.toString();
     }
 
-} //HierarchicalElementImpl
+} // HierarchicalElementImpl

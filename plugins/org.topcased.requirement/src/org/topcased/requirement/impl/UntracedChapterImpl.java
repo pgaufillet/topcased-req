@@ -11,19 +11,17 @@ import org.topcased.requirement.RequirementPackage;
 import org.topcased.requirement.UntracedChapter;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Untraced Chapter</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Untraced Chapter</b></em>'. <!-- end-user-doc
+ * -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class UntracedChapterImpl extends SpecialChapterImpl implements UntracedChapter
 {
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     protected UntracedChapterImpl()
@@ -32,8 +30,7 @@ public class UntracedChapterImpl extends SpecialChapterImpl implements UntracedC
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -42,4 +39,4 @@ public class UntracedChapterImpl extends SpecialChapterImpl implements UntracedC
         return RequirementPackage.Literals.UNTRACED_CHAPTER;
     }
 
-} //UntracedChapterImpl
+} // UntracedChapterImpl

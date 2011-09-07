@@ -11,19 +11,17 @@ import org.topcased.requirement.ProblemChapter;
 import org.topcased.requirement.RequirementPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Problem Chapter</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Problem Chapter</b></em>'. <!-- end-user-doc
+ * -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class ProblemChapterImpl extends SpecialChapterImpl implements ProblemChapter
 {
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     protected ProblemChapterImpl()
@@ -32,8 +30,7 @@ public class ProblemChapterImpl extends SpecialChapterImpl implements ProblemCha
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -42,4 +39,4 @@ public class ProblemChapterImpl extends SpecialChapterImpl implements ProblemCha
         return RequirementPackage.Literals.PROBLEM_CHAPTER;
     }
 
-} //ProblemChapterImpl
+} // ProblemChapterImpl

@@ -31,10 +31,9 @@ import org.eclipse.emf.edit.provider.ViewerNotification;
 import org.topcased.requirement.RequirementPackage;
 import org.topcased.requirement.TextAttribute;
 
-
 /**
- * This is the item provider adapter for a {@link org.topcased.requirement.TextAttribute} object. <!-- begin-user-doc --> <!--
- * end-user-doc -->
+ * This is the item provider adapter for a {@link org.topcased.requirement.TextAttribute} object. <!-- begin-user-doc
+ * --> <!-- end-user-doc -->
  * 
  * @generated
  */

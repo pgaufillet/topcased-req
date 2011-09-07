@@ -57,8 +57,8 @@ public class RequirementCacheAdapter extends ECrossReferenceAdapter
     /**
      * Handles a cross reference change by adding and removing the adapter as appropriate.
      * 
-     * Copied from ECrossReferenceAdapter and add the resolving of proxy eobjects before
-     * adding them to the cross reference map.
+     * Copied from ECrossReferenceAdapter and add the resolving of proxy eobjects before adding them to the cross
+     * reference map.
      */
     @Override
     protected void handleCrossReference(EReference reference, Notification notification)
@@ -181,7 +181,7 @@ public class RequirementCacheAdapter extends ECrossReferenceAdapter
                     setTarget((Notifier) notification.getNewValue());
                 }
                 break;
-                
+
             case Notification.REMOVE:
                 Object oldValue = notification.getOldValue();
                 if (oldValue instanceof Notifier)

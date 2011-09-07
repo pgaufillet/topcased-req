@@ -13,9 +13,7 @@ import org.topcased.requirement.UpstreamModel;
 import ttm.impl.ProjectImpl;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Upstream Model</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Upstream Model</b></em>'. <!-- end-user-doc -->
  * <p>
  * </p>
  *
@@ -24,8 +22,7 @@ import ttm.impl.ProjectImpl;
 public class UpstreamModelImpl extends ProjectImpl implements UpstreamModel
 {
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     protected UpstreamModelImpl()
@@ -34,8 +31,7 @@ public class UpstreamModelImpl extends ProjectImpl implements UpstreamModel
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -44,4 +40,4 @@ public class UpstreamModelImpl extends ProjectImpl implements UpstreamModel
         return RequirementPackage.Literals.UPSTREAM_MODEL;
     }
 
-} //UpstreamModelImpl
+} // UpstreamModelImpl

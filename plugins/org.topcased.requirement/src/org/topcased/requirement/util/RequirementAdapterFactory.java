@@ -20,10 +20,8 @@ import ttm.Element;
 import ttm.Project;
 
 /**
- * <!-- begin-user-doc -->
- * The <b>Adapter Factory</b> for the model.
- * It provides an adapter <code>createXXX</code> method for each class of the model.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> The <b>Adapter Factory</b> for the model. It provides an adapter <code>createXXX</code>
+ * method for each class of the model. <!-- end-user-doc -->
  * @see org.topcased.requirement.RequirementPackage
  * @generated
  */
@@ -31,16 +29,14 @@ public class RequirementAdapterFactory extends AdapterFactoryImpl
 {
     /**
      * The cached model package.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     protected static RequirementPackage modelPackage;
 
     /**
      * Creates an instance of the adapter factory.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public RequirementAdapterFactory()
@@ -53,9 +49,9 @@ public class RequirementAdapterFactory extends AdapterFactoryImpl
 
     /**
      * Returns whether this factory is applicable for the type of the object.
-     * <!-- begin-user-doc -->
-     * This implementation returns <code>true</code> if the object is either the model's package or is an instance object of the model.
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> This
+     * implementation returns <code>true</code> if the object is either the model's package or is an instance object of
+     * the model. <!-- end-user-doc -->
      * @return whether this factory is applicable for the type of the object.
      * @generated
      */
@@ -75,8 +71,7 @@ public class RequirementAdapterFactory extends AdapterFactoryImpl
 
     /**
      * The switch that delegates to the <code>createXXX</code> methods.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     protected RequirementSwitch<Adapter> modelSwitch = new RequirementSwitch<Adapter>()
@@ -240,8 +235,7 @@ public class RequirementAdapterFactory extends AdapterFactoryImpl
 
     /**
      * Creates an adapter for the <code>target</code>.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @param target the object to adapt.
      * @return the adapter for the <code>target</code>.
      * @generated
@@ -254,10 +248,8 @@ public class RequirementAdapterFactory extends AdapterFactoryImpl
 
     /**
      * Creates a new adapter for an object of class '{@link org.topcased.requirement.RequirementProject <em>Project</em>}'.
-     * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore
+     * cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
      * @return the new adapter.
      * @see org.topcased.requirement.RequirementProject
      * @generated
@@ -269,10 +261,9 @@ public class RequirementAdapterFactory extends AdapterFactoryImpl
 
     /**
      * Creates a new adapter for an object of class '{@link org.topcased.requirement.HierarchicalElement <em>Hierarchical Element</em>}'.
-     * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> This default implementation returns null so that we can
+     * easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!--
+     * end-user-doc -->
      * @return the new adapter.
      * @see org.topcased.requirement.HierarchicalElement
      * @generated
@@ -284,10 +275,9 @@ public class RequirementAdapterFactory extends AdapterFactoryImpl
 
     /**
      * Creates a new adapter for an object of class '{@link org.topcased.requirement.CurrentRequirement <em>Current Requirement</em>}'.
-     * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> This default implementation returns null so that we can
+     * easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!--
+     * end-user-doc -->
      * @return the new adapter.
      * @see org.topcased.requirement.CurrentRequirement
      * @generated
@@ -299,10 +289,8 @@ public class RequirementAdapterFactory extends AdapterFactoryImpl
 
     /**
      * Creates a new adapter for an object of class '{@link org.topcased.requirement.Attribute <em>Attribute</em>}'.
-     * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful
+     * to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
      * @return the new adapter.
      * @see org.topcased.requirement.Attribute
      * @generated
@@ -314,10 +302,9 @@ public class RequirementAdapterFactory extends AdapterFactoryImpl
 
     /**
      * Creates a new adapter for an object of class '{@link org.topcased.requirement.AttributeConfiguration <em>Attribute Configuration</em>}'.
-     * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> This default implementation returns null so that we
+     * can easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!--
+     * end-user-doc -->
      * @return the new adapter.
      * @see org.topcased.requirement.AttributeConfiguration
      * @generated
@@ -329,10 +316,9 @@ public class RequirementAdapterFactory extends AdapterFactoryImpl
 
     /**
      * Creates a new adapter for an object of class '{@link org.topcased.requirement.ConfiguratedAttribute <em>Configurated Attribute</em>}'.
-     * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> This default implementation returns null so that we
+     * can easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!--
+     * end-user-doc -->
      * @return the new adapter.
      * @see org.topcased.requirement.ConfiguratedAttribute
      * @generated
@@ -344,10 +330,9 @@ public class RequirementAdapterFactory extends AdapterFactoryImpl
 
     /**
      * Creates a new adapter for an object of class '{@link org.topcased.requirement.AttributeValue <em>Attribute Value</em>}'.
-     * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> This default implementation returns null so that we can
+     * easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!--
+     * end-user-doc -->
      * @return the new adapter.
      * @see org.topcased.requirement.AttributeValue
      * @generated
@@ -359,10 +344,9 @@ public class RequirementAdapterFactory extends AdapterFactoryImpl
 
     /**
      * Creates a new adapter for an object of class '{@link org.topcased.requirement.DefaultAttributeValue <em>Default Attribute Value</em>}'.
-     * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> This default implementation returns null so that we
+     * can easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!--
+     * end-user-doc -->
      * @return the new adapter.
      * @see org.topcased.requirement.DefaultAttributeValue
      * @generated
@@ -374,10 +358,9 @@ public class RequirementAdapterFactory extends AdapterFactoryImpl
 
     /**
      * Creates a new adapter for an object of class '{@link org.topcased.requirement.IdentifiedElement <em>Identified Element</em>}'.
-     * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> This default implementation returns null so that we can
+     * easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!--
+     * end-user-doc -->
      * @return the new adapter.
      * @see org.topcased.requirement.IdentifiedElement
      * @generated
@@ -389,10 +372,9 @@ public class RequirementAdapterFactory extends AdapterFactoryImpl
 
     /**
      * Creates a new adapter for an object of class '{@link org.topcased.requirement.SpecialChapter <em>Special Chapter</em>}'.
-     * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> This default implementation returns null so that we can
+     * easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!--
+     * end-user-doc -->
      * @return the new adapter.
      * @see org.topcased.requirement.SpecialChapter
      * @generated
@@ -403,11 +385,11 @@ public class RequirementAdapterFactory extends AdapterFactoryImpl
     }
 
     /**
-     * Creates a new adapter for an object of class '{@link org.topcased.requirement.TextAttribute <em>Text Attribute</em>}'.
-     * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
+     * Creates a new adapter for an object of class '{@link org.topcased.requirement.TextAttribute
+     * <em>Text Attribute</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can easily
+     * ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc
+     * -->
+     * 
      * @return the new adapter.
      * @see org.topcased.requirement.TextAttribute
      * @generated
@@ -419,10 +401,9 @@ public class RequirementAdapterFactory extends AdapterFactoryImpl
 
     /**
      * Creates a new adapter for an object of class '{@link org.topcased.requirement.ObjectAttribute <em>Object Attribute</em>}'.
-     * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> This default implementation returns null so that we can
+     * easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!--
+     * end-user-doc -->
      * @return the new adapter.
      * @see org.topcased.requirement.ObjectAttribute
      * @generated
@@ -433,11 +414,11 @@ public class RequirementAdapterFactory extends AdapterFactoryImpl
     }
 
     /**
-     * Creates a new adapter for an object of class '{@link org.topcased.requirement.UpstreamModel <em>Upstream Model</em>}'.
-     * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
+     * Creates a new adapter for an object of class '{@link org.topcased.requirement.UpstreamModel
+     * <em>Upstream Model</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can easily
+     * ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc
+     * -->
+     * 
      * @return the new adapter.
      * @see org.topcased.requirement.UpstreamModel
      * @generated
@@ -448,11 +429,11 @@ public class RequirementAdapterFactory extends AdapterFactoryImpl
     }
 
     /**
-     * Creates a new adapter for an object of class '{@link org.topcased.requirement.AttributeLink <em>Attribute Link</em>}'.
-     * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
+     * Creates a new adapter for an object of class '{@link org.topcased.requirement.AttributeLink
+     * <em>Attribute Link</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can easily
+     * ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc
+     * -->
+     * 
      * @return the new adapter.
      * @see org.topcased.requirement.AttributeLink
      * @generated
@@ -464,10 +445,9 @@ public class RequirementAdapterFactory extends AdapterFactoryImpl
 
     /**
      * Creates a new adapter for an object of class '{@link org.topcased.requirement.AttributeAllocate <em>Attribute Allocate</em>}'.
-     * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> This default implementation returns null so that we can
+     * easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!--
+     * end-user-doc -->
      * @return the new adapter.
      * @see org.topcased.requirement.AttributeAllocate
      * @generated
@@ -479,10 +459,9 @@ public class RequirementAdapterFactory extends AdapterFactoryImpl
 
     /**
      * Creates a new adapter for an object of class '{@link org.topcased.requirement.UntracedChapter <em>Untraced Chapter</em>}'.
-     * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> This default implementation returns null so that we can
+     * easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!--
+     * end-user-doc -->
      * @return the new adapter.
      * @see org.topcased.requirement.UntracedChapter
      * @generated
@@ -494,10 +473,9 @@ public class RequirementAdapterFactory extends AdapterFactoryImpl
 
     /**
      * Creates a new adapter for an object of class '{@link org.topcased.requirement.ProblemChapter <em>Problem Chapter</em>}'.
-     * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> This default implementation returns null so that we can
+     * easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!--
+     * end-user-doc -->
      * @return the new adapter.
      * @see org.topcased.requirement.ProblemChapter
      * @generated
@@ -508,11 +486,11 @@ public class RequirementAdapterFactory extends AdapterFactoryImpl
     }
 
     /**
-     * Creates a new adapter for an object of class '{@link org.topcased.requirement.TrashChapter <em>Trash Chapter</em>}'.
-     * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
+     * Creates a new adapter for an object of class '{@link org.topcased.requirement.TrashChapter
+     * <em>Trash Chapter</em>}'. <!-- begin-user-doc --> This default implementation returns null so that we can easily
+     * ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc
+     * -->
+     * 
      * @return the new adapter.
      * @see org.topcased.requirement.TrashChapter
      * @generated
@@ -524,10 +502,8 @@ public class RequirementAdapterFactory extends AdapterFactoryImpl
 
     /**
      * Creates a new adapter for an object of class '{@link org.topcased.requirement.Requirement <em>Requirement</em>}'.
-     * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful
+     * to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
      * @return the new adapter.
      * @see org.topcased.requirement.Requirement
      * @generated
@@ -539,10 +515,9 @@ public class RequirementAdapterFactory extends AdapterFactoryImpl
 
     /**
      * Creates a new adapter for an object of class '{@link org.topcased.requirement.AnonymousRequirement <em>Anonymous Requirement</em>}'.
-     * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> This default implementation returns null so that we can
+     * easily ignore cases; it's useful to ignore a case when inheritance will catch all the cases anyway. <!--
+     * end-user-doc -->
      * @return the new adapter.
      * @see org.topcased.requirement.AnonymousRequirement
      * @generated
@@ -554,10 +529,8 @@ public class RequirementAdapterFactory extends AdapterFactoryImpl
 
     /**
      * Creates a new adapter for an object of class '{@link org.eclipse.emf.ecore.EModelElement <em>EModel Element</em>}'.
-     * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's
+     * useful to ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
      * @return the new adapter.
      * @see org.eclipse.emf.ecore.EModelElement
      * @generated
@@ -569,10 +542,9 @@ public class RequirementAdapterFactory extends AdapterFactoryImpl
 
     /**
      * Creates a new adapter for an object of class '{@link ttm.Element <em>Element</em>}'.
-     * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> This
+     * default implementation returns null so that we can easily ignore cases; it's useful to ignore a case when
+     * inheritance will catch all the cases anyway. <!-- end-user-doc -->
      * @return the new adapter.
      * @see ttm.Element
      * @generated
@@ -583,11 +555,10 @@ public class RequirementAdapterFactory extends AdapterFactoryImpl
     }
 
     /**
-     * Creates a new adapter for an object of class '{@link ttm.AttributeOwner <em>Attribute Owner</em>}'.
-     * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
+     * Creates a new adapter for an object of class '{@link ttm.AttributeOwner <em>Attribute Owner</em>}'. <!--
+     * begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to
+     * ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
+     * 
      * @return the new adapter.
      * @see ttm.AttributeOwner
      * @generated
@@ -598,11 +569,10 @@ public class RequirementAdapterFactory extends AdapterFactoryImpl
     }
 
     /**
-     * Creates a new adapter for an object of class '{@link ttm.IdentifiedElement <em>Identified Element</em>}'.
-     * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
+     * Creates a new adapter for an object of class '{@link ttm.IdentifiedElement <em>Identified Element</em>}'. <!--
+     * begin-user-doc --> This default implementation returns null so that we can easily ignore cases; it's useful to
+     * ignore a case when inheritance will catch all the cases anyway. <!-- end-user-doc -->
+     * 
      * @return the new adapter.
      * @see ttm.IdentifiedElement
      * @generated
@@ -614,10 +584,9 @@ public class RequirementAdapterFactory extends AdapterFactoryImpl
 
     /**
      * Creates a new adapter for an object of class '{@link ttm.Project <em>Project</em>}'.
-     * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> This
+     * default implementation returns null so that we can easily ignore cases; it's useful to ignore a case when
+     * inheritance will catch all the cases anyway. <!-- end-user-doc -->
      * @return the new adapter.
      * @see ttm.Project
      * @generated
@@ -629,8 +598,7 @@ public class RequirementAdapterFactory extends AdapterFactoryImpl
 
     /**
      * Creates a new adapter for the default case.
-     * <!-- begin-user-doc -->
-     * This default implementation returns null.
+     * <!-- begin-user-doc --> This default implementation returns null.
      * <!-- end-user-doc -->
      * @return the new adapter.
      * @generated
@@ -640,4 +608,4 @@ public class RequirementAdapterFactory extends AdapterFactoryImpl
         return null;
     }
 
-} //RequirementAdapterFactory
+} // RequirementAdapterFactory

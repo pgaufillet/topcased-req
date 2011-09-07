@@ -27,18 +27,17 @@ import org.topcased.requirement.RequirementFactory;
 import org.topcased.requirement.RequirementPackage;
 
 /**
- * This is the item provider adapter for a {@link org.topcased.requirement.HierarchicalElement} object.
- * <!-- begin-user-doc -->
- * <!-- end-user-doc -->
+ * This is the item provider adapter for a {@link org.topcased.requirement.HierarchicalElement} object. <!--
+ * begin-user-doc --> <!-- end-user-doc -->
+ * 
  * @generated
  */
 public class HierarchicalElementItemProvider extends IdentifiedElementItemProvider implements IEditingDomainItemProvider, IStructuredItemContentProvider, ITreeItemContentProvider, IItemLabelProvider,
         IItemPropertySource, IItemColorProvider
 {
     /**
-     * This constructs an instance from a factory and a notifier.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This constructs an instance from a factory and a notifier. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public HierarchicalElementItemProvider(AdapterFactory adapterFactory)
@@ -47,9 +46,8 @@ public class HierarchicalElementItemProvider extends IdentifiedElementItemProvid
     }
 
     /**
-     * This returns the property descriptors for the adapted class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This returns the property descriptors for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -66,9 +64,8 @@ public class HierarchicalElementItemProvider extends IdentifiedElementItemProvid
     }
 
     /**
-     * This adds a property descriptor for the Element feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This adds a property descriptor for the Element feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected void addElementPropertyDescriptor(Object object)
@@ -79,24 +76,24 @@ public class HierarchicalElementItemProvider extends IdentifiedElementItemProvid
     }
 
     /**
-     * This adds a property descriptor for the Next Req Index feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This adds a property descriptor for the Next Req Index feature. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected void addNextReqIndexPropertyDescriptor(Object object)
     {
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-                getString("_UI_HierarchicalElement_nextReqIndex_feature"), getString("_UI_PropertyDescriptor_description", "_UI_HierarchicalElement_nextReqIndex_feature",
-                        "_UI_HierarchicalElement_type"), RequirementPackage.Literals.HIERARCHICAL_ELEMENT__NEXT_REQ_INDEX, true, false, false, ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE, null, null));
+                getString("_UI_HierarchicalElement_nextReqIndex_feature"),
+                getString("_UI_PropertyDescriptor_description", "_UI_HierarchicalElement_nextReqIndex_feature", "_UI_HierarchicalElement_type"),
+                RequirementPackage.Literals.HIERARCHICAL_ELEMENT__NEXT_REQ_INDEX, true, false, false, ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE, null, null));
     }
 
     /**
      * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
      * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
-     * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -112,8 +109,8 @@ public class HierarchicalElementItemProvider extends IdentifiedElementItemProvid
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -126,9 +123,8 @@ public class HierarchicalElementItemProvider extends IdentifiedElementItemProvid
     }
 
     /**
-     * This returns HierarchicalElement.gif.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This returns HierarchicalElement.gif. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -138,9 +134,8 @@ public class HierarchicalElementItemProvider extends IdentifiedElementItemProvid
     }
 
     /**
-     * This returns the label text for the adapted class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This returns the label text for the adapted class. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -151,10 +146,10 @@ public class HierarchicalElementItemProvider extends IdentifiedElementItemProvid
     }
 
     /**
-     * This handles model notifications by calling {@link #updateChildren} to update any cached
-     * children and by creating a viewer notification, which it passes to {@link #fireNotifyChanged}.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This handles model notifications by calling {@link #updateChildren} to update any cached children and by creating
+     * a viewer notification, which it passes to {@link #fireNotifyChanged}. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @generated
      */
     @Override
@@ -176,10 +171,9 @@ public class HierarchicalElementItemProvider extends IdentifiedElementItemProvid
     }
 
     /**
-     * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
-     * that can be created under this object.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be created
+     * under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override

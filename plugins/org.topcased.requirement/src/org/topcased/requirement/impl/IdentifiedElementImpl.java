@@ -16,25 +16,24 @@ import org.topcased.requirement.IdentifiedElement;
 import org.topcased.requirement.RequirementPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Identified Element</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Identified Element</b></em>'. <!-- end-user-doc
+ * -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.topcased.requirement.impl.IdentifiedElementImpl#getIdentifier <em>Identifier</em>}</li>
- *   <li>{@link org.topcased.requirement.impl.IdentifiedElementImpl#getShortDescription <em>Short Description</em>}</li>
+ * <li>{@link org.topcased.requirement.impl.IdentifiedElementImpl#getIdentifier <em>Identifier</em>}</li>
+ * <li>{@link org.topcased.requirement.impl.IdentifiedElementImpl#getShortDescription <em>Short Description</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public abstract class IdentifiedElementImpl extends EModelElementImpl implements IdentifiedElement
 {
     /**
      * The default value of the '{@link #getIdentifier() <em>Identifier</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @see #getIdentifier()
      * @generated
      * @ordered
@@ -43,8 +42,8 @@ public abstract class IdentifiedElementImpl extends EModelElementImpl implements
 
     /**
      * The cached value of the '{@link #getIdentifier() <em>Identifier</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @see #getIdentifier()
      * @generated
      * @ordered
@@ -52,9 +51,9 @@ public abstract class IdentifiedElementImpl extends EModelElementImpl implements
     protected String identifier = IDENTIFIER_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getShortDescription() <em>Short Description</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getShortDescription() <em>Short Description</em>}' attribute. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getShortDescription()
      * @generated
      * @ordered
@@ -62,9 +61,9 @@ public abstract class IdentifiedElementImpl extends EModelElementImpl implements
     protected static final String SHORT_DESCRIPTION_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getShortDescription() <em>Short Description</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getShortDescription() <em>Short Description</em>}' attribute. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getShortDescription()
      * @generated
      * @ordered
@@ -72,8 +71,7 @@ public abstract class IdentifiedElementImpl extends EModelElementImpl implements
     protected String shortDescription = SHORT_DESCRIPTION_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     protected IdentifiedElementImpl()
@@ -82,8 +80,7 @@ public abstract class IdentifiedElementImpl extends EModelElementImpl implements
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -93,8 +90,7 @@ public abstract class IdentifiedElementImpl extends EModelElementImpl implements
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public String getIdentifier()
@@ -103,8 +99,7 @@ public abstract class IdentifiedElementImpl extends EModelElementImpl implements
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public void setIdentifier(String newIdentifier)
@@ -116,8 +111,7 @@ public abstract class IdentifiedElementImpl extends EModelElementImpl implements
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public String getShortDescription()
@@ -126,8 +120,7 @@ public abstract class IdentifiedElementImpl extends EModelElementImpl implements
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public void setShortDescription(String newShortDescription)
@@ -139,8 +132,7 @@ public abstract class IdentifiedElementImpl extends EModelElementImpl implements
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -157,8 +149,7 @@ public abstract class IdentifiedElementImpl extends EModelElementImpl implements
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -177,8 +168,7 @@ public abstract class IdentifiedElementImpl extends EModelElementImpl implements
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -197,8 +187,7 @@ public abstract class IdentifiedElementImpl extends EModelElementImpl implements
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -215,8 +204,7 @@ public abstract class IdentifiedElementImpl extends EModelElementImpl implements
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -234,4 +222,4 @@ public abstract class IdentifiedElementImpl extends EModelElementImpl implements
         return result.toString();
     }
 
-} //IdentifiedElementImpl
+} // IdentifiedElementImpl

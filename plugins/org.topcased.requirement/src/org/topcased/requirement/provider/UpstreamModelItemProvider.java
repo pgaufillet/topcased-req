@@ -24,8 +24,8 @@ import org.topcased.requirement.UpstreamModel;
 import ttm.provider.ProjectItemProvider;
 
 /**
- * This is the item provider adapter for a {@link org.topcased.requirement.UpstreamModel} object. <!-- begin-user-doc --> <!--
- * end-user-doc -->
+ * This is the item provider adapter for a {@link org.topcased.requirement.UpstreamModel} object. <!-- begin-user-doc
+ * --> <!-- end-user-doc -->
  * 
  * @generated
  */

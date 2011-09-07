@@ -27,10 +27,9 @@ import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.topcased.requirement.AttributeAllocate;
 
-
 /**
- * This is the item provider adapter for a {@link org.topcased.requirement.AttributeAllocate} object. <!-- begin-user-doc --> <!--
- * end-user-doc -->
+ * This is the item provider adapter for a {@link org.topcased.requirement.AttributeAllocate} object. <!--
+ * begin-user-doc --> <!-- end-user-doc -->
  * 
  * @generated
  */

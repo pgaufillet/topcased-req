@@ -16,14 +16,12 @@ import org.eclipse.emf.ecore.EcorePackage;
 import ttm.TtmPackage;
 
 /**
- * <!-- begin-user-doc -->
- * The <b>Package</b> for the model.
- * It contains accessors for the meta objects to represent
+ * <!-- begin-user-doc --> The <b>Package</b> for the model. It contains accessors for the meta objects to represent
  * <ul>
- *   <li>each class,</li>
- *   <li>each feature of each class,</li>
- *   <li>each enum,</li>
- *   <li>and each data type</li>
+ * <li>each class,</li>
+ * <li>each feature of each class,</li>
+ * <li>each enum,</li>
+ * <li>and each data type</li>
  * </ul>
  * <!-- end-user-doc -->
  * @see org.topcased.requirement.RequirementFactory
@@ -34,40 +32,35 @@ public interface RequirementPackage extends EPackage
 {
     /**
      * The package name.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     String eNAME = "requirement";
 
     /**
      * The package namespace URI.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     String eNS_URI = "http://org.topcased.requirement/1.0";
 
     /**
      * The package namespace name.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     String eNS_PREFIX = "requirement";
 
     /**
      * The singleton instance of the package.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     RequirementPackage eINSTANCE = org.topcased.requirement.impl.RequirementPackageImpl.init();
 
     /**
      * The meta object id for the '{@link org.topcased.requirement.impl.IdentifiedElementImpl <em>Identified Element</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @see org.topcased.requirement.impl.IdentifiedElementImpl
      * @see org.topcased.requirement.impl.RequirementPackageImpl#getIdentifiedElement()
      * @generated
@@ -76,8 +69,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -85,17 +78,16 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Identifier</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      * @ordered
      */
     int IDENTIFIED_ELEMENT__IDENTIFIER = EcorePackage.EMODEL_ELEMENT_FEATURE_COUNT + 0;
 
     /**
-     * The feature id for the '<em><b>Short Description</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The feature id for the '<em><b>Short Description</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @generated
      * @ordered
      */
@@ -103,8 +95,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The number of structural features of the '<em>Identified Element</em>' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -112,8 +104,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The meta object id for the '{@link org.topcased.requirement.impl.RequirementProjectImpl <em>Project</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @see org.topcased.requirement.impl.RequirementProjectImpl
      * @see org.topcased.requirement.impl.RequirementPackageImpl#getRequirementProject()
      * @generated
@@ -122,8 +113,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -131,17 +122,16 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Identifier</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      * @ordered
      */
     int REQUIREMENT_PROJECT__IDENTIFIER = IDENTIFIED_ELEMENT__IDENTIFIER;
 
     /**
-     * The feature id for the '<em><b>Short Description</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The feature id for the '<em><b>Short Description</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @generated
      * @ordered
      */
@@ -167,8 +157,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Chapter</b></em>' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -176,8 +166,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Upstream Model</b></em>' containment reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -185,8 +175,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The number of structural features of the '<em>Project</em>' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      * @ordered
      */
@@ -194,8 +183,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The meta object id for the '{@link org.topcased.requirement.impl.HierarchicalElementImpl <em>Hierarchical Element</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @see org.topcased.requirement.impl.HierarchicalElementImpl
      * @see org.topcased.requirement.impl.RequirementPackageImpl#getHierarchicalElement()
      * @generated
@@ -204,8 +192,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -213,17 +201,16 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Identifier</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      * @ordered
      */
     int HIERARCHICAL_ELEMENT__IDENTIFIER = IDENTIFIED_ELEMENT__IDENTIFIER;
 
     /**
-     * The feature id for the '<em><b>Short Description</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The feature id for the '<em><b>Short Description</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @generated
      * @ordered
      */
@@ -231,8 +218,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Element</b></em>' reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      * @ordered
      */
@@ -240,17 +226,17 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Children</b></em>' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
     int HIERARCHICAL_ELEMENT__CHILDREN = IDENTIFIED_ELEMENT_FEATURE_COUNT + 1;
 
     /**
-     * The feature id for the '<em><b>Parent</b></em>' container reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The feature id for the '<em><b>Parent</b></em>' container reference. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @generated
      * @ordered
      */
@@ -258,8 +244,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Requirement</b></em>' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -267,8 +253,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Next Req Index</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      * @ordered
      */
@@ -276,8 +261,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The number of structural features of the '<em>Hierarchical Element</em>' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -285,8 +270,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The meta object id for the '{@link org.topcased.requirement.impl.RequirementImpl <em>Requirement</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @see org.topcased.requirement.impl.RequirementImpl
      * @see org.topcased.requirement.impl.RequirementPackageImpl#getRequirement()
      * @generated
@@ -295,8 +279,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -304,17 +288,16 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Identifier</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      * @ordered
      */
     int REQUIREMENT__IDENTIFIER = IDENTIFIED_ELEMENT__IDENTIFIER;
 
     /**
-     * The feature id for the '<em><b>Short Description</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The feature id for the '<em><b>Short Description</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @generated
      * @ordered
      */
@@ -322,8 +305,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Attribute</b></em>' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -331,17 +314,17 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>External Resources</b></em>' attribute list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
     int REQUIREMENT__EXTERNAL_RESOURCES = IDENTIFIED_ELEMENT_FEATURE_COUNT + 1;
 
     /**
-     * The number of structural features of the '<em>Requirement</em>' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The number of structural features of the '<em>Requirement</em>' class. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @generated
      * @ordered
      */
@@ -349,8 +332,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The meta object id for the '{@link org.topcased.requirement.impl.CurrentRequirementImpl <em>Current Requirement</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @see org.topcased.requirement.impl.CurrentRequirementImpl
      * @see org.topcased.requirement.impl.RequirementPackageImpl#getCurrentRequirement()
      * @generated
@@ -359,8 +341,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -368,17 +350,16 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Identifier</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      * @ordered
      */
     int CURRENT_REQUIREMENT__IDENTIFIER = REQUIREMENT__IDENTIFIER;
 
     /**
-     * The feature id for the '<em><b>Short Description</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The feature id for the '<em><b>Short Description</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @generated
      * @ordered
      */
@@ -386,8 +367,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Attribute</b></em>' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -395,8 +376,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>External Resources</b></em>' attribute list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -404,8 +385,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Impacted</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      * @ordered
      */
@@ -413,17 +393,17 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The number of structural features of the '<em>Current Requirement</em>' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
     int CURRENT_REQUIREMENT_FEATURE_COUNT = REQUIREMENT_FEATURE_COUNT + 1;
 
     /**
-     * The meta object id for the '{@link org.topcased.requirement.impl.AttributeImpl <em>Attribute</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The meta object id for the '{@link org.topcased.requirement.impl.AttributeImpl <em>Attribute</em>}' class. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see org.topcased.requirement.impl.AttributeImpl
      * @see org.topcased.requirement.impl.RequirementPackageImpl#getAttribute()
      * @generated
@@ -432,8 +412,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -441,17 +421,16 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      * @ordered
      */
     int ATTRIBUTE__NAME = EcorePackage.EMODEL_ELEMENT_FEATURE_COUNT + 0;
 
     /**
-     * The number of structural features of the '<em>Attribute</em>' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The number of structural features of the '<em>Attribute</em>' class. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @generated
      * @ordered
      */
@@ -459,8 +438,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The meta object id for the '{@link org.topcased.requirement.impl.AttributeConfigurationImpl <em>Attribute Configuration</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @see org.topcased.requirement.impl.AttributeConfigurationImpl
      * @see org.topcased.requirement.impl.RequirementPackageImpl#getAttributeConfiguration()
      * @generated
@@ -469,8 +447,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>List Attributes</b></em>' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -478,8 +456,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The number of structural features of the '<em>Attribute Configuration</em>' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -487,8 +465,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The meta object id for the '{@link org.topcased.requirement.impl.ConfiguratedAttributeImpl <em>Configurated Attribute</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @see org.topcased.requirement.impl.ConfiguratedAttributeImpl
      * @see org.topcased.requirement.impl.RequirementPackageImpl#getConfiguratedAttribute()
      * @generated
@@ -497,8 +474,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Default Value</b></em>' containment reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -506,8 +483,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>List Value</b></em>' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -515,8 +492,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      * @ordered
      */
@@ -524,8 +500,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Type</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      * @ordered
      */
@@ -533,8 +508,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The number of structural features of the '<em>Configurated Attribute</em>' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -542,8 +517,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The meta object id for the '{@link org.topcased.requirement.impl.AttributeValueImpl <em>Attribute Value</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @see org.topcased.requirement.impl.AttributeValueImpl
      * @see org.topcased.requirement.impl.RequirementPackageImpl#getAttributeValue()
      * @generated
@@ -552,8 +526,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Value</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      * @ordered
      */
@@ -561,8 +534,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The number of structural features of the '<em>Attribute Value</em>' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -570,8 +543,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The meta object id for the '{@link org.topcased.requirement.impl.DefaultAttributeValueImpl <em>Default Attribute Value</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @see org.topcased.requirement.impl.DefaultAttributeValueImpl
      * @see org.topcased.requirement.impl.RequirementPackageImpl#getDefaultAttributeValue()
      * @generated
@@ -580,8 +552,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Value</b></em>' reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      * @ordered
      */
@@ -589,8 +560,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The number of structural features of the '<em>Default Attribute Value</em>' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -598,8 +569,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The meta object id for the '{@link org.topcased.requirement.impl.SpecialChapterImpl <em>Special Chapter</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @see org.topcased.requirement.impl.SpecialChapterImpl
      * @see org.topcased.requirement.impl.RequirementPackageImpl#getSpecialChapter()
      * @generated
@@ -617,8 +587,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Requirement</b></em>' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -626,8 +596,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The number of structural features of the '<em>Special Chapter</em>' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -635,8 +605,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The meta object id for the '{@link org.topcased.requirement.impl.TextAttributeImpl <em>Text Attribute</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @see org.topcased.requirement.impl.TextAttributeImpl
      * @see org.topcased.requirement.impl.RequirementPackageImpl#getTextAttribute()
      * @generated
@@ -645,8 +614,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -654,8 +623,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      * @ordered
      */
@@ -663,8 +631,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Value</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      * @ordered
      */
@@ -672,8 +639,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The number of structural features of the '<em>Text Attribute</em>' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -681,8 +648,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The meta object id for the '{@link org.topcased.requirement.impl.ObjectAttributeImpl <em>Object Attribute</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @see org.topcased.requirement.impl.ObjectAttributeImpl
      * @see org.topcased.requirement.impl.RequirementPackageImpl#getObjectAttribute()
      * @generated
@@ -691,8 +657,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -700,8 +666,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      * @ordered
      */
@@ -709,8 +674,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Value</b></em>' reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      * @ordered
      */
@@ -718,8 +682,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The number of structural features of the '<em>Object Attribute</em>' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -727,8 +691,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The meta object id for the '{@link org.topcased.requirement.impl.UpstreamModelImpl <em>Upstream Model</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @see org.topcased.requirement.impl.UpstreamModelImpl
      * @see org.topcased.requirement.impl.RequirementPackageImpl#getUpstreamModel()
      * @generated
@@ -737,8 +700,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Activated Rules</b></em>' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -746,8 +709,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Attributes</b></em>' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -755,17 +718,16 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Ident</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      * @ordered
      */
     int UPSTREAM_MODEL__IDENT = TtmPackage.PROJECT__IDENT;
 
     /**
-     * The feature id for the '<em><b>Short Description</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The feature id for the '<em><b>Short Description</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @generated
      * @ordered
      */
@@ -773,8 +735,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Texts</b></em>' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -782,8 +744,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Documents</b></em>' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -791,8 +753,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Rules</b></em>' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -809,8 +771,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Any Document Covered</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -818,8 +780,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The number of structural features of the '<em>Upstream Model</em>' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -827,8 +789,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The meta object id for the '{@link org.topcased.requirement.impl.AttributeLinkImpl <em>Attribute Link</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @see org.topcased.requirement.impl.AttributeLinkImpl
      * @see org.topcased.requirement.impl.RequirementPackageImpl#getAttributeLink()
      * @generated
@@ -837,8 +798,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -846,8 +807,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      * @ordered
      */
@@ -855,8 +815,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Value</b></em>' reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      * @ordered
      */
@@ -864,8 +823,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Partial</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      * @ordered
      */
@@ -873,8 +831,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The number of structural features of the '<em>Attribute Link</em>' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -882,8 +840,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The meta object id for the '{@link org.topcased.requirement.impl.AttributeAllocateImpl <em>Attribute Allocate</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @see org.topcased.requirement.impl.AttributeAllocateImpl
      * @see org.topcased.requirement.impl.RequirementPackageImpl#getAttributeAllocate()
      * @generated
@@ -892,8 +849,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -901,8 +858,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      * @ordered
      */
@@ -910,8 +866,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Value</b></em>' reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      * @ordered
      */
@@ -919,8 +874,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The number of structural features of the '<em>Attribute Allocate</em>' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -928,8 +883,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The meta object id for the '{@link org.topcased.requirement.impl.UntracedChapterImpl <em>Untraced Chapter</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @see org.topcased.requirement.impl.UntracedChapterImpl
      * @see org.topcased.requirement.impl.RequirementPackageImpl#getUntracedChapter()
      * @generated
@@ -947,8 +901,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Requirement</b></em>' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -956,8 +910,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The number of structural features of the '<em>Untraced Chapter</em>' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -965,8 +919,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The meta object id for the '{@link org.topcased.requirement.impl.ProblemChapterImpl <em>Problem Chapter</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @see org.topcased.requirement.impl.ProblemChapterImpl
      * @see org.topcased.requirement.impl.RequirementPackageImpl#getProblemChapter()
      * @generated
@@ -984,8 +937,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Requirement</b></em>' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -993,8 +946,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The number of structural features of the '<em>Problem Chapter</em>' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -1002,8 +955,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The meta object id for the '{@link org.topcased.requirement.impl.TrashChapterImpl <em>Trash Chapter</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @see org.topcased.requirement.impl.TrashChapterImpl
      * @see org.topcased.requirement.impl.RequirementPackageImpl#getTrashChapter()
      * @generated
@@ -1021,8 +973,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Requirement</b></em>' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -1030,8 +982,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The number of structural features of the '<em>Trash Chapter</em>' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -1039,8 +991,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The meta object id for the '{@link org.topcased.requirement.impl.AnonymousRequirementImpl <em>Anonymous Requirement</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @see org.topcased.requirement.impl.AnonymousRequirementImpl
      * @see org.topcased.requirement.impl.RequirementPackageImpl#getAnonymousRequirement()
      * @generated
@@ -1049,8 +1000,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>EAnnotations</b></em>' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -1058,17 +1009,16 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Identifier</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      * @ordered
      */
     int ANONYMOUS_REQUIREMENT__IDENTIFIER = REQUIREMENT__IDENTIFIER;
 
     /**
-     * The feature id for the '<em><b>Short Description</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The feature id for the '<em><b>Short Description</b></em>' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @generated
      * @ordered
      */
@@ -1076,8 +1026,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>Attribute</b></em>' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -1085,8 +1035,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The feature id for the '<em><b>External Resources</b></em>' attribute list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
@@ -1094,17 +1044,17 @@ public interface RequirementPackage extends EPackage
 
     /**
      * The number of structural features of the '<em>Anonymous Requirement</em>' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @generated
      * @ordered
      */
     int ANONYMOUS_REQUIREMENT_FEATURE_COUNT = REQUIREMENT_FEATURE_COUNT + 0;
 
     /**
-     * The meta object id for the '{@link org.topcased.requirement.AttributesType <em>Attributes Type</em>}' enum.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The meta object id for the '{@link org.topcased.requirement.AttributesType <em>Attributes Type</em>}' enum. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see org.topcased.requirement.AttributesType
      * @see org.topcased.requirement.impl.RequirementPackageImpl#getAttributesType()
      * @generated
@@ -1112,9 +1062,9 @@ public interface RequirementPackage extends EPackage
     int ATTRIBUTES_TYPE = 20;
 
     /**
-     * Returns the meta object for class '{@link org.topcased.requirement.RequirementProject <em>Project</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Returns the meta object for class '{@link org.topcased.requirement.RequirementProject <em>Project</em>}'. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @return the meta object for class '<em>Project</em>'.
      * @see org.topcased.requirement.RequirementProject
      * @generated
@@ -1122,9 +1072,10 @@ public interface RequirementPackage extends EPackage
     EClass getRequirementProject();
 
     /**
-     * Returns the meta object for the containment reference list '{@link org.topcased.requirement.RequirementProject#getHierarchicalElement <em>Hierarchical Element</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Returns the meta object for the containment reference list '
+     * {@link org.topcased.requirement.RequirementProject#getHierarchicalElement <em>Hierarchical Element</em>}'. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @return the meta object for the containment reference list '<em>Hierarchical Element</em>'.
      * @see org.topcased.requirement.RequirementProject#getHierarchicalElement()
      * @see #getRequirementProject()
@@ -1134,8 +1085,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * Returns the meta object for the containment reference '{@link org.topcased.requirement.RequirementProject#getAttributeConfiguration <em>Attribute Configuration</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @return the meta object for the containment reference '<em>Attribute Configuration</em>'.
      * @see org.topcased.requirement.RequirementProject#getAttributeConfiguration()
      * @see #getRequirementProject()
@@ -1145,8 +1095,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * Returns the meta object for the containment reference list '{@link org.topcased.requirement.RequirementProject#getChapter <em>Chapter</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @return the meta object for the containment reference list '<em>Chapter</em>'.
      * @see org.topcased.requirement.RequirementProject#getChapter()
      * @see #getRequirementProject()
@@ -1155,9 +1105,10 @@ public interface RequirementPackage extends EPackage
     EReference getRequirementProject_Chapter();
 
     /**
-     * Returns the meta object for the containment reference '{@link org.topcased.requirement.RequirementProject#getUpstreamModel <em>Upstream Model</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Returns the meta object for the containment reference '
+     * {@link org.topcased.requirement.RequirementProject#getUpstreamModel <em>Upstream Model</em>}'. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @return the meta object for the containment reference '<em>Upstream Model</em>'.
      * @see org.topcased.requirement.RequirementProject#getUpstreamModel()
      * @see #getRequirementProject()
@@ -1167,8 +1118,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * Returns the meta object for class '{@link org.topcased.requirement.HierarchicalElement <em>Hierarchical Element</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @return the meta object for class '<em>Hierarchical Element</em>'.
      * @see org.topcased.requirement.HierarchicalElement
      * @generated
@@ -1177,8 +1127,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * Returns the meta object for the reference '{@link org.topcased.requirement.HierarchicalElement#getElement <em>Element</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @return the meta object for the reference '<em>Element</em>'.
      * @see org.topcased.requirement.HierarchicalElement#getElement()
      * @see #getHierarchicalElement()
@@ -1188,8 +1137,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * Returns the meta object for the containment reference list '{@link org.topcased.requirement.HierarchicalElement#getChildren <em>Children</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @return the meta object for the containment reference list '<em>Children</em>'.
      * @see org.topcased.requirement.HierarchicalElement#getChildren()
      * @see #getHierarchicalElement()
@@ -1199,8 +1148,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * Returns the meta object for the container reference '{@link org.topcased.requirement.HierarchicalElement#getParent <em>Parent</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @return the meta object for the container reference '<em>Parent</em>'.
      * @see org.topcased.requirement.HierarchicalElement#getParent()
      * @see #getHierarchicalElement()
@@ -1210,8 +1159,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * Returns the meta object for the containment reference list '{@link org.topcased.requirement.HierarchicalElement#getRequirement <em>Requirement</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc
+     * --> <!-- end-user-doc -->
      * @return the meta object for the containment reference list '<em>Requirement</em>'.
      * @see org.topcased.requirement.HierarchicalElement#getRequirement()
      * @see #getHierarchicalElement()
@@ -1221,8 +1170,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * Returns the meta object for the attribute '{@link org.topcased.requirement.HierarchicalElement#getNextReqIndex <em>Next Req Index</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @return the meta object for the attribute '<em>Next Req Index</em>'.
      * @see org.topcased.requirement.HierarchicalElement#getNextReqIndex()
      * @see #getHierarchicalElement()
@@ -1232,8 +1180,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * Returns the meta object for class '{@link org.topcased.requirement.CurrentRequirement <em>Current Requirement</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @return the meta object for class '<em>Current Requirement</em>'.
      * @see org.topcased.requirement.CurrentRequirement
      * @generated
@@ -1242,8 +1189,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * Returns the meta object for the attribute '{@link org.topcased.requirement.CurrentRequirement#isImpacted <em>Impacted</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @return the meta object for the attribute '<em>Impacted</em>'.
      * @see org.topcased.requirement.CurrentRequirement#isImpacted()
      * @see #getCurrentRequirement()
@@ -1252,9 +1198,9 @@ public interface RequirementPackage extends EPackage
     EAttribute getCurrentRequirement_Impacted();
 
     /**
-     * Returns the meta object for class '{@link org.topcased.requirement.Attribute <em>Attribute</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Returns the meta object for class '{@link org.topcased.requirement.Attribute <em>Attribute</em>}'. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @return the meta object for class '<em>Attribute</em>'.
      * @see org.topcased.requirement.Attribute
      * @generated
@@ -1263,8 +1209,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * Returns the meta object for the attribute '{@link org.topcased.requirement.Attribute#getName <em>Name</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @return the meta object for the attribute '<em>Name</em>'.
      * @see org.topcased.requirement.Attribute#getName()
      * @see #getAttribute()
@@ -1274,8 +1219,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * Returns the meta object for class '{@link org.topcased.requirement.AttributeConfiguration <em>Attribute Configuration</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @return the meta object for class '<em>Attribute Configuration</em>'.
      * @see org.topcased.requirement.AttributeConfiguration
      * @generated
@@ -1283,9 +1227,10 @@ public interface RequirementPackage extends EPackage
     EClass getAttributeConfiguration();
 
     /**
-     * Returns the meta object for the containment reference list '{@link org.topcased.requirement.AttributeConfiguration#getListAttributes <em>List Attributes</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Returns the meta object for the containment reference list '
+     * {@link org.topcased.requirement.AttributeConfiguration#getListAttributes <em>List Attributes</em>}'. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @return the meta object for the containment reference list '<em>List Attributes</em>'.
      * @see org.topcased.requirement.AttributeConfiguration#getListAttributes()
      * @see #getAttributeConfiguration()
@@ -1295,8 +1240,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * Returns the meta object for class '{@link org.topcased.requirement.ConfiguratedAttribute <em>Configurated Attribute</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @return the meta object for class '<em>Configurated Attribute</em>'.
      * @see org.topcased.requirement.ConfiguratedAttribute
      * @generated
@@ -1304,9 +1248,10 @@ public interface RequirementPackage extends EPackage
     EClass getConfiguratedAttribute();
 
     /**
-     * Returns the meta object for the containment reference '{@link org.topcased.requirement.ConfiguratedAttribute#getDefaultValue <em>Default Value</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Returns the meta object for the containment reference '
+     * {@link org.topcased.requirement.ConfiguratedAttribute#getDefaultValue <em>Default Value</em>}'. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @return the meta object for the containment reference '<em>Default Value</em>'.
      * @see org.topcased.requirement.ConfiguratedAttribute#getDefaultValue()
      * @see #getConfiguratedAttribute()
@@ -1327,8 +1272,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * Returns the meta object for the attribute '{@link org.topcased.requirement.ConfiguratedAttribute#getName <em>Name</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @return the meta object for the attribute '<em>Name</em>'.
      * @see org.topcased.requirement.ConfiguratedAttribute#getName()
      * @see #getConfiguratedAttribute()
@@ -1338,8 +1282,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * Returns the meta object for the attribute '{@link org.topcased.requirement.ConfiguratedAttribute#getType <em>Type</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @return the meta object for the attribute '<em>Type</em>'.
      * @see org.topcased.requirement.ConfiguratedAttribute#getType()
      * @see #getConfiguratedAttribute()
@@ -1349,8 +1292,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * Returns the meta object for class '{@link org.topcased.requirement.AttributeValue <em>Attribute Value</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @return the meta object for class '<em>Attribute Value</em>'.
      * @see org.topcased.requirement.AttributeValue
      * @generated
@@ -1359,8 +1301,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * Returns the meta object for the attribute '{@link org.topcased.requirement.AttributeValue#getValue <em>Value</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @return the meta object for the attribute '<em>Value</em>'.
      * @see org.topcased.requirement.AttributeValue#getValue()
      * @see #getAttributeValue()
@@ -1370,8 +1311,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * Returns the meta object for class '{@link org.topcased.requirement.DefaultAttributeValue <em>Default Attribute Value</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @return the meta object for class '<em>Default Attribute Value</em>'.
      * @see org.topcased.requirement.DefaultAttributeValue
      * @generated
@@ -1380,8 +1320,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * Returns the meta object for the reference '{@link org.topcased.requirement.DefaultAttributeValue#getValue <em>Value</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @return the meta object for the reference '<em>Value</em>'.
      * @see org.topcased.requirement.DefaultAttributeValue#getValue()
      * @see #getDefaultAttributeValue()
@@ -1391,8 +1330,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * Returns the meta object for class '{@link org.topcased.requirement.IdentifiedElement <em>Identified Element</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @return the meta object for class '<em>Identified Element</em>'.
      * @see org.topcased.requirement.IdentifiedElement
      * @generated
@@ -1401,8 +1339,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * Returns the meta object for the attribute '{@link org.topcased.requirement.IdentifiedElement#getIdentifier <em>Identifier</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @return the meta object for the attribute '<em>Identifier</em>'.
      * @see org.topcased.requirement.IdentifiedElement#getIdentifier()
      * @see #getIdentifiedElement()
@@ -1412,8 +1349,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * Returns the meta object for the attribute '{@link org.topcased.requirement.IdentifiedElement#getShortDescription <em>Short Description</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @return the meta object for the attribute '<em>Short Description</em>'.
      * @see org.topcased.requirement.IdentifiedElement#getShortDescription()
      * @see #getIdentifiedElement()
@@ -1423,8 +1359,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * Returns the meta object for class '{@link org.topcased.requirement.SpecialChapter <em>Special Chapter</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @return the meta object for class '<em>Special Chapter</em>'.
      * @see org.topcased.requirement.SpecialChapter
      * @generated
@@ -1432,9 +1367,10 @@ public interface RequirementPackage extends EPackage
     EClass getSpecialChapter();
 
     /**
-     * Returns the meta object for the containment reference list '{@link org.topcased.requirement.SpecialChapter#getHierarchicalElement <em>Hierarchical Element</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Returns the meta object for the containment reference list '
+     * {@link org.topcased.requirement.SpecialChapter#getHierarchicalElement <em>Hierarchical Element</em>}'. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @return the meta object for the containment reference list '<em>Hierarchical Element</em>'.
      * @see org.topcased.requirement.SpecialChapter#getHierarchicalElement()
      * @see #getSpecialChapter()
@@ -1454,9 +1390,9 @@ public interface RequirementPackage extends EPackage
     EReference getSpecialChapter_Requirement();
 
     /**
-     * Returns the meta object for class '{@link org.topcased.requirement.TextAttribute <em>Text Attribute</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Returns the meta object for class '{@link org.topcased.requirement.TextAttribute <em>Text Attribute</em>}'. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @return the meta object for class '<em>Text Attribute</em>'.
      * @see org.topcased.requirement.TextAttribute
      * @generated
@@ -1465,8 +1401,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * Returns the meta object for the attribute '{@link org.topcased.requirement.TextAttribute#getValue <em>Value</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @return the meta object for the attribute '<em>Value</em>'.
      * @see org.topcased.requirement.TextAttribute#getValue()
      * @see #getTextAttribute()
@@ -1476,8 +1411,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * Returns the meta object for class '{@link org.topcased.requirement.ObjectAttribute <em>Object Attribute</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @return the meta object for class '<em>Object Attribute</em>'.
      * @see org.topcased.requirement.ObjectAttribute
      * @generated
@@ -1486,8 +1420,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * Returns the meta object for the reference '{@link org.topcased.requirement.ObjectAttribute#getValue <em>Value</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @return the meta object for the reference '<em>Value</em>'.
      * @see org.topcased.requirement.ObjectAttribute#getValue()
      * @see #getObjectAttribute()
@@ -1496,9 +1429,9 @@ public interface RequirementPackage extends EPackage
     EReference getObjectAttribute_Value();
 
     /**
-     * Returns the meta object for class '{@link org.topcased.requirement.UpstreamModel <em>Upstream Model</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Returns the meta object for class '{@link org.topcased.requirement.UpstreamModel <em>Upstream Model</em>}'. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @return the meta object for class '<em>Upstream Model</em>'.
      * @see org.topcased.requirement.UpstreamModel
      * @generated
@@ -1506,9 +1439,9 @@ public interface RequirementPackage extends EPackage
     EClass getUpstreamModel();
 
     /**
-     * Returns the meta object for class '{@link org.topcased.requirement.AttributeLink <em>Attribute Link</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Returns the meta object for class '{@link org.topcased.requirement.AttributeLink <em>Attribute Link</em>}'. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @return the meta object for class '<em>Attribute Link</em>'.
      * @see org.topcased.requirement.AttributeLink
      * @generated
@@ -1517,8 +1450,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * Returns the meta object for the attribute '{@link org.topcased.requirement.AttributeLink#getPartial <em>Partial</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @return the meta object for the attribute '<em>Partial</em>'.
      * @see org.topcased.requirement.AttributeLink#getPartial()
      * @see #getAttributeLink()
@@ -1528,8 +1460,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * Returns the meta object for class '{@link org.topcased.requirement.AttributeAllocate <em>Attribute Allocate</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @return the meta object for class '<em>Attribute Allocate</em>'.
      * @see org.topcased.requirement.AttributeAllocate
      * @generated
@@ -1538,8 +1469,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * Returns the meta object for class '{@link org.topcased.requirement.UntracedChapter <em>Untraced Chapter</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @return the meta object for class '<em>Untraced Chapter</em>'.
      * @see org.topcased.requirement.UntracedChapter
      * @generated
@@ -1548,8 +1478,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * Returns the meta object for class '{@link org.topcased.requirement.ProblemChapter <em>Problem Chapter</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @return the meta object for class '<em>Problem Chapter</em>'.
      * @see org.topcased.requirement.ProblemChapter
      * @generated
@@ -1557,9 +1486,9 @@ public interface RequirementPackage extends EPackage
     EClass getProblemChapter();
 
     /**
-     * Returns the meta object for class '{@link org.topcased.requirement.TrashChapter <em>Trash Chapter</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Returns the meta object for class '{@link org.topcased.requirement.TrashChapter <em>Trash Chapter</em>}'. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @return the meta object for class '<em>Trash Chapter</em>'.
      * @see org.topcased.requirement.TrashChapter
      * @generated
@@ -1567,9 +1496,9 @@ public interface RequirementPackage extends EPackage
     EClass getTrashChapter();
 
     /**
-     * Returns the meta object for class '{@link org.topcased.requirement.Requirement <em>Requirement</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Returns the meta object for class '{@link org.topcased.requirement.Requirement <em>Requirement</em>}'. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @return the meta object for class '<em>Requirement</em>'.
      * @see org.topcased.requirement.Requirement
      * @generated
@@ -1578,8 +1507,8 @@ public interface RequirementPackage extends EPackage
 
     /**
      * Returns the meta object for the containment reference list '{@link org.topcased.requirement.Requirement#getAttribute <em>Attribute</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @return the meta object for the containment reference list '<em>Attribute</em>'.
      * @see org.topcased.requirement.Requirement#getAttribute()
      * @see #getRequirement()
@@ -1589,8 +1518,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * Returns the meta object for the attribute list '{@link org.topcased.requirement.Requirement#getExternalResources <em>External Resources</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @return the meta object for the attribute list '<em>External Resources</em>'.
      * @see org.topcased.requirement.Requirement#getExternalResources()
      * @see #getRequirement()
@@ -1600,8 +1528,7 @@ public interface RequirementPackage extends EPackage
 
     /**
      * Returns the meta object for class '{@link org.topcased.requirement.AnonymousRequirement <em>Anonymous Requirement</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @return the meta object for class '<em>Anonymous Requirement</em>'.
      * @see org.topcased.requirement.AnonymousRequirement
      * @generated
@@ -1609,9 +1536,9 @@ public interface RequirementPackage extends EPackage
     EClass getAnonymousRequirement();
 
     /**
-     * Returns the meta object for enum '{@link org.topcased.requirement.AttributesType <em>Attributes Type</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Returns the meta object for enum '{@link org.topcased.requirement.AttributesType <em>Attributes Type</em>}'. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @return the meta object for enum '<em>Attributes Type</em>'.
      * @see org.topcased.requirement.AttributesType
      * @generated
@@ -1620,21 +1547,19 @@ public interface RequirementPackage extends EPackage
 
     /**
      * Returns the factory that creates the instances of the model.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @return the factory that creates the instances of the model.
      * @generated
      */
     RequirementFactory getRequirementFactory();
 
     /**
-     * <!-- begin-user-doc -->
-     * Defines literals for the meta objects that represent
+     * <!-- begin-user-doc --> Defines literals for the meta objects that represent
      * <ul>
-     *   <li>each class,</li>
-     *   <li>each feature of each class,</li>
-     *   <li>each enum,</li>
-     *   <li>and each data type</li>
+     * <li>each class,</li>
+     * <li>each feature of each class,</li>
+     * <li>each enum,</li>
+     * <li>and each data type</li>
      * </ul>
      * <!-- end-user-doc -->
      * @generated
@@ -1643,8 +1568,7 @@ public interface RequirementPackage extends EPackage
     {
         /**
          * The meta object literal for the '{@link org.topcased.requirement.impl.RequirementProjectImpl <em>Project</em>}' class.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc --> <!-- end-user-doc -->
          * @see org.topcased.requirement.impl.RequirementProjectImpl
          * @see org.topcased.requirement.impl.RequirementPackageImpl#getRequirementProject()
          * @generated
@@ -1653,40 +1577,38 @@ public interface RequirementPackage extends EPackage
 
         /**
          * The meta object literal for the '<em><b>Hierarchical Element</b></em>' containment reference list feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc --> <!-- end-user-doc -->
          * @generated
          */
         EReference REQUIREMENT_PROJECT__HIERARCHICAL_ELEMENT = eINSTANCE.getRequirementProject_HierarchicalElement();
 
         /**
-         * The meta object literal for the '<em><b>Attribute Configuration</b></em>' containment reference feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * The meta object literal for the '<em><b>Attribute Configuration</b></em>' containment reference feature. <!--
+         * begin-user-doc --> <!-- end-user-doc -->
+         * 
          * @generated
          */
         EReference REQUIREMENT_PROJECT__ATTRIBUTE_CONFIGURATION = eINSTANCE.getRequirementProject_AttributeConfiguration();
 
         /**
-         * The meta object literal for the '<em><b>Chapter</b></em>' containment reference list feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * The meta object literal for the '<em><b>Chapter</b></em>' containment reference list feature. <!--
+         * begin-user-doc --> <!-- end-user-doc -->
+         * 
          * @generated
          */
         EReference REQUIREMENT_PROJECT__CHAPTER = eINSTANCE.getRequirementProject_Chapter();
 
         /**
-         * The meta object literal for the '<em><b>Upstream Model</b></em>' containment reference feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * The meta object literal for the '<em><b>Upstream Model</b></em>' containment reference feature. <!--
+         * begin-user-doc --> <!-- end-user-doc -->
+         * 
          * @generated
          */
         EReference REQUIREMENT_PROJECT__UPSTREAM_MODEL = eINSTANCE.getRequirementProject_UpstreamModel();
 
         /**
          * The meta object literal for the '{@link org.topcased.requirement.impl.HierarchicalElementImpl <em>Hierarchical Element</em>}' class.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc --> <!-- end-user-doc -->
          * @see org.topcased.requirement.impl.HierarchicalElementImpl
          * @see org.topcased.requirement.impl.RequirementPackageImpl#getHierarchicalElement()
          * @generated
@@ -1695,16 +1617,16 @@ public interface RequirementPackage extends EPackage
 
         /**
          * The meta object literal for the '<em><b>Element</b></em>' reference feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc --> <!--
+         * end-user-doc -->
          * @generated
          */
         EReference HIERARCHICAL_ELEMENT__ELEMENT = eINSTANCE.getHierarchicalElement_Element();
 
         /**
-         * The meta object literal for the '<em><b>Children</b></em>' containment reference list feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * The meta object literal for the '<em><b>Children</b></em>' containment reference list feature. <!--
+         * begin-user-doc --> <!-- end-user-doc -->
+         * 
          * @generated
          */
         EReference HIERARCHICAL_ELEMENT__CHILDREN = eINSTANCE.getHierarchicalElement_Children();
@@ -1718,9 +1640,9 @@ public interface RequirementPackage extends EPackage
         EReference HIERARCHICAL_ELEMENT__PARENT = eINSTANCE.getHierarchicalElement_Parent();
 
         /**
-         * The meta object literal for the '<em><b>Requirement</b></em>' containment reference list feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * The meta object literal for the '<em><b>Requirement</b></em>' containment reference list feature. <!--
+         * begin-user-doc --> <!-- end-user-doc -->
+         * 
          * @generated
          */
         EReference HIERARCHICAL_ELEMENT__REQUIREMENT = eINSTANCE.getHierarchicalElement_Requirement();
@@ -1735,8 +1657,7 @@ public interface RequirementPackage extends EPackage
 
         /**
          * The meta object literal for the '{@link org.topcased.requirement.impl.CurrentRequirementImpl <em>Current Requirement</em>}' class.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc --> <!-- end-user-doc -->
          * @see org.topcased.requirement.impl.CurrentRequirementImpl
          * @see org.topcased.requirement.impl.RequirementPackageImpl#getCurrentRequirement()
          * @generated
@@ -1745,16 +1666,15 @@ public interface RequirementPackage extends EPackage
 
         /**
          * The meta object literal for the '<em><b>Impacted</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc --> <!--
+         * end-user-doc -->
          * @generated
          */
         EAttribute CURRENT_REQUIREMENT__IMPACTED = eINSTANCE.getCurrentRequirement_Impacted();
 
         /**
          * The meta object literal for the '{@link org.topcased.requirement.impl.AttributeImpl <em>Attribute</em>}' class.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc --> <!-- end-user-doc -->
          * @see org.topcased.requirement.impl.AttributeImpl
          * @see org.topcased.requirement.impl.RequirementPackageImpl#getAttribute()
          * @generated
@@ -1763,16 +1683,15 @@ public interface RequirementPackage extends EPackage
 
         /**
          * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc --> <!--
+         * end-user-doc -->
          * @generated
          */
         EAttribute ATTRIBUTE__NAME = eINSTANCE.getAttribute_Name();
 
         /**
          * The meta object literal for the '{@link org.topcased.requirement.impl.AttributeConfigurationImpl <em>Attribute Configuration</em>}' class.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc --> <!-- end-user-doc -->
          * @see org.topcased.requirement.impl.AttributeConfigurationImpl
          * @see org.topcased.requirement.impl.RequirementPackageImpl#getAttributeConfiguration()
          * @generated
@@ -1780,17 +1699,16 @@ public interface RequirementPackage extends EPackage
         EClass ATTRIBUTE_CONFIGURATION = eINSTANCE.getAttributeConfiguration();
 
         /**
-         * The meta object literal for the '<em><b>List Attributes</b></em>' containment reference list feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * The meta object literal for the '<em><b>List Attributes</b></em>' containment reference list feature. <!--
+         * begin-user-doc --> <!-- end-user-doc -->
+         * 
          * @generated
          */
         EReference ATTRIBUTE_CONFIGURATION__LIST_ATTRIBUTES = eINSTANCE.getAttributeConfiguration_ListAttributes();
 
         /**
          * The meta object literal for the '{@link org.topcased.requirement.impl.ConfiguratedAttributeImpl <em>Configurated Attribute</em>}' class.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc --> <!-- end-user-doc -->
          * @see org.topcased.requirement.impl.ConfiguratedAttributeImpl
          * @see org.topcased.requirement.impl.RequirementPackageImpl#getConfiguratedAttribute()
          * @generated
@@ -1798,41 +1716,40 @@ public interface RequirementPackage extends EPackage
         EClass CONFIGURATED_ATTRIBUTE = eINSTANCE.getConfiguratedAttribute();
 
         /**
-         * The meta object literal for the '<em><b>Default Value</b></em>' containment reference feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * The meta object literal for the '<em><b>Default Value</b></em>' containment reference feature. <!--
+         * begin-user-doc --> <!-- end-user-doc -->
+         * 
          * @generated
          */
         EReference CONFIGURATED_ATTRIBUTE__DEFAULT_VALUE = eINSTANCE.getConfiguratedAttribute_DefaultValue();
 
         /**
-         * The meta object literal for the '<em><b>List Value</b></em>' containment reference list feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * The meta object literal for the '<em><b>List Value</b></em>' containment reference list feature. <!--
+         * begin-user-doc --> <!-- end-user-doc -->
+         * 
          * @generated
          */
         EReference CONFIGURATED_ATTRIBUTE__LIST_VALUE = eINSTANCE.getConfiguratedAttribute_ListValue();
 
         /**
          * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc --> <!--
+         * end-user-doc -->
          * @generated
          */
         EAttribute CONFIGURATED_ATTRIBUTE__NAME = eINSTANCE.getConfiguratedAttribute_Name();
 
         /**
          * The meta object literal for the '<em><b>Type</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc --> <!--
+         * end-user-doc -->
          * @generated
          */
         EAttribute CONFIGURATED_ATTRIBUTE__TYPE = eINSTANCE.getConfiguratedAttribute_Type();
 
         /**
          * The meta object literal for the '{@link org.topcased.requirement.impl.AttributeValueImpl <em>Attribute Value</em>}' class.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc --> <!-- end-user-doc -->
          * @see org.topcased.requirement.impl.AttributeValueImpl
          * @see org.topcased.requirement.impl.RequirementPackageImpl#getAttributeValue()
          * @generated
@@ -1841,16 +1758,15 @@ public interface RequirementPackage extends EPackage
 
         /**
          * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc --> <!--
+         * end-user-doc -->
          * @generated
          */
         EAttribute ATTRIBUTE_VALUE__VALUE = eINSTANCE.getAttributeValue_Value();
 
         /**
          * The meta object literal for the '{@link org.topcased.requirement.impl.DefaultAttributeValueImpl <em>Default Attribute Value</em>}' class.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc --> <!-- end-user-doc -->
          * @see org.topcased.requirement.impl.DefaultAttributeValueImpl
          * @see org.topcased.requirement.impl.RequirementPackageImpl#getDefaultAttributeValue()
          * @generated
@@ -1859,16 +1775,15 @@ public interface RequirementPackage extends EPackage
 
         /**
          * The meta object literal for the '<em><b>Value</b></em>' reference feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc --> <!--
+         * end-user-doc -->
          * @generated
          */
         EReference DEFAULT_ATTRIBUTE_VALUE__VALUE = eINSTANCE.getDefaultAttributeValue_Value();
 
         /**
          * The meta object literal for the '{@link org.topcased.requirement.impl.IdentifiedElementImpl <em>Identified Element</em>}' class.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc --> <!-- end-user-doc -->
          * @see org.topcased.requirement.impl.IdentifiedElementImpl
          * @see org.topcased.requirement.impl.RequirementPackageImpl#getIdentifiedElement()
          * @generated
@@ -1877,24 +1792,23 @@ public interface RequirementPackage extends EPackage
 
         /**
          * The meta object literal for the '<em><b>Identifier</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc --> <!--
+         * end-user-doc -->
          * @generated
          */
         EAttribute IDENTIFIED_ELEMENT__IDENTIFIER = eINSTANCE.getIdentifiedElement_Identifier();
 
         /**
          * The meta object literal for the '<em><b>Short Description</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc
+         * --> <!-- end-user-doc -->
          * @generated
          */
         EAttribute IDENTIFIED_ELEMENT__SHORT_DESCRIPTION = eINSTANCE.getIdentifiedElement_ShortDescription();
 
         /**
          * The meta object literal for the '{@link org.topcased.requirement.impl.SpecialChapterImpl <em>Special Chapter</em>}' class.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc --> <!-- end-user-doc -->
          * @see org.topcased.requirement.impl.SpecialChapterImpl
          * @see org.topcased.requirement.impl.RequirementPackageImpl#getSpecialChapter()
          * @generated
@@ -1903,24 +1817,22 @@ public interface RequirementPackage extends EPackage
 
         /**
          * The meta object literal for the '<em><b>Hierarchical Element</b></em>' containment reference list feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc --> <!-- end-user-doc -->
          * @generated
          */
         EReference SPECIAL_CHAPTER__HIERARCHICAL_ELEMENT = eINSTANCE.getSpecialChapter_HierarchicalElement();
 
         /**
-         * The meta object literal for the '<em><b>Requirement</b></em>' containment reference list feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * The meta object literal for the '<em><b>Requirement</b></em>' containment reference list feature. <!--
+         * begin-user-doc --> <!-- end-user-doc -->
+         * 
          * @generated
          */
         EReference SPECIAL_CHAPTER__REQUIREMENT = eINSTANCE.getSpecialChapter_Requirement();
 
         /**
          * The meta object literal for the '{@link org.topcased.requirement.impl.TextAttributeImpl <em>Text Attribute</em>}' class.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc --> <!-- end-user-doc -->
          * @see org.topcased.requirement.impl.TextAttributeImpl
          * @see org.topcased.requirement.impl.RequirementPackageImpl#getTextAttribute()
          * @generated
@@ -1929,16 +1841,15 @@ public interface RequirementPackage extends EPackage
 
         /**
          * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc --> <!--
+         * end-user-doc -->
          * @generated
          */
         EAttribute TEXT_ATTRIBUTE__VALUE = eINSTANCE.getTextAttribute_Value();
 
         /**
          * The meta object literal for the '{@link org.topcased.requirement.impl.ObjectAttributeImpl <em>Object Attribute</em>}' class.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc --> <!-- end-user-doc -->
          * @see org.topcased.requirement.impl.ObjectAttributeImpl
          * @see org.topcased.requirement.impl.RequirementPackageImpl#getObjectAttribute()
          * @generated
@@ -1947,16 +1858,15 @@ public interface RequirementPackage extends EPackage
 
         /**
          * The meta object literal for the '<em><b>Value</b></em>' reference feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc --> <!--
+         * end-user-doc -->
          * @generated
          */
         EReference OBJECT_ATTRIBUTE__VALUE = eINSTANCE.getObjectAttribute_Value();
 
         /**
          * The meta object literal for the '{@link org.topcased.requirement.impl.UpstreamModelImpl <em>Upstream Model</em>}' class.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc --> <!-- end-user-doc -->
          * @see org.topcased.requirement.impl.UpstreamModelImpl
          * @see org.topcased.requirement.impl.RequirementPackageImpl#getUpstreamModel()
          * @generated
@@ -1965,8 +1875,7 @@ public interface RequirementPackage extends EPackage
 
         /**
          * The meta object literal for the '{@link org.topcased.requirement.impl.AttributeLinkImpl <em>Attribute Link</em>}' class.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc --> <!-- end-user-doc -->
          * @see org.topcased.requirement.impl.AttributeLinkImpl
          * @see org.topcased.requirement.impl.RequirementPackageImpl#getAttributeLink()
          * @generated
@@ -1975,16 +1884,15 @@ public interface RequirementPackage extends EPackage
 
         /**
          * The meta object literal for the '<em><b>Partial</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc --> <!--
+         * end-user-doc -->
          * @generated
          */
         EAttribute ATTRIBUTE_LINK__PARTIAL = eINSTANCE.getAttributeLink_Partial();
 
         /**
          * The meta object literal for the '{@link org.topcased.requirement.impl.AttributeAllocateImpl <em>Attribute Allocate</em>}' class.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc --> <!-- end-user-doc -->
          * @see org.topcased.requirement.impl.AttributeAllocateImpl
          * @see org.topcased.requirement.impl.RequirementPackageImpl#getAttributeAllocate()
          * @generated
@@ -1993,8 +1901,7 @@ public interface RequirementPackage extends EPackage
 
         /**
          * The meta object literal for the '{@link org.topcased.requirement.impl.UntracedChapterImpl <em>Untraced Chapter</em>}' class.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc --> <!-- end-user-doc -->
          * @see org.topcased.requirement.impl.UntracedChapterImpl
          * @see org.topcased.requirement.impl.RequirementPackageImpl#getUntracedChapter()
          * @generated
@@ -2003,8 +1910,7 @@ public interface RequirementPackage extends EPackage
 
         /**
          * The meta object literal for the '{@link org.topcased.requirement.impl.ProblemChapterImpl <em>Problem Chapter</em>}' class.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc --> <!-- end-user-doc -->
          * @see org.topcased.requirement.impl.ProblemChapterImpl
          * @see org.topcased.requirement.impl.RequirementPackageImpl#getProblemChapter()
          * @generated
@@ -2013,8 +1919,7 @@ public interface RequirementPackage extends EPackage
 
         /**
          * The meta object literal for the '{@link org.topcased.requirement.impl.TrashChapterImpl <em>Trash Chapter</em>}' class.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc --> <!-- end-user-doc -->
          * @see org.topcased.requirement.impl.TrashChapterImpl
          * @see org.topcased.requirement.impl.RequirementPackageImpl#getTrashChapter()
          * @generated
@@ -2023,8 +1928,7 @@ public interface RequirementPackage extends EPackage
 
         /**
          * The meta object literal for the '{@link org.topcased.requirement.impl.RequirementImpl <em>Requirement</em>}' class.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc --> <!-- end-user-doc -->
          * @see org.topcased.requirement.impl.RequirementImpl
          * @see org.topcased.requirement.impl.RequirementPackageImpl#getRequirement()
          * @generated
@@ -2032,25 +1936,24 @@ public interface RequirementPackage extends EPackage
         EClass REQUIREMENT = eINSTANCE.getRequirement();
 
         /**
-         * The meta object literal for the '<em><b>Attribute</b></em>' containment reference list feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * The meta object literal for the '<em><b>Attribute</b></em>' containment reference list feature. <!--
+         * begin-user-doc --> <!-- end-user-doc -->
+         * 
          * @generated
          */
         EReference REQUIREMENT__ATTRIBUTE = eINSTANCE.getRequirement_Attribute();
 
         /**
-         * The meta object literal for the '<em><b>External Resources</b></em>' attribute list feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * The meta object literal for the '<em><b>External Resources</b></em>' attribute list feature. <!--
+         * begin-user-doc --> <!-- end-user-doc -->
+         * 
          * @generated
          */
         EAttribute REQUIREMENT__EXTERNAL_RESOURCES = eINSTANCE.getRequirement_ExternalResources();
 
         /**
          * The meta object literal for the '{@link org.topcased.requirement.impl.AnonymousRequirementImpl <em>Anonymous Requirement</em>}' class.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc --> <!-- end-user-doc -->
          * @see org.topcased.requirement.impl.AnonymousRequirementImpl
          * @see org.topcased.requirement.impl.RequirementPackageImpl#getAnonymousRequirement()
          * @generated
@@ -2059,8 +1962,7 @@ public interface RequirementPackage extends EPackage
 
         /**
          * The meta object literal for the '{@link org.topcased.requirement.AttributesType <em>Attributes Type</em>}' enum.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
+         * <!-- begin-user-doc --> <!-- end-user-doc -->
          * @see org.topcased.requirement.AttributesType
          * @see org.topcased.requirement.impl.RequirementPackageImpl#getAttributesType()
          * @generated
@@ -2069,4 +1971,4 @@ public interface RequirementPackage extends EPackage
 
     }
 
-} //RequirementPackage
+} // RequirementPackage

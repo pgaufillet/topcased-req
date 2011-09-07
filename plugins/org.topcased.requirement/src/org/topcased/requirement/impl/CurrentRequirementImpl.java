@@ -15,9 +15,8 @@ import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.RequirementPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Current Requirement</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Current Requirement</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -31,8 +30,8 @@ public class CurrentRequirementImpl extends RequirementImpl implements CurrentRe
 {
     /**
      * The default value of the '{@link #isImpacted() <em>Impacted</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @see #isImpacted()
      * @generated
      * @ordered
@@ -41,8 +40,8 @@ public class CurrentRequirementImpl extends RequirementImpl implements CurrentRe
 
     /**
      * The cached value of the '{@link #isImpacted() <em>Impacted</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!--
+     * end-user-doc -->
      * @see #isImpacted()
      * @generated
      * @ordered
@@ -50,8 +49,7 @@ public class CurrentRequirementImpl extends RequirementImpl implements CurrentRe
     protected boolean impacted = IMPACTED_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     protected CurrentRequirementImpl()
@@ -60,8 +58,7 @@ public class CurrentRequirementImpl extends RequirementImpl implements CurrentRe
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -71,8 +68,7 @@ public class CurrentRequirementImpl extends RequirementImpl implements CurrentRe
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public boolean isImpacted()
@@ -81,8 +77,7 @@ public class CurrentRequirementImpl extends RequirementImpl implements CurrentRe
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public void setImpacted(boolean newImpacted)
@@ -94,8 +89,7 @@ public class CurrentRequirementImpl extends RequirementImpl implements CurrentRe
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -110,8 +104,7 @@ public class CurrentRequirementImpl extends RequirementImpl implements CurrentRe
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -127,8 +120,7 @@ public class CurrentRequirementImpl extends RequirementImpl implements CurrentRe
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -144,8 +136,7 @@ public class CurrentRequirementImpl extends RequirementImpl implements CurrentRe
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -160,8 +151,7 @@ public class CurrentRequirementImpl extends RequirementImpl implements CurrentRe
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -177,4 +167,4 @@ public class CurrentRequirementImpl extends RequirementImpl implements CurrentRe
         return result.toString();
     }
 
-} //CurrentRequirementImpl
+} // CurrentRequirementImpl

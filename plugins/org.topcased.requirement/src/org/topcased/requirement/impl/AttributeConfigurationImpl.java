@@ -15,6 +15,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
+import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
@@ -24,9 +25,8 @@ import org.topcased.requirement.ConfiguratedAttribute;
 import org.topcased.requirement.RequirementPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Attribute Configuration</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Attribute Configuration</b></em>'. <!--
+ * end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
@@ -36,12 +36,12 @@ import org.topcased.requirement.RequirementPackage;
  *
  * @generated
  */
-public class AttributeConfigurationImpl extends EObjectImpl implements AttributeConfiguration
+public class AttributeConfigurationImpl extends MinimalEObjectImpl.Container implements AttributeConfiguration
 {
     /**
-     * The cached value of the '{@link #getListAttributes() <em>List Attributes</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getListAttributes() <em>List Attributes</em>}' containment reference list. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getListAttributes()
      * @generated
      * @ordered
@@ -49,8 +49,7 @@ public class AttributeConfigurationImpl extends EObjectImpl implements Attribute
     protected EList<ConfiguratedAttribute> listAttributes;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     protected AttributeConfigurationImpl()
@@ -59,8 +58,7 @@ public class AttributeConfigurationImpl extends EObjectImpl implements Attribute
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -70,22 +68,20 @@ public class AttributeConfigurationImpl extends EObjectImpl implements Attribute
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     public EList<ConfiguratedAttribute> getListAttributes()
     {
         if (listAttributes == null)
         {
-            listAttributes = new EObjectContainmentEList<ConfiguratedAttribute>(ConfiguratedAttribute.class, this, RequirementPackage.ATTRIBUTE_CONFIGURATION__LIST_ATTRIBUTES);
+            listAttributes = new EObjectContainmentEList.Resolving<ConfiguratedAttribute>(ConfiguratedAttribute.class, this, RequirementPackage.ATTRIBUTE_CONFIGURATION__LIST_ATTRIBUTES);
         }
         return listAttributes;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -100,8 +96,7 @@ public class AttributeConfigurationImpl extends EObjectImpl implements Attribute
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -116,8 +111,7 @@ public class AttributeConfigurationImpl extends EObjectImpl implements Attribute
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @SuppressWarnings("unchecked")
@@ -135,8 +129,7 @@ public class AttributeConfigurationImpl extends EObjectImpl implements Attribute
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -152,8 +145,7 @@ public class AttributeConfigurationImpl extends EObjectImpl implements Attribute
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -167,4 +159,4 @@ public class AttributeConfigurationImpl extends EObjectImpl implements Attribute
         return super.eIsSet(featureID);
     }
 
-} //AttributeConfigurationImpl
+} // AttributeConfigurationImpl

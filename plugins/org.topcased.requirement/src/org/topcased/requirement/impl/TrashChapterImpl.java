@@ -11,9 +11,7 @@ import org.topcased.requirement.RequirementPackage;
 import org.topcased.requirement.TrashChapter;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Trash Chapter</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Trash Chapter</b></em>'. <!-- end-user-doc -->
  * <p>
  * </p>
  *
@@ -22,8 +20,7 @@ import org.topcased.requirement.TrashChapter;
 public class TrashChapterImpl extends SpecialChapterImpl implements TrashChapter
 {
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     protected TrashChapterImpl()
@@ -32,8 +29,7 @@ public class TrashChapterImpl extends SpecialChapterImpl implements TrashChapter
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
     @Override
@@ -42,4 +38,4 @@ public class TrashChapterImpl extends SpecialChapterImpl implements TrashChapter
         return RequirementPackage.Literals.TRASH_CHAPTER;
     }
 
-} //TrashChapterImpl
+} // TrashChapterImpl
