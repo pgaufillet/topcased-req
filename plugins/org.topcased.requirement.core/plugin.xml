@@ -586,15 +586,6 @@
                   commandId="org.topcased.requirement.core.linkRequirement"
                   label="&amp;Attach Requirements"
                   style="push">
-               <visibleWhen
-                     checkEnabled="false">
-                  <with
-                        variable="activeWorkbenchWindow.activePerspective">
-                     <equals
-                           value="org.topcased.requirement.core.perspective">
-                     </equals>
-                  </with>
-               </visibleWhen>
             </command>
          </toolbar>
       </menuContribution>
