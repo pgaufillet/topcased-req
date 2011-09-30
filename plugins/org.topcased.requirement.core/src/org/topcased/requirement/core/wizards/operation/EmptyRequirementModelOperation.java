@@ -59,6 +59,11 @@ public class EmptyRequirementModelOperation extends AbstractRequirementModelOper
         Command startTaskCmd = UpdateMonitorCommand.getCommand(monitor, getLabel(), 4, null, -1);
         Command cmdWS = new AbstractCommand()
         {
+        	protected boolean prepare()
+        	{
+        		return true;
+        	}
+
             public void redo()
             {
                 // Create the empty requirement model
