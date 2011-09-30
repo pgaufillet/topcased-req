@@ -64,8 +64,16 @@ public class LinkRequirementModelCommand extends AbstractCommand
         TopcasedAttachmentPolicy.setProperty(modeler, RequirementUtils.getResource(requirementResourcePath));
 
         // Notify views that the diagram property has changed
-        ((CurrentRequirementView) CurrentRequirementView.getInstance()).partActivated(modeler);
-        ((UpstreamRequirementView) UpstreamRequirementView.getInstance()).partActivated(modeler);
+        CurrentRequirementView currentView = (CurrentRequirementView)CurrentRequirementView.getInstance();
+        if (currentView != null)
+        {
+            ((CurrentRequirementView) CurrentRequirementView.getInstance()).partActivated(modeler);
+        }
+        UpstreamRequirementView upstreamView =  (UpstreamRequirementView) UpstreamRequirementView.getInstance();
+        if (upstreamView != null)
+        {
+            ((UpstreamRequirementView) UpstreamRequirementView.getInstance()).partActivated(modeler);
+        }
     }
 
     /**

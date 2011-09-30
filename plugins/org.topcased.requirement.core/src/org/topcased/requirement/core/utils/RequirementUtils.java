@@ -382,25 +382,36 @@ public final class RequirementUtils
     }
 
     /**
+     * Get a file path from a resource URI
+     * 
+     * @param resourceURI The resource URI
+     * @return the model path
+     */
+    public static IPath getPath(URI resourceURI)
+    {
+        String scheme = resourceURI.scheme();
+        IPath path = null;
+        if ("platform".equals(scheme)) //$NON-NLS-1$
+        {
+            path = Path.fromPortableString(resourceURI.toPlatformString(true));
+        }
+        else if ("file".equals(scheme)) //$NON-NLS-1$
+        {
+            path = Path.fromPortableString(resourceURI.toFileString());
+        }
+        return path;
+    }
+
+    /**
      * Get a file path from a resource
      * 
-     * @param file The model path
-     * @return the resource
+     * @param resource The resource
+     * @return the model path
      */
     public static IPath getPath(Resource resource)
     {
         URI uri = resource.getURI();
-        String scheme = uri.scheme();
-        IPath path = null;
-        if ("platform".equals(scheme)) //$NON-NLS-1$
-        {
-            path = Path.fromPortableString(uri.toPlatformString(true));
-        }
-        else if ("file".equals(scheme)) //$NON-NLS-1$
-        {
-            path = Path.fromPortableString(uri.toFileString());
-        }
-        return path;
+        return getPath(uri);
     }
 
     /**

@@ -13,6 +13,8 @@ package org.topcased.requirement.bundle.topcased.resource;
 
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.util.URI;
@@ -25,10 +27,12 @@ import org.topcased.modeler.diagrams.model.Diagrams;
 import org.topcased.modeler.diagrams.model.util.DiagramsResourceImpl;
 import org.topcased.modeler.diagrams.model.util.DiagramsUtils;
 import org.topcased.modeler.editor.Modeler;
+import org.topcased.modeler.utils.Utils;
 import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.bundle.topcased.commands.LinkRequirementModelCommand;
 import org.topcased.requirement.bundle.topcased.commands.UnlinkRequirementModelCommand;
 import org.topcased.requirement.core.extensions.IModelAttachmentPolicy;
+import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
  * Define the default policy for requirement attachment on DI models.<br>
@@ -113,12 +117,38 @@ public class TopcasedAttachmentPolicy implements IModelAttachmentPolicy
     }
 
     /**
-     * Get the resource path to the requirement model attached with the given diagrams
+     * Get the resource path to the requirement model attached with the given diagrams when it exists
      * 
      * @param diagrams the diagrams where requirement model will be search
-     * @return the requirement resource path found or an empty string
+     * @return the requirement resource path (URI like) found or an empty string when no requirement file exists
      */
     public static String getRequirementResourcePath(Diagrams diagrams)
+    {
+        String prop = getRequirementProperty(diagrams);
+        if (!"".equals(prop))
+        {
+            URI resourceURI = diagrams.eResource().getURI().trimSegments(1);
+            URI reqURI = resourceURI.appendSegment(prop);
+            IPath path = RequirementUtils.getPath(reqURI);
+            IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+
+            if (!file.exists())
+            {
+                setProperty(Utils.getCurrentModeler(), null);
+                return "";
+            }
+        }
+        
+        return prop;
+    }
+
+    /**
+     * Get the 'requirements' property determining the attached requirement file from diagrams
+     * 
+     * @param diagrams the diagrams where requirement model will be search
+     * @return the relative requirement resource path (file may not actually exist)
+     */
+    private static String getRequirementProperty(Diagrams diagrams)
     {
         Diagram rootDiagram = DiagramsUtils.getRootDiagram(diagrams);
         String resourcePath = DIUtils.getPropertyValue(rootDiagram, REQUIREMENT_PROPERTY_KEY);
@@ -163,25 +193,25 @@ public class TopcasedAttachmentPolicy implements IModelAttachmentPolicy
      */
     public RequirementProject getRequirementProjectFromTargetMainResource(Resource mainResource)
     {
-    	if (mainResource != null && mainResource.getContents() != null && !mainResource.getContents().isEmpty())
-    	{
-    		EObject content = mainResource.getContents().get(0);
-    		if (content instanceof Diagrams)
-    		{
-    			Diagrams diagram = (Diagrams) content;
-    			String resourcePath = getRequirementResourcePath(diagram);
-    			if (!"".equals(resourcePath) && diagram.eResource() != null && diagram.eResource().getResourceSet() != null)
-    			{
-    				URI uri = URI.createURI(resourcePath).trimFragment().resolve(diagram.eResource().getURI());
-    				Resource reqResource = diagram.eResource().getResourceSet().getResource(uri, true);
-    				if (!reqResource.getContents().isEmpty())
-    				{
-    					return (RequirementProject) reqResource.getContents().get(0);
-    				}
-    			}
-    		}
-    	}
-    	return null;
+        if (mainResource != null && mainResource.getContents() != null && !mainResource.getContents().isEmpty())
+        {
+            EObject content = mainResource.getContents().get(0);
+            if (content instanceof Diagrams)
+            {
+                Diagrams diagram = (Diagrams) content;
+                String resourcePath = getRequirementResourcePath(diagram);
+                if (!"".equals(resourcePath) && diagram.eResource() != null && diagram.eResource().getResourceSet() != null)
+                {
+                    URI uri = URI.createURI(resourcePath).trimFragment().resolve(diagram.eResource().getURI());
+                    Resource reqResource = diagram.eResource().getResourceSet().getResource(uri, true);
+                    if (!reqResource.getContents().isEmpty())
+                    {
+                        return (RequirementProject) reqResource.getContents().get(0);
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     /**
