@@ -116,5 +116,17 @@
          <advice ref="org.topcased.requirement.bundle.papyrus.EObjectWithRequirements" />
       </binding>
    </extension>
+   <extension
+         point="org.eclipse.papyrus.ui.perspectiveconfiguration">
+      <configuration
+            perspectiveID="org.eclipse.papyrus.core.perspective">
+         <toolbar
+               toolbarID="org.topcased.requirement.core.mainToolbar">
+         </toolbar>
+         <command
+               commandID="org.topcased.requirement.core.linkRequirement">
+         </command>
+      </configuration>
+   </extension>
    
 </plugin>
