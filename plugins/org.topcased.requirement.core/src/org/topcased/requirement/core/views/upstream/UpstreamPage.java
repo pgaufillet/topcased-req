@@ -365,9 +365,9 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
                 {
                     internalRefresh(msg.getNewValue());
                     // refresh decorator only if needed
-                    if (msg.getNewValue() instanceof CurrentRequirement)
+                    if (msg.getNewValue() instanceof Requirement)
                     {
-                        EObject hierElt = ((CurrentRequirement) msg.getNewValue()).eContainer();
+                        EObject hierElt = ((Requirement) msg.getNewValue()).eContainer();
                         if (hierElt instanceof HierarchicalElement)
                         {
                             refreshLinkedEditPartsDecorators((HierarchicalElement) hierElt);
