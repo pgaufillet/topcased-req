@@ -397,7 +397,8 @@ public final class RequirementUtils
         }
         else if ("file".equals(scheme)) //$NON-NLS-1$
         {
-            path = Path.fromPortableString(resourceURI.toFileString());
+        	URI platformURI = resourceURI.deresolve(URI.createURI(ResourcesPlugin.getWorkspace().getRoot().getLocationURI().toString()+"/"),false,false,true);
+            path = new Path("/" + platformURI.toString());
         }
         return path;
     }
