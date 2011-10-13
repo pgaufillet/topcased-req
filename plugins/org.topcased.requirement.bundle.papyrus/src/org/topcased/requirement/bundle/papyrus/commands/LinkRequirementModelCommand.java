@@ -25,6 +25,8 @@ import org.topcased.requirement.bundle.papyrus.internal.Messages;
 import org.topcased.requirement.bundle.papyrus.resource.RequirementModel;
 import org.topcased.requirement.core.extensions.IEditorServices;
 import org.topcased.requirement.core.utils.RequirementUtils;
+import org.topcased.requirement.core.views.current.CurrentRequirementView;
+import org.topcased.requirement.core.views.upstream.UpstreamRequirementView;
 
 /**
  * A command to link a requirement model to a papyrus diagram
@@ -81,8 +83,16 @@ public class LinkRequirementModelCommand extends AbstractCommand
         }
 
         // Notify views that the diagram property has changed
-        // ((CurrentRequirementView) CurrentRequirementView.getInstance()).partActivated(editor);
-        // ((UpstreamRequirementView) UpstreamRequirementView.getInstance()).partActivated(editor);
+        CurrentRequirementView currentView = (CurrentRequirementView)CurrentRequirementView.getInstance();
+        if (currentView != null)
+        {
+            ((CurrentRequirementView) CurrentRequirementView.getInstance()).partActivated(editor);
+        }
+        UpstreamRequirementView upstreamView =  (UpstreamRequirementView) UpstreamRequirementView.getInstance();
+        if (upstreamView != null)
+        {
+            ((UpstreamRequirementView) UpstreamRequirementView.getInstance()).partActivated(editor);
+        }
     }
 
     /**

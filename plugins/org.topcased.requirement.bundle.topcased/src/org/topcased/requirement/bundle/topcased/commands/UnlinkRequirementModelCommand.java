@@ -71,8 +71,16 @@ public class UnlinkRequirementModelCommand extends AbstractCommand
         RequirementUtils.unloadRequirementModel(modeler.getEditingDomain());
 
         // Notify views that the diagram property has changed
-        ((CurrentRequirementView) CurrentRequirementView.getInstance()).partClosed(modeler);
-        ((UpstreamRequirementView) UpstreamRequirementView.getInstance()).partClosed(modeler);
+        CurrentRequirementView currentView = (CurrentRequirementView)CurrentRequirementView.getInstance();
+        if (currentView != null)
+        {
+            ((CurrentRequirementView) CurrentRequirementView.getInstance()).partClosed(modeler);
+        }
+        UpstreamRequirementView upstreamView =  (UpstreamRequirementView) UpstreamRequirementView.getInstance();
+        if (upstreamView != null)
+        {
+            ((UpstreamRequirementView) UpstreamRequirementView.getInstance()).partClosed(modeler);
+        }
     }
 
     /**
