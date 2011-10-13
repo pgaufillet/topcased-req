@@ -80,6 +80,7 @@ import ttm.Requirement;
  */
 public final class RequirementHelper
 {
+
     /** The singleton */
     public static final RequirementHelper INSTANCE = new RequirementHelper();
 
@@ -272,10 +273,10 @@ public final class RequirementHelper
      * In your code if you don't want to write check for read only use this method to throw a specific exception caught
      * by the corresponding command stack to notify the user the resource is read only
      * 
-     * @param globalCmd, the global command where the command will be added
-     * @param toCheck, the concerned resource
-     * @param domain, the editing domain
-     * @param com, the command to add in the compound
+     * @param globalCmd , the global command where the command will be added
+     * @param toCheck , the concerned resource
+     * @param domain , the editing domain
+     * @param com , the command to add in the compound
      * @throws RuntimeException a specific exception caught by the command stack if the resource is read-only
      */
     public static void appendIfCanExecute(CompoundCommand globalCmd, Resource toCheck, EditingDomain domain, Command com)
@@ -596,9 +597,20 @@ public final class RequirementHelper
     private TextAttribute createAttributeText(ConfiguratedAttribute attribute, Requirement reqSource)
     {
         TextAttribute newAtt = RequirementFactory.eINSTANCE.createTextAttribute();
-        newAtt.setName(attribute.getName());
-        String value = attribute.getDefaultValue() != null ? attribute.getDefaultValue().getValue().getValue() : ""; //$NON-NLS-1$
-        newAtt.setValue(value);
+        if (attribute != null)
+        {
+            newAtt.setName(attribute.getName());
+            String value = ""; //$NON-NLS-1$
+            if (attribute.getDefaultValue() != null)
+            {
+                if (attribute.getDefaultValue().getValue() != null)
+                {
+                    value = attribute.getDefaultValue().getValue().getValue();
+                }
+            }
+            newAtt.setValue(value);
+
+        }
         return newAtt;
     }
 
