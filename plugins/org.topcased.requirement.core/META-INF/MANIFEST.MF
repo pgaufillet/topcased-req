@@ -33,6 +33,7 @@ Export-Package: org.topcased.requirement.core,
  org.topcased.requirement.core.utils,
  org.topcased.requirement.core.views,
  org.topcased.requirement.core.views.current,
+ org.topcased.requirement.core.views.current.model,
  org.topcased.requirement.core.views.upstream,
  org.topcased.requirement.core.wizards,
  org.topcased.requirement.core.wizards.operation

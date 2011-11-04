@@ -11,13 +11,19 @@
 package org.topcased.requirement.core.providers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
+import org.eclipse.jface.viewers.Viewer;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.Requirement;
+import org.topcased.requirement.RequirementProject;
+import org.topcased.requirement.core.views.current.model.CurrentRequirementReference;
+import org.topcased.requirement.core.views.current.model.CurrentRequirementReferenceContainer;
 
 /**
  * Default provider for the current requirement view.<br>
@@ -28,6 +34,11 @@ import org.topcased.requirement.Requirement;
  */
 public class CurrentRequirementContentProvider extends AdapterFactoryContentProvider
 {
+    /**
+     * Simulate the containment link between a {@link RequirementProject} and
+     * {@link CurrentRequirementReferenceContainer}
+     */
+    private HashMap<RequirementProject, CurrentRequirementReferenceContainer> currentRequirementReferenRegistry;
 
     /**
      * Constructor
@@ -54,6 +65,69 @@ public class CurrentRequirementContentProvider extends AdapterFactoryContentProv
             toReturn.addAll(children);
             return toReturn.toArray();
         }
+        else if (object instanceof CurrentRequirementReferenceContainer)
+        {
+            return ((CurrentRequirementReferenceContainer) object).getChildren(object);
+        }
         return super.getChildren(object);
     }
+
+    @Override
+    public Object[] getElements(Object object)
+    {
+        /**
+         * Virtually add the References element which will contained references current requirement
+         */
+        if (object instanceof RequirementProject)
+        {
+            ArrayList<Object> result = new ArrayList<Object>(Arrays.asList(super.getElements(object)));
+            RequirementProject reqProject = (RequirementProject) object;
+            CurrentRequirementReferenceContainer container = currentRequirementReferenRegistry.get(reqProject);
+            if (container == null)
+            {
+                container = new CurrentRequirementReferenceContainer(reqProject, this);
+                currentRequirementReferenRegistry.put(reqProject, container);
+            }
+            if (!container.getReferences().isEmpty())
+            {
+                result.add(container);
+            }
+            return result.toArray();
+        }
+        else if (object instanceof CurrentRequirementReferenceContainer)
+        {
+            return ((CurrentRequirementReferenceContainer) object).getElements(object);
+        }
+        return super.getElements(object);
+    }
+
+    @Override
+    public boolean hasChildren(Object object)
+    {
+        if (object instanceof CurrentRequirementReferenceContainer)
+        {
+            return ((CurrentRequirementReferenceContainer) object).hasChildren(object);
+        }
+        else if (object instanceof CurrentRequirementReference)
+        {
+            CurrentRequirementReference ref = (CurrentRequirementReference) object;
+            return ref.getParentReference().hasChildren(ref);
+        }
+        return super.hasChildren(object);
+    }
+
+    @Override
+    public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
+    {
+        currentRequirementReferenRegistry = new HashMap<RequirementProject, CurrentRequirementReferenceContainer>();
+        super.inputChanged(viewer, oldInput, newInput);
+    }
+
+    @Override
+    public void dispose()
+    {
+        currentRequirementReferenRegistry.clear();
+        super.dispose();
+    }
+
 }
