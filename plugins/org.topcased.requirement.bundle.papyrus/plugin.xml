@@ -128,5 +128,12 @@
          </command>
       </configuration>
    </extension>
+   <extension
+         point="org.eclipse.papyrus.core.resourceloading.loadingStrategyExtender">
+      <strategyExtender
+            description="an extender that loads controlled upstream requirements"
+            strategyExtension="org.topcased.requirement.bundle.papyrus.resourceloading.UpstreamRequirementsExtender">
+      </strategyExtender>
+   </extension>
    
 </plugin>
