@@ -13,7 +13,9 @@
 package org.topcased.requirement.core.providers;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IFontProvider;
@@ -88,7 +90,15 @@ public class CurrentRequirementLabelProvider extends AdapterFactoryLabelProvider
             EObject eObject = ((HierarchicalElement) element).getElement();
             if (eObject != null)
             {
-                return super.getImage(eObject);
+                if(eObject.eIsProxy())
+                {
+                    //Displaying the image used for HierarchicalElements. 
+                    return super.getImage(element);
+                }
+                else
+                {
+                    return super.getImage(eObject);
+                }
             }
         }
         return super.getImage(element);
@@ -104,7 +114,18 @@ public class CurrentRequirementLabelProvider extends AdapterFactoryLabelProvider
             EObject eObject = ((HierarchicalElement) element).getElement();
             if (eObject != null)
             {
-                return super.getText(eObject);
+                if (eObject.eIsProxy())
+                {
+                    //Returning the URI of the associated resource.
+                    URI eObjectUri = EcoreUtil.getURI(eObject);
+                    String resourcePath = eObjectUri.path();
+                    String label = "Element ("+resourcePath+")";
+                    return label;
+                }
+                else
+                {
+                    return super.getText(eObject);
+                }
             }
         }
         else if (element instanceof AttributeLink)
