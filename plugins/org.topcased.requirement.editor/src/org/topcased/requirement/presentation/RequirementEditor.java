@@ -89,7 +89,6 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.dnd.DND;
@@ -97,8 +96,6 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
@@ -119,10 +116,8 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheet;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
-import org.topcased.requirement.core.filters.RequirementFilter;
 import org.topcased.requirement.core.properties.RequirementPropertySheetPage;
 import org.topcased.requirement.core.providers.CurrentRequirementLabelProvider;
-import org.topcased.requirement.core.views.SearchComposite;
 import org.topcased.requirement.provider.RequirementItemProviderAdapterFactory;
 
 import ttm.provider.TtmItemProviderAdapterFactory;
@@ -132,7 +127,7 @@ import ttm.provider.TtmItemProviderAdapterFactory;
  * 
  * @generated
  */
-public class RequirementEditor extends MultiPageEditorPart implements IEditingDomainProvider, ISelectionProvider, IMenuListener, IViewerProvider, IGotoMarker
+public class RequirementEditor extends MultiPageEditorPart implements IEditingDomainProvider, ISelectionProvider, IMenuListener, IViewerProvider, IGotoMarker, IRequestActivationHandler
 {
     /**
      * This keeps track of the editing domain that is used to track all changes to the model. <!-- begin-user-doc -->
@@ -177,11 +172,6 @@ public class RequirementEditor extends MultiPageEditorPart implements IEditingDo
      * @generated NOT change the type to use the requirement property page.
      */
     protected RequirementPropertySheetPage propertySheetPage;
-
-    /**
-     * @generated NOT
-     */
-    protected RequirementFilter currentFilter;
 
     /**
      * This is the viewer that shadows the selection in the content outline. The parent relation must be correctly
@@ -707,11 +697,13 @@ public class RequirementEditor extends MultiPageEditorPart implements IEditingDo
         adapterFactory.addAdapterFactory(new TtmItemProviderAdapterFactory());
         adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 
-        // Create the command stack that will notify this editor as commands are executed.
+        // Create the command stack that will notify this editor as commands are
+        // executed.
         //
         BasicCommandStack commandStack = new BasicCommandStack();
 
-        // Add a listener to set the most recent command's affected objects to be the selection of the viewer with
+        // Add a listener to set the most recent command's affected objects to
+        // be the selection of the viewer with
         // focus.
         //
         commandStack.addCommandStackListener(new CommandStackListener()
@@ -774,7 +766,8 @@ public class RequirementEditor extends MultiPageEditorPart implements IEditingDo
             {
                 public void run()
                 {
-                    // Try to select the items in the current content viewer of the editor.
+                    // Try to select the items in the current content viewer of
+                    // the editor.
                     //
                     if (currentViewer != null)
                     {
@@ -899,7 +892,8 @@ public class RequirementEditor extends MultiPageEditorPart implements IEditingDo
                 //
                 selectionChangedListener = new ISelectionChangedListener()
                 {
-                    // This just notifies those things that are affected by the section.
+                    // This just notifies those things that are affected by the
+                    // section.
                     //
                     public void selectionChanged(SelectionChangedEvent selectionChangedEvent)
                     {
@@ -926,7 +920,8 @@ public class RequirementEditor extends MultiPageEditorPart implements IEditingDo
             //
             currentViewer = viewer;
 
-            // Set the editors selection based on the current viewer's selection.
+            // Set the editors selection based on the current viewer's
+            // selection.
             //
             setSelection(currentViewer == null ? StructuredSelection.EMPTY : currentViewer.getSelection());
         }
@@ -1034,81 +1029,29 @@ public class RequirementEditor extends MultiPageEditorPart implements IEditingDo
         //
         createModel();
 
-        currentFilter = new RequirementFilter(true, true);
-
         // Only creates the other pages if there is something that can be edited
         //
         if (!getEditingDomain().getResourceSet().getResources().isEmpty())
         {
             // Create a page for the selection tree view.
             //
-            {
-                final GridLayout mainLayout = new GridLayout();
-                mainLayout.marginHeight = 0;
-                mainLayout.marginWidth = 0;
+            RequirementViewerComposite composite = new RequirementViewerComposite(getContainer(), SWT.NONE, getSite().getPage(), this);
+            composite.setRequestActivationHandler(this);
+            ViewerPane viewerPane = composite.getViewerPane();
+            selectionViewer = (TreeViewer) viewerPane.getViewer();
+            selectionViewer.setContentProvider(new AdapterFactoryContentProvider(adapterFactory));
 
-                Composite selectionComposite = new Composite(getContainer(), SWT.NONE);
+            selectionViewer.setLabelProvider(new CurrentRequirementLabelProvider(adapterFactory));
 
-                selectionComposite.setLayout(mainLayout);
+            selectionViewer.setInput(editingDomain.getResourceSet());
+            selectionViewer.setSelection(new StructuredSelection(editingDomain.getResourceSet().getResources().get(0)), true);
+            viewerPane.setTitle(editingDomain.getResourceSet());
 
-                final ViewerPane viewerPane = new ViewerPane(getSite().getPage(), RequirementEditor.this)
-                {
-                    @Override
-                    public Viewer createViewer(Composite composite)
-                    {
-                        TreeViewer newTreeViewer = new TreeViewer(composite, SWT.MULTI);
-                        newTreeViewer.getTree().getParent().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+            new AdapterFactoryTreeEditor(selectionViewer.getTree(), adapterFactory);
 
-                        newTreeViewer.setFilters(new ViewerFilter[] {currentFilter});
-
-                        return newTreeViewer;
-                    }
-
-                    @Override
-                    public void requestActivation()
-                    {
-                        super.requestActivation();
-                        setCurrentViewerPane(this);
-                    }
-                };
-
-                viewerPane.createControl(selectionComposite);
-
-                // Text filter
-                final SearchComposite findIt = new SearchComposite(selectionComposite, SWT.NONE)
-                {
-                    @Override
-                    protected void doAfterSearch()
-                    {
-                        viewerPane.getViewer().refresh();
-                        ((TreeViewer) viewerPane.getViewer()).expandAll();
-                    }
-
-                    @Override
-                    protected void doAfterEmptySearch()
-                    {
-                        ((TreeViewer) viewerPane.getViewer()).collapseAll();
-                        viewerPane.getViewer().refresh();
-                    }
-
-                };
-                findIt.setFilter(currentFilter);
-
-                selectionViewer = (TreeViewer) viewerPane.getViewer();
-                selectionViewer.setContentProvider(new AdapterFactoryContentProvider(adapterFactory));
-
-                selectionViewer.setLabelProvider(new CurrentRequirementLabelProvider(adapterFactory));
-
-                selectionViewer.setInput(editingDomain.getResourceSet());
-                selectionViewer.setSelection(new StructuredSelection(editingDomain.getResourceSet().getResources().get(0)), true);
-                viewerPane.setTitle(editingDomain.getResourceSet());
-
-                new AdapterFactoryTreeEditor(selectionViewer.getTree(), adapterFactory);
-
-                createContextMenuFor(selectionViewer);
-                int pageIndex = addPage(selectionComposite);
-                setPageText(pageIndex, getString("_UI_SelectionPage_label"));
-            }
+            createContextMenuFor(selectionViewer);
+            int pageIndex = addPage(composite);
+            setPageText(pageIndex, getString("_UI_SelectionPage_label"));
 
             getSite().getShell().getDisplay().asyncExec(new Runnable()
             {
@@ -1340,7 +1283,8 @@ public class RequirementEditor extends MultiPageEditorPart implements IEditingDo
                 //
                 Object selectedElement = selectedElements.next();
 
-                // If it's the selection viewer, then we want it to select the same selection as this selection.
+                // If it's the selection viewer, then we want it to select the
+                // same selection as this selection.
                 //
                 if (currentViewerPane.getViewer() == selectionViewer)
                 {
@@ -1395,7 +1339,8 @@ public class RequirementEditor extends MultiPageEditorPart implements IEditingDo
         final Map<Object, Object> saveOptions = new HashMap<Object, Object>();
         saveOptions.put(Resource.OPTION_SAVE_ONLY_IF_CHANGED, Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER);
 
-        // Do the work within an operation because this is a long running activity that modifies the workbench.
+        // Do the work within an operation because this is a long running
+        // activity that modifies the workbench.
         //
         WorkspaceModifyOperation operation = new WorkspaceModifyOperation()
         {
@@ -1778,5 +1723,10 @@ public class RequirementEditor extends MultiPageEditorPart implements IEditingDo
     protected boolean showOutlineView()
     {
         return true;
+    }
+
+    public void requestActivation(ViewerPane pane)
+    {
+        setCurrentViewerPane(pane);
     }
 }

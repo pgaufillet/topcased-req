@@ -15,7 +15,7 @@ package org.topcased.requirement.resourceloading.exception;
  * @author Arthur Daussy <a href="mailto:arthur.daussy@atos.net">arthur.daussy@atos.net</a>"
  *
  */
-public class RequirementResourceLoadingException extends RuntimeException
+public class RequirementResourceException extends RuntimeException
 {
 
     /**
@@ -23,22 +23,22 @@ public class RequirementResourceLoadingException extends RuntimeException
      */
     private static final long serialVersionUID = -4684288122651196501L;
 
-    public RequirementResourceLoadingException()
+    public RequirementResourceException()
     {
         super();
     }
 
-    public RequirementResourceLoadingException(String arg0, Throwable arg1)
+    public RequirementResourceException(String arg0, Throwable arg1)
     {
         super(arg0, arg1);
     }
 
-    public RequirementResourceLoadingException(String arg0)
+    public RequirementResourceException(String arg0)
     {
         super(arg0);
     }
 
-    public RequirementResourceLoadingException(Throwable arg0)
+    public RequirementResourceException(Throwable arg0)
     {
         super(arg0);
     }

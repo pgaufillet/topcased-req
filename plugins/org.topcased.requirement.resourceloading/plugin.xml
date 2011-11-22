@@ -12,11 +12,17 @@
       </propertyTester>
    </extension>
    <extension
+         id="org.topcased.requirement.resourceloading.OpenRequirementFromReferenceTransactionalCommand"
          point="org.eclipse.ui.commands">
       <command
             description="%command.description"
             id="org.topcased.requirement.resourceloading.loadCurrentRequirementRefererence"
             name="%command.name">
+      </command>
+      <command
+            description="%commandOpen.description"
+            id="org.topcased.requirement.resourceloading.OpenRequirementReference"
+            name="%commandOpen.name">
       </command>
    </extension>
    <extension
@@ -31,6 +37,26 @@
                      forcePluginActivation="true"
                      property="org.topcased.requirement.core.isCurrentRequirementLoaded">
                </test>
+            </with>
+         </enabledWhen>
+      </handler>
+      <handler
+            class="org.topcased.requirement.resourceloading.handler.OpenRequirementFromReferenceHandler"
+            commandId="org.topcased.requirement.resourceloading.OpenRequirementReference">
+         <enabledWhen>
+            <with
+                  variable="selection">
+               <and>
+                  <not>
+                     <test
+                           forcePluginActivation="true"
+                           property="org.topcased.requirement.core.isCurrentRequirementLoaded">
+                     </test>
+                  </not>
+                  <count
+                        value="1">
+                  </count>
+               </and>
             </with>
          </enabledWhen>
       </handler>
@@ -60,7 +86,40 @@
                </with>
             </visibleWhen>
          </command>
+         <command
+               commandId="org.topcased.requirement.resourceloading.OpenRequirementReference"
+               label="%commandOpen.label"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <iterate>
+                     <or>
+                        <instanceof
+                              value="org.topcased.requirement.core.views.current.model.CurrentRequirementReference">
+                        </instanceof>
+                     </or>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
       </menuContribution>
    </extension>
-
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            id="org.topcased.requirement.resourceloading"
+            name="Requirements">
+      </category>
+      <view
+            allowMultiple="true"
+            category="org.topcased.facilities.views"
+            class="org.topcased.requirement.resourceloading.views.QuickEditorView"
+            icon="icons/CurrentRequirementReference.GIF"
+            id="org.topcased.requirement.resourceloading.views.QuickEditorView"
+            name="Requirement Viewer">
+      </view>
+   </extension>
+   
 </plugin>

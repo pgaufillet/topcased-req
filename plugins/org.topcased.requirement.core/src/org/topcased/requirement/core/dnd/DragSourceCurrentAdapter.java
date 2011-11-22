@@ -32,6 +32,11 @@ public class DragSourceCurrentAdapter extends DragSourceAdapter
 {
     private TreeViewer treeViewer;
 
+    public DragSourceCurrentAdapter(TreeViewer viewer)
+    {
+        this(null, viewer);
+    }
+
     public DragSourceCurrentAdapter(EditingDomain domain, TreeViewer viewer)
     {
         super();

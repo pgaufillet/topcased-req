@@ -21,6 +21,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
+import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.ui.actions.RedoAction;
 import org.eclipse.gef.ui.actions.UndoAction;
 import org.eclipse.jface.action.IMenuListener;
@@ -244,19 +245,26 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
                 first.setVisible(true);
                 manager.add(first);
 
-                // using gef undo stack action because emf undo/redo got label problems.
-                UndoAction undoAction = new UndoAction(RequirementUtils.getCurrentEditor().getSite().getPart());
-                undoAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_UNDO));
-                undoAction.update();
-                undoAction.setActionDefinitionId(ICommandConstants.UNDO_ID);
-                manager.add(undoAction);
+                IWorkbenchPart part = RequirementUtils.getCurrentEditor().getSite().getPart();
+                
+                //Checks if the current editor has a command stack before creating Undo/Redo action.
+                if(part.getAdapter(CommandStack.class) != null){
+                                     
+                    // using gef undo stack action because emf undo/redo got label problems.
+                    UndoAction undoAction = new UndoAction(part);
+                    undoAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_UNDO));
+                    undoAction.update();
+                    undoAction.setActionDefinitionId(ICommandConstants.UNDO_ID);
+                    manager.add(undoAction);
+    
+                    // using gef redo stack actions because emf undo/redo got label problems.
+                    RedoAction redoAction = new RedoAction(part);
+                    redoAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_REDO));
+                    redoAction.update();
+                    redoAction.setActionDefinitionId(ICommandConstants.REDO_ID);
+                    manager.add(redoAction);
 
-                // using gef redo stack actions because emf undo/redo got label problems.
-                RedoAction redoAction = new RedoAction(RequirementUtils.getCurrentEditor().getSite().getPart());
-                redoAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_REDO));
-                redoAction.update();
-                redoAction.setActionDefinitionId(ICommandConstants.REDO_ID);
-                manager.add(redoAction);
+                }
 
                 // add a last separator to surround undo & redo actions
                 Separator last = new Separator(lastPopupMenuSeparator);
@@ -293,7 +301,7 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
         final RequirementFilter currentFilter = new RequirementFilter(true, false);
         viewer.setFilters(new ViewerFilter[] {currentFilter});
 
-        int dndOperations = DND.DROP_COPY | DND.DROP_MOVE;
+        int dndOperations = DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK;
         Transfer[] transfers = new Transfer[] {RequirementTransfer.getInstance()};
         viewer.addDragSupport(dndOperations, transfers, new DragSourceCurrentAdapter(editingDomain, viewer));
         viewer.addDropSupport(dndOperations, transfers, new DropTargetCurrentAdapter(editingDomain, viewer));

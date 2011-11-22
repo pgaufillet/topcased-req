@@ -13,3 +13,4 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: %providerName
 Export-Package: org.topcased.requirement.bundle.papyrus.resource
+Import-Package: org.eclipse.core.expressions

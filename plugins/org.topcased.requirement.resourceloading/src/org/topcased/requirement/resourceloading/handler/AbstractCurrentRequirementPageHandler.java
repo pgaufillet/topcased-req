@@ -29,7 +29,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.PlatformUI;
 import org.topcased.requirement.core.views.current.model.CurrentRequirementReference;
-import org.topcased.requirement.resourceloading.exception.RequirementResourceLoadingException;
+import org.topcased.requirement.resourceloading.exception.RequirementResourceException;
 
 /**
  * Abstract handler useull to implement handler of the Current Requirement Page
@@ -127,15 +127,19 @@ public abstract class AbstractCurrentRequirementPageHandler extends AbstractHand
             }
             else
             {
-                throw new RequirementResourceLoadingException("Unable to get a command stact to exectue the load resource command");
+                throw new RequirementResourceException(getCommandStackException());
             }
         }
         else
         {
-            throw new RequirementResourceLoadingException("Unable to find and editing domain to execute load resource command");
+            throw new RequirementResourceException(getEditingDomainExceptionLabel());
         }
         return null;
     }
+
+    protected abstract String getEditingDomainExceptionLabel();
+
+    protected abstract String getCommandStackException();
 
     /**
      * <pre>

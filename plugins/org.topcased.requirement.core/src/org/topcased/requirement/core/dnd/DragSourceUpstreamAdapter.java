@@ -38,6 +38,7 @@ public class DragSourceUpstreamAdapter extends DragSourceAdapter
      */
     public DragSourceUpstreamAdapter(ISelectionProvider provider)
     {
+        super();
         selectionProvider = provider;
     }
 
