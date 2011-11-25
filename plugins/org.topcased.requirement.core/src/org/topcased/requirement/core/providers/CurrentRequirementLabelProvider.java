@@ -12,10 +12,14 @@
  ******************************************************************************/
 package org.topcased.requirement.core.providers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.edit.provider.ComposedImage;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IFontProvider;
@@ -31,6 +35,7 @@ import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.ObjectAttribute;
 import org.topcased.requirement.common.utils.JFaceUtils;
+import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.preferences.CurrentPreferenceHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
@@ -101,9 +106,24 @@ public class CurrentRequirementLabelProvider extends AdapterFactoryLabelProvider
                 }
             }
         }
+        else if (element instanceof EObject){
+            //tests if the requirement refers to trash requirements.
+            EObject eObject = (EObject) element;
+            if(RequirementUtils.refersToTrash(eObject)){
+                Image original = super.getImage(eObject);
+                
+                List<Object> images = new ArrayList<Object>(2);
+                images.add(original);
+                images.add(RequirementCorePlugin.getDefault().getImage("icons/trashOverlay.gif"));
+                Object imageWithOverlay = new ComposedImage(images);
+                //Creating the message from the ComposedImage object, and returning it.
+                return this.getImageFromObject(imageWithOverlay);
+            }
+        }
+        
         return super.getImage(element);
     }
-
+    
     /**
      * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider#getText(java.lang.Object)
      */

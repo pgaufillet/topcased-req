@@ -512,6 +512,14 @@
             </and>
          </activeWhen>
       </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.TrashHandler"
+            commandId="org.topcased.requirement.core.trash">
+      </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.ToggleTrashRequirementFilterHandler"
+            commandId="org.topcased.requirement.core.filterTrashRequirements">
+      </handler>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -807,6 +815,20 @@
                <command
                      commandId="org.topcased.requirement.core.filterCurrentRequirements"
                      label="&amp;Filter Current Requirements"
+                     style="toggle">
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="requirementActionsEnablement.hasRequirementModel">
+                        <equals
+                              value="true">
+                        </equals>
+                     </with>
+                  </visibleWhen>
+               </command>
+               <command
+                     commandId="org.topcased.requirement.core.filterTrashRequirements"
+                     label="Filter Trash Requirements"
                      style="toggle">
                   <visibleWhen
                         checkEnabled="false">
@@ -1170,6 +1192,29 @@
                   </visibleWhen>
                </command>
             </menuContribution>
+            <menuContribution
+                  locationURI="popup:org.topcased.requirement.core.views.current.popupMenu?after=lastSeparator">
+               <command
+                     commandId="org.topcased.requirement.core.trash"
+                     icon="icons/trash.gif"
+                     label="Move to trash"
+                     style="push">
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="activeMenuSelection">
+                        <iterate
+                              ifEmpty="false">
+                           <or>
+                              <instanceof
+                                    value="org.topcased.requirement.Requirement">
+                              </instanceof>
+                           </or>
+                        </iterate>
+                     </with>
+                  </visibleWhen>
+               </command>
+            </menuContribution>
      </extension>
    <extension
          point="org.eclipse.ui.services">
@@ -1346,6 +1391,7 @@
       </page>
    </extension>
    <extension
+         id="TrashCurrentReq"
          point="org.eclipse.ui.commands">
       <command
             description="Copy the selection with its children"
@@ -1532,6 +1578,18 @@
       <command
             id="org.topcased.requirement.core.addDoc"
             name="Add a new Document to the Upstream View">
+      </command>
+      <command
+            id="org.topcased.requirement.core.trash"
+            name="Trash Current Requirement">
+      </command>
+      <command
+            id="org.topcased.requirement.core.filterTrashRequirements"
+            name="Filter Trash Requirements">
+         <state
+               class="org.eclipse.ui.handlers.RegistryToggleState"
+               id="org.eclipse.ui.commands.toggleState">
+         </state>
       </command>
    </extension>
    <extension

@@ -246,17 +246,18 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
                 manager.add(first);
 
                 IWorkbenchPart part = RequirementUtils.getCurrentEditor().getSite().getPart();
-                
-                //Checks if the current editor has a command stack before creating Undo/Redo action.
-                if(part.getAdapter(CommandStack.class) != null){
-                                     
+
+                // Checks if the current editor has a command stack before creating Undo/Redo action.
+                if (part.getAdapter(CommandStack.class) != null)
+                {
+
                     // using gef undo stack action because emf undo/redo got label problems.
                     UndoAction undoAction = new UndoAction(part);
                     undoAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_UNDO));
                     undoAction.update();
                     undoAction.setActionDefinitionId(ICommandConstants.UNDO_ID);
                     manager.add(undoAction);
-    
+
                     // using gef redo stack actions because emf undo/redo got label problems.
                     RedoAction redoAction = new RedoAction(part);
                     redoAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_REDO));
@@ -286,7 +287,7 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
 
         mainComposite = new Composite(parent, SWT.NONE);
         mainComposite.setLayout(mainLayout);
-
+        
         viewer = new TreeViewer(mainComposite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
         viewer.getTree().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         viewer.setContentProvider(new CurrentRequirementContentProvider(RequirementUtils.getAdapterFactory()));

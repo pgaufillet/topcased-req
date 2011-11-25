@@ -8,6 +8,7 @@
  *
  * Contributors:
  *  	Christophe Mertz (CS) <christophe.mertz@c-s.fr>
+ *      Olivier Mélois <a href="mailto:olivier.melois@atos.net">olivier.melois@atos.net</a>"
  *    
  ******************************************************************************/
 package org.topcased.requirement.core.utils;
@@ -37,6 +38,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.AdapterFactory;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -397,7 +399,7 @@ public final class RequirementUtils
         }
         else if ("file".equals(scheme)) //$NON-NLS-1$
         {
-        	URI platformURI = resourceURI.deresolve(URI.createURI(ResourcesPlugin.getWorkspace().getRoot().getLocationURI().toString()+"/"),false,false,true);
+            URI platformURI = resourceURI.deresolve(URI.createURI(ResourcesPlugin.getWorkspace().getRoot().getLocationURI().toString() + "/"), false, false, true);
             path = new Path("/" + platformURI.toString());
         }
         return path;
@@ -1039,5 +1041,60 @@ public final class RequirementUtils
             }
         }
         return currentReqs;
+    }
+
+    /**
+     * Predicate checking if an attribute points towards a trash.
+     * 
+     * @param attribute
+     */
+    protected static boolean isTrash(ObjectAttribute attribute)
+    {
+        return attribute.getValue().eContainer() instanceof TrashChapter;
+    }
+
+    /**
+     * Predicate checking if an requirement is trash.
+     * 
+     * @param req
+     */
+    protected static boolean isTrash(org.topcased.requirement.Requirement req)
+    {
+        return req.eContainer() instanceof TrashChapter;
+    }
+
+    /**
+     * Returns whether a requirement contains a trash attribute. In other words, contains
+     * 
+     * @return
+     */
+    public static boolean refersToTrash(EObject eObject)
+    {
+        if (eObject instanceof org.topcased.requirement.Requirement)
+        {
+            org.topcased.requirement.Requirement req = (org.topcased.requirement.Requirement) eObject;
+            EList<org.topcased.requirement.Attribute> attributes = req.getAttribute();
+
+            // Tests whether one of the attributes is a Trash.
+            for (org.topcased.requirement.Attribute attribute : attributes)
+            {
+                if (attribute instanceof ObjectAttribute)
+                {
+                    if (isTrash((ObjectAttribute) attribute))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        else if (eObject instanceof ObjectAttribute)
+        {
+            return isTrash((ObjectAttribute) eObject);
+        }
+        else
+        {
+            return false;
+        }
     }
 }

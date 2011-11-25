@@ -28,6 +28,8 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.PlatformUI;
+import org.topcased.requirement.core.utils.RequirementHelper;
+import org.topcased.requirement.core.views.current.CurrentPage;
 import org.topcased.requirement.core.views.current.model.CurrentRequirementReference;
 import org.topcased.requirement.resourceloading.exception.RequirementResourceException;
 
@@ -134,6 +136,9 @@ public abstract class AbstractCurrentRequirementPageHandler extends AbstractHand
         {
             throw new RequirementResourceException(getEditingDomainExceptionLabel());
         }
+        //Refreshing the view.
+        CurrentPage currentPage = RequirementHelper.INSTANCE.getCurrentPage();
+        currentPage.getViewer().refresh();
         return null;
     }
 

@@ -29,6 +29,9 @@ public class RequirementCorePlugin extends AbstractUIPlugin
     /** Icon path of a current requirement reference */
     public static final String ICONS_CURRENT_REQUIREMENT_REFERENCE_GIF = "icons/CurrentRequirementReference.GIF";
 
+    /** Icon path of the trash overlay */
+    public static final String ICONS_TRASH_OVERLAY_GIF = "icons/trashOverlay.gif";
+
     // The plug-in ID
     public static final String PLUGIN_ID = "org.topcased.requirement.core"; //$NON-NLS-1$
 
@@ -53,6 +56,7 @@ public class RequirementCorePlugin extends AbstractUIPlugin
     {
         getImageRegistry().put(ICONS_CURRENT_REQUIREMENT_REFERENCE_GIF,getImageDescriptor(ICONS_CURRENT_REQUIREMENT_REFERENCE_GIF));
         getImageRegistry().put(ICONS_CURRENT_REQUIREMENT_REFERENCES_GIF,getImageDescriptor(ICONS_CURRENT_REQUIREMENT_REFERENCES_GIF));
+        getImageRegistry().put(ICONS_TRASH_OVERLAY_GIF,getImageDescriptor(ICONS_TRASH_OVERLAY_GIF));
     }
 
     public void start(BundleContext context) throws Exception

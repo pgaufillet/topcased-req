@@ -44,7 +44,7 @@ import org.topcased.requirement.core.utils.RequirementUtils;
  */
 public abstract class RequirementAbstractEMFCommandHandler extends AbstractHandler
 {
-    private CompoundCommand compoundCmd;
+    protected CompoundCommand compoundCmd;
 
     protected EditingDomain editingDomain;
 
