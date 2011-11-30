@@ -1050,7 +1050,14 @@ public final class RequirementUtils
      */
     protected static boolean isTrash(ObjectAttribute attribute)
     {
-        return attribute.getValue().eContainer() instanceof TrashChapter;
+        boolean result = false; 
+        if (attribute != null){
+            EObject value = attribute.getValue();
+            if (value != null){
+                result = attribute.getValue().eContainer() instanceof TrashChapter;                
+            }
+        }
+        return result ;
     }
 
     /**
@@ -1060,7 +1067,11 @@ public final class RequirementUtils
      */
     protected static boolean isTrash(org.topcased.requirement.Requirement req)
     {
-        return req.eContainer() instanceof TrashChapter;
+        boolean result = false; 
+        if (req != null){
+            result = req.eContainer() instanceof TrashChapter;            
+        }
+        return result;
     }
 
     /**
