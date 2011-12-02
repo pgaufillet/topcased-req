@@ -37,7 +37,6 @@ public class ToggleTrashRequirementFilterHandler extends AbstractHandlerWithStat
 
     private Command command;
 
-    @Override
     public Object execute(ExecutionEvent event) throws ExecutionException
     {
 
@@ -46,7 +45,6 @@ public class ToggleTrashRequirementFilterHandler extends AbstractHandlerWithStat
         return null;
     }
 
-    @Override
     public void handleStateChange(State state, Object oldValue)
     {
         // Getting the value the state was toggled to.
@@ -105,7 +103,6 @@ public class ToggleTrashRequirementFilterHandler extends AbstractHandlerWithStat
     private class FilterDisposeListener implements DisposeListener
     {
 
-        @Override
         public void widgetDisposed(DisposeEvent e)
         {
             CurrentPage currentPage = RequirementHelper.INSTANCE.getCurrentPage();
