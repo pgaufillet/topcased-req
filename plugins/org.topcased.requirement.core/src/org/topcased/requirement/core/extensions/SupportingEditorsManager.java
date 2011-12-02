@@ -170,6 +170,15 @@ public class SupportingEditorsManager extends AbstractExtensionManager
         }
         Class< ? extends IEditorPart> editorClass = editor.getClass();
         // try to find cached value
+        return getKey(editorClass);
+    }
+
+    /**
+     * @param editorClass
+     * @return
+     */
+    public String getKey(Class< ? extends IEditorPart> editorClass)
+    {
         if (keysCache.containsKey(editorClass))
         {
             return keysCache.get(editorClass);
