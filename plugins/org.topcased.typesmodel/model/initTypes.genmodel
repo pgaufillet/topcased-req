@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.topcased.typesmodel/src"
+    editDirectory="/org.topcased.typesmodel/src" editorDirectory="" modelPluginID="org.topcased.typesmodel"
+    modelName="InitTypes" editPluginClass="org.topcased.typesmodel.model.inittypes.provider.InitTypesEditPlugin"
+    editorPluginClass="org.topcased.typesmodel.inittypes.presentation.InitTypesEditorPlugin"
+    rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" featureMapWrapperInterface=""
+    reflectiveDelegation="true" testsDirectory="" testSuiteClass="org.topcased.typesmodel.model.inittypes.tests.InitTypesAllTests"
+    importerID="org.eclipse.emf.importer.ecore" featureDelegation="Reflective" complianceLevel="5.0"
+    copyrightFields="false" editPluginID="org.topcased.typesmodel" editorPluginID="org.topcased.typesmodel.editor">
+  <foreignModel>initTypes.ecore</foreignModel>
+  <genPackages prefix="Inittypes" basePackage="org.topcased.typesmodel.model" disposableProviderFactory="true"
+      ecorePackage="initTypes.ecore#/">
+    <genClasses ecoreClass="initTypes.ecore#//TypeModel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference initTypes.ecore#//TypeModel/documentTypes"/>
+    </genClasses>
+    <genClasses ecoreClass="initTypes.ecore#//Type">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute initTypes.ecore#//Type/name"/>
+    </genClasses>
+    <genClasses ecoreClass="initTypes.ecore#//Regex">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute initTypes.ecore#//Regex/expression"/>
+    </genClasses>
+    <genClasses ecoreClass="initTypes.ecore#//Column">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute initTypes.ecore#//Column/number"/>
+    </genClasses>
+    <genClasses ecoreClass="initTypes.ecore#//DocumentType">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference initTypes.ecore#//DocumentType/types"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference initTypes.ecore#//DocumentType/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute initTypes.ecore#//DocumentType/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute initTypes.ecore#//DocumentType/hierarchical"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute initTypes.ecore#//DocumentType/textType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute initTypes.ecore#//DocumentType/documentPath"/>
+    </genClasses>
+    <genClasses ecoreClass="initTypes.ecore#//Style">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute initTypes.ecore#//Style/label"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>
