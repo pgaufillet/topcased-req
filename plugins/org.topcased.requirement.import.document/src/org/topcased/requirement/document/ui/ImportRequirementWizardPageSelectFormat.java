@@ -17,6 +17,10 @@ import java.io.File;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -38,6 +42,7 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.topcased.requirement.document.Activator;
+import org.topcased.requirement.document.component.ComponentHelpCheckButton;
 import org.topcased.requirement.document.component.ComponentHelpRadioButton;
 import org.topcased.requirement.document.component.ComponentHelpTextFieldButtonWithDelete;
 import org.topcased.requirement.document.elements.Column;
@@ -122,12 +127,29 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
     /** The label chapter. */
     private Label labelChapter;
 
+    /** The Current File System */
+    private File currentFileSystem;
+
+    /** The Current File */
+    private IFile currentFile;
+    
+    /** Flag for initialization */
+	private boolean init = true;
+	
+	/** Check button component for Description */
+	private ComponentHelpCheckButton descriptionCheck;
+	
+	/** description composite */
+	private DescriptionComposite descriptionComposite;
+	
+    
     /**
      * Instantiates a new import requirement wizard page select format.
      * 
      * @param pageName the page name
      * @param document the document
      * @param t the t
+     * @param page1 
      */
     protected ImportRequirementWizardPageSelectFormat(String pageName, File document, RecognizedTree t)
     {
@@ -167,6 +189,7 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
      */
     public void createControl(Composite parent)
     {
+    	init  = true;
         Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayout(new FillLayout());
         // setImageDescriptor(workbench.getSharedImages().getImageDescriptor(Wizard.DEFAULT_IMAGE));
@@ -183,6 +206,7 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
         form.getBody().setLayout(layout);
         createSection();
         setControl(composite);
+        init = false;
 
     }
 
@@ -198,8 +222,36 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
         createRowForReqIndification(section);
         createListFormat(section);
         createComponentForButtons(section);
+        createDescription(section);
     }
 
+    /**
+     * Creates Description Composite
+     * 
+     * @param composite
+     */
+    private void createDescription(Composite composite)
+    {
+        String helpText = "<form><p>Option to specify End Text description</p></form>";
+        descriptionCheck = new ComponentHelpCheckButton(new NotifyElement()
+        {
+            public void handleModelChange()
+            {
+                descriptionComposite.setEnabled(descriptionCheck.getSelection());
+                descriptionComposite.setVisible(descriptionCheck.getSelection());
+                ImportRequirementWizardPageSelectFormat.this.handleModelChange();
+            }
+        }, composite, toolkit, SWT.NONE, helpText);
+        descriptionCheck.setValueText("Description");
+        descriptionComposite = new DescriptionComposite(composite, SWT.NONE);
+        descriptionComposite.setNotifyElement(this);
+        descriptionComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
+        descriptionComposite.setEnabled(false);
+        descriptionComposite.setVisible(false);
+    }
+
+
+    
     /**
      * Creates the component for buttons.
      * 
@@ -246,6 +298,7 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
                         tree.add(new Regex(dialog.getRegexInput()));
                         listFormat.refresh();
                     }
+                    updateWizard();
                 }
             }
         });
@@ -329,13 +382,13 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
                     {
                         valueToRecognizeReq = new Column(dialog.getColumnInput(), dialog.getRegexInput());
                         reqIdComponent.setValueText(valueToRecognizeReq.getText());
-                        updateWizard();
                     }
                     else
                     {
                         tree.add(new Column(dialog.getColumnInput(), dialog.getRegexInput()));
                         listFormat.refresh();
                     }
+                    updateWizard();
                 }
             }
         });
@@ -369,13 +422,13 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
                         {
                             valueToRecognizeReq = new Style(dialog.getStyleInput(), dialog.getRegexInput());
                             reqIdComponent.setValueText(valueToRecognizeReq.getText());
-                            updateWizard();
                         }
                         else
                         {
                             tree.add(new Style(dialog.getStyleInput(), dialog.getRegexInput()));
                             listFormat.refresh();
                         }
+                        updateWizard();
                     }
                 }
             }
@@ -389,6 +442,7 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
     {
         getWizard().getContainer().updateMessage();
         getWizard().getContainer().updateButtons();
+        ((ImportRequirementWizard)getWizard()).getPageController().pageSelectFormatChanged( tree );
     }
 
     /**
@@ -477,7 +531,7 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
         // Load preferences from a previous use
         if (valueToRecognizeReq != null)
         {
-            reqIdComponent.setValueText(valueToRecognizeReq.getText());
+            reqIdComponent.setValueText(valueToRecognizeReq.getText(), true);
             updateWizard();
         }
     }
@@ -668,6 +722,16 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
         return tree;
     }
 
+    public boolean getDescriptionState()
+    {
+        return descriptionCheck.getSelection();
+    }
+    
+    public String getDescription()
+    {
+        return descriptionComposite.getText();
+    }
+    
     /**
      * Load Preferences from a previous use.
      */
@@ -741,10 +805,10 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
                 return null;
             }
         });
+            // Set the content provider
+            listFormat.setContentProvider(new IStructuredContentProviderTree());
 
-        // Set the content provider
-        listFormat.setContentProvider(new IStructuredContentProviderTree());
-
+        
         // Add inputs
         listFormat.setInput(tree);
 
@@ -770,4 +834,116 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
         });
 
     }
+    
+    /**
+     * Performs initialization of the page at each changes in the wizard
+     * 
+     * @param inputDocument
+     */
+    public void pageChanged(String inputDocument)
+    {
+    	if (init) {
+			init = false;
+    		return;
+		}
+        
+        if (inputDocument.endsWith(".docx") || inputDocument.endsWith(".odt"))
+        {
+            setIsSpreadsheet(false);
+            
+            
+            chapterRecognizeComponent.setHierachical(((ImportRequirementWizard)getWizard()).getPageController().isHierarchical());
+            
+            valueToRecognizeReq = ((ImportRequirementWizard)getWizard()).getPageController().getIDRegexOrStyle();
+            if (valueToRecognizeReq != null)
+            {
+                reqIdComponent.setValueText(valueToRecognizeReq.getText());
+            } else {
+                reqIdComponent.setValueText("");
+            }
+            
+            RecognizedTree newTree = ((ImportRequirementWizard)getWizard()).getPageController().getStylesAndRegex();
+            tree.getChildren().clear();
+            if (newTree != null)
+            {
+                tree.getChildren().addAll(newTree.getChildren());
+            }
+            listFormat.refresh(true);
+           
+           
+        } 
+        else
+        {
+            setIsSpreadsheet(true);
+            
+            valueToRecognizeReq = ((ImportRequirementWizard)getWizard()).getPageController().getIDColumn();
+             
+            if (valueToRecognizeReq != null)
+            {
+                reqIdComponent.setValueText(valueToRecognizeReq.getText());
+            } else {
+                reqIdComponent.setValueText("");
+            }
+            
+            RecognizedTree newTree = ((ImportRequirementWizard)getWizard()).getPageController().getColumns();
+            tree.getChildren().clear();
+            if (newTree != null)
+            {
+                tree.getChildren().addAll(newTree.getChildren());
+            }
+            listFormat.refresh(true);
+            
+            descriptionCheck.setSelection(false);
+            descriptionComposite.setEnabled(false);
+            descriptionComposite.setVisible(false);
+            descriptionComposite.setText("");
+
+        }
+        
+        descriptionCheck.setSelection(false);
+        descriptionComposite.setEnabled(false);
+        descriptionComposite.setVisible(false);
+        descriptionComposite.setText("");
+
+        String endText = ((ImportRequirementWizard)getWizard()).getPageController().getEndText();
+        if (endText != null)
+        {
+            descriptionCheck.setSelection(true);
+            descriptionComposite.setEnabled(true);
+            descriptionComposite.setVisible(true);
+            descriptionComposite.setText(endText);
+        }
+        updateWizard();
+        
+        if (inputDocument != null)
+        {
+            if (inputDocument.contains("file:"))
+            {
+                currentFileSystem = new File(URI.createURI(inputDocument).toFileString());
+                ((ImportRequirementWizard)getWizard()).setCurrentFileSystem(currentFileSystem);
+            }
+            else if (inputDocument.contains("platform:"))
+            {
+                currentFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(URI.createURI(inputDocument).toPlatformString(true)));
+                ((ImportRequirementWizard)getWizard()).setCurrentFile(currentFile);
+                if (currentFile != null)
+                {
+                    currentFileSystem = currentFile.getLocation().toFile();
+                    ((ImportRequirementWizard)getWizard()).setCurrentFileSystem(currentFileSystem);
+                }
+            }
+            else
+            {
+                currentFile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(URI.createURI(inputDocument).toFileString()));
+                ((ImportRequirementWizard)getWizard()).setCurrentFile(currentFile);
+                if (currentFile != null)
+                {
+                    currentFileSystem = currentFile.getLocation().toFile();
+                    ((ImportRequirementWizard)getWizard()).setCurrentFileSystem(currentFileSystem);
+                }
+            }
+        }
+        setDocumentFile(currentFileSystem);
+    }
+    
 }

@@ -64,7 +64,17 @@ abstract public class Attribute implements Serializable
         }
         return s;
     }
-
+    
+    /**
+     * Gets the name without the source 
+     * 
+     * @return the name without the source
+     */
+    public String getProperName ()
+    {
+        return name ;
+    }
+    
     /**
      * Checks if is reference.
      * 

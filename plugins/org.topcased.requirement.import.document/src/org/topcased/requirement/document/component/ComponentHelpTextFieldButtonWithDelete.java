@@ -37,6 +37,9 @@ public class ComponentHelpTextFieldButtonWithDelete extends ComponentHelpTextFie
     /** The has to be delete. */
     private boolean hasToBeDelete = false;
 
+    /** The do handle. */
+    private boolean doHandle = true;
+
     /**
      * Instantiates a new component help text field button with delete.
      * 
@@ -70,8 +73,15 @@ public class ComponentHelpTextFieldButtonWithDelete extends ComponentHelpTextFie
 
             public void modifyText(ModifyEvent e)
             {
-                inputValue = input.getText();
-                pageParent.handleModelChange();
+                if (doHandle)
+                {
+                    inputValue = input.getText();
+                    pageParent.handleModelChange();
+                }
+                else
+                {
+                    doHandle = true;
+                }
             }
         });
 
@@ -112,6 +122,23 @@ public class ComponentHelpTextFieldButtonWithDelete extends ComponentHelpTextFie
     public boolean isDelete()
     {
         return hasToBeDelete;
+    }
+
+    // Set the text value of
+    /**
+     * Sets the value text.
+     * 
+     * @param text the text
+     * @param handleChange the handle change
+     */
+    public void setValueText(String text, boolean handleChange)
+    {
+        if (handleChange)
+        {
+            doHandle = false;
+        }
+        input.setText(text);
+        inputValue = text;
     }
 
 }

@@ -8,7 +8,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *  Caroline Bourdeu d'Aguerre (ATOS ORIGIN INTEGRATION) caroline.bourdeudaguerre@atosorigin.com - Initial API and implementation
+ *  Caroline Bourdeu d'Aguerre (ATOS ORIGIN INTEGRATION) caroline.bourdeudaguerre@atosorigin.com - Initial API and implementation$
+ *  Anass RADOUANI (Atos) anass.radouani@atos.net - adding setForeground method
  *
  *****************************************************************************/
 package org.topcased.requirement.document.component;
@@ -244,4 +245,14 @@ public class ComponentHelpTextField extends ComponentHelp
         input.setEditable(editable);
     }
 
+    /**
+     * set foreground of text field
+     * 
+     * @param color
+     */
+    public void setTextForeground(Color color)
+    {
+        input.setForeground(color);
+    }
+    
 }

@@ -25,14 +25,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EModelElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcoreFactory;
+import org.eclipse.emf.ecore.plugin.EcorePlugin;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -40,7 +44,6 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
@@ -55,13 +58,18 @@ import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.preferences.CurrentPreferenceHelper;
 import org.topcased.requirement.core.preferences.RequirementPreferenceConstants;
 import org.topcased.requirement.document.Activator;
+import org.topcased.requirement.document.checker.DescriptionChecker;
 import org.topcased.requirement.document.doc2model.Doc2ModelCreator;
 import org.topcased.requirement.document.elements.Attribute;
 import org.topcased.requirement.document.elements.AttributeSysml;
 import org.topcased.requirement.document.elements.AttributeSysmlReference;
 import org.topcased.requirement.document.elements.AttributeUml;
 import org.topcased.requirement.document.elements.Mapping;
+import org.topcased.requirement.document.elements.PageController;
+import org.topcased.requirement.document.elements.RecognizedElement;
 import org.topcased.requirement.document.elements.RecognizedTree;
+import org.topcased.requirement.document.elements.Regex;
+import org.topcased.requirement.document.elements.Style;
 import org.topcased.requirement.document.utils.Constants;
 
 import doc2modelMapping.doc2model;
@@ -94,9 +102,13 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
 
     /** The page3. */
     private ImportRequirementWizardPageMapping page3;
-    
-    /** The file   */
+
+    /** The file */
     private File currentFileSystem;
+
+    /** the controller */
+    private PageController pageController;
+
     /*
      * (non-Javadoc)
      * 
@@ -130,6 +142,7 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
         page3 = new ImportRequirementWizardPageMapping("Enter the file format", tree, listAttributes, page1.getModelType());
         addPage(page3);
 
+        pageController = new PageController(this);
     }
 
     /*
@@ -141,9 +154,24 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
     public boolean performFinish()
     {
         String pathForDebug = getPathForDebug(page1.getLevel());
+
+        if (page2.getDescriptionState())
+        {
+            DescriptionChecker.setEndText(page2.getDescription());
+        }
+        RecognizedElement id = page2.getIdentification();
+        if (id instanceof Style)
+        {
+            DescriptionChecker.setStyleIdent(((Style) id).getStyle());
+        }
+        else if (id instanceof Regex)
+        {
+            DescriptionChecker.setReqIdent(((Regex) id).getRegex());
+        }
+
         /** Process **/
         Doc2ModelCreator d2mc = new Doc2ModelCreator(page3.getListMapping(), page1.getModelType(), page2.isSpreadsheet(), page1.getProfileURI(), page1.getStereotype(), page2.getIsHiearachical(),
-                page2.getIdentification(),pathForDebug);
+                page2.getIdentification(), pathForDebug);
         final doc2model model = d2mc.createDoc2Model();
         if (model != null)
         {
@@ -188,7 +216,26 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
                             assignLevel(myMonitor, result);
                             if (Constants.REQUIREMENT_EXTENSION.equals(page1.getModelType()))
                             {
-                                assignAttributeConfiguration(myMonitor,result);
+                                assignAttributeConfiguration(myMonitor, result);
+                            }
+                            IFile file = getFile(page1.getOutputModel());
+                            if (file != null && file.exists())
+                            {
+                                try
+                                {
+                                    file.getParent().refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
+                                }
+                                catch (CoreException e)
+                                {
+                                }
+                            }
+                            if (page1.isAttachRequirement())
+                            {
+                                myMonitor.beginTask("Attaching requirement", 3);
+                                if (!getPageController().attachRequirement(myMonitor).get())
+                                {
+                                    throw new InvocationTargetException(new Exception("Action Cancelled"));
+                                }
                             }
                             myMonitor.done();
                         }
@@ -196,6 +243,11 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
                         {
                             e.printStackTrace();
                         }
+                        finally
+                        {
+                            DescriptionChecker.rollback();
+                        }
+
                     }
 
                     /**
@@ -308,16 +360,40 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
         Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageMapping.PREFERENCE_FOR_LIST_MAPPING, page3.getListMappingPref());
 
         IPreferenceStore preferenceStorePlugIn = RequirementCorePlugin.getDefault().getPreferenceStore();
-        if(!preferenceStorePlugIn.getBoolean(RequirementPreferenceConstants.IMPORT_REQUIREMENT_WITHOUT_DIALOG)) {
-            MessageDialog dialog = new MessageDialog(getShell(), "Information", null, "The .requirement file is generated in : " + currentFileSystem.getPath(), MessageDialog.INFORMATION, new String[] {IDialogConstants.OK_LABEL}, Window.OK);
+        if (!preferenceStorePlugIn.getBoolean(RequirementPreferenceConstants.IMPORT_REQUIREMENT_WITHOUT_DIALOG))
+        {
+            MessageDialog dialog = new MessageDialog(getShell(), "Information", null, "The .requirement file is generated in : " + currentFileSystem.getPath(), MessageDialog.INFORMATION,
+                    new String[] {IDialogConstants.OK_LABEL}, Window.OK);
             dialog.open();
         }
+
         return true;
+    }
+
+    /**
+     * Transforms an String path to IFile
+     * 
+     * @return
+     */
+    public static IFile getFile(String argPath)
+    {
+        URI uri = URI.createURI(argPath);
+        String path = null;
+        if (uri.isFile())
+        {
+            path = "/" + uri.deresolve(URI.createURI(EcorePlugin.getWorkspaceRoot().getLocationURI().toString() + "/"), false, false, true).toString();
+        }
+        else
+        {
+            path = uri.toString();
+        }
+        IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(path));
+        return file;
     }
 
     private String getPathForDebug(String level)
     {
-        String result = null ;
+        String result = null;
         Pattern p = Pattern.compile(CONSTANT_DEBUG + " (.*)");
         Matcher m = p.matcher(level);
         if (m.matches())
@@ -347,93 +423,7 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
         this.stereotype = stereotype;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.wizard.Wizard#getNextPage(org.eclipse.jface.wizard.IWizardPage)
-     */
-    @Override
-    public IWizardPage getNextPage(IWizardPage page)
-    {
-
-        IWizardPage newPage = super.getNextPage(page);
-        // From page 1 to page 2
-        if (newPage instanceof ImportRequirementWizardPageSelectFormat)
-        {
-            if (page1.getInputDocument().endsWith(".docx") || page1.getInputDocument().endsWith(".odt"))
-            {
-                page2.setIsSpreadsheet(false);
-            }
-            else
-            {
-                page2.setIsSpreadsheet(true);
-            }
-            String inputDocument = page1.getInputDocument();
-            if (inputDocument != null)
-            {
-                if (inputDocument.contains("file:"))
-                {
-                    currentFileSystem = new File(URI.createURI(inputDocument).toFileString());
-                }
-                else if (inputDocument.contains("platform:"))
-                {
-                    currentFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(URI.createURI(page1.getInputDocument()).toPlatformString(true)));
-                    currentFileSystem = currentFile.getLocation().toFile();
-                }
-                else
-                {
-                    currentFile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(URI.createURI(page1.getInputDocument()).toFileString()));
-                    currentFileSystem = currentFile.getLocation().toFile();
-                }
-            }
-            page2.setDocumentFile(currentFileSystem);
-        }
-        else if (newPage instanceof ImportRequirementWizardPageMapping)
-        {
-            // From page 2 to page 3
-
-            // Load pref attributes
-            page3.clearListAttributes();
-            if (Constants.REQUIREMENT_EXTENSION.equals(page1.getModelType()))
-            {
-                page3.setIsRequirementModel(true);
-                page3.loadPreferenceAttributes();
-            }
-            else
-            {
-                page3.setIsRequirementModel(false);
-                // if(Constants.UML_EXTENSION.equals(page1.getModelType()))
-                // {
-                // listAttributes.add(new AttributeUml("Name", false, "Class"));
-                // }
-                // else
-                // {
-                // listAttributes.add(new AttributeSysml("Name", false, "Requirement"));
-                // }
-                if (Constants.SYSML_EXTENSION.equals(page1.getModelType()))
-                {
-                    manageSysml();
-                }
-                if (Constants.UML_EXTENSION.equals(page1.getModelType()) || Constants.SYSML_EXTENSION.equals(page1.getModelType()))
-                {
-                    manageProfiles();
-                }
-            }
-            page3.refreshLists();
-            // Load pref mapping
-            if (page1.loadMappingPref())
-            {
-                page3.loadPreferecencesMapping();
-            }
-            else
-            {
-                page3.clearListMapping();
-            }
-        }
-        return newPage;
-    }
-
-    private void manageProfiles()
+    protected void manageProfiles()
     {
         if (page1.getProfile() != null && page1.getStereotype() != null)
         {
@@ -469,7 +459,7 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
         }
     }
 
-    private void manageSysml()
+    protected void manageSysml()
     {
         LinkedList<Attribute> defaultList = new LinkedList<Attribute>();
         Attribute text = new AttributeSysml("text", false, "Requirement");
@@ -526,6 +516,36 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
             }
         }
         return false;
+    }
+
+    /**
+     * Gets the page Controller
+     * 
+     * @return
+     */
+    public PageController getPageController()
+    {
+        return pageController;
+    }
+
+    /**
+     * The current File System Variable
+     * 
+     * @param currentFileSystem
+     */
+    public void setCurrentFileSystem(File currentFileSystem)
+    {
+        this.currentFileSystem = currentFileSystem;
+    }
+
+    /**
+     * Sets the current File Variable
+     * 
+     * @param currentFile
+     */
+    public void setCurrentFile(IFile currentFile)
+    {
+        this.currentFile = currentFile;
     }
 
 }

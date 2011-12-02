@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -29,8 +30,10 @@ import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
@@ -41,6 +44,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -121,6 +125,9 @@ public class ImportRequirementWizardPageMapping extends WizardPage
     /** The model type. */
     private String modelType;
 
+    /** The initialization Flag */
+	private boolean init = true;
+	
     /** The image add. */
     private static Image imageAdd;
 
@@ -162,6 +169,7 @@ public class ImportRequirementWizardPageMapping extends WizardPage
      */
     public void createControl(Composite parent)
     {
+    	init = true;
         Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayout(new FillLayout());
         // setImageDescriptor(workbench.getSharedImages().getImageDescriptor(Wizard.DEFAULT_IMAGE));
@@ -177,6 +185,7 @@ public class ImportRequirementWizardPageMapping extends WizardPage
         form.getBody().setLayout(layout);
         createSection();
         setControl(composite);
+        init = false;
     }
 
     /**
@@ -193,6 +202,53 @@ public class ImportRequirementWizardPageMapping extends WizardPage
         createButtonsAttributes(section);
         createListMapping(section);
         createButtonRemoveMapping(section);
+        createButtonSave(section);
+    }
+    /**
+     * Create save button for mapping
+     * 
+     * @param composite
+     */
+    private void createButtonSave(Composite composite) {
+        toolkit.createLabel(composite, "You can save mapping : ");
+    	Button saveButton = toolkit.createButton(composite, "Save Mapping", SWT.NONE);
+    	saveButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
+    	hookSaveListener(saveButton);
+    }
+
+    /**
+     * Hook Listener for save mapping button
+     * 
+     * @param saveButton
+     */
+	private void hookSaveListener(Button saveButton)
+    {
+        
+        saveButton.addSelectionListener(new SelectionAdapter()
+        {
+            public void widgetSelected(SelectionEvent e)
+            {
+                SaveAsDialog csDialog = new SaveAsDialog(Activator.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell());
+                
+
+                if (csDialog.open() == Window.OK)
+                {
+                    IPath result = csDialog.getResult();
+                    if (result != null)
+                    {
+                        if (result.getFileExtension() == null || !"types".equals(result.getFileExtension()))
+                        {
+                            result = result.addFileExtension("types");
+                        }
+//                        else if ("types".equals(result.getFileExtension()))
+//                        {
+//                            result = result.removeFileExtension().addFileExtension("types");
+//                        }
+                        ((ImportRequirementWizard)getWizard()).getPageController().PerformSavingModel(result);
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -807,6 +863,67 @@ public class ImportRequirementWizardPageMapping extends WizardPage
                     rParent.setSelected(true);
                 }
             }
+        }
+    }
+
+    /**
+     * Performs initialization of the page at each changes in the wizard
+     * 
+     * @param attributes list of attributes
+     * @param allMapping list of mapping
+     * @param modelType the model type (Requirement, UML, SysML)
+     */
+    
+    public void pageChanged(List<Attribute> attributes, List<Mapping> allMapping, String modelType)
+    {
+    	if (init ) {
+    		init = false;
+    		return;
+    	}
+    	boolean loadPref = true;
+    	clearListAttributes();
+        if (attributes != null && !attributes.isEmpty() && Constants.REQUIREMENT_EXTENSION.equals(modelType))
+        {
+            listAttributes = attributes;
+            listViewerAttributes.setInput(attributes);
+            loadPref = false;
+        }
+        listViewerAttributes.refresh();
+        clearListMapping();
+        if (allMapping != null && !allMapping.isEmpty() && Constants.REQUIREMENT_EXTENSION.equals(modelType))
+        {
+            for (Mapping mapping : allMapping)
+            {
+                addMapping(mapping.getElement(), mapping.getAttribute());
+            }
+            listViewerMapping.refresh();
+            loadPref = false;
+        }
+        if (Constants.REQUIREMENT_EXTENSION.equals(modelType))
+        {
+            setIsRequirementModel(true);
+            if (loadPref)
+            {
+                loadPreferenceAttributes();
+            }
+        }
+        else
+        {
+            setIsRequirementModel(false);
+            if (Constants.SYSML_EXTENSION.equals(modelType))
+            {
+                ((ImportRequirementWizard)getWizard()).manageSysml();
+            }
+            if (Constants.UML_EXTENSION.equals(modelType) || Constants.SYSML_EXTENSION.equals(modelType))
+            {
+                ((ImportRequirementWizard)getWizard()).manageProfiles();
+            }
+        }
+        refreshLists();
+        // Load pref mapping
+        if ( loadPref && ((ImportRequirementWizard)getWizard()).getPageController().loadMappingPref())
+        {
+            loadPreferecencesMapping();
         }
     }
 }
