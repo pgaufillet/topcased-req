@@ -81,7 +81,6 @@ public class NewRequirementModelOperation extends AbstractRequirementModelOperat
         {
             domain = service.getEditingDomain(editor);
         }
-
         // Deals with source model file extension and the fact that the target model could already have a requirement
         // project attached
         if (isCurrentModelerAlreadyAttached(domain))
@@ -97,7 +96,7 @@ public class NewRequirementModelOperation extends AbstractRequirementModelOperat
             return getTransformAndCreateCmd(monitor);
         }
     }
-
+    
     /**
      * Get the label
      */

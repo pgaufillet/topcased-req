@@ -52,20 +52,31 @@ public class MergeRequirementModelOperation extends AbstractRequirementModelOper
     
     private boolean isPartialImport;
     
+    private boolean isImpactAnalysis;
+
+    
+    public MergeRequirementModelOperation(IFile targetFile, IFile sourceFile, IFile reqFile, Map<Document,Document> docs, boolean isPartialImport)
+    {
+        this(targetFile,sourceFile,reqFile,docs,isPartialImport,true);
+    }
+    
     /**
      * The constructor
      * 
      * @param targetFile
      * @param sourceFile
+     * @param isImpactAnalysis 
      * @param destFile
      */
-    public MergeRequirementModelOperation(IFile targetFile, IFile sourceFile, IFile reqFile, Map<Document,Document> docs, boolean isPartialImport)
+    public MergeRequirementModelOperation(IFile targetFile, IFile sourceFile, IFile reqFile, Map<Document,Document> docs, boolean isPartialImport, boolean isImpactAnalysis)
     {
         super(targetFile, reqFile);
         sourceModelFile = sourceFile;
         documentsToMerge = docs;
         this.isPartialImport = isPartialImport;
+        this.isImpactAnalysis = isImpactAnalysis;
     }
+
 
     /**
      * Get commands to merge requirement models
@@ -157,6 +168,6 @@ public class MergeRequirementModelOperation extends AbstractRequirementModelOper
         monitor.worked(1);
 
         // merge operation
-        mergeOperation(documentsToMerge, isPartialImport, monitor);
+        mergeOperation(documentsToMerge, isPartialImport, isImpactAnalysis, monitor);
     }
 }

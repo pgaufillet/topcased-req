@@ -15,7 +15,11 @@ package org.topcased.requirement.core.providers;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
+import org.eclipse.jface.viewers.Viewer;
+import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.utils.RequirementUtils;
+import org.topcased.requirement.core.utils.impact.RequirementTimestampMonitor;
+import org.topcased.requirement.impl.UpstreamModelImpl;
 
 import ttm.Requirement;
 
@@ -80,4 +84,22 @@ public class UpstreamRequirementContentProvider extends AdapterFactoryContentPro
         this.isFlat = isFlat;
     }
 
+    @Override
+    public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
+    {
+        if (newInput != null && newInput instanceof UpstreamModelImpl) {
+            UpstreamModelImpl model = (UpstreamModelImpl) newInput;
+            try
+            {
+                RequirementTimestampMonitor.onLoad(model.getDocuments());
+            }
+            catch (InterruptedException e)
+            {
+                RequirementCorePlugin.log(e);
+            }
+        }
+        super.inputChanged(viewer, oldInput, newInput);
+    }
+
+    
 }

@@ -12,6 +12,7 @@ package org.topcased.requirement.core.wizards.operation;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,7 +42,9 @@ import org.topcased.requirement.core.extensions.SupportingEditorsManager;
 import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.preferences.CurrentPreferenceHelper;
 import org.topcased.requirement.core.utils.MergeRequirement;
+import org.topcased.requirement.core.utils.RequirementDifferenceCalculator;
 import org.topcased.requirement.core.utils.RequirementUtils;
+import org.topcased.requirement.core.utils.impact.MergeImpactProcessor;
 import org.topcased.requirement.util.RequirementResource;
 
 import ttm.Document;
@@ -116,18 +119,28 @@ public abstract class AbstractRequirementModelOperation extends WorkspaceModifyO
         }
         if (domain != null)
         {
-            List<Command> cmds = getCommands(monitor);
-            // Add commands to notify views that the diagram property has changed
-            List<Command> commands = new ArrayList<Command>(cmds.size() + 2);
-            commands.add(RefreshRequirementsPropertiesCommand.getAtUndo(editor));
-            commands.addAll(cmds);
-            commands.add(RefreshRequirementsPropertiesCommand.getAtRedo(editor));
-            // execute global command
-            CompoundCommand command = new CompoundCommand(getLabel(), commands);
-            if (command.canExecute())
-            {
-                domain.getCommandStack().execute(command);
-            }
+            execute(monitor, domain, editor);
+        }
+    }
+
+    /**
+     * @param monitor
+     * @param domain
+     * @param editor
+     */
+    protected void execute(IProgressMonitor monitor, EditingDomain domain, IEditorPart editor)
+    {
+        List<Command> cmds = getCommands(monitor);
+        // Add commands to notify views that the diagram property has changed
+        List<Command> commands = new ArrayList<Command>(cmds.size() + 2);
+        commands.add(RefreshRequirementsPropertiesCommand.getAtUndo(editor));
+        commands.addAll(cmds);
+        commands.add(RefreshRequirementsPropertiesCommand.getAtRedo(editor));
+        // execute global command
+        CompoundCommand command = new CompoundCommand(getLabel(), commands);
+        if (command.canExecute())
+        {
+            domain.getCommandStack().execute(command);
         }
     }
 
@@ -181,8 +194,10 @@ public abstract class AbstractRequirementModelOperation extends WorkspaceModifyO
     /**
      * 
      * Process the merge operation
+     * @param isImpactAnalysis 
+     * @param tempURI 
      */
-    protected void mergeOperation(Map<Document,Document> documentsToMerge,boolean isPartialImport, IProgressMonitor monitor)
+    protected void mergeOperation(Map<Document,Document> documentsToMerge,boolean isPartialImport, boolean isImpactAnalysis, IProgressMonitor monitor)
     {
         monitor.subTask(Messages.getString("AbstractRequirementModelOperation.1")); //$NON-NLS-1$
         try
@@ -203,7 +218,30 @@ public abstract class AbstractRequirementModelOperation extends WorkspaceModifyO
                 requirementResource2 = domain.getResourceSet().getResource(
                         URI.createPlatformResourceURI(requirementModelFile.getFullPath().addFileExtension(RequirementResource.FILE_EXTENSION).toString(), true), true);
             }
-            MergeRequirement.INSTANCE.merge(documentsToMerge, requirementResource2,isPartialImport,monitor);
+            //TODO begin mod
+            List<Document> upstreamDocuments = RequirementUtils.getUpstreamDocuments(requirementResource2);
+            List<Resource> resources = new ArrayList<Resource>();
+            Map<Document,Document> mergedDocuments = new HashMap<Document, Document>();
+            for (int i = 0; i < upstreamDocuments.size(); i++)
+            {
+                Document d = upstreamDocuments.get(i);
+                for (Document d2 : documentsToMerge.keySet())
+                {
+                    if (d.getIdent().equals(d2.getIdent()))
+                    {
+                        Document currentRoot = d;
+                        Document mergeRoot = documentsToMerge.get(d2);
+                        mergedDocuments.put(mergeRoot, currentRoot);
+                        resources.add(currentRoot.eResource());
+                    }
+                }
+            }
+            //TODO end mod
+            RequirementDifferenceCalculator calculator = new RequirementDifferenceCalculator(mergedDocuments, isPartialImport, monitor);
+            if (isImpactAnalysis) {
+                new MergeImpactProcessor(resources, calculator).processImpact();
+            }
+            MergeRequirement.INSTANCE.merge(calculator,isPartialImport,monitor);
             RequirementProject rp = RequirementUtils.getRequirementProject(requirementResource2);
             rp.setIdentifier(projectName);
             rp.setShortDescription(projectDescription);

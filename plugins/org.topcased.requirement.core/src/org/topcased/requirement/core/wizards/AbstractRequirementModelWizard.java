@@ -143,8 +143,9 @@ public abstract class AbstractRequirementModelWizard extends Wizard implements I
         }
         if (pageMerge != null && pageMerge.isPageComplete())
         {
-            // Save is partial preference
+            // Save is partial and perform analysis preferences
             RequirementCorePlugin.getDefault().getPreferenceStore().setValue(MergeRequirementModelWizardPage.PREFERENCE_FOR_IS_PARTIAL, pageMerge.isPartialImport());
+            RequirementCorePlugin.getDefault().getPreferenceStore().setValue(MergeRequirementModelWizardPage.PREFERENCE_FOR_PERFORM_IMPACT_ANALYSIS, pageMerge.isImpactAnalysis());
             projectName = pageMerge.getProjectFd();
             projectDescription = pageMerge.getProjectDescrFd();
             result = createModelFile();
@@ -204,6 +205,7 @@ public abstract class AbstractRequirementModelWizard extends Wizard implements I
      * implemented.
      * 
      * @return the AbstractRequirementModelOperation to perform
+     * @throws InterruptedException 
      */
-    protected abstract AbstractRequirementModelOperation getOperation();
+    protected abstract AbstractRequirementModelOperation getOperation() throws InterruptedException;
 }

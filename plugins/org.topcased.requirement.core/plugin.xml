@@ -10,6 +10,7 @@
    <extension-point id="upstreamstyles" name="Upstream Requirement Styles" schema="schema/upstreamstyles.exsd"/>
    <extension-point id="mergeRequirementProcessor" name="Merge Requirement Processor" schema="schema/mergeRequirementProcessor.exsd"/>
    <extension-point id="supportingEditors" name="Editors supporting the requirements" schema="schema/supportingEditors.exsd"/>
+   <extension-point id="importDocument" name="importDocument" schema="schema/importDocument.exsd"/>
    <extension
          point="org.eclipse.core.runtime.preferences">
       <initializer
@@ -497,12 +498,6 @@
             commandId="org.topcased.requirement.core.addDoc">
          <activeWhen>
             <and>
-               <with
-                     variable="activeWorkbenchWindow.activePerspective">
-                  <equals
-                        value="org.topcased.requirement.core.perspective">
-                  </equals>
-               </with>
                <with
                      variable="requirementActionsEnablement.hasRequirementModel">
                   <equals
