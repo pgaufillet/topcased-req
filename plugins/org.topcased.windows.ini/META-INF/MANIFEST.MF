@@ -15,4 +15,5 @@ Bundle-ClassPath: .,
  lib/ini4j-0.5.2.jar
 Export-Package: org.ini4j,
  org.ini4j.spi,
+ org.topcased.windows.ini,
  org.topcased.windows.ini.actions
