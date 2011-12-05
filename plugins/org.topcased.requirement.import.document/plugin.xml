@@ -20,5 +20,10 @@
             instance="org.topcased.requirement.document.checker.DescriptionChecker">
       </checker>
    </extension>
+   <extension
+         point="org.topcased.requirement.core.importDocument">
+      <importDocument
+            class="org.topcased.requirement.document.doc2model.Doc2ModelImportDocument"></importDocument>
+   </extension>
 
 </plugin>

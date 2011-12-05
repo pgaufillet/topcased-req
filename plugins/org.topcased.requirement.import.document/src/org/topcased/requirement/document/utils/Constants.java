@@ -33,5 +33,11 @@ public interface Constants
 
     /** The METAMODE l_ uml. */
     public static String METAMODEL_UML = "http://www.eclipse.org/uml2/3.0.0/UML";
+    
+    /** the column type */
+    public static String COLUMN_TYPE = "column";
+    
+    /** the regex or style type */
+    public static String REGEX_STYLE_TYPE = "regexOrStyle";
 
 }
