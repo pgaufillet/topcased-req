@@ -122,7 +122,7 @@ public class RegexItemProvider
         }
         if (((Regex)object).getExpression() != null)
         {
-            label += label.isEmpty() ? ((Regex)object).getExpression(): " " + ((Regex)object).getExpression();
+            label += label.length() == 0 ? ((Regex)object).getExpression(): " " + ((Regex)object).getExpression();
         }
         return label == null || label.length() == 0 ?
             getString("_UI_Regex_type"):

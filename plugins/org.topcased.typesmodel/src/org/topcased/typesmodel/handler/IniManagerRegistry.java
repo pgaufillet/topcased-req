@@ -280,7 +280,7 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
      */
     private void manageElement(Map<String, Type> allElements, Entry<String, String> element, EClass eclass, EStructuralFeature feature)
     {
-        if (element.getValue().isEmpty())
+        if (element.getValue() == null || element.getValue().length() == 0)
         {
             Activator.getDefault().getLog().log(new Status(Status.WARNING, Activator.PLUGIN_ID, "the element : " + element.getKey() + "=" + element.getValue() + " was ignored because it's empty")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             return;
@@ -400,7 +400,7 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
         section.add("Names", typesFile.getName().replace(".types", ""));
         section = ini.add(typesFile.getName().replace(".types", ""));
         section.add("Hierarchical", hierarchical);
-        if (endText != null && !endText.isEmpty())
+        if (endText != null && endText.length() > 0)
         {
             section.add("EndText", endText);
         }
@@ -425,7 +425,7 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
             {
                 Column column = (Column) type;
                 section.add("Column"+column.getNumber()+"Name", column.getName());
-                if (column.getExpression() != null && !column.getExpression().isEmpty())
+                if (column.getExpression() != null && column.getExpression().length() > 0)
                 {
                     section.add("Column"+column.getNumber(), column.getExpression());
                 }
@@ -435,7 +435,7 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
                 Style style = (Style) type;
                 section.add("Style" + i + "Name", style.getName());
                 section.add("Style" + i + "Label", style.getLabel());
-                if (style.getExpression() != null  && !style.getExpression().isEmpty())
+                if (style.getExpression() != null  && style.getExpression().length() > 0)
                 {
                     section.add("Style" + i, style.getExpression());
                 }
