@@ -1,6 +1,5 @@
 package org.topcased.requirement.core.extensions;
 
-import java.util.NavigableSet;
 import java.util.TreeSet;
 
 import org.eclipse.core.runtime.CoreException;
@@ -24,7 +23,7 @@ public class ImportDocumentManager extends AbstractExtensionManager
     private static ImportDocumentManager manager;
     
     /** Map of the graphical model file extension patterns and the document importer for it */
-    public NavigableSet<IImportDocument> setImporter;
+    public TreeSet<IImportDocument> setImporter;
     
     
     /**
