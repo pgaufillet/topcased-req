@@ -190,4 +190,18 @@
          version="0.0.0"
          unpack="false"/>
 
+   <plugin
+         id="org.topcased.requirement.teamhistory"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.topcased.requirement.teamhistory.svn"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
 </feature>

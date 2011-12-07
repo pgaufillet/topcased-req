@@ -114,7 +114,7 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
         viewer = new TreeViewer(mainComposite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
         viewer.setUseHashlookup(true);
         viewer.getTree().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-        viewer.setContentProvider(ctPvd = new UpstreamRequirementContentProvider(RequirementUtils.getAdapterFactory()));
+        viewer.setContentProvider(ctPvd = new UpstreamRequirementContentProvider(RequirementUtils.getAdapterFactory(), getEditingDomain()));
 
         UpstreamRequirementLabelProvider labelProvider = new UpstreamRequirementLabelProvider(RequirementUtils.getAdapterFactory(getEditingDomain()));
         ILabelDecorator labelDecorator = RequirementCorePlugin.getDefault().getWorkbench().getDecoratorManager().getLabelDecorator();

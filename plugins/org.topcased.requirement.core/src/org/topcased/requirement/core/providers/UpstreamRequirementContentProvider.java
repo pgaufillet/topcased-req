@@ -12,14 +12,16 @@
  ******************************************************************************/
 package org.topcased.requirement.core.providers;
 
+import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.topcased.requirement.UpstreamModel;
 import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.utils.impact.RequirementTimestampMonitor;
-import org.topcased.requirement.impl.UpstreamModelImpl;
 
 import ttm.Requirement;
 
@@ -33,14 +35,18 @@ public class UpstreamRequirementContentProvider extends AdapterFactoryContentPro
 {
     private Boolean isFlat;
 
+    protected EditingDomain editingDomain;
+
     /**
      * Constructor
      * 
      * @param adapterFactory The adapter factory to use for this provider
+     * @param editingDomain
      */
-    public UpstreamRequirementContentProvider(AdapterFactory adapterFactory)
+    public UpstreamRequirementContentProvider(AdapterFactory adapterFactory, EditingDomain editingDomain)
     {
         super(adapterFactory);
+        this.editingDomain = editingDomain;
         setIsFlat(false);
     }
 
@@ -87,19 +93,27 @@ public class UpstreamRequirementContentProvider extends AdapterFactoryContentPro
     @Override
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
     {
-        if (newInput != null && newInput instanceof UpstreamModelImpl) {
-            UpstreamModelImpl model = (UpstreamModelImpl) newInput;
-            try
+        //Upon opening upstream requirement view, check whether we need to perform impact analysis
+        if (newInput != null && newInput instanceof UpstreamModel)
+        {
+            UpstreamModel model = (UpstreamModel) newInput;
+            if (!model.eResource().getURI().equals(model.eContainer().eResource().getURI()))
             {
-                RequirementTimestampMonitor.onLoad(model.getDocuments());
-            }
-            catch (InterruptedException e)
-            {
-                RequirementCorePlugin.log(e);
+                try
+                {
+                    Command command = new RequirementTimestampMonitor().getOnLoadCommand(model);
+                    if (command != null)
+                    {
+                        editingDomain.getCommandStack().execute(command);
+                    }
+                }
+                catch (InterruptedException e)
+                {
+                    RequirementCorePlugin.log(e);
+                }
             }
         }
         super.inputChanged(viewer, oldInput, newInput);
     }
 
-    
 }

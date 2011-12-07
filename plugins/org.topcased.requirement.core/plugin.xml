@@ -499,6 +499,12 @@
          <activeWhen>
             <and>
                <with
+                     variable="activeWorkbenchWindow.activePerspective">
+                  <equals
+                        value="org.topcased.requirement.core.perspective">
+                  </equals>
+               </with>
+               <with
                      variable="requirementActionsEnablement.hasRequirementModel">
                   <equals
                         value="true">
@@ -514,6 +520,18 @@
       <handler
             class="org.topcased.requirement.core.handlers.ToggleTrashRequirementFilterHandler"
             commandId="org.topcased.requirement.core.filterTrashRequirements">
+      </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.ImpactAnalysisHandler"
+            commandId="org.topcased.requirement.core.impactAnalysis">
+         <activeWhen>
+            <with
+                  variable="activeEditor">
+               <test
+                     property="org.topcased.requirement.core.activeEditorEnablesRequirements">
+               </test>
+            </with>
+         </activeWhen>
       </handler>
    </extension>
    <extension
@@ -1210,6 +1228,16 @@
                   </visibleWhen>
                </command>
             </menuContribution>
+            <menuContribution
+                  allPopups="false"
+                  locationURI="popup:org.eclipse.team.ui.GenericHistoryView">
+               <command
+                     commandId="org.topcased.requirement.core.impactAnalysis"
+                     icon="icons/update.gif"
+                     label="Requirement Impact Analysis"
+                     style="push">
+               </command>
+            </menuContribution>
      </extension>
    <extension
          point="org.eclipse.ui.services">
@@ -1585,6 +1613,10 @@
                class="org.eclipse.ui.handlers.RegistryToggleState"
                id="org.eclipse.ui.commands.toggleState">
          </state>
+      </command>
+      <command
+            id="org.topcased.requirement.core.impactAnalysis"
+            name="Requirement Impact Analysis">
       </command>
    </extension>
    <extension

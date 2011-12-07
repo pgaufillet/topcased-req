@@ -11,17 +11,18 @@
 package org.topcased.requirement.core.providers;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.Requirement;
 import org.topcased.requirement.RequirementProject;
+import org.topcased.requirement.core.utils.impact.RequirementTimestampMonitor;
 import org.topcased.requirement.core.views.current.model.CurrentRequirementReference;
 import org.topcased.requirement.core.views.current.model.CurrentRequirementReferenceContainer;
 
@@ -80,7 +81,33 @@ public class CurrentRequirementContentProvider extends AdapterFactoryContentProv
          */
         if (object instanceof RequirementProject)
         {
-            ArrayList<Object> result = new ArrayList<Object>(Arrays.asList(super.getElements(object)));
+            ArrayList<Object> result = new ArrayList<Object>();
+            // filter out timestamp annotations
+            for (Object element : super.getElements(object))
+            {
+                if (element instanceof EAnnotation)
+                {
+                    EAnnotation annotation = (EAnnotation) element;
+                    boolean addToResult = true;
+                    for (String key : annotation.getDetails().keySet())
+                    {
+                        if (RequirementTimestampMonitor.HASH_KEY.equals(key))
+                        {
+                            addToResult = false;
+                            break;
+                        }
+                    }
+                    if (addToResult)
+                    {
+                        result.add(annotation);
+                    }
+                }
+                else
+                {
+                    result.add(element);
+                }
+            }
+
             RequirementProject reqProject = (RequirementProject) object;
             CurrentRequirementReferenceContainer container = currentRequirementReferenRegistry.get(reqProject);
             if (container == null)

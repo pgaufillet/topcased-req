@@ -15,6 +15,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -31,6 +33,7 @@ import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.topcased.facilities.util.EMFMarkerUtil;
@@ -52,30 +55,32 @@ import ttm.Text;
 
 /**
  * Analyzes the impact of a merge on the given resources<br>
- * An initial impact map is created with the resources passed to the constructor, 
- * and actual impacts are later processed by using the RequirementDifferenceCalculator
- * Update : 29 november 2011<br>
+ * An initial impact map is created with the resources passed to the constructor, and actual impacts are later processed
+ * by using the RequirementDifferenceCalculator Update : 29 november 2011<br>
  * 
  * @author <a href="mailto:philippe.roland@atos.net">Philippe ROLAND</a>
  * @since Topcased 5.2.0
  */
-public class MergeImpactProcessor {
-    
-    private List<Resource> resources;
-    
+public class MergeImpactProcessor
+{
+
+    private Set<URI> resources;
+
     private Map<EObject, List<EObject>> impact;
-    
+
     private RequirementDifferenceCalculator calc;
-    
-    public MergeImpactProcessor(List<Resource> resources, RequirementDifferenceCalculator calculator) {
+
+    public MergeImpactProcessor(Set<URI> resources, ResourceSet resourceSet, RequirementDifferenceCalculator calculator)
+    {
         impact = new HashMap<EObject, List<EObject>>();
         calc = calculator;
         this.resources = resources;
-        for(Resource resource : this.resources) {
-            buildImpactRequirementMap(resource);
+        for (URI uri : this.resources)
+        {
+            buildImpactRequirementMap(resourceSet.getResource(uri, false));
         }
     }
-    
+
     /**
      * Builds the impact map.
      * 
@@ -96,7 +101,7 @@ public class MergeImpactProcessor {
             }
         }
     }
-    
+
     /**
      * In charge of filling the impact analysis map.
      * 
@@ -144,10 +149,13 @@ public class MergeImpactProcessor {
         }
         temp.add(value);
     }
-    
-    
-    public void processImpact() {
-        //Moves
+
+    /**
+     * Proceeds with impact analysis processing
+     */
+    public void processImpact()
+    {
+        // Moves
         for (DiffElement diff : calc.getMoves())
         {
             if (diff instanceof MoveModelElement)
@@ -160,7 +168,7 @@ public class MergeImpactProcessor {
                 }
             }
         }
-        //Additions
+        // Additions
         for (DiffElement diff : calc.getAdditions())
         {
             if (diff instanceof ModelElementChangeLeftTarget)
@@ -173,7 +181,7 @@ public class MergeImpactProcessor {
                 }
             }
         }
-        //Modifications
+        // Modifications
         for (DiffElement diff : calc.getChanges())
         {
             if (diff instanceof UpdateAttribute)
@@ -191,7 +199,7 @@ public class MergeImpactProcessor {
                 }
             }
         }
-        //Deletion
+        // Deletion
         for (DiffElement diff : calc.getDeletions())
         {
             if (diff instanceof ModelElementChangeRightTarget)
@@ -218,7 +226,7 @@ public class MergeImpactProcessor {
             }
         }
     }
-    
+
     /**
      * Processes potential impacts between upstream requirements changes and current requirements defined into the
      * requirement model.<br>
@@ -232,24 +240,48 @@ public class MergeImpactProcessor {
     private void processElementImpact(DiffElement diff, EObject element)
     {
         AdapterFactoryLabelProvider factory = new AdapterFactoryLabelProvider(RequirementUtils.getAdapterFactory());
-        if (impact.containsKey(element))
+        List<EObject> foundList = null;
+        if (element instanceof ttm.Requirement)
         {
-            for (EObject linkTo : impact.get(element))
+            // when deleting a requirement the objects are not equal in a Java sense -> check idents
+            ttm.Requirement requirement = (ttm.Requirement) element;
+            for (EObject impactObject : impact.keySet())
+            {
+                if (impactObject instanceof ttm.Requirement)
+                {
+                    ttm.Requirement impactRequirement = (ttm.Requirement) impactObject;
+                    if (impactRequirement.getIdent().equals(requirement.getIdent()))
+                    {
+                        foundList = impact.get(impactRequirement);
+                        break;
+                    }
+                }
+            }
+        }
+        else if (impact.containsKey(element))
+        {
+            foundList = impact.get(element);
+        }
+        if (foundList != null)
+        {
+            for (EObject linkTo : foundList)
             {
                 try
                 {
                     if (linkTo.eContainer() != null && linkTo.eContainer() instanceof CurrentRequirement)
                     {
                         CurrentRequirement currentReq = (CurrentRequirement) linkTo.eContainer();
-                        Document d = getDocument(currentReq); 
+                        Document d = getDocument(currentReq);
                         currentReq.setImpacted(true);
                         // the information is logged
                         String requirement = factory.getText(currentReq);
                         String reason = factory.getText(diff);
-                        if(d != null) {
+                        if (d != null)
+                        {
                             addMarkerFor(linkTo, requirement + " : " + reason, IMarker.SEVERITY_WARNING, d); //$NON-NLS-1$
                         }
-                        else {
+                        else
+                        {
                             EMFMarkerUtil.addMarkerFor(linkTo, requirement + " : " + reason, IMarker.SEVERITY_WARNING); //$NON-NLS-1$
                         }
                     }
@@ -260,17 +292,24 @@ public class MergeImpactProcessor {
                 }
             }
         }
+        // if the old resource does not exist, element is intangible and should not be modified
         else
         {
             try
             {
                 String infoMsg = factory.getText(diff);
                 Document document = getDocument(element);
-                if(document != null) {
-                    addMarkerFor(element, infoMsg, IMarker.SEVERITY_INFO, document);
+                Document newDocument = null;
+                for (Entry<Document, Document> entry : calc.getMergedDocuments().entrySet())
+                {
+                    if (entry.getValue().equals(document))
+                    {
+                        newDocument = entry.getKey();
+                    }
                 }
-                else {
-                    EMFMarkerUtil.addMarkerFor(element, infoMsg, IMarker.SEVERITY_INFO);
+                if (newDocument != null)
+                {
+                    EMFMarkerUtil.addMarkerFor(newDocument, infoMsg, IMarker.SEVERITY_INFO);
                 }
             }
             catch (CoreException e)
@@ -279,57 +318,71 @@ public class MergeImpactProcessor {
             }
         }
     }
-    
+
     /**
      * Get the document of the element, element can be current requirement, upstream requirement or document
+     * 
      * @param element the element from which found document
      * @return the document of element
      */
-    private Document getDocument(EObject element) {
+    private Document getDocument(EObject element)
+    {
         ttm.Requirement upstream = null;
         Document d = null;
-        if(element instanceof Requirement) {
+        if (element instanceof Requirement)
+        {
             upstream = getUpstreamRequirement((Requirement) element);
         }
-        if(element instanceof ttm.Requirement) {
+        if (element instanceof ttm.Requirement)
+        {
             upstream = (ttm.Requirement) element;
         }
-        if(upstream != null) {
+        if (upstream != null)
+        {
             EObject parent = upstream.eContainer();
-            while(parent != null && !(parent instanceof Document)) {
+            while (parent != null && !(parent instanceof Document))
+            {
                 parent = parent.eContainer();
             }
-            if(parent instanceof Document) {
+            if (parent instanceof Document)
+            {
                 d = (Document) parent;
             }
         }
-        if(element instanceof Document) {
+        if (element instanceof Document)
+        {
             d = (Document) element;
         }
         return d;
     }
-    
+
     /**
      * Get the upstream requirement with the link attribute of the current requirement
+     * 
      * @param element the current requirement
      * @return the upstream requirement link to the element
      */
-    private ttm.Requirement getUpstreamRequirement(Requirement element) {
+    private ttm.Requirement getUpstreamRequirement(Requirement element)
+    {
         List<Attribute> atts = element.getAttribute();
-        for(Attribute a : atts) {
-            if(a instanceof AttributeLink) {
-                AttributeLink link = (AttributeLink)a;
+        for (Attribute a : atts)
+        {
+            if (a instanceof AttributeLink)
+            {
+                AttributeLink link = (AttributeLink) a;
                 Object o = link.getValue();
-                if(o instanceof ttm.Requirement) {
+                if (o instanceof ttm.Requirement)
+                {
                     return (ttm.Requirement) o;
                 }
             }
         }
         return null;
     }
-    
+
     /**
      * Add marker for element toLog with document impacted at location
+     * 
      * @param toLog the element impacted
      * @param message the message
      * @param severity the severity
@@ -350,7 +403,7 @@ public class MergeImpactProcessor {
         }
         else
         {
-            StringBuffer uriMessage = new StringBuffer() ;
+            StringBuffer uriMessage = new StringBuffer();
             int error = IStatus.ERROR;
             if (toLog.eResource() != null && toLog.eResource().getURI() != null)
             {
@@ -358,22 +411,23 @@ public class MergeImpactProcessor {
                 uriMessage.append(" : ").append(uri.toString());
                 if (!(uri.isFile() || uri.isPlatform()))
                 {
-                    error = IStatus.WARNING ;
+                    error = IStatus.WARNING;
                 }
             }
-            IStatus status = new Status(error, RequirementCorePlugin.PLUGIN_ID,error, "Cannot create marker from a null resource" + uriMessage.toString(),null); //$NON-NLS-1$
+            IStatus status = new Status(error, RequirementCorePlugin.PLUGIN_ID, error, "Cannot create marker from a null resource" + uriMessage.toString(), null); //$NON-NLS-1$
             throw new CoreException(status);
         }
     }
-    
+
     /**
      * Find resource for toResolve
+     * 
      * @param toResolve the resource to find
      * @return the resource find or null
      */
     private static IResource findResourceFor(Resource toResolve)
     {
-        if(toResolve != null)
+        if (toResolve != null)
         {
             String relativePath = toResolve.getURI().toPlatformString(true);
             if (relativePath != null)

@@ -49,55 +49,38 @@ public class RequirementDifferenceCalculator
     private EList<DiffElement> additions;
 
     private EList<DiffElement> moves;
-    
-    private boolean isPartialImport = false;
-    
-    
-    public RequirementDifferenceCalculator(Resource current, Resource toMerge, IProgressMonitor monitor) throws InterruptedException{
-        //Added support for single-Resource merges in MergeRequirement, but this is not currently in use
-        deletions = new BasicEList<DiffElement>();
-        changes = new BasicEList<DiffElement>();
-        additions = new BasicEList<DiffElement>();
-        moves = new BasicEList<DiffElement>();
-        
-        // Call the EMF comparison service
-        Map<String, Object> options = new HashMap<String, Object>();
-        options.put(MatchOptions.OPTION_IGNORE_ID, false);
-        options.put(MatchOptions.OPTION_IGNORE_XMI_ID, true);
-        options.put(MatchOptions.OPTION_PROGRESS_MONITOR, monitor);
-        EObject currentRoot = RequirementUtils.getUpstreamModel(current);
-        EObject mergeRoot = RequirementUtils.getUpstreamModel(toMerge);
-        MatchModel match = MatchService.doMatch(mergeRoot, currentRoot, options);// currentRoot, mergeRoot, options);
-        DiffModel diff = DiffService.doDiff(match);
-        for (DiffElement aDifference : diff.getOwnedElements())
-        {
-            buildDifferenceLists(aDifference);
-        }
-    }
-    
-    public RequirementDifferenceCalculator(Map<Document, Document> mergedDocuments, boolean isPartialImport, IProgressMonitor monitor) throws InterruptedException{
-        this.isPartialImport = isPartialImport;
-        
-        deletions = new BasicEList<DiffElement>();
-        changes = new BasicEList<DiffElement>();
-        additions = new BasicEList<DiffElement>();
-        moves = new BasicEList<DiffElement>();
-        
-        // Call the EMF comparison service
-        Map<String, Object> options = new HashMap<String, Object>();
-        options.put(MatchOptions.OPTION_IGNORE_ID, false);
-        options.put(MatchOptions.OPTION_IGNORE_XMI_ID, true);
-        options.put(MatchOptions.OPTION_PROGRESS_MONITOR, monitor);
-        
-        for(Entry<Document,Document> entry : mergedDocuments.entrySet()) {
-            ContainerAssignerFactory factory = new ContainerAssignerFactory();
-            ContainerAssigner container1 = factory.create(entry.getKey());
-            Resource r1dummy = new XMIResourceImpl();
-            r1dummy.getContents().add(entry.getKey());
 
-            ContainerAssigner container2 = factory.create(entry.getValue());
+    private boolean isPartialImport = false;
+
+    private Map<Document, Document> mergedDocuments;
+
+    public RequirementDifferenceCalculator(Map<Document, Document> mergedDocuments, boolean isPartialImport, IProgressMonitor monitor) throws InterruptedException
+    {
+        this.isPartialImport = isPartialImport;
+
+        deletions = new BasicEList<DiffElement>();
+        changes = new BasicEList<DiffElement>();
+        additions = new BasicEList<DiffElement>();
+        moves = new BasicEList<DiffElement>();
+
+        this.mergedDocuments = mergedDocuments;
+
+        // Call the EMF comparison service
+        Map<String, Object> options = new HashMap<String, Object>();
+        options.put(MatchOptions.OPTION_IGNORE_ID, false);
+        options.put(MatchOptions.OPTION_IGNORE_XMI_ID, true);
+        options.put(MatchOptions.OPTION_PROGRESS_MONITOR, monitor);
+
+        for (Entry<Document, Document> entry : mergedDocuments.entrySet())
+        {
+            ContainerAssignerFactory factory = new ContainerAssignerFactory();
+            ContainerAssigner container1 = factory.create(entry.getValue());
+            Resource r1dummy = new XMIResourceImpl();
+            r1dummy.getContents().add(entry.getValue());
+
+            ContainerAssigner container2 = factory.create(entry.getKey());
             Resource r2dummy = new XMIResourceImpl();
-            r2dummy.getContents().add(entry.getValue());
+            r2dummy.getContents().add(entry.getKey());
 
             MatchModel match = MatchService.doMatch(entry.getKey(), entry.getValue(), options);
             DiffModel diff = DiffService.doDiff(match);
@@ -126,14 +109,14 @@ public class RequirementDifferenceCalculator
 
             if (difference.getKind().equals(DifferenceKind.DELETION))
             {
-                //Do not add deletion if difference element is a requirement
-                //and this is a partial import
+                // Do not add deletion if difference element is a requirement
+                // and this is a partial import
                 EObject removedElement = ((ModelElementChangeRightTarget) difference).getRightElement();
                 if (!(removedElement instanceof ttm.Requirement) || !isPartialImport)
                 {
                     deletions.add(difference);
                 }
-                
+
             }
 
             if (difference.getKind().equals(DifferenceKind.CHANGE))
@@ -176,5 +159,10 @@ public class RequirementDifferenceCalculator
     {
         return moves;
     }
-    
+
+    public Map<Document, Document> getMergedDocuments()
+    {
+        return mergedDocuments;
+    }
+
 }

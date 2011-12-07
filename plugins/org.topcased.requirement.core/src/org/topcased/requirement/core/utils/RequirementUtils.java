@@ -666,6 +666,14 @@ public final class RequirementUtils
         {
             return project.getUpstreamModel();
         }
+        else
+        {
+            EObject tmp = getRoot(requirement, UpstreamModel.class);
+            if (tmp instanceof UpstreamModel)
+            {
+                return (UpstreamModel) tmp ;
+            }
+        }
         return null;
     }
 

@@ -1,129 +1,242 @@
+/***********************************************************************************************************************
+ * Copyright (c) 2011 Atos.
+ * 
+ * All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse
+ * Public License v1.0 which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: Philippe ROLAND (Atos) - initial API and implementation
+ * 
+ **********************************************************************************************************************/
 package org.topcased.requirement.core.utils.impact;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.command.AbstractCommand;
+import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 import org.topcased.requirement.RequirementProject;
-import org.topcased.requirement.core.utils.RequirementDifferenceCalculator;
-import org.topcased.requirement.core.utils.RequirementUtils;
+import org.topcased.requirement.UpstreamModel;
+import org.topcased.requirement.core.RequirementCorePlugin;
+import org.topcased.requirement.core.internal.Messages;
+import org.topcased.requirement.teamhistory.TeamHistoryException;
+import org.topcased.requirement.teamhistory.TeamHistoryManager;
 
-import ttm.Document;
-
-//TODO copyright, documentation
+/**
+ * Handles timestamping of upstreamModels, offering impact analysis when changed are detected
+ * 
+ * @author proland
+ */
 public class RequirementTimestampMonitor
 {
-    private static final String LASTANALYZED_SUFFIX = "LA";
-    private static final String LASTUSERCHOICE_SUFFIX = "LUC";
-    
-    public static void onLoad(List<Document> documents) throws InterruptedException {
-        //All documents are assumed to have the same project
-        RequirementProject project = RequirementUtils.getRequirementProject(documents.get(0).eResource());
-        if (project == null) {
-            return;
+    public static final String HASH_KEY = "LastAnalyzedHash";
+
+    public static final String REVISION_KEY = "LastAnalyzedRevision";
+
+    /**
+     * Checks model hash and latest revision. Offers to lead user to history view for impact analysis as needed
+     * 
+     * @param model the upstream model to check
+     * @return in some special cases (first load) returns Command to be executed, saving current hash and revision in
+     *         the model's annotations
+     * @throws InterruptedException
+     */
+    public Command getOnLoadCommand(UpstreamModel model) throws InterruptedException
+    {
+        if (model == null)
+        {
+            return null;
         }
-        List<Document> foundDiff = new ArrayList<Document>();
-        for (Document document : documents) {
-            long timestamp = document.eResource().getTimeStamp();
-            EAnnotation annotation  = findTimeStampAnnotation(document);
-            //if no hash-bearing annotation is found, create hash
-            if (annotation == null) {
-                updateCreateTimestamp(document, String.valueOf(timestamp), String.valueOf(timestamp));
-            }
-            //otherwise, if hash is different, offer impact analysis
-            else if (!annotation.getDetails().get(getDocumentLastAnalyzedKey(document)).equals(String.valueOf(timestamp))
-                    && !annotation.getDetails().get(getDocumentLastUserChoiceKey(document)).equals(String.valueOf(timestamp))) {
-                foundDiff.add(document);
-            }
+        RequirementProject project = (RequirementProject) model.eContainer();
+        String hash = hashModel(model);
+        IFile modelFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(model.eResource().getURI().toPlatformString(true)));
+        String currentRevision = getRevision(modelFile);
+        EAnnotation annotation = findHashAnnotation(project);
+
+        // if no hash-bearing annotation is found, create one
+        if (annotation == null)
+        {
+            return new UpdateCreateHashCommand(project, hash, currentRevision);
         }
-        
-        //Ensure this is not called again even if no analysis is then made
-        for (Document document : foundDiff) {
-            long timestamp = document.eResource().getTimeStamp();
-            updateCreateTimestamp(document, null, String.valueOf(timestamp));
-        }
-        
-        //TODO add wizard page and retrieve these variables
-        //map contains documents to analyze as key and the version to compare against as value
-        Map<Document,Document> docsToAnalyze = new HashMap<Document,Document>();
-        for(Document document : foundDiff) {
-            docsToAnalyze.put(document, document);
-        }
-        //TODO end todo
-        
-        List<Resource> resources = new ArrayList<Resource>();
-        for (Document document : docsToAnalyze.keySet()) {
-            //update timestamp
-            long timestamp = document.eResource().getTimeStamp();
-            updateCreateTimestamp(document, String.valueOf(timestamp), String.valueOf(timestamp));
-            resources.add(docsToAnalyze.get(document).eResource());
-        }
-        RequirementDifferenceCalculator calculator = new RequirementDifferenceCalculator(docsToAnalyze, false, null);
-        new MergeImpactProcessor(resources, calculator).processImpact();
-        
-    }
-    
-    public static void onMerge(Document document) {
-        long timestamp = document.eResource().getTimeStamp();
-        List<Document> upstreams = RequirementUtils.getUpstreamDocuments(document.eResource());
-        //if an upstream document exists, update stamp
-        if(!upstreams.isEmpty()) {
-            updateCreateTimestamp(document, String.valueOf(timestamp), String.valueOf(timestamp));
-        }
-    }
-    
-    private static EAnnotation findTimeStampAnnotation(Document document) {
-        RequirementProject project = RequirementUtils.getRequirementProject(document.eResource());
-        for (EAnnotation annotation : project.getEAnnotations()) {
-            if (annotation.getDetails().keySet().contains(getDocumentLastAnalyzedKey(document))) {
-                return annotation;
-            }
-            
+        // otherwise, if hash is different, offer impact analysis
+        else if (!annotation.getDetails().get(HASH_KEY).equals(hash))
+        {
+            String lastAnalyzedRevision = annotation.getDetails().get(REVISION_KEY);
+            askUser(model, lastAnalyzedRevision, currentRevision);
         }
         return null;
     }
-    
+
     /**
-     * Sets document hash within an annotation. If null, creates annotation beforehand
-     * @param document the document to hash
+     * Hashes the model
+     * 
+     * @param model the model
+     * @return the model's MD5 hash
      */
-    public static void updateCreateTimestamp(Document document, String lastAnalyzed, String lastUserChecked) {
-        
-        RequirementProject project = RequirementUtils.getRequirementProject(document.eResource());
-        EAnnotation annotation  = findTimeStampAnnotation(document);
-        //if no hash-bearing annotation is found, create hash
-        if (annotation == null) {
+    public static String hashModel(UpstreamModel model)
+    {
+        Resource r = model.eResource();
+        InputStream stream = null;
+        try
+        {
+            stream = r.getResourceSet().getURIConverter().createInputStream(r.getURI());
+        }
+        catch (IOException e2)
+        {
+            RequirementCorePlugin.log(e2);
+        }
+        String md5Str = null;
+        try
+        {
+            final MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] buf = new byte[10240];
+            while (stream.read(buf) >= 0)
+            {
+                md.update(buf);
+            }
+            stream.close();
+            byte[] res = md.digest();
+            StringBuffer hexString = new StringBuffer();
+            for (int i = 0; i < res.length; i++)
+            {
+                hexString.append(Integer.toHexString(0xFF & res[i]));
+            }
+            md5Str = hexString.toString();
+        }
+        catch (NoSuchAlgorithmException e1)
+        {
+            RequirementCorePlugin.log(e1);
+        }
+        catch (IOException e)
+        {
+            RequirementCorePlugin.log(e);
+        }
+        return md5Str;
+    }
+
+    private void askUser(UpstreamModel model, String lastAnalyzedRevision, String currentRevision)
+    {
+        Resource modelResource = model.eResource();
+        IFile modelFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(modelResource.getURI().toPlatformString(true)));
+        if (MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.getString("ImpactAnalysisDialog.title"),
+                String.format(Messages.getString("ImpactAnalysisDialog.message"), lastAnalyzedRevision)))
+        {
+
+            showHistoryView(modelFile, lastAnalyzedRevision);
+        }
+    }
+
+    private static EAnnotation findHashAnnotation(RequirementProject project)
+    {
+        for (EAnnotation annotation : project.getEAnnotations())
+        {
+            if (annotation.getDetails().keySet().contains(HASH_KEY))
+            {
+                return annotation;
+            }
+
+        }
+        return null;
+    }
+
+    private String getRevision(IResource resource)
+    {
+        try
+        {
+            return TeamHistoryManager.getCurrentRevisionLabel(resource);
+        }
+        catch (TeamHistoryException e)
+        {
+            RequirementCorePlugin.log(e);
+            return null;
+        }
+    }
+
+    private void showHistoryView(IResource modelResource, String lastAnalyzedRevision)
+    {
+        IResource r = (IResource) modelResource;
+        try
+        {
+            TeamHistoryManager.showHistoryView(r, TeamHistoryManager.getCurrentRevisionLabel(r));
+        }
+        catch (TeamHistoryException e)
+        {
+            RequirementCorePlugin.log(e);
+        }
+    }
+
+    /**
+     * Creates or updates the project's upstream model's annotations to include the given hash and revision
+     * 
+     * @param project the project
+     * @param modelHash the hash
+     * @param revision the revision
+     */
+    public static void createUpdateAnnotation(RequirementProject project, String modelHash, String revision)
+    {
+        EAnnotation annotation = findHashAnnotation(project);
+        // if no hash-bearing annotation is found, create hash
+        if (annotation == null)
+        {
             EcoreFactory factory = EcoreFactory.eINSTANCE;
             annotation = factory.createEAnnotation();
             project.getEAnnotations().add(annotation);
         }
-        if(lastAnalyzed != null) {
-            annotation.getDetails().put(getDocumentLastAnalyzedKey(document), lastAnalyzed);
+        if (modelHash != null)
+        {
+            annotation.getDetails().put(HASH_KEY, modelHash);
         }
-        if(lastUserChecked != null) {
-            annotation.getDetails().put(getDocumentLastUserChoiceKey(document), lastUserChecked);
+        if (revision != null)
+        {
+            annotation.getDetails().put(REVISION_KEY, revision);
         }
     }
-    
-    /**
-     * Calculates String key that will contain the document's hash.
-     * @param document the document
-     * @return the hash key
-     */
-    public static String getDocumentLastAnalyzedKey(Document document) {
-        return document.getIdent()+LASTANALYZED_SUFFIX;
-    }
-    
-    /**
-     * Calculates String key that will contain the document's hash.
-     * @param document the document
-     * @return the hash key
-     */
-    public static String getDocumentLastUserChoiceKey(Document document) {
-        return document.getIdent()+LASTUSERCHOICE_SUFFIX;
+
+    private class UpdateCreateHashCommand extends AbstractCommand
+    {
+
+        private RequirementProject project;
+
+        private String modelHash;
+
+        private String revision;
+
+        public UpdateCreateHashCommand(RequirementProject project, String modelHash, String revision)
+        {
+            this.project = project;
+            this.modelHash = modelHash;
+            this.revision = revision;
+        }
+
+        @Override
+        public boolean canExecute()
+        {
+            return true;
+        }
+
+        public void execute()
+        {
+            createUpdateAnnotation(project, modelHash, revision);
+        }
+
+        public void redo()
+        {
+        }
+
+        public void undo()
+        {
+        }
+
     }
 }

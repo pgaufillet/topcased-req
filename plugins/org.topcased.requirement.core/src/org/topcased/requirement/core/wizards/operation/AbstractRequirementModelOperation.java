@@ -13,8 +13,10 @@ package org.topcased.requirement.core.wizards.operation;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -218,9 +220,8 @@ public abstract class AbstractRequirementModelOperation extends WorkspaceModifyO
                 requirementResource2 = domain.getResourceSet().getResource(
                         URI.createPlatformResourceURI(requirementModelFile.getFullPath().addFileExtension(RequirementResource.FILE_EXTENSION).toString(), true), true);
             }
-            //TODO begin mod
             List<Document> upstreamDocuments = RequirementUtils.getUpstreamDocuments(requirementResource2);
-            List<Resource> resources = new ArrayList<Resource>();
+            Set<URI> resources = new HashSet<URI>();
             Map<Document,Document> mergedDocuments = new HashMap<Document, Document>();
             for (int i = 0; i < upstreamDocuments.size(); i++)
             {
@@ -232,14 +233,13 @@ public abstract class AbstractRequirementModelOperation extends WorkspaceModifyO
                         Document currentRoot = d;
                         Document mergeRoot = documentsToMerge.get(d2);
                         mergedDocuments.put(mergeRoot, currentRoot);
-                        resources.add(currentRoot.eResource());
+                        resources.add(currentRoot.eResource().getURI());
                     }
                 }
             }
-            //TODO end mod
             RequirementDifferenceCalculator calculator = new RequirementDifferenceCalculator(mergedDocuments, isPartialImport, monitor);
             if (isImpactAnalysis) {
-                new MergeImpactProcessor(resources, calculator).processImpact();
+                new MergeImpactProcessor(resources, requirementResource2.getResourceSet(), calculator).processImpact();
             }
             MergeRequirement.INSTANCE.merge(calculator,isPartialImport,monitor);
             RequirementProject rp = RequirementUtils.getRequirementProject(requirementResource2);
