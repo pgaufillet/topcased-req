@@ -167,7 +167,7 @@ public class ImpactAnalysisHandler extends AbstractHandler
                         InputStream is = TeamHistoryManager.getStreamFromHistoryEntry(fileInput, obj);
                         ResourceSet rs = editingDomain.getResourceSet();
                         monitor.worked(1);
-                        Resource oldModelResource = rs.createResource(URI.createURI("dummy://dummy")); //$NON-NLS-1$
+                        Resource oldModelResource = rs.createResource(URI.createURI("dummy://dummy.requirement")); //$NON-NLS-1$
                         try
                         {
                             Map<Object, Object> map = new HashMap<Object, Object>();
@@ -230,6 +230,18 @@ public class ImpactAnalysisHandler extends AbstractHandler
         // recover selections
         Set<URI> resources = new HashSet<URI>();
         Map<Document, Document> documentsToImpactAnalyze = new HashMap<Document, Document>();
+        
+        //Check to see if one of the results is read only. Fail if so.
+        for(Object object : objects) 
+        {
+            if (isReadOnly(object)) 
+            {
+                Display.getDefault().syncExec(new ImpactErrorRunnable(Messages.getString("ImpactAnalysisHandler.1"))); //$NON-NLS-1$
+                RequirementCorePlugin.log("ImpactAnalysisHandler.1");
+                return;
+            }
+        }
+        
         for (Object object : objects)
         {
             if (object instanceof IFile)

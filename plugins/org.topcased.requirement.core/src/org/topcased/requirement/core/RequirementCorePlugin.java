@@ -116,6 +116,12 @@ public class RequirementCorePlugin extends AbstractUIPlugin
     {
         log(e.getMessage(), IStatus.ERROR, e);
     }
+    
+    public static void log(String m)
+    {
+        IStatus status = new Status(IStatus.ERROR, getId(), m);
+        getDefault().getLog().log(status);
+    }
 
     /**
      * Logs a message with a given level into the PDE Error Log
