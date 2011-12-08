@@ -15,6 +15,7 @@ package org.topcased.requirement.core.preferences;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.topcased.requirement.core.RequirementCorePlugin;
+import org.topcased.requirement.core.wizards.MergeRequirementModelWizardPage;
 
 /**
  * This class contributes to the <code>org.eclipse.core.runtime.preferences</code> extension point.
@@ -50,5 +51,6 @@ public class RequirementPreferenceInitializer extends AbstractPreferenceInitiali
         store.setDefault(RequirementNamingConstants.REQUIREMENT_COUNTING_ALGORITHM, RequirementNamingConstants.DEFAULT_COUNTING_ALGORITHM);
         store.setDefault(RequirementPreferenceConstants.DISPLAY_CURRENT_DECORATOR, false);
         store.setDefault(RequirementPreferenceConstants.IMPORT_REQUIREMENT_WITHOUT_DIALOG, false);
+        store.setDefault(MergeRequirementModelWizardPage.PREFERENCE_FOR_PERFORM_IMPACT_ANALYSIS, true);
     }
 }

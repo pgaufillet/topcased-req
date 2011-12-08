@@ -214,12 +214,13 @@ public abstract class AbstractRequirementModelOperation extends WorkspaceModifyO
             IEditorPart editor = RequirementUtils.getCurrentEditor();
             IEditorServices services = SupportingEditorsManager.getInstance().getServices(editor);
             Resource requirementResource2 = null;
-            if (services != null)
+            if (services == null)
             {
-                EditingDomain domain = services.getEditingDomain(editor);
-                requirementResource2 = domain.getResourceSet().getResource(
-                        URI.createPlatformResourceURI(requirementModelFile.getFullPath().addFileExtension(RequirementResource.FILE_EXTENSION).toString(), true), true);
+                // TODO ERROR
             }
+            EditingDomain domain = services.getEditingDomain(editor);
+            requirementResource2 = domain.getResourceSet().getResource(
+                    URI.createPlatformResourceURI(requirementModelFile.getFullPath().addFileExtension(RequirementResource.FILE_EXTENSION).toString(), true), true);
             List<Document> upstreamDocuments = RequirementUtils.getUpstreamDocuments(requirementResource2);
             Set<URI> resources = new HashSet<URI>();
             Map<Document,Document> mergedDocuments = new HashMap<Document, Document>();
@@ -233,11 +234,14 @@ public abstract class AbstractRequirementModelOperation extends WorkspaceModifyO
                         Document currentRoot = d;
                         Document mergeRoot = documentsToMerge.get(d2);
                         mergedDocuments.put(mergeRoot, currentRoot);
+                        // it seems it is useless but it is a set so it is okay
                         resources.add(currentRoot.eResource().getURI());
+                        resources.add(requirementResource2.getURI());
                     }
                 }
             }
-            RequirementDifferenceCalculator calculator = new RequirementDifferenceCalculator(mergedDocuments, isPartialImport, monitor);
+            RequirementDifferenceCalculator calculator = new RequirementDifferenceCalculator(mergedDocuments, isPartialImport);
+            calculator.calculate(monitor);
             if (isImpactAnalysis) {
                 new MergeImpactProcessor(resources, requirementResource2.getResourceSet(), calculator).processImpact();
             }

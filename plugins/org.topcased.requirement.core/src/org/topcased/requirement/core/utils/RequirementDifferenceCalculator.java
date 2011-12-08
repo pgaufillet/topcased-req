@@ -54,7 +54,7 @@ public class RequirementDifferenceCalculator
 
     private Map<Document, Document> mergedDocuments;
 
-    public RequirementDifferenceCalculator(Map<Document, Document> mergedDocuments, boolean isPartialImport, IProgressMonitor monitor) throws InterruptedException
+    public RequirementDifferenceCalculator(Map<Document, Document> mergedDocuments, boolean isPartialImport)
     {
         this.isPartialImport = isPartialImport;
 
@@ -64,12 +64,14 @@ public class RequirementDifferenceCalculator
         moves = new BasicEList<DiffElement>();
 
         this.mergedDocuments = mergedDocuments;
-
+    }
+    
+    public void calculate(IProgressMonitor monitor) throws InterruptedException {
         // Call the EMF comparison service
-        Map<String, Object> options = new HashMap<String, Object>();
-        options.put(MatchOptions.OPTION_IGNORE_ID, false);
-        options.put(MatchOptions.OPTION_IGNORE_XMI_ID, true);
-        options.put(MatchOptions.OPTION_PROGRESS_MONITOR, monitor);
+        HashMap<String, Object> matchOptions = new HashMap<String, Object>();
+        matchOptions.put(MatchOptions.OPTION_IGNORE_ID, false);
+        matchOptions.put(MatchOptions.OPTION_IGNORE_XMI_ID, true);
+        matchOptions.put(MatchOptions.OPTION_PROGRESS_MONITOR, monitor);
 
         for (Entry<Document, Document> entry : mergedDocuments.entrySet())
         {
@@ -82,7 +84,7 @@ public class RequirementDifferenceCalculator
             Resource r2dummy = new XMIResourceImpl();
             r2dummy.getContents().add(entry.getKey());
 
-            MatchModel match = MatchService.doMatch(entry.getKey(), entry.getValue(), options);
+            MatchModel match = MatchService.doMatch(entry.getKey(), entry.getValue(), matchOptions);
             DiffModel diff = DiffService.doDiff(match);
             for (DiffElement aDifference : diff.getOwnedElements())
             {

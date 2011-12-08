@@ -40,6 +40,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
@@ -50,6 +51,8 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.team.ui.history.IHistoryView;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
@@ -153,7 +156,7 @@ public class ImpactAnalysisHandler extends AbstractHandler
                 if (services == null)
                 {
                     Display.getDefault().syncExec(new ImpactErrorRunnable(Messages.getString("ImpactAnalysisHandler.2"))); //$NON-NLS-1$
-                    RequirementCorePlugin.log("ImpactAnalysisHandler.2");
+                    RequirementCorePlugin.log("ImpactAnalysisHandler.2"); //$NON-NLS-1$
                     return Status.CANCEL_STATUS;
                 }
                 EditingDomain editingDomain = services.getEditingDomain(editor);
@@ -166,8 +169,11 @@ public class ImpactAnalysisHandler extends AbstractHandler
                     {
                         InputStream is = TeamHistoryManager.getStreamFromHistoryEntry(fileInput, obj);
                         ResourceSet rs = editingDomain.getResourceSet();
+                        // rs.getResourceFactoryRegistry().getExtensionToFactoryMap().put(RequirementResource.FILE_EXTENSION,
+                        // new RequirementResourceFactoryImpl());
                         monitor.worked(1);
                         Resource oldModelResource = rs.createResource(URI.createURI("dummy://dummy.requirement")); //$NON-NLS-1$
+
                         try
                         {
                             Map<Object, Object> map = new HashMap<Object, Object>();
@@ -197,7 +203,7 @@ public class ImpactAnalysisHandler extends AbstractHandler
                             else
                             {
                                 Display.getDefault().syncExec(new ImpactErrorRunnable(Messages.getString("ImpactAnalysisHandler.4"))); //$NON-NLS-1$
-                                RequirementCorePlugin.log("ImpactAnalysisHandler.4");
+                                RequirementCorePlugin.log("ImpactAnalysisHandler.4"); //$NON-NLS-1$
                             }
                             monitor.done();
                         }
@@ -227,21 +233,30 @@ public class ImpactAnalysisHandler extends AbstractHandler
 
     private void processDialogResults(Object[] objects, Resource modelResource, Resource oldModelResource, EditingDomain domain)
     {
+
         // recover selections
         Set<URI> resources = new HashSet<URI>();
         Map<Document, Document> documentsToImpactAnalyze = new HashMap<Document, Document>();
-        
-        //Check to see if one of the results is read only. Fail if so.
-        for(Object object : objects) 
+
+        // Check to see if one of the results is read only. Fail if so.
+        for (Object object : objects)
         {
-            if (isReadOnly(object)) 
+            if (isReadOnly(object))
             {
                 Display.getDefault().syncExec(new ImpactErrorRunnable(Messages.getString("ImpactAnalysisHandler.1"))); //$NON-NLS-1$
-                RequirementCorePlugin.log("ImpactAnalysisHandler.1");
+                RequirementCorePlugin.log("ImpactAnalysisHandler.1"); //$NON-NLS-1$
                 return;
             }
         }
-        
+
+        ConfirmationRunnable confirm = new ConfirmationRunnable();
+        // inform the user this will make irreversible changes
+        Display.getDefault().syncExec(confirm);
+        if (!confirm.confirm)
+        {
+            return;
+        }
+
         for (Object object : objects)
         {
             if (object instanceof IFile)
@@ -263,10 +278,9 @@ public class ImpactAnalysisHandler extends AbstractHandler
                             if (oldDoc.getIdent().equals(newDoc.getIdent()))
                             {
                                 documentsToImpactAnalyze.put(newDoc, oldDoc);
-                                if (!resources.contains(checkedResource.getURI()))
-                                {
-                                    resources.add(checkedResource.getURI());
-                                }
+                                // Unoptimized, but this is a set so OK
+                                resources.add(checkedResource.getURI());
+                                resources.add(RequirementUtils.getUpstreamModel(checkedResource).eResource().getURI());
                                 break;
                             }
                         }
@@ -282,7 +296,7 @@ public class ImpactAnalysisHandler extends AbstractHandler
         else
         {
             Display.getDefault().syncExec(new ImpactErrorRunnable(Messages.getString("ImpactAnalysisHandler.7"))); //$NON-NLS-1$
-            RequirementCorePlugin.log("ImpactAnalysisHandler.7");
+            RequirementCorePlugin.log("ImpactAnalysisHandler.7"); //$NON-NLS-1$
         }
     }
 
@@ -328,7 +342,8 @@ public class ImpactAnalysisHandler extends AbstractHandler
             RequirementDifferenceCalculator calculator;
             try
             {
-                calculator = new RequirementDifferenceCalculator(documentsToImpactAnalyze, false, null);
+                calculator = new RequirementDifferenceCalculator(documentsToImpactAnalyze, false);
+                calculator.calculate(null);
                 new MergeImpactProcessor(resources, oldModelResource.getResourceSet(), calculator).processImpact();
                 ResourceSet set = oldModelResource.getResourceSet();
                 oldModelResource.unload();
@@ -342,6 +357,23 @@ public class ImpactAnalysisHandler extends AbstractHandler
                 String currentRevision = TeamHistoryManager.getCurrentRevisionLabel(modelFile);
                 RequirementTimestampMonitor.createUpdateAnnotation(project, hash, currentRevision);
 
+                // inform the user upon operation end
+                Display.getDefault().syncExec(new Runnable()
+                {
+                    public void run()
+                    {
+                        MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.getString("ImpactAnalysisHandler.0"), Messages.getString("ImpactAnalysisHandler.14")); //$NON-NLS-1$ //$NON-NLS-2$
+
+                        try
+                        {
+                            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("org.eclipse.ui.views.ProblemView"); //$NON-NLS-1$
+                        }
+                        catch (PartInitException e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+                });
             }
             catch (InterruptedException e)
             {
@@ -371,7 +403,6 @@ public class ImpactAnalysisHandler extends AbstractHandler
         public FileSelectionRunnable(Resource modelResource)
         {
             this.modelResource = modelResource;
-
         }
 
         public Object[] getDialogResult()
@@ -450,7 +481,7 @@ public class ImpactAnalysisHandler extends AbstractHandler
 
         public ImpactErrorRunnable(String reason)
         {
-            this.message = ""; //$NON-NLS-1$
+            this.message = Messages.getString("ImpactAnalysisHandler.12"); //$NON-NLS-1$
             this.reason = reason;
         }
 
@@ -459,6 +490,17 @@ public class ImpactAnalysisHandler extends AbstractHandler
             ErrorDialog newDialog = new ErrorDialog(Display.getDefault().getActiveShell(), Messages.getString("ImpactAnalysisHandler.13"), message, new Status(IStatus.ERROR, //$NON-NLS-1$
                     RequirementCorePlugin.getId(), reason), 4);
             newDialog.open();
+        }
+    }
+
+    private class ConfirmationRunnable implements Runnable
+    {
+        private boolean confirm;
+
+        public void run()
+        {
+            confirm = MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.getString("ImpactAnalysisHandler.3"), //$NON-NLS-1$
+                    Messages.getString("ImpactAnalysisHandler.10")); //$NON-NLS-1$
         }
     }
 }

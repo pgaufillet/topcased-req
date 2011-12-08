@@ -1234,7 +1234,7 @@
                <command
                      commandId="org.topcased.requirement.core.impactAnalysis"
                      icon="icons/update.gif"
-                     label="Requirement Impact Analysis"
+                     label="Launch requirement impact analysis from this revision"
                      style="push">
                </command>
             </menuContribution>
@@ -1616,7 +1616,7 @@
       </command>
       <command
             id="org.topcased.requirement.core.impactAnalysis"
-            name="Requirement Impact Analysis">
+            name="Launch requirement impact analysis from this revision">
       </command>
    </extension>
    <extension

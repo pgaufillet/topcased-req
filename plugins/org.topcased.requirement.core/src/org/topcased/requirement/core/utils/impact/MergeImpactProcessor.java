@@ -67,12 +67,14 @@ public class MergeImpactProcessor
     private Set<URI> resources;
 
     private Map<EObject, List<EObject>> impact;
+    private Map<String, EObject> ids;
 
     private RequirementDifferenceCalculator calc;
 
     public MergeImpactProcessor(Set<URI> resources, ResourceSet resourceSet, RequirementDifferenceCalculator calculator)
     {
         impact = new HashMap<EObject, List<EObject>>();
+        ids = new HashMap<String, EObject>();
         calc = calculator;
         this.resources = resources;
         for (URI uri : this.resources)
@@ -142,6 +144,11 @@ public class MergeImpactProcessor
         {
             temp = new ArrayList<EObject>();
             impact.put(key, temp);
+            if (key instanceof ttm.Requirement)
+            {
+                ttm.Requirement req = (ttm.Requirement) key;
+                ids.put(req.getIdent(), req);
+            }
         }
         else
         {
@@ -244,18 +251,11 @@ public class MergeImpactProcessor
         if (element instanceof ttm.Requirement)
         {
             // when deleting a requirement the objects are not equal in a Java sense -> check idents
-            ttm.Requirement requirement = (ttm.Requirement) element;
-            for (EObject impactObject : impact.keySet())
+            ttm.Requirement ttm = (ttm.Requirement) element ;
+            EObject eObject = ids.get(ttm.getIdent());
+            if (eObject != null)
             {
-                if (impactObject instanceof ttm.Requirement)
-                {
-                    ttm.Requirement impactRequirement = (ttm.Requirement) impactObject;
-                    if (impactRequirement.getIdent().equals(requirement.getIdent()))
-                    {
-                        foundList = impact.get(impactRequirement);
-                        break;
-                    }
-                }
+                foundList = impact.get(eObject);
             }
         }
         else if (impact.containsKey(element))
@@ -292,7 +292,7 @@ public class MergeImpactProcessor
                 }
             }
         }
-        // if the old resource does not exist, element is intangible and should not be modified
+        // if the old resource does not exist, element is intangible and should not be modified -> find new one
         else
         {
             try
