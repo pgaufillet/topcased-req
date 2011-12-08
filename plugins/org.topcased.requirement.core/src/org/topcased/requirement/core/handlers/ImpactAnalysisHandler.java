@@ -153,6 +153,8 @@ public class ImpactAnalysisHandler extends AbstractHandler
                 if (services == null)
                 {
                     Display.getDefault().syncExec(new ImpactErrorRunnable(Messages.getString("ImpactAnalysisHandler.2"))); //$NON-NLS-1$
+                    RequirementCorePlugin.log("ImpactAnalysisHandler.2");
+                    return Status.CANCEL_STATUS;
                 }
                 EditingDomain editingDomain = services.getEditingDomain(editor);
                 if (sel instanceof IStructuredSelection)
@@ -195,12 +197,14 @@ public class ImpactAnalysisHandler extends AbstractHandler
                             else
                             {
                                 Display.getDefault().syncExec(new ImpactErrorRunnable(Messages.getString("ImpactAnalysisHandler.4"))); //$NON-NLS-1$
+                                RequirementCorePlugin.log("ImpactAnalysisHandler.4");
                             }
                             monitor.done();
                         }
                         catch (IOException e)
                         {
                             Display.getDefault().syncExec(new ImpactErrorRunnable(Messages.getString("ImpactAnalysisHandler.5"))); //$NON-NLS-1$
+                            RequirementCorePlugin.log(e);
                             monitor.done();
                         }
 
@@ -208,6 +212,7 @@ public class ImpactAnalysisHandler extends AbstractHandler
                     catch (TeamHistoryException e)
                     {
                         Display.getDefault().syncExec(new ImpactErrorRunnable(Messages.getString("ImpactAnalysisHandler.6"))); //$NON-NLS-1$
+                        RequirementCorePlugin.log(e);
                         monitor.done();
                     }
 
@@ -265,6 +270,7 @@ public class ImpactAnalysisHandler extends AbstractHandler
         else
         {
             Display.getDefault().syncExec(new ImpactErrorRunnable(Messages.getString("ImpactAnalysisHandler.7"))); //$NON-NLS-1$
+            RequirementCorePlugin.log("ImpactAnalysisHandler.7");
         }
     }
 
@@ -328,10 +334,12 @@ public class ImpactAnalysisHandler extends AbstractHandler
             catch (InterruptedException e)
             {
                 Display.getDefault().syncExec(new ImpactErrorRunnable(Messages.getString("ImpactAnalysisHandler.8"))); //$NON-NLS-1$
+                RequirementCorePlugin.log(e);
             }
             catch (TeamHistoryException e)
             {
                 Display.getDefault().syncExec(new ImpactErrorRunnable(Messages.getString("ImpactAnalysisHandler.9"))); //$NON-NLS-1$
+                RequirementCorePlugin.log(e);
             }
         }
 
