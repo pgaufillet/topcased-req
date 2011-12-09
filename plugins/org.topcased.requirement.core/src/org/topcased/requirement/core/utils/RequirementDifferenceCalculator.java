@@ -75,6 +75,8 @@ public class RequirementDifferenceCalculator
 
         for (Entry<Document, Document> entry : mergedDocuments.entrySet())
         {
+            entry.getKey().setIdent(entry.getValue().getIdent());
+
             ContainerAssignerFactory factory = new ContainerAssignerFactory();
             ContainerAssigner container1 = factory.create(entry.getValue());
             Resource r1dummy = new XMIResourceImpl();
