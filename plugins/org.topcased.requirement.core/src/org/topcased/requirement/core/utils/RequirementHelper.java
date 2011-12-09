@@ -467,6 +467,11 @@ public final class RequirementHelper
         String source = ""; //$NON-NLS-1$
         IRequirementCountingAlgorithm algorithm = RequirementCountingAlgorithmManager.getInstance().getCountingAlgorithm(ComputeRequirementIdentifier.getCurrentAlgorithm());
 
+        if (algorithm == null)
+        {
+            throw new RuntimeException(String.format("algorithm not found : %s",ComputeRequirementIdentifier.getCurrentAlgorithm()));
+        }
+        
         // Handle the create from upstream case
         if (upstream != null)
         {
