@@ -499,12 +499,6 @@
          <activeWhen>
             <and>
                <with
-                     variable="activeWorkbenchWindow.activePerspective">
-                  <equals
-                        value="org.topcased.requirement.core.perspective">
-                  </equals>
-               </with>
-               <with
                      variable="requirementActionsEnablement.hasRequirementModel">
                   <equals
                         value="true">
