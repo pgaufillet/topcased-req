@@ -112,7 +112,7 @@ public class PageController
             if (iter instanceof ImportRequirementWizardPageSelectFormat)
             {
                 ImportRequirementWizardPageSelectFormat page = (ImportRequirementWizardPageSelectFormat) iter;
-                page.pageChanged(InputDocument);
+                page.pageChanged(InputDocument, modelType);
             }
         }
     }
@@ -124,6 +124,15 @@ public class PageController
     public String getModelType()
     {
         return modelType;
+    }
+    
+    /**
+     * Sets the type model element
+     * 
+     */
+    public void setModelType(String modelType)
+    {
+        this.modelType = modelType;
     }
     
     /**

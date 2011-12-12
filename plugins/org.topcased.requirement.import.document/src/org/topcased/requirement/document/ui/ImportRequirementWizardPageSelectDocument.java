@@ -13,7 +13,11 @@
  *****************************************************************************/
 package org.topcased.requirement.document.ui;
 
+import java.io.File;
+
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -305,6 +309,7 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
         {
             oldModelType = modelTypeFromPref;
             modelType = modelTypeFromPref;
+            ((ImportRequirementWizard)getWizard()).getPageController().setModelType(modelType);
             if (Constants.REQUIREMENT_EXTENSION.equals(modelType))
             {
                 radioButtonModelType.setselection(0);
@@ -344,6 +349,37 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
                     {
                         stereotypeComponent.setValueText(this.stereotype.getName());
                     }
+                }
+            }
+        }
+        
+        File currentFileSystem;
+        if (inputDocument != null)
+        {
+            IFile currentFile;
+            if (inputDocument.contains("file:"))
+            {
+                currentFileSystem = new File(URI.createURI(inputDocument).toFileString());
+                ((ImportRequirementWizard)getWizard()).setCurrentFileSystem(currentFileSystem);
+            }
+            else if (inputDocument.contains("platform:"))
+            {
+                currentFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(URI.createURI(inputDocument).toPlatformString(true)));
+                ((ImportRequirementWizard)getWizard()).setCurrentFile(currentFile);
+                if (currentFile != null)
+                {
+                    currentFileSystem = currentFile.getLocation().toFile();
+                    ((ImportRequirementWizard)getWizard()).setCurrentFileSystem(currentFileSystem);
+                }
+            }
+            else
+            {
+                currentFile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(URI.createURI(inputDocument).toFileString()));
+                ((ImportRequirementWizard)getWizard()).setCurrentFile(currentFile);
+                if (currentFile != null)
+                {
+                    currentFileSystem = currentFile.getLocation().toFile();
+                    ((ImportRequirementWizard)getWizard()).setCurrentFileSystem(currentFileSystem);
                 }
             }
         }

@@ -51,6 +51,7 @@ import org.topcased.requirement.document.elements.RecognizedElement;
 import org.topcased.requirement.document.elements.RecognizedTree;
 import org.topcased.requirement.document.elements.Regex;
 import org.topcased.requirement.document.elements.Style;
+import org.topcased.requirement.document.utils.Constants;
 import org.topcased.requirement.document.utils.DocumentStyleBrowser;
 import org.topcased.requirement.document.utils.Messages;
 import org.topcased.requirement.document.utils.Serializer;
@@ -839,8 +840,9 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
      * Performs initialization of the page at each changes in the wizard
      * 
      * @param inputDocument
+     * @param modelType 
      */
-    public void pageChanged(String inputDocument)
+    public void pageChanged(String inputDocument, String modelType)
     {
     	if (init) {
 			init = false;
@@ -905,14 +907,27 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
         descriptionComposite.setVisible(false);
         descriptionComposite.setText("");
 
-        String endText = ((ImportRequirementWizard)getWizard()).getPageController().getEndText();
-        if (endText != null)
+        if (Constants.REQUIREMENT_EXTENSION.equals(modelType))
         {
-            descriptionCheck.setSelection(true);
-            descriptionComposite.setEnabled(true);
-            descriptionComposite.setVisible(true);
-            descriptionComposite.setText(endText);
+            descriptionCheck.setVisible(true);
+            descriptionCheck.setEnabled(true);
+            
+            String endText = ((ImportRequirementWizard)getWizard()).getPageController().getEndText();
+            if (endText != null)
+            {
+                descriptionCheck.setSelection(true);
+                descriptionComposite.setEnabled(true);
+                descriptionComposite.setVisible(true);
+                descriptionComposite.setText(endText);
+            }
+        } else
+        {
+            descriptionCheck.setVisible(false);
+            descriptionCheck.setEnabled(false);
+            descriptionComposite.setEnabled(false);
+            descriptionComposite.setVisible(false);
         }
+        
         updateWizard();
         
         if (inputDocument != null)

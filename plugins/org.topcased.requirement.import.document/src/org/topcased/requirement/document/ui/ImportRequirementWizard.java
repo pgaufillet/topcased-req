@@ -536,6 +536,7 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
     public void setCurrentFileSystem(File currentFileSystem)
     {
         this.currentFileSystem = currentFileSystem;
+        page2.setDocumentFile(currentFileSystem);
     }
 
     /**
