@@ -22,6 +22,7 @@ import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.DifferenceKind;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
+import org.eclipse.emf.compare.diff.metamodel.UpdateAttribute;
 import org.eclipse.emf.compare.diff.service.DiffService;
 import org.eclipse.emf.compare.match.MatchOptions;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
@@ -32,6 +33,7 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.topcased.requirement.core.utils.ContainerAssigner.ContainerAssignerFactory;
 
 import ttm.Document;
+import ttm.TtmPackage;
 
 /**
  * Calculates differences between two requirement resources<br>
@@ -75,8 +77,6 @@ public class RequirementDifferenceCalculator
 
         for (Entry<Document, Document> entry : mergedDocuments.entrySet())
         {
-            entry.getKey().setIdent(entry.getValue().getIdent());
-
             ContainerAssignerFactory factory = new ContainerAssignerFactory();
             ContainerAssigner container1 = factory.create(entry.getValue());
             Resource r1dummy = new XMIResourceImpl();
@@ -125,7 +125,18 @@ public class RequirementDifferenceCalculator
 
             if (difference.getKind().equals(DifferenceKind.CHANGE))
             {
-                changes.add(difference);
+                // we always compare equivalent documents ident is not relevant 
+                if (difference instanceof UpdateAttribute)
+                {
+                    UpdateAttribute update = (UpdateAttribute) difference;
+                    //Workaround? setting the ident before the doMatch is done yeilded strange results...
+                    if (!(update.getRightElement() instanceof Document && update.getLeftElement() instanceof Document &&
+                            update.getAttribute() != null && TtmPackage.Literals.IDENTIFIED_ELEMENT__IDENT.equals(update.getAttribute()))) 
+                    {
+                        changes.add(difference);
+                    }
+                }
+                
             }
 
             if (difference.getKind().equals(DifferenceKind.ADDITION))
