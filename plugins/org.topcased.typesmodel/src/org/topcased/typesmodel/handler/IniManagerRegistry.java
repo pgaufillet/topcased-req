@@ -122,11 +122,14 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
 
     private Pattern attribute = Pattern.compile(Messages.AttributeRegex);
     private Pattern attributeName = Pattern.compile(Messages.AttributeName);
+    private Pattern attributeIsText = Pattern.compile("Attribute\\d+IsText");
     private Pattern style = Pattern.compile(Messages.StyleRegex);
     private Pattern styleName = Pattern.compile(Messages.StyleName);
     private Pattern styleLabel = Pattern.compile(Messages.StyleLabel);
+    private Pattern styleIsText = Pattern.compile("Style\\d+IsText");
     private Pattern column = Pattern.compile(Messages.ColumnRegex);
     private Pattern columnName = Pattern.compile(Messages.ColumnName);
+    private Pattern columnIsText = Pattern.compile("Column\\d+IsText");
     private Pattern requirement = Pattern.compile(Messages.RequirementRegex);
     private Pattern requirementStyle = Pattern.compile(Messages.RequirementStyle);
     private Pattern requirementColumn = Pattern.compile(Messages.RequirementColumn);
@@ -166,6 +169,10 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
                     {
                         manageElement(allElements, element,InittypesPackage.Literals.REGEX,InittypesPackage.Literals.REGEX__EXPRESSION);
                     }
+                    else if (attributeIsText.matcher(element.getKey()).matches())
+                    {
+                        manageElement(allElements, element,InittypesPackage.Literals.REGEX,InittypesPackage.Literals.TYPE__IS_TEXT);
+                    }
                     else if (attributeName.matcher(element.getKey()).matches())
                     {
                         manageElement(allElements, element,InittypesPackage.Literals.REGEX,InittypesPackage.Literals.TYPE__NAME);
@@ -174,6 +181,10 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
                     {
                         manageElement(allElements, element,InittypesPackage.Literals.COLUMN,InittypesPackage.Literals.REGEX__EXPRESSION);
                     }
+                    else if (columnIsText.matcher(element.getKey()).matches())
+                    {
+                        manageElement(allElements, element,InittypesPackage.Literals.COLUMN,InittypesPackage.Literals.TYPE__IS_TEXT);
+                    }
                     else if (columnName.matcher(element.getKey()).matches())
                     {
                         manageElement(allElements, element,InittypesPackage.Literals.COLUMN,InittypesPackage.Literals.TYPE__NAME);
@@ -181,6 +192,10 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
                     else if (style.matcher(element.getKey()).matches())
                     {
                         manageElement(allElements, element,InittypesPackage.Literals.STYLE,InittypesPackage.Literals.REGEX__EXPRESSION);
+                    }
+                    else if (styleIsText.matcher(element.getKey()).matches())
+                    {
+                        manageElement(allElements, element,InittypesPackage.Literals.STYLE,InittypesPackage.Literals.TYPE__IS_TEXT);
                     }
                     else if (styleName.matcher(element.getKey()).matches())
                     {
@@ -286,16 +301,27 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
             return;
         }
         String elementId = element.getKey().replace("Name", ""); //$NON-NLS-1$ //$NON-NLS-2$
+        elementId = elementId.replace("IsText", ""); //$NON-NLS-1$ //$NON-NLS-2$
         elementId = elementId.replace("Label", "");//$NON-NLS-1$ //$NON-NLS-2$
         if (!allElements.containsKey(elementId))
         {
             Regex regex = create(eclass);
-            regex.eSet(feature,element.getValue());
+            if (InittypesPackage.Literals.TYPE__IS_TEXT.equals(feature))
+            {
+                regex.eSet(feature,Boolean.parseBoolean(element.getValue()));
+            } else {
+                regex.eSet(feature,element.getValue());   
+            }
             allElements.put(elementId, regex);
         }
-        else if (allElements.containsKey(elementId) && (allElements.get(elementId)).eGet(feature) == null)
+        else if (allElements.containsKey(elementId))
         {
-            (allElements.get(elementId)).eSet(feature,element.getValue());
+            if (InittypesPackage.Literals.TYPE__IS_TEXT.equals(feature))
+            {
+                (allElements.get(elementId)).eSet(feature,Boolean.parseBoolean(element.getValue()));
+            } else {
+                (allElements.get(elementId)).eSet(feature,element.getValue());
+            }
         }
         if (allElements.get(elementId) instanceof Column)
         {
@@ -425,16 +451,19 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
             {
                 Column column = (Column) type;
                 section.add("Column"+column.getNumber()+"Name", column.getName());
+                section.add("Column"+column.getNumber()+"IsText", column.isIsText());
                 if (column.getExpression() != null && column.getExpression().length() > 0)
                 {
                     section.add("Column"+column.getNumber(), column.getExpression());
                 }
+                
             }
             else if (type instanceof Style)
             {
                 Style style = (Style) type;
                 section.add("Style" + i + "Name", style.getName());
                 section.add("Style" + i + "Label", style.getLabel());
+                section.add("Style" + i + "IsText", style.isIsText());
                 if (style.getExpression() != null  && style.getExpression().length() > 0)
                 {
                     section.add("Style" + i, style.getExpression());
@@ -446,6 +475,7 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
                 Regex regex = (Regex) type;
                 section.add("Attribute" + i + "Name", regex.getName());
                 section.add("Attribute" + i, regex.getExpression());
+                section.add("Attribute" + i + "IsText", regex.isIsText());
                 i++;
             }
         }

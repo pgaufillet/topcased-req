@@ -71,6 +71,8 @@ public class TypeItemProvider
             super.getPropertyDescriptors(object);
 
             addNamePropertyDescriptor(object);
+            addIsTextPropertyDescriptor(object);
+            addIsReferencePropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
     }
@@ -94,6 +96,52 @@ public class TypeItemProvider
                  false,
                  false,
                  ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
+     * This adds a property descriptor for the Is Text feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addIsTextPropertyDescriptor(Object object)
+    {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_Type_isText_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_Type_isText_feature", "_UI_Type_type"),
+                 InittypesPackage.Literals.TYPE__IS_TEXT,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
+     * This adds a property descriptor for the Is Reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addIsReferencePropertyDescriptor(Object object)
+    {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_Type_isReference_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_Type_isReference_feature", "_UI_Type_type"),
+                 InittypesPackage.Literals.TYPE__IS_REFERENCE,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
                  null,
                  null));
     }
@@ -151,6 +199,8 @@ public class TypeItemProvider
         switch (notification.getFeatureID(Type.class))
         {
             case InittypesPackage.TYPE__NAME:
+            case InittypesPackage.TYPE__IS_TEXT:
+            case InittypesPackage.TYPE__IS_REFERENCE:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
                 return;
         }

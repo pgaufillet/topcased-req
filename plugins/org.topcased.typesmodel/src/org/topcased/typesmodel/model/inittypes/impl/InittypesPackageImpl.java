@@ -180,6 +180,26 @@ public class InittypesPackageImpl extends EPackageImpl implements InittypesPacka
      * <!-- end-user-doc -->
      * @generated
      */
+    public EAttribute getType_IsText()
+    {
+        return (EAttribute)typeEClass.getEStructuralFeatures().get(1);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getType_IsReference()
+    {
+        return (EAttribute)typeEClass.getEStructuralFeatures().get(2);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public EClass getRegex()
     {
         return regexEClass;
@@ -340,6 +360,8 @@ public class InittypesPackageImpl extends EPackageImpl implements InittypesPacka
 
         typeEClass = createEClass(TYPE);
         createEAttribute(typeEClass, TYPE__NAME);
+        createEAttribute(typeEClass, TYPE__IS_TEXT);
+        createEAttribute(typeEClass, TYPE__IS_REFERENCE);
 
         regexEClass = createEClass(REGEX);
         createEAttribute(regexEClass, REGEX__EXPRESSION);
@@ -398,6 +420,8 @@ public class InittypesPackageImpl extends EPackageImpl implements InittypesPacka
 
         initEClass(typeEClass, Type.class, "Type", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getType_Name(), ecorePackage.getEString(), "name", null, 0, 1, Type.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getType_IsText(), ecorePackage.getEBoolean(), "isText", null, 0, 1, Type.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getType_IsReference(), ecorePackage.getEBoolean(), "isReference", null, 0, 1, Type.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(regexEClass, Regex.class, "Regex", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getRegex_Expression(), ecorePackage.getEString(), "expression", null, 0, 1, Regex.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

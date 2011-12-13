@@ -196,7 +196,7 @@ public class PageController
         {
             if (Constants.REQUIREMENT_EXTENSION.equals(modelType))
             {
-                AttributeRequirement attributeTemp = new AttributeRequirement(entryset.getValue().getName(), false, "Requirement");
+                AttributeRequirement attributeTemp = new AttributeRequirement(entryset.getValue().getName(), false,entryset.getValue().isIsText(), "Requirement");
                 mapping.add(new Mapping(entryset.getKey(), attributeTemp));
                 attributes.add(attributeTemp);
             }
@@ -463,6 +463,11 @@ public class PageController
                 column.setExpression(recognizedColumn.getRegex());
                 column.setNumber(recognizedColumn.getColumn());
                 column.setName(mapping.getAttribute().getProperName());
+                if (mapping.getAttribute() instanceof AttributeRequirement)
+                {
+                    AttributeRequirement att = (AttributeRequirement) mapping.getAttribute();
+                    column.setIsText(att.isText());
+                }
                 types.add(column);
             }
             else if (mapping.getElement() instanceof Style)
@@ -472,6 +477,11 @@ public class PageController
                 style.setExpression(recognizedStyle.getRegex());
                 style.setLabel(recognizedStyle.getStyle());
                 style.setName(mapping.getAttribute().getProperName());
+                if (mapping.getAttribute() instanceof AttributeRequirement)
+                {
+                    AttributeRequirement att = (AttributeRequirement) mapping.getAttribute();
+                    style.setIsText(att.isText());
+                }
                 types.add(style);
             }
             else if (mapping.getElement() instanceof Regex)
@@ -480,6 +490,11 @@ public class PageController
                 org.topcased.typesmodel.model.inittypes.Regex regex = InittypesFactory.eINSTANCE.createRegex();
                 regex.setExpression(recognizedRegex.getRegex());
                 regex.setName(mapping.getAttribute().getProperName());
+                if (mapping.getAttribute() instanceof AttributeRequirement)
+                {
+                    AttributeRequirement att = (AttributeRequirement) mapping.getAttribute();
+                    regex.setIsText(att.isText());
+                }
                 types.add(regex);
             }
         }

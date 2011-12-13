@@ -17,6 +17,8 @@
     </genClasses>
     <genClasses ecoreClass="initTypes.ecore#//Type">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute initTypes.ecore#//Type/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute initTypes.ecore#//Type/isText"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute initTypes.ecore#//Type/isReference"/>
     </genClasses>
     <genClasses ecoreClass="initTypes.ecore#//Regex">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute initTypes.ecore#//Regex/expression"/>

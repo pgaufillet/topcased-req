@@ -108,13 +108,31 @@ public interface InittypesPackage extends EPackage
     int TYPE__NAME = 0;
 
     /**
+     * The feature id for the '<em><b>Is Text</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TYPE__IS_TEXT = 1;
+
+    /**
+     * The feature id for the '<em><b>Is Reference</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TYPE__IS_REFERENCE = 2;
+
+    /**
      * The number of structural features of the '<em>Type</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int TYPE_FEATURE_COUNT = 1;
+    int TYPE_FEATURE_COUNT = 3;
 
     /**
      * The meta object id for the '{@link org.topcased.typesmodel.model.inittypes.impl.RegexImpl <em>Regex</em>}' class.
@@ -134,6 +152,24 @@ public interface InittypesPackage extends EPackage
      * @ordered
      */
     int REGEX__NAME = TYPE__NAME;
+
+    /**
+     * The feature id for the '<em><b>Is Text</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int REGEX__IS_TEXT = TYPE__IS_TEXT;
+
+    /**
+     * The feature id for the '<em><b>Is Reference</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int REGEX__IS_REFERENCE = TYPE__IS_REFERENCE;
 
     /**
      * The feature id for the '<em><b>Expression</b></em>' attribute.
@@ -171,6 +207,24 @@ public interface InittypesPackage extends EPackage
      * @ordered
      */
     int COLUMN__NAME = REGEX__NAME;
+
+    /**
+     * The feature id for the '<em><b>Is Text</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN__IS_TEXT = REGEX__IS_TEXT;
+
+    /**
+     * The feature id for the '<em><b>Is Reference</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int COLUMN__IS_REFERENCE = REGEX__IS_REFERENCE;
 
     /**
      * The feature id for the '<em><b>Expression</b></em>' attribute.
@@ -292,6 +346,24 @@ public interface InittypesPackage extends EPackage
     int STYLE__NAME = REGEX__NAME;
 
     /**
+     * The feature id for the '<em><b>Is Text</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int STYLE__IS_TEXT = REGEX__IS_TEXT;
+
+    /**
+     * The feature id for the '<em><b>Is Reference</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int STYLE__IS_REFERENCE = REGEX__IS_REFERENCE;
+
+    /**
      * The feature id for the '<em><b>Expression</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -360,6 +432,28 @@ public interface InittypesPackage extends EPackage
      * @generated
      */
     EAttribute getType_Name();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.Type#isIsText <em>Is Text</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Is Text</em>'.
+     * @see org.topcased.typesmodel.model.inittypes.Type#isIsText()
+     * @see #getType()
+     * @generated
+     */
+    EAttribute getType_IsText();
+
+    /**
+     * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.Type#isIsReference <em>Is Reference</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Is Reference</em>'.
+     * @see org.topcased.typesmodel.model.inittypes.Type#isIsReference()
+     * @see #getType()
+     * @generated
+     */
+    EAttribute getType_IsReference();
 
     /**
      * Returns the meta object for class '{@link org.topcased.typesmodel.model.inittypes.Regex <em>Regex</em>}'.
@@ -558,6 +652,22 @@ public interface InittypesPackage extends EPackage
          * @generated
          */
         EAttribute TYPE__NAME = eINSTANCE.getType_Name();
+
+        /**
+         * The meta object literal for the '<em><b>Is Text</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute TYPE__IS_TEXT = eINSTANCE.getType_IsText();
+
+        /**
+         * The meta object literal for the '<em><b>Is Reference</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute TYPE__IS_REFERENCE = eINSTANCE.getType_IsReference();
 
         /**
          * The meta object literal for the '{@link org.topcased.typesmodel.model.inittypes.impl.RegexImpl <em>Regex</em>}' class.

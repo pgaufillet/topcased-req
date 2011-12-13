@@ -107,4 +107,9 @@ public class AttributeRequirement extends Attribute
         return c;
     }
 
+    public boolean isText()
+    {
+        return isText;
+    }
+
 }
