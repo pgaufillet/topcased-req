@@ -9,6 +9,7 @@
  * Contributors:
  *      Christophe Mertz (CS) <christophe.mertz@c-s.fr>
  *      Maxime AUDRAIN (CS) : API Changes
+ *      Olivier Mélois (Atos) <olivier.melois@atos.net> : scrollbar addition
  ******************************************************************************/
 package org.topcased.requirement.core.wizards;
 
@@ -40,6 +41,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -97,6 +99,8 @@ public class MergeRequirementModelWizardPage extends WizardPage
     private Group mainGroup;
 
     private Group docsGroup;
+
+    private ScrolledComposite scrolledComp;
 
     private Image folderImg;
 
@@ -225,7 +229,7 @@ public class MergeRequirementModelWizardPage extends WizardPage
     {
         mainGroup = new Group(parent, SWT.NONE);
         mainGroup.setLayout(new GridLayout(3, false));
-        mainGroup.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 1, 1));
+        mainGroup.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, true, 1, 1));
 
         /*
          * Selection of the existing model file
@@ -237,13 +241,20 @@ public class MergeRequirementModelWizardPage extends WizardPage
         modelText.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 2, 1));
         modelText.setEditable(false);
 
+        scrolledComp = new ScrolledComposite(mainGroup, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+        scrolledComp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1));
+        scrolledComp.setExpandHorizontal(true);
+        scrolledComp.setExpandVertical(true);
+
         /**
          * Documents group
          */
-        docsGroup = new Group(mainGroup, SWT.NONE);
+        docsGroup = new Group(scrolledComp, SWT.NONE);
         docsGroup.setText(Messages.getString("RequirementWizardPage.26"));
         docsGroup.setLayout(new GridLayout(6, false));
-        docsGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 4, 1));
+        docsGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 4, 1));
+
+        scrolledComp.setContent(docsGroup);
 
         /*
          * Selection of the requirement to import for all documents
@@ -321,6 +332,9 @@ public class MergeRequirementModelWizardPage extends WizardPage
                 documentsCombos.add(c);
             }
         }
+
+        // Displaying the scrollbar if needed.
+        scrolledComp.setMinSize(docsGroup.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 
         /*
          * Model requirement name
@@ -479,10 +493,11 @@ public class MergeRequirementModelWizardPage extends WizardPage
             c.removeAll();
             IFile f = files[0];
             documentsTexts.get(index).setText(f.getFullPath().toString());
-            if ("docx".equals(f.getFileExtension())|| "odt".equals(f.getFileExtension()) || "csv".equals(f.getFileExtension()) || "ods".equals(f.getFileExtension()) || "xlsx".equals(f.getFileExtension()))
+            if ("docx".equals(f.getFileExtension()) || "odt".equals(f.getFileExtension()) || "csv".equals(f.getFileExtension()) || "ods".equals(f.getFileExtension())
+                    || "xlsx".equals(f.getFileExtension()))
             {
                 documentsComboViewers.get(index).getCombo().setEnabled(true);
-            } 
+            }
             else
             {
                 documentsComboViewers.get(index).getCombo().setEnabled(false);
@@ -721,11 +736,12 @@ public class MergeRequirementModelWizardPage extends WizardPage
                     setErrorMessage("Please choose a document type");
                     return false;
                 }
-                
-                if (documentsTexts.get(buttonsCheck.indexOf(b)).getText() != null && (!documentsTexts.get(buttonsCheck.indexOf(b)).getText().endsWith("." + RequirementResource.FILE_EXTENSION)
-                        && !documentsTexts.get(buttonsCheck.indexOf(b)).getText().endsWith(".docx") && !documentsTexts.get(buttonsCheck.indexOf(b)).getText().endsWith(".odt")
-                        && !documentsTexts.get(buttonsCheck.indexOf(b)).getText().endsWith(".csv") && !documentsTexts.get(buttonsCheck.indexOf(b)).getText().endsWith(".ods") 
-                        && !documentsTexts.get(buttonsCheck.indexOf(b)).getText().endsWith(".xlsx")))
+
+                if (documentsTexts.get(buttonsCheck.indexOf(b)).getText() != null
+                        && (!documentsTexts.get(buttonsCheck.indexOf(b)).getText().endsWith("." + RequirementResource.FILE_EXTENSION)
+                                && !documentsTexts.get(buttonsCheck.indexOf(b)).getText().endsWith(".docx") && !documentsTexts.get(buttonsCheck.indexOf(b)).getText().endsWith(".odt")
+                                && !documentsTexts.get(buttonsCheck.indexOf(b)).getText().endsWith(".csv") && !documentsTexts.get(buttonsCheck.indexOf(b)).getText().endsWith(".ods") && !documentsTexts.get(
+                                buttonsCheck.indexOf(b)).getText().endsWith(".xlsx")))
                 {
                     setErrorMessage("Please choose a valide input file (valide file extensions : .requirement, .docx, .odt, .csv, .ods or .xlsx)");
                     return false;
@@ -876,7 +892,7 @@ public class MergeRequirementModelWizardPage extends WizardPage
      * Return all documents to merge, key are older documents and value new documents
      * 
      * @return documents to merge
-     * @throws InterruptedException 
+     * @throws InterruptedException
      */
     protected Map<Document, Document> getDocumentsToMerge()
     {
@@ -914,7 +930,7 @@ public class MergeRequirementModelWizardPage extends WizardPage
                         for (Document d : docs)
                         {
                             docsToMerge.put(inputDocuments.get(index), d);
-                            
+
                         }
                     }
                     catch (IOException e)
