@@ -310,6 +310,16 @@ public class InittypesPackageImpl extends EPackageImpl implements InittypesPacka
      * <!-- end-user-doc -->
      * @generated
      */
+    public EAttribute getDocumentType_TextRegex()
+    {
+        return (EAttribute)documentTypeEClass.getEStructuralFeatures().get(6);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public EClass getStyle()
     {
         return styleEClass;
@@ -376,6 +386,7 @@ public class InittypesPackageImpl extends EPackageImpl implements InittypesPacka
         createEAttribute(documentTypeEClass, DOCUMENT_TYPE__HIERARCHICAL);
         createEAttribute(documentTypeEClass, DOCUMENT_TYPE__TEXT_TYPE);
         createEAttribute(documentTypeEClass, DOCUMENT_TYPE__DOCUMENT_PATH);
+        createEAttribute(documentTypeEClass, DOCUMENT_TYPE__TEXT_REGEX);
 
         styleEClass = createEClass(STYLE);
         createEAttribute(styleEClass, STYLE__LABEL);
@@ -436,6 +447,7 @@ public class InittypesPackageImpl extends EPackageImpl implements InittypesPacka
         initEAttribute(getDocumentType_Hierarchical(), ecorePackage.getEBoolean(), "hierarchical", null, 0, 1, DocumentType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getDocumentType_TextType(), ecorePackage.getEString(), "textType", null, 0, 1, DocumentType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getDocumentType_DocumentPath(), ecorePackage.getEString(), "documentPath", null, 0, 1, DocumentType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getDocumentType_TextRegex(), ecorePackage.getEString(), "textRegex", null, 0, 1, DocumentType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(styleEClass, Style.class, "Style", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getStyle_Label(), ecorePackage.getEString(), "label", null, 0, 1, Style.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

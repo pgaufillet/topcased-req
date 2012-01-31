@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
@@ -135,6 +136,7 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
     private Pattern requirementColumn = Pattern.compile(Messages.RequirementColumn);
     private Pattern hierarchical = Pattern.compile(Messages.Hierarchical);
     private Pattern endText = Pattern.compile(Messages.EndText);
+    private Pattern textRegex = Pattern.compile("DescriptionRegex");
     
     
     private boolean fileAdded(IFile resource)
@@ -151,8 +153,10 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
             Map<String, Type> allElements = new HashMap<String, Type>();
             boolean hieraricalFound = false;
             boolean endTextFound = false;
+            boolean textRegexFound = false;
             Type id = null;
             String endText = null;
+            String textRegex = null;
 
             duplicata = exists(resource, type);
 
@@ -210,6 +214,11 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
                         if (id == null)
                         {
                             id = manageId(element,InittypesPackage.Literals.REGEX, InittypesPackage.Literals.REGEX__EXPRESSION);
+                        } else if (id instanceof Style)
+                        {
+                            String labelTemp = ((Style) id).getLabel();
+                            id = manageId(element,InittypesPackage.Literals.STYLE, InittypesPackage.Literals.REGEX__EXPRESSION);
+                            ((Style)id).setLabel(labelTemp);
                         }
                     }
                     else if (requirementStyle.matcher(element.getKey()).matches())
@@ -217,6 +226,12 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
                         if (id == null)
                         {
                             id = manageId(element,InittypesPackage.Literals.STYLE,InittypesPackage.Literals.STYLE__LABEL);
+                        } 
+                        else if (id instanceof Regex && !(id instanceof Style))
+                        {
+                            String expressionTemp = ((Regex) id).getExpression();
+                            id = manageId(element,InittypesPackage.Literals.STYLE,InittypesPackage.Literals.STYLE__LABEL);
+                            ((Style)id).setExpression(expressionTemp);
                         }
                     }
                     else if (requirementColumn.matcher(element.getKey()).matches())
@@ -224,6 +239,13 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
                         if (id == null)
                         {
                             id = manageId(element,InittypesPackage.Literals.COLUMN, InittypesPackage.Literals.REGEX__EXPRESSION);
+                            Pattern patternColumn = Pattern.compile("Requirement(\\d*)Column");
+                            Matcher m = patternColumn.matcher(element.getKey());
+                            if (m.matches())
+                            {
+                                ((Column) id).setNumber(Integer.parseInt(m.group(1)));
+                            }
+                            
                         }
                     }
                     else if (hierarchical.matcher(element.getKey()).matches())
@@ -247,10 +269,17 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
                             endText = element.getValue();
                         }
                     }
+                    else if (this.textRegex.matcher(element.getKey()).matches()) {
+                        if (!textRegexFound)
+                        {
+                            textRegex = element.getValue();
+                        }
+                    }
                 }
                 documentType.getTypes().addAll(allElements.values());
                 documentType.setId(id);
                 documentType.setTextType(endText);
+                documentType.setTextRegex(textRegex);
                 typeModel.getDocumentTypes().add(documentType);
             }
         }
@@ -414,10 +443,8 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
         }));
     }
 
-    public static void save(IFile typesFile, Collection<Type> types, Type id, boolean hierarchical, String endText)
+    public static void save(IFile typesFile, Collection<Type> types, Type id, boolean hierarchical, String endText, String descriptionRegex)
     {
-//            path.
-//        IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(typesFile);
         
         URI uri = typesFile.getLocationURI();
         
@@ -430,6 +457,12 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
         {
             section.add("EndText", endText);
         }
+        
+        if (descriptionRegex != null && descriptionRegex.length()>0)
+        {
+            section.add("DescriptionRegex", descriptionRegex);
+        }
+        
         if (id instanceof Column)
         {
             section.add("Requirement" + ((Column)id).getNumber() + "Column", ((Column) id).getExpression());
@@ -437,6 +470,7 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
         else if (id instanceof Style)
         {
             section.add("Requirement1Style", ((Style) id).getLabel());
+            section.add("Requirement1", ((Style) id).getExpression());
         }
         else if (id instanceof Regex)
         {

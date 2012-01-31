@@ -75,6 +75,7 @@ public class DocumentTypeItemProvider
             addHierarchicalPropertyDescriptor(object);
             addTextTypePropertyDescriptor(object);
             addDocumentPathPropertyDescriptor(object);
+            addTextRegexPropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
     }
@@ -172,6 +173,29 @@ public class DocumentTypeItemProvider
     }
 
     /**
+     * This adds a property descriptor for the Text Regex feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addTextRegexPropertyDescriptor(Object object)
+    {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_DocumentType_textRegex_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_DocumentType_textRegex_feature", "_UI_DocumentType_type"),
+                 InittypesPackage.Literals.DOCUMENT_TYPE__TEXT_REGEX,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
      * This specifies how to implement {@link #getChildren} and is used to deduce an appropriate feature for an
      * {@link org.eclipse.emf.edit.command.AddCommand}, {@link org.eclipse.emf.edit.command.RemoveCommand} or
      * {@link org.eclipse.emf.edit.command.MoveCommand} in {@link #createCommand}.
@@ -254,6 +278,7 @@ public class DocumentTypeItemProvider
             case InittypesPackage.DOCUMENT_TYPE__HIERARCHICAL:
             case InittypesPackage.DOCUMENT_TYPE__TEXT_TYPE:
             case InittypesPackage.DOCUMENT_TYPE__DOCUMENT_PATH:
+            case InittypesPackage.DOCUMENT_TYPE__TEXT_REGEX:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
                 return;
             case InittypesPackage.DOCUMENT_TYPE__TYPES:

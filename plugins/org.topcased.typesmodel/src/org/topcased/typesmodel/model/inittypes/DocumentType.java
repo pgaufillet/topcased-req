@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.topcased.typesmodel.model.inittypes.DocumentType#isHierarchical <em>Hierarchical</em>}</li>
  *   <li>{@link org.topcased.typesmodel.model.inittypes.DocumentType#getTextType <em>Text Type</em>}</li>
  *   <li>{@link org.topcased.typesmodel.model.inittypes.DocumentType#getDocumentPath <em>Document Path</em>}</li>
+ *   <li>{@link org.topcased.typesmodel.model.inittypes.DocumentType#getTextRegex <em>Text Regex</em>}</li>
  * </ul>
  * </p>
  *
@@ -178,5 +179,31 @@ public interface DocumentType extends EObject
      * @generated
      */
     void setDocumentPath(String value);
+
+    /**
+     * Returns the value of the '<em><b>Text Regex</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Text Regex</em>' attribute isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Text Regex</em>' attribute.
+     * @see #setTextRegex(String)
+     * @see org.topcased.typesmodel.model.inittypes.InittypesPackage#getDocumentType_TextRegex()
+     * @model
+     * @generated
+     */
+    String getTextRegex();
+
+    /**
+     * Sets the value of the '{@link org.topcased.typesmodel.model.inittypes.DocumentType#getTextRegex <em>Text Regex</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Text Regex</em>' attribute.
+     * @see #getTextRegex()
+     * @generated
+     */
+    void setTextRegex(String value);
 
 } // DocumentType

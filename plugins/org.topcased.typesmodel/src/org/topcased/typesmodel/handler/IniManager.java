@@ -87,9 +87,9 @@ public class IniManager
         return registry.getElementsByType(documentType, InittypesPackage.Literals.REGEX);
     }
 
-    public void save(IFile typesFile, Collection<Type> types, Type id, boolean hierarchical, String endText)
+    public void save(IFile typesFile, Collection<Type> types, Type id, boolean hierarchical, String endText, String descriptionRegex)
     {
-        IniManagerRegistry.save(typesFile, types, id, hierarchical, endText);
+        IniManagerRegistry.save(typesFile, types, id, hierarchical, endText, descriptionRegex);
         
     }
     

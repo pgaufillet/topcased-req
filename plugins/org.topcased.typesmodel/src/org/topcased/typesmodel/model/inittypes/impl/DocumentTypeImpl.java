@@ -29,6 +29,7 @@ import org.topcased.typesmodel.model.inittypes.Type;
  *   <li>{@link org.topcased.typesmodel.model.inittypes.impl.DocumentTypeImpl#isHierarchical <em>Hierarchical</em>}</li>
  *   <li>{@link org.topcased.typesmodel.model.inittypes.impl.DocumentTypeImpl#getTextType <em>Text Type</em>}</li>
  *   <li>{@link org.topcased.typesmodel.model.inittypes.impl.DocumentTypeImpl#getDocumentPath <em>Document Path</em>}</li>
+ *   <li>{@link org.topcased.typesmodel.model.inittypes.impl.DocumentTypeImpl#getTextRegex <em>Text Regex</em>}</li>
  * </ul>
  * </p>
  *
@@ -177,6 +178,26 @@ public class DocumentTypeImpl extends MinimalEObjectImpl.Container implements Do
     public void setDocumentPath(String newDocumentPath)
     {
         eSet(InittypesPackage.Literals.DOCUMENT_TYPE__DOCUMENT_PATH, newDocumentPath);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public String getTextRegex()
+    {
+        return (String)eGet(InittypesPackage.Literals.DOCUMENT_TYPE__TEXT_REGEX, true);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setTextRegex(String newTextRegex)
+    {
+        eSet(InittypesPackage.Literals.DOCUMENT_TYPE__TEXT_REGEX, newTextRegex);
     }
 
 } //DocumentTypeImpl

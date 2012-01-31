@@ -318,13 +318,22 @@ public interface InittypesPackage extends EPackage
     int DOCUMENT_TYPE__DOCUMENT_PATH = 5;
 
     /**
+     * The feature id for the '<em><b>Text Regex</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DOCUMENT_TYPE__TEXT_REGEX = 6;
+
+    /**
      * The number of structural features of the '<em>Document Type</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int DOCUMENT_TYPE_FEATURE_COUNT = 6;
+    int DOCUMENT_TYPE_FEATURE_COUNT = 7;
 
     /**
      * The meta object id for the '{@link org.topcased.typesmodel.model.inittypes.impl.StyleImpl <em>Style</em>}' class.
@@ -574,6 +583,17 @@ public interface InittypesPackage extends EPackage
     EAttribute getDocumentType_DocumentPath();
 
     /**
+     * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.DocumentType#getTextRegex <em>Text Regex</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Text Regex</em>'.
+     * @see org.topcased.typesmodel.model.inittypes.DocumentType#getTextRegex()
+     * @see #getDocumentType()
+     * @generated
+     */
+    EAttribute getDocumentType_TextRegex();
+
+    /**
      * Returns the meta object for class '{@link org.topcased.typesmodel.model.inittypes.Style <em>Style</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -762,6 +782,14 @@ public interface InittypesPackage extends EPackage
          * @generated
          */
         EAttribute DOCUMENT_TYPE__DOCUMENT_PATH = eINSTANCE.getDocumentType_DocumentPath();
+
+        /**
+         * The meta object literal for the '<em><b>Text Regex</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute DOCUMENT_TYPE__TEXT_REGEX = eINSTANCE.getDocumentType_TextRegex();
 
         /**
          * The meta object literal for the '{@link org.topcased.typesmodel.model.inittypes.impl.StyleImpl <em>Style</em>}' class.

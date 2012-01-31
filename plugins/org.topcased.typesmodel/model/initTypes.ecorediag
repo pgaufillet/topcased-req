@@ -99,6 +99,10 @@
         <element xmi:type="ecore:EAttribute" href="initTypes.ecore#//DocumentType/textType"/>
         <layoutConstraint xmi:type="notation:Location" xmi:id="_ubBu8hA-EeGXNruNYJ-Y0w"/>
       </children>
+      <children xmi:type="notation:Node" xmi:id="_VRdsEUsvEeG_m4uUsEnJIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="initTypes.ecore#//DocumentType/textRegex"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_VRdsEksvEeG_m4uUsEnJIg"/>
+      </children>
       <children xmi:type="notation:Node" xmi:id="_LLoFARHKEeG5aLjAtJUEYQ" type="2001">
         <element xmi:type="ecore:EAttribute" href="initTypes.ecore#//DocumentType/documentPath"/>
         <layoutConstraint xmi:type="notation:Location" xmi:id="_LLoFAhHKEeG5aLjAtJUEYQ"/>
