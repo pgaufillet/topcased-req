@@ -405,6 +405,7 @@ public class PageController
         RecognizedElement idToSave = null;
         boolean hierarchicalToSave = false;
         String endText = null;
+        String descriptionRegex = null;
         for (IWizardPage iter : wizard.getPages())
         {
             if (iter instanceof ImportRequirementWizardPageMapping)
@@ -419,7 +420,14 @@ public class PageController
                 hierarchicalToSave = page.getIsHiearachical();
                 if (page.getDescriptionState())
                 {
-                    endText = page.getDescription();
+                    if (page.isDescriptionText())
+                    {
+                        endText = page.getDescription();
+                    }
+                    if (page.isDescriptionRegex())
+                    {
+                        descriptionRegex = page.getDescriptionRegex();
+                    }
                 }
             }
         }
@@ -447,7 +455,7 @@ public class PageController
             }
         }
         IFile typesFile = ImportRequirementWizard.getFile(path.toString());
-        IniManager.getInstance().save(typesFile, types, id, hierarchicalToSave, endText);
+        IniManager.getInstance().save(typesFile, types, id, hierarchicalToSave, endText, descriptionRegex);
 
     }
 
@@ -515,6 +523,21 @@ public class PageController
         return documentType.getTextType();
     }
 
+    /**
+     * Gets the description Regex
+     * 
+     * @return
+     */
+    public String getDescriptionRegex()
+    {
+        if (documentType == null)
+        {
+            return null;
+        }
+        return documentType.getTextRegex();
+    }
+    
+    
     /**
      * Perform a requirement attachment
      * 

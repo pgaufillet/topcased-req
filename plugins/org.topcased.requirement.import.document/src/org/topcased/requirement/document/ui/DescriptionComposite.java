@@ -31,8 +31,10 @@ public class DescriptionComposite extends Composite
 {
     private Text text;
 
+    private Text descriptionRegex;
+
     private NotifyElement notifyElement;
-    
+
     /**
      * Create the composite.
      */
@@ -40,19 +42,27 @@ public class DescriptionComposite extends Composite
     {
         super(parent, style);
         setLayout(new GridLayout(1, false));
-        
+
         Group group = new Group(this, SWT.NONE);
         group.setLayout(new GridLayout(2, false));
         group.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
         new Label(group, SWT.NONE);
         new Label(group, SWT.NONE);
-        
+
         Label lblEndlabel = new Label(group, SWT.NONE);
         lblEndlabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
         lblEndlabel.setText("EndLabel");
-        
+
         text = new Text(group, SWT.BORDER);
         text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+
+        Label lblDescriptionRegex = new Label(group, SWT.NONE);
+        lblDescriptionRegex.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+        lblDescriptionRegex.setText("Description Regex");
+
+        descriptionRegex = new Text(group, SWT.BORDER);
+        descriptionRegex.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+
         hookListeners();
     }
 
@@ -60,7 +70,19 @@ public class DescriptionComposite extends Composite
     {
         text.addModifyListener(new ModifyListener()
         {
-            
+
+            public void modifyText(ModifyEvent e)
+            {
+                if (notifyElement != null)
+                {
+                    notifyElement.handleModelChange();
+                }
+            }
+        });
+
+        descriptionRegex.addModifyListener(new ModifyListener()
+        {
+
             public void modifyText(ModifyEvent e)
             {
                 if (notifyElement != null)
@@ -70,17 +92,27 @@ public class DescriptionComposite extends Composite
             }
         });
     }
-    
+
     /**
      * return if the description is filled or not
      * 
      * @return
      */
-    public boolean isComplete()
+    public boolean isTextComplete()
     {
         return !(text.getText().isEmpty());
     }
-    
+
+    /**
+     * return if the description regex is filled or not
+     * 
+     * @return
+     */
+    public boolean isDescriptionRegexComplete()
+    {
+        return !(descriptionRegex.getText().isEmpty());
+    }
+
     /**
      * Sets the notifier
      * 
@@ -90,7 +122,7 @@ public class DescriptionComposite extends Composite
     {
         this.notifyElement = notifyElement;
     }
-    
+
     /**
      * Gets the description
      * 
@@ -100,7 +132,7 @@ public class DescriptionComposite extends Composite
     {
         return text.getText();
     }
-    
+
     /**
      * Sets a description
      * 
@@ -110,5 +142,25 @@ public class DescriptionComposite extends Composite
     {
         text.setText(textToSet);
     }
-    
+
+    /**
+     * Gets the description regex
+     * 
+     * @return
+     */
+    public String getDescriptionRegex()
+    {
+        return descriptionRegex.getText();
+    }
+
+    /**
+     * Sets a description regex
+     * 
+     * @param textToSet
+     */
+    public void setDescriptionRegex(String textToSet)
+    {
+        descriptionRegex.setText(textToSet);
+    }
+
 }

@@ -157,12 +157,24 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
 
         if (page2.getDescriptionState())
         {
-            DescriptionChecker.setEndText(page2.getDescription());
+            if (page2.isDescriptionText())
+            {
+                DescriptionChecker.setEndText(page2.getDescription());
+            }
+            if (page2.isDescriptionRegex())
+            {
+                DescriptionChecker.setRegDescription(page2.getDescriptionRegex());
+            }
         }
         RecognizedElement id = page2.getIdentification();
         if (id instanceof Style)
         {
             DescriptionChecker.setStyleIdent(((Style) id).getStyle());
+            String regex = ((Style) id).getRegex();
+            if (regex != null)
+            {
+                DescriptionChecker.setReqIdent(regex);
+            }
         }
         else if (id instanceof Regex)
         {

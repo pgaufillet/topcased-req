@@ -16,6 +16,8 @@ package org.topcased.requirement.document.ui;
 import java.io.File;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -233,7 +235,7 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
      */
     private void createDescription(Composite composite)
     {
-        String helpText = "<form><p>Option to specify End Text description</p></form>";
+        String helpText = "<form><p>Option to specify End Text and description regex</p></form>";
         descriptionCheck = new ComponentHelpCheckButton(new NotifyElement()
         {
             public void handleModelChange()
@@ -570,6 +572,23 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
             result = false;
             error.append("Some rules are not valid\nxlsx, ods, csv => only column\ndocx, odt => only style and regex"); //$NON-NLS-1$
         }
+        
+        
+        if (descriptionCheck!=null && descriptionCheck.getSelection() && !(descriptionComposite.isDescriptionRegexComplete() ||descriptionComposite.isTextComplete()))
+        {
+            result = false;
+            error.append("Please fill EndLabel or Description regex");
+        }
+        else if (descriptionCheck != null && descriptionCheck.getSelection() && descriptionComposite.isDescriptionRegexComplete())
+        {
+            if (!isRegexValid(descriptionComposite.getDescriptionRegex()))
+            {
+                result = false;
+                error.append("Description regex doesn't compile");
+            }
+        }
+        
+        
         // Display error message
         if (result)
         {
@@ -581,6 +600,25 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
         }
         return result;
 
+    }
+
+    /**
+     * Check the validity of a regex 
+     * 
+     * @param string the regex to check
+     * @return true if the regex is valid and false otherwise
+     */
+    private boolean isRegexValid(String string)
+    {
+            try
+            {
+                Pattern.compile(string, Pattern.MULTILINE);
+                return true;
+            }
+            catch (PatternSyntaxException e)
+            {
+                return false;
+            }
     }
 
     /**
@@ -632,6 +670,8 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
             buttonNewStyle.setVisible(false);
             chapterRecognizeComponent.setVisible(false);
             labelChapter.setVisible(false);
+            descriptionCheck.setVisible(false);
+            descriptionComposite.setVisible(false);
         }
         else
         {
@@ -641,6 +681,7 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
             buttonNewStyle.setVisible(true);
             chapterRecognizeComponent.setVisible(true);
             labelChapter.setVisible(true);
+            descriptionCheck.setVisible(true);
         }
     }
 
@@ -732,6 +773,22 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
     {
         return descriptionComposite.getText();
     }
+    
+    public boolean isDescriptionRegex()
+    {
+        return descriptionComposite.isDescriptionRegexComplete();
+    }
+    
+    public boolean isDescriptionText()
+    {
+        return descriptionComposite.isTextComplete();
+    }
+    
+    public String getDescriptionRegex()
+    {
+        return descriptionComposite.getDescriptionRegex();
+    }
+    
     
     /**
      * Load Preferences from a previous use.
@@ -913,13 +970,23 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
             descriptionCheck.setEnabled(true);
             
             String endText = ((ImportRequirementWizard)getWizard()).getPageController().getEndText();
-            if (endText != null)
+            String descriptionRegex = ((ImportRequirementWizard)getWizard()).getPageController().getDescriptionRegex();
+            if (endText != null || descriptionRegex != null)
             {
                 descriptionCheck.setSelection(true);
                 descriptionComposite.setEnabled(true);
                 descriptionComposite.setVisible(true);
-                descriptionComposite.setText(endText);
+                if (endText != null)
+                {
+                    descriptionComposite.setText(endText);
+                }
+                if (descriptionRegex != null)
+                {
+                    descriptionComposite.setDescriptionRegex(descriptionRegex);
+                }
             }
+            
+            
         } else
         {
             descriptionCheck.setVisible(false);
