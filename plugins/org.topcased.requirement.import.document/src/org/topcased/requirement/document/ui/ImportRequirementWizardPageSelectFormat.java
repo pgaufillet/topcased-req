@@ -182,7 +182,7 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
     {
         reqIdComponent.setHasToBeDelete(false);
         valueToRecognizeReq = null;
-        reqIdComponent.setValueText("");
+        reqIdComponent.setValueText(""); //$NON-NLS-1$
     }
 
     /*
@@ -235,7 +235,7 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
      */
     private void createDescription(Composite composite)
     {
-        String helpText = "<form><p>Option to specify End Text and description regex</p></form>";
+        String helpText = Messages.DescriptionHelp;
         descriptionCheck = new ComponentHelpCheckButton(new NotifyElement()
         {
             public void handleModelChange()
@@ -245,7 +245,7 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
                 ImportRequirementWizardPageSelectFormat.this.handleModelChange();
             }
         }, composite, toolkit, SWT.NONE, helpText);
-        descriptionCheck.setValueText("Description");
+        descriptionCheck.setValueText("Description"); //$NON-NLS-1$
         descriptionComposite = new DescriptionComposite(composite, SWT.NONE);
         descriptionComposite.setNotifyElement(this);
         descriptionComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
@@ -559,13 +559,13 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
     public boolean isPageComplete()
     {
         boolean result = true;
-        StringBuffer error = new StringBuffer("");
+        StringBuffer error = new StringBuffer(""); //$NON-NLS-1$
 
         // Validation Input document
         if (valueToRecognizeReq == null)
         {
             result = false;
-            error.append("Enter a rule to recognize requirements\n");
+            error.append("Enter a rule to recognize requirements\n"); //$NON-NLS-1$
         }
         if (!isListValid())
         {
@@ -577,14 +577,22 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
         if (descriptionCheck!=null && descriptionCheck.getSelection() && !(descriptionComposite.isDescriptionRegexComplete() ||descriptionComposite.isTextComplete()))
         {
             result = false;
-            error.append("Please fill EndLabel or Description regex");
+            error.append(Messages.DescriptionError);
         }
         else if (descriptionCheck != null && descriptionCheck.getSelection() && descriptionComposite.isDescriptionRegexComplete())
         {
             if (!isRegexValid(descriptionComposite.getDescriptionRegex()))
             {
                 result = false;
-                error.append("Description regex doesn't compile");
+                error.append(Messages.DescriptionRegexError);
+            }
+        }
+        else if (descriptionCheck != null && descriptionCheck.getSelection() && descriptionComposite.isTextComplete())
+        {
+            if (!isRegexValid(descriptionComposite.getText()))
+            {
+                result = false;
+                error.append(Messages.EndLabelRegexError);
             }
         }
         
@@ -719,7 +727,7 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
         }
         else
         {
-            return "";
+            return ""; //$NON-NLS-1$
         }
     }
 
@@ -906,7 +914,7 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
     		return;
 		}
         
-        if (inputDocument.endsWith(".docx") || inputDocument.endsWith(".odt"))
+        if (inputDocument.endsWith(".docx") || inputDocument.endsWith(".odt")) //$NON-NLS-1$ //$NON-NLS-2$
         {
             setIsSpreadsheet(false);
             
@@ -918,7 +926,7 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
             {
                 reqIdComponent.setValueText(valueToRecognizeReq.getText());
             } else {
-                reqIdComponent.setValueText("");
+                reqIdComponent.setValueText(""); //$NON-NLS-1$
             }
             
             RecognizedTree newTree = ((ImportRequirementWizard)getWizard()).getPageController().getStylesAndRegex();
@@ -941,7 +949,7 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
             {
                 reqIdComponent.setValueText(valueToRecognizeReq.getText());
             } else {
-                reqIdComponent.setValueText("");
+                reqIdComponent.setValueText(""); //$NON-NLS-1$
             }
             
             RecognizedTree newTree = ((ImportRequirementWizard)getWizard()).getPageController().getColumns();
@@ -955,14 +963,14 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
             descriptionCheck.setSelection(false);
             descriptionComposite.setEnabled(false);
             descriptionComposite.setVisible(false);
-            descriptionComposite.setText("");
+            descriptionComposite.setText(""); //$NON-NLS-1$
 
         }
         
         descriptionCheck.setSelection(false);
         descriptionComposite.setEnabled(false);
         descriptionComposite.setVisible(false);
-        descriptionComposite.setText("");
+        descriptionComposite.setText(""); //$NON-NLS-1$
 
         if (Constants.REQUIREMENT_EXTENSION.equals(modelType))
         {
@@ -999,12 +1007,12 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
         
         if (inputDocument != null)
         {
-            if (inputDocument.contains("file:"))
+            if (inputDocument.contains("file:")) //$NON-NLS-1$
             {
                 currentFileSystem = new File(URI.createURI(inputDocument).toFileString());
                 ((ImportRequirementWizard)getWizard()).setCurrentFileSystem(currentFileSystem);
             }
-            else if (inputDocument.contains("platform:"))
+            else if (inputDocument.contains("platform:")) //$NON-NLS-1$
             {
                 currentFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(URI.createURI(inputDocument).toPlatformString(true)));
                 ((ImportRequirementWizard)getWizard()).setCurrentFile(currentFile);

@@ -24,6 +24,14 @@ public class Messages extends NLS
     /** The Constant BUNDLE_NAME. */
     private static final String BUNDLE_NAME = "org.topcased.requirement.document.utils.messages"; //$NON-NLS-1$
 
+    public static String DescriptionError;
+
+    public static String DescriptionHelp;
+
+    public static String DescriptionRegexError;
+
+    public static String EndLabelRegexError;
+
     /** The Import requirement wizard page select document_ inpu t_ document. */
     public static String ImportRequirementWizardPageSelectDocument_INPUT_DOCUMENT;
 
