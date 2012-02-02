@@ -574,12 +574,13 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
         }
         
         
-        if (descriptionCheck!=null && descriptionCheck.getSelection() && !(descriptionComposite.isDescriptionRegexComplete() ||descriptionComposite.isTextComplete()))
+        if (descriptionCheck != null && descriptionCheck.getSelection() && !(descriptionComposite.isDescriptionRegexComplete() || descriptionComposite.isTextComplete()))
         {
             result = false;
             error.append(Messages.DescriptionError);
         }
-        else if (descriptionCheck != null && descriptionCheck.getSelection() && descriptionComposite.isDescriptionRegexComplete())
+
+        if (descriptionCheck != null && descriptionCheck.getSelection() && descriptionComposite.isDescriptionRegexComplete())
         {
             if (!isRegexValid(descriptionComposite.getDescriptionRegex()))
             {
@@ -587,7 +588,8 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
                 error.append(Messages.DescriptionRegexError);
             }
         }
-        else if (descriptionCheck != null && descriptionCheck.getSelection() && descriptionComposite.isTextComplete())
+
+        if (descriptionCheck != null && descriptionCheck.getSelection() && descriptionComposite.isTextComplete())
         {
             if (!isRegexValid(descriptionComposite.getText()))
             {
