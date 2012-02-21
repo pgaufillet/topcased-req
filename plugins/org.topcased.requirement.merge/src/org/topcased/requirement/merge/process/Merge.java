@@ -748,7 +748,7 @@ public class Merge
                 {
                     HierarchicalElement hier = (HierarchicalElement) current.eContainer();
                     EObject element = hier.getElement();
-                    if (element.eIsProxy())
+                    if (element != null && element.eIsProxy())
                     {
                         element = (EObject) hier.eGet(RequirementPackage.Literals.HIERARCHICAL_ELEMENT__ELEMENT, true);
                     }
