@@ -59,7 +59,7 @@ public class AddRequirementMarker
         {
             if (AddRequirementMarker.eINSTANCE.getPosition() == AddRequirementMarker.eINSTANCE.sTART)
             {
-                pos = RequirementUtils.countChildrens(hierarchicalElement);
+                pos = 0;
             }
             else if (AddRequirementMarker.eINSTANCE.getPosition() == AddRequirementMarker.eINSTANCE.eND)
             {
