@@ -7,7 +7,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors: Christophe Mertz (CS) <christophe.mertz@c-s.fr>
- *    
+ * Anass RADOUANI (Atos) <anass.radouani@atos.net> - adding the creation position from the marker for FreeText   
  ******************************************************************************/
 package org.topcased.requirement.core.utils;
 
@@ -248,8 +248,9 @@ public final class RequirementHelper
             {
                 AnonymousRequirement anonymmous = createAnonymousRequirement(hierarchicalElement);
                 createdRequirements.add(anonymmous);
+                Integer pos = AddRequirementMarker.eINSTANCE.computeIndex(hierarchicalElement);
                 appendIfCanExecute(globalCmd, hierarchicalElement.eResource(), editingDomain,
-                        AddCommand.create(editingDomain, hierarchicalElement, RequirementPackage.eINSTANCE.getHierarchicalElement_Requirement(), anonymmous));
+                        AddCommand.create(editingDomain, hierarchicalElement, RequirementPackage.eINSTANCE.getHierarchicalElement_Requirement(), anonymmous, pos));
             }
 
             // it is only here that all the commands are executed
