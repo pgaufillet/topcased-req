@@ -480,9 +480,9 @@ public class Merge
 					return (T) eObject2;
 				}
 			}
-			else if (t instanceof CurrentRequirement)
+			else if (t instanceof Requirement)
 			{
-				CurrentRequirement req = (CurrentRequirement) t;
+				Requirement req = (Requirement) t;
 				EObject eObject2 = reqCorrespondances.get(req.getIdentifier());
 				if (eObject2 != null)
 				{
@@ -741,9 +741,9 @@ public class Merge
         for (TreeIterator<EObject> i = EcoreUtil.getAllContents(t.getRequirement(),true); i.hasNext();)
         {
             EObject tmp = i.next();
-            if (tmp instanceof CurrentRequirement)
+            if (tmp instanceof Requirement)
             {
-                CurrentRequirement current = (CurrentRequirement) tmp;
+                Requirement current = (Requirement) tmp;
                 if (current.eContainer() instanceof HierarchicalElement)
                 {
                     HierarchicalElement hier = (HierarchicalElement) current.eContainer();
@@ -780,7 +780,7 @@ public class Merge
 		return ((XMIResource)samElement.eResource()).getID(samElement);
 	}
 
-    private void copyAndAdd(CurrentRequirement current, HierarchicalElement hierToAdd)
+    private void copyAndAdd(Requirement current, HierarchicalElement hierToAdd)
     {
         Requirement copy = (Requirement) copy(current);
         hierToAdd.getRequirement().add(copy);
