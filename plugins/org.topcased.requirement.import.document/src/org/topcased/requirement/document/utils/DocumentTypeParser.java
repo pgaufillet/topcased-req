@@ -148,7 +148,7 @@ public class DocumentTypeParser
                 if (oneRegex.getExpression() != null && oneRegex.getName() != null)
                 {
                     Regex newRegex = new Regex(oneRegex.getExpression());
-                    AttributeRequirement regexAttribute = new AttributeRequirement(oneRegex.getName(), false, "Requirement");
+                    AttributeRequirement regexAttribute = new AttributeRequirement(oneRegex.getName(), false,oneRegex.isIsText(), "Requirement");
                     mapping.add(new Mapping(newRegex, regexAttribute));
                 }
                 else
@@ -171,7 +171,7 @@ public class DocumentTypeParser
                     {
                         newStyle = new Style(style.getLabel(), "");
                     }
-                    AttributeRequirement newAttribute = new AttributeRequirement(style.getName(), false, "Requirement");
+                    AttributeRequirement newAttribute = new AttributeRequirement(style.getName(), false, style.isIsText(), "Requirement");
                     mapping.add(new Mapping(newStyle, newAttribute));
                 }
                 else
@@ -190,7 +190,7 @@ public class DocumentTypeParser
                 if (column.getExpression() != null && column.getName() != null)
                 {
                     Column newColumn = new Column(column.getNumber(), column.getExpression());
-                    AttributeRequirement newAttribute = new AttributeRequirement(column.getName(), false, "Requirement");
+                    AttributeRequirement newAttribute = new AttributeRequirement(column.getName(), false,column.isIsText(), "Requirement");
                     mapping.add(new Mapping(newColumn, newAttribute));
                     
                 }
