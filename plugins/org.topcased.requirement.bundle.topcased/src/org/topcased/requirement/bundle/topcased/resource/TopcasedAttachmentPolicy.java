@@ -132,7 +132,7 @@ public class TopcasedAttachmentPolicy implements IModelAttachmentPolicy
             IPath path = RequirementUtils.getPath(reqURI);
             IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 
-            if (!file.exists())
+            if (!file.exists() && Utils.getCurrentModeler() != null)
             {
                 setProperty(Utils.getCurrentModeler(), null);
                 return "";
