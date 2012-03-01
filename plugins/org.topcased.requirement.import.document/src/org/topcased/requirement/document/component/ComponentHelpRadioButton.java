@@ -14,6 +14,8 @@
 package org.topcased.requirement.document.component;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -27,6 +29,8 @@ public class ComponentHelpRadioButton extends ComponentHelp
 
     /** The radios. */
     Button[] radios;
+    
+    private NotifyElement parentElement;
 
     /**
      * The Constructor.
@@ -40,6 +44,7 @@ public class ComponentHelpRadioButton extends ComponentHelp
     public ComponentHelpRadioButton(NotifyElement parentElement, Composite parent, FormToolkit toolkit, int style, String helpText)
     {
         super(parentElement, parent, toolkit, style, helpText, 2);
+        this.parentElement = parentElement;
     }
 
     /*
@@ -57,6 +62,34 @@ public class ComponentHelpRadioButton extends ComponentHelp
         radios[1] = toolkit.createButton(this, "flat", SWT.RADIO);
 
         radios[0].setSelection(true);
+        
+        radios[0].addSelectionListener(new SelectionListener()
+        {
+            
+            public void widgetSelected(SelectionEvent e)
+            {
+                parentElement.handleModelChange();
+            }
+            
+            public void widgetDefaultSelected(SelectionEvent e)
+            {
+                
+            }
+        });
+        
+        radios[1].addSelectionListener(new SelectionListener()
+        {
+            
+            public void widgetSelected(SelectionEvent e)
+            {
+                parentElement.handleModelChange();
+            }
+            
+            public void widgetDefaultSelected(SelectionEvent e)
+            {
+                
+            }
+        });
     }
 
     /**
