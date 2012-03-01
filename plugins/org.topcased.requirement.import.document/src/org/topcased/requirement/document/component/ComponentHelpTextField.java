@@ -254,5 +254,11 @@ public class ComponentHelpTextField extends ComponentHelp
     {
         input.setForeground(color);
     }
+    /**
+     * Gets the input field
+     */
+    public Text getInputField(){
+    	return input;
+    }
     
 }
