@@ -13,6 +13,8 @@
  *****************************************************************************/
 package org.topcased.requirement.document.ui;
 
+import java.util.regex.Pattern;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -40,7 +42,7 @@ public class NewColumnPopup extends PopupRegexDialog
      */
     protected NewColumnPopup(Shell parentShell)
     {
-        super(parentShell);
+        super(parentShell, Pattern.DOTALL);
     }
 
     /*
