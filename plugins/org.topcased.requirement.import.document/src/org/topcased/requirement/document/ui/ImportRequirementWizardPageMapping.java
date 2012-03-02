@@ -57,6 +57,7 @@ import org.topcased.requirement.document.elements.AttributeUml;
 import org.topcased.requirement.document.elements.IStructuredContentProviderTree;
 import org.topcased.requirement.document.elements.Mapping;
 import org.topcased.requirement.document.elements.OwnerElement;
+import org.topcased.requirement.document.elements.PageController;
 import org.topcased.requirement.document.elements.RecognizedElement;
 import org.topcased.requirement.document.elements.RecognizedTree;
 import org.topcased.requirement.document.utils.Constants;
@@ -125,8 +126,8 @@ public class ImportRequirementWizardPageMapping extends WizardPage
     /** The model type. */
     private String modelType;
 
-    /** The initialization Flag */
-	private boolean init = true;
+    /** the page controller */
+	private PageController controller;
 	
     /** The image add. */
     private static Image imageAdd;
@@ -150,26 +151,45 @@ public class ImportRequirementWizardPageMapping extends WizardPage
      * Instantiates a new import requirement wizard page mapping.
      * 
      * @param pageName the page name
+     * @param pageController 
      * @param t the t
      * @param listAttributes the list attributes
      * @param model the model
      */
-    protected ImportRequirementWizardPageMapping(String pageName, RecognizedTree t, Collection<Attribute> listAttributes, String model)
+    public ImportRequirementWizardPageMapping(String pageName, PageController pageController)
     {
         super(pageName);
-        tree = t;
-        this.listAttributes = listAttributes;
-        modelType = model;
+        controller = pageController;
     }
 
-    /*
+    /**
+     * Sets the model type
+     */
+    public void setModelType(String modelType) {
+		this.modelType = modelType;
+	}
+
+    /**
+     * sets the attributes list
+     */
+	public void setListAttributes(Collection<Attribute> listAttributes) {
+		this.listAttributes = listAttributes;
+	}
+
+	/**
+	 * sets the tree
+	 */
+	public void setTree(RecognizedTree tree) {
+		this.tree = tree;
+	}
+
+	/*
      * (non-Javadoc)
      * 
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     public void createControl(Composite parent)
     {
-    	init = true;
         Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayout(new FillLayout());
         // setImageDescriptor(workbench.getSharedImages().getImageDescriptor(Wizard.DEFAULT_IMAGE));
@@ -185,7 +205,6 @@ public class ImportRequirementWizardPageMapping extends WizardPage
         form.getBody().setLayout(layout);
         createSection();
         setControl(composite);
-        init = false;
     }
 
     /**
@@ -240,11 +259,7 @@ public class ImportRequirementWizardPageMapping extends WizardPage
                         {
                             result = result.addFileExtension("types");
                         }
-//                        else if ("types".equals(result.getFileExtension()))
-//                        {
-//                            result = result.removeFileExtension().addFileExtension("types");
-//                        }
-                        ((ImportRequirementWizard)getWizard()).getPageController().PerformSavingModel(result);
+                        controller.PerformSavingModel(result);
                     }
                 }
             }
@@ -447,7 +462,9 @@ public class ImportRequirementWizardPageMapping extends WizardPage
                     {
                         listAttributes.add(new AttributeRequirement(dialog.getAttributeName() == null || dialog.getAttributeName().length() == 0 ? "Text" : dialog.getAttributeName(), dialog.isReference(),dialog.getAttributeName() == null || dialog.getAttributeName().length() == 0, "Requirement"));
                     }
+                    listViewerAttributes.setInput(listAttributes);
                     listViewerAttributes.refresh();
+                    controller.removeDocumentType();
                 }
             }
         });
@@ -467,6 +484,7 @@ public class ImportRequirementWizardPageMapping extends WizardPage
                 listAttributes.remove(selectedAttribute);
                 listViewerAttributes.refresh();
                 buttonRemoveAttribute.setEnabled(false);
+                controller.removeDocumentType();
             }
 
         });
@@ -669,10 +687,12 @@ public class ImportRequirementWizardPageMapping extends WizardPage
             {
                 selectedMapping.getElement().setSelected(false);
                 listAttributes.add(selectedMapping.getAttribute());
+                listViewerAttributes.setInput(listAttributes);
                 listMapping.remove(selectedMapping);
                 listViewerMapping.refresh();
                 refreshLists();
                 buttonRemoveMapping.setEnabled(false);
+                controller.removeDocumentType();
 
                 // Add removed elements to inputs list
                 // tree.getChildren().add(selectedMapping.getElement());
@@ -751,7 +771,6 @@ public class ImportRequirementWizardPageMapping extends WizardPage
     public void clearListAttributes()
     {
         listAttributes.clear();
-        listViewerAttributes.refresh();
     }
 
     /**
@@ -760,7 +779,6 @@ public class ImportRequirementWizardPageMapping extends WizardPage
     public void clearListMapping()
     {
         listMapping.clear();
-        listViewerMapping.refresh();
     }
 
     // /// Getters
@@ -821,11 +839,18 @@ public class ImportRequirementWizardPageMapping extends WizardPage
             {
                 for (Iterator<Attribute> iterator = paramDecoded.iterator(); iterator.hasNext();)
                 {
-                    Attribute next = (Attribute) iterator.next();
-                    if ((Constants.SYSML_EXTENSION.equals(modelType) && "Requirement".equals(next.getSource())) || (Constants.UML_EXTENSION.equals(modelType) && "Class".equals(next.getSource()))
-                            || next instanceof AttributeRequirement)
+                    if (iterator instanceof Attribute)
                     {
-                        listAttributes.add(next);
+                        Attribute next = (Attribute) iterator.next();
+                        if ((Constants.SYSML_EXTENSION.equals(modelType) && "Requirement".equals(next.getSource())) || (Constants.UML_EXTENSION.equals(modelType) && "Class".equals(next.getSource()))
+                                || next instanceof AttributeRequirement)
+                        {
+                            listAttributes.add(next);
+                        }
+                    }
+                    else
+                    {
+                        iterator.next();
                     }
 
                 }
@@ -872,23 +897,19 @@ public class ImportRequirementWizardPageMapping extends WizardPage
      * @param attributes list of attributes
      * @param allMapping list of mapping
      * @param modelType the model type (Requirement, UML, SysML)
+     * @param documentTypeSelected 
      */
     
-    public void pageChanged(List<Attribute> attributes, List<Mapping> allMapping, String modelType)
+    public void pageChanged(Collection<Attribute> attributes, Collection<Mapping> allMapping, String modelType, boolean documentTypeSelected)
     {
-    	if (init ) {
-    		init = false;
-    		return;
-    	}
     	boolean loadPref = true;
     	clearListAttributes();
+    	this.modelType = modelType;
         if (attributes != null && !attributes.isEmpty() && Constants.REQUIREMENT_EXTENSION.equals(modelType))
         {
             listAttributes = attributes;
-            listViewerAttributes.setInput(attributes);
             loadPref = false;
         }
-        listViewerAttributes.refresh();
         clearListMapping();
         if (allMapping != null && !allMapping.isEmpty() && Constants.REQUIREMENT_EXTENSION.equals(modelType))
         {
@@ -901,7 +922,6 @@ public class ImportRequirementWizardPageMapping extends WizardPage
         }
         if (Constants.REQUIREMENT_EXTENSION.equals(modelType))
         {
-            setIsRequirementModel(true);
             if (loadPref)
             {
                 loadPreferenceAttributes();
@@ -909,7 +929,6 @@ public class ImportRequirementWizardPageMapping extends WizardPage
         }
         else
         {
-            setIsRequirementModel(false);
             if (Constants.SYSML_EXTENSION.equals(modelType))
             {
                 ((ImportRequirementWizard)getWizard()).manageSysml();
@@ -919,11 +938,54 @@ public class ImportRequirementWizardPageMapping extends WizardPage
                 ((ImportRequirementWizard)getWizard()).manageProfiles();
             }
         }
-        refreshLists();
+//        refreshLists();
         // Load pref mapping
-        if ( loadPref && ((ImportRequirementWizard)getWizard()).getPageController().loadMappingPref())
+        if ( loadPref && controller.loadMappingPref())
         {
             loadPreferecencesMapping();
         }
     }
+    
+    
+    @Override
+    public void setVisible(boolean visible) {
+    	super.setVisible(visible);
+    	if (visible) {
+    	    refreshView();
+		}
+    }
+
+    /**
+     * Refresh graphical components
+     */
+    private void refreshView()
+    {
+        modelType = controller.getModelType();
+        if (listAttributes != null && !listAttributes.isEmpty() && Constants.REQUIREMENT_EXTENSION.equals(modelType))
+        {
+            listViewerAttributes.setInput(listAttributes);
+        }
+        listViewerAttributes.refresh();
+        
+        
+        if (listMapping != null && !listMapping.isEmpty() && Constants.REQUIREMENT_EXTENSION.equals(modelType))
+        {
+            listViewerMapping.refresh();
+        }
+         
+        
+        if (Constants.REQUIREMENT_EXTENSION.equals(modelType))
+        {
+            setIsRequirementModel(true);
+        }
+        else
+        {
+            setIsRequirementModel(false);
+        }
+        
+        refreshLists();
+    }
+    
+    
+    
 }
