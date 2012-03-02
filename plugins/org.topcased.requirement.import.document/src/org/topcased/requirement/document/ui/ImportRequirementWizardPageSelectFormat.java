@@ -49,6 +49,7 @@ import org.topcased.requirement.document.component.ComponentHelpRadioButton;
 import org.topcased.requirement.document.component.ComponentHelpTextFieldButtonWithDelete;
 import org.topcased.requirement.document.elements.Column;
 import org.topcased.requirement.document.elements.IStructuredContentProviderTree;
+import org.topcased.requirement.document.elements.PageController;
 import org.topcased.requirement.document.elements.RecognizedElement;
 import org.topcased.requirement.document.elements.RecognizedTree;
 import org.topcased.requirement.document.elements.Regex;
@@ -136,31 +137,61 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
     /** The Current File */
     private IFile currentFile;
     
-    /** Flag for initialization */
-	private boolean init = true;
-	
 	/** Check button component for Description */
 	private ComponentHelpCheckButton descriptionCheck;
 	
 	/** description composite */
 	private DescriptionComposite descriptionComposite;
+
+	/** the page controller */
+	private PageController controller;
+
+	/** the value of the description check button */
+	private boolean descriptionChecked = false;
+
+	/** Boolean to define if the description regex if complete */
+	private boolean descriptionRegexComplete = false;
+
+	/** Boolean to define if the description text if complete */
+	private boolean descriptionTextComplete = false;
+	
+	/** the description regex */
+	private String descriptionRegex;
+
+	/** the description text */
+	private String descriptionText;
 	
     
     /**
      * Instantiates a new import requirement wizard page select format.
      * 
      * @param pageName the page name
+     * @param pageController 
      * @param document the document
      * @param t the t
      * @param page1 
      */
-    protected ImportRequirementWizardPageSelectFormat(String pageName, File document, RecognizedTree t)
+    public ImportRequirementWizardPageSelectFormat(String pageName, PageController pageController)
     {
         super(pageName);
-        documentFile = document;
-        tree = t;
+        controller = pageController;
     }
 
+    public void setTree(RecognizedTree tree) {
+		this.tree = tree;
+	}
+
+	/**
+     * Sets the document file.
+     * 
+     * @param documentFile the new document file
+     */
+    public void setDocumentFile(File documentFile)
+    {
+        this.documentFile = documentFile;
+    }
+    
+    
     /*
      * (non-Javadoc)
      * 
@@ -172,6 +203,16 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
         {
             deleteReqId();
         }
+        if (descriptionChecked) {
+			descriptionRegexComplete = descriptionComposite.isDescriptionRegexComplete();
+			descriptionTextComplete = descriptionComposite.isTextComplete();
+			descriptionRegex = descriptionComposite.getDescriptionRegex();
+			descriptionText = descriptionComposite.getText();
+			controller.setDescriptionRegex(descriptionRegex);
+			controller.setDescriptionEndText(descriptionText);
+		}
+        
+        
         updateWizard();
     }
 
@@ -192,7 +233,6 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
      */
     public void createControl(Composite parent)
     {
-    	init  = true;
         Composite composite = new Composite(parent, SWT.NONE);
         composite.setLayout(new FillLayout());
         // setImageDescriptor(workbench.getSharedImages().getImageDescriptor(Wizard.DEFAULT_IMAGE));
@@ -209,7 +249,6 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
         form.getBody().setLayout(layout);
         createSection();
         setControl(composite);
-        init = false;
 
     }
 
@@ -226,6 +265,22 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
         createListFormat(section);
         createComponentForButtons(section);
         createDescription(section);
+        initSpreadSheet();
+    }
+
+    /**
+     * initializes the spreadSheet field
+     */
+    private void initSpreadSheet()
+    {
+        if (documentFile.getName().endsWith(".docx") || documentFile.getName().endsWith(".odt"))
+        {
+            setIsSpreadsheet(false);
+        }
+        else
+        {
+            setIsSpreadsheet(true);
+        }
     }
 
     /**
@@ -240,8 +295,15 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
         {
             public void handleModelChange()
             {
+            	descriptionChecked = descriptionCheck.getSelection();
                 descriptionComposite.setEnabled(descriptionCheck.getSelection());
                 descriptionComposite.setVisible(descriptionCheck.getSelection());
+                if (!descriptionChecked)
+                {
+                    descriptionRegex = null;   
+                    descriptionText = null;
+                }
+                controller.removeDocumentType();
                 ImportRequirementWizardPageSelectFormat.this.handleModelChange();
             }
         }, composite, toolkit, SWT.NONE, helpText);
@@ -294,13 +356,13 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
                     {
                         valueToRecognizeReq = new Regex(dialog.getRegexInput());
                         reqIdComponent.setValueText(valueToRecognizeReq.getText());
-                        updateWizard();
                     }
                     else
                     {
                         tree.add(new Regex(dialog.getRegexInput()));
                         listFormat.refresh();
                     }
+                    controller.removeDocumentType();
                     updateWizard();
                 }
             }
@@ -329,6 +391,7 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
                 listFormat.refresh();
                 buttonDelete.setEnabled(false);
                 updateWizard();
+                controller.removeDocumentType();
             }
         });
     }
@@ -356,6 +419,7 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
                 listFormat.refresh();
                 // Remove req id
                 deleteReqId();
+                controller.removeDocumentType();
             }
         });
     }
@@ -391,6 +455,7 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
                         tree.add(new Column(dialog.getColumnInput(), dialog.getRegexInput()));
                         listFormat.refresh();
                     }
+                    controller.removeDocumentType();
                     updateWizard();
                 }
             }
@@ -431,6 +496,7 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
                             tree.add(new Style(dialog.getStyleInput(), dialog.getRegexInput()));
                             listFormat.refresh();
                         }
+                        controller.removeDocumentType();
                         updateWizard();
                     }
                 }
@@ -445,7 +511,7 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
     {
         getWizard().getContainer().updateMessage();
         getWizard().getContainer().updateButtons();
-        ((ImportRequirementWizard)getWizard()).getPageController().pageSelectFormatChanged( tree );
+        controller.pageSelectFormatChanged( tree );
     }
 
     /**
@@ -501,7 +567,15 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
         labelChapter = toolkit.createLabel(compo, "Chapter organisation: "); //$NON-NLS-1$
         // Create the text component
         String helpText = Messages.ImportRequirementWizardPageSelectFormat_FLAT_OR_HIERARCHICAL;
-        chapterRecognizeComponent = new ComponentHelpRadioButton(this, compo, toolkit, SWT.NONE, helpText);
+        chapterRecognizeComponent = new ComponentHelpRadioButton(new NotifyElement()
+        {
+            public void handleModelChange()
+            {
+                controller.setHierarchical(chapterRecognizeComponent.isHierarchical());
+                controller.removeDocumentType();
+                ImportRequirementWizardPageSelectFormat.this.handleModelChange();
+            }
+        }, compo, toolkit, SWT.NONE, helpText);
         chapterRecognizeComponent.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
         GridData data = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1);
         compo.setLayoutData(data);
@@ -524,7 +598,18 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
         toolkit.createLabel(compo, "Requirement identification: "); //$NON-NLS-1$
         // Create the text component
         String helpText = Messages.ImportRequirementWizardPageSelectFormat_IDENTIFICATION;
-        reqIdComponent = new ComponentHelpTextFieldButtonWithDelete(this, compo, toolkit, SWT.NONE, helpText);
+        reqIdComponent = new ComponentHelpTextFieldButtonWithDelete(new NotifyElement()
+        {
+            
+            public void handleModelChange()
+            {
+                if (valueToRecognizeReq != null)
+                {
+                    controller.setIdentifier(valueToRecognizeReq);
+                    ImportRequirementWizardPageSelectFormat.this.handleModelChange();
+                }
+            }
+        }, compo, toolkit, SWT.NONE, helpText);
         reqIdComponent.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
         GridData data1 = new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1);
         compo.setLayoutData(data1);
@@ -567,6 +652,19 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
             result = false;
             error.append("Enter a rule to recognize requirements\n"); //$NON-NLS-1$
         }
+
+        if (valueToRecognizeReq != null && isSpreadsheet && !(valueToRecognizeReq instanceof Column))
+        {
+            result = false;
+            error.append("Some rules are not valid\nxlsx, ods, csv => only column\ndocx, odt => only style and regex"); //$NON-NLS-1$
+        }
+        
+        if (valueToRecognizeReq != null && !isSpreadsheet && valueToRecognizeReq instanceof Column)
+        {
+            result = false;
+            error.append("Some rules are not valid\nxlsx, ods, csv => only column\ndocx, odt => only style and regex"); //$NON-NLS-1$
+        }
+        
         if (!isListValid())
         {
             result = false;
@@ -574,30 +672,26 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
         }
         
         
-        if (descriptionCheck != null && descriptionCheck.getSelection() && !(descriptionComposite.isDescriptionRegexComplete() || descriptionComposite.isTextComplete()))
-        {
-            result = false;
+        if (descriptionChecked && !descriptionRegexComplete && !descriptionTextComplete ) {
+        	result = false;
             error.append(Messages.DescriptionError);
-        }
+		}
 
-        if (descriptionCheck != null && descriptionCheck.getSelection() && descriptionComposite.isDescriptionRegexComplete())
-        {
-            if (!isRegexValid(descriptionComposite.getDescriptionRegex()))
+        if (descriptionChecked && descriptionRegexComplete){
+        	if (!isRegexValid(descriptionRegex))
             {
                 result = false;
                 error.append(Messages.DescriptionRegexError);
             }
         }
 
-        if (descriptionCheck != null && descriptionCheck.getSelection() && descriptionComposite.isTextComplete())
-        {
-            if (!isRegexValid(descriptionComposite.getText()))
+        if (descriptionChecked && descriptionRegexComplete){
+        	if (!isRegexValid(descriptionText))
             {
                 result = false;
                 error.append(Messages.EndLabelRegexError);
             }
         }
-        
         
         // Display error message
         if (result)
@@ -672,27 +766,6 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
     public void setIsSpreadsheet(boolean isASpreadsheet)
     {
         isSpreadsheet = isASpreadsheet;
-        if (isASpreadsheet)
-        {
-            // Case xlsx or ods or csv
-            buttonNewColumn.setVisible(true);
-            buttonNewRegex.setVisible(false);
-            buttonNewStyle.setVisible(false);
-            chapterRecognizeComponent.setVisible(false);
-            labelChapter.setVisible(false);
-            descriptionCheck.setVisible(false);
-            descriptionComposite.setVisible(false);
-        }
-        else
-        {
-            // Case docx or odt
-            buttonNewColumn.setVisible(false);
-            buttonNewRegex.setVisible(true);
-            buttonNewStyle.setVisible(true);
-            chapterRecognizeComponent.setVisible(true);
-            labelChapter.setVisible(true);
-            descriptionCheck.setVisible(true);
-        }
     }
 
     /**
@@ -705,15 +778,7 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
         return isSpreadsheet;
     }
 
-    /**
-     * Sets the document file.
-     * 
-     * @param documentFile the new document file
-     */
-    public void setDocumentFile(File documentFile)
-    {
-        this.documentFile = documentFile;
-    }
+
 
     /**
      * Gets the value to recognize req.
@@ -908,101 +973,47 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
      * 
      * @param inputDocument
      * @param modelType 
+     * @param documentTypeSelected 
      */
-    public void pageChanged(String inputDocument, String modelType)
+    public void pageChanged(String inputDocument, String modelType, boolean documentTypeSelected)
     {
-    	if (init) {
-			init = false;
-    		return;
-		}
         
         if (inputDocument.endsWith(".docx") || inputDocument.endsWith(".odt")) //$NON-NLS-1$ //$NON-NLS-2$
         {
-            setIsSpreadsheet(false);
+            isSpreadsheet = false;
             
-            
-            chapterRecognizeComponent.setHierachical(((ImportRequirementWizard)getWizard()).getPageController().isHierarchical());
-            
-            valueToRecognizeReq = ((ImportRequirementWizard)getWizard()).getPageController().getIDRegexOrStyle();
-            if (valueToRecognizeReq != null)
+            if (documentTypeSelected)
             {
-                reqIdComponent.setValueText(valueToRecognizeReq.getText());
-            } else {
-                reqIdComponent.setValueText(""); //$NON-NLS-1$
+                valueToRecognizeReq = controller.getIDRegexOrStyle();
+                RecognizedTree newTree = controller.getStylesAndRegex();
+                tree.getChildren().clear();
+                if (newTree != null)
+                {
+                    tree.getChildren().addAll(newTree.getChildren());
+                }
             }
-            
-            RecognizedTree newTree = ((ImportRequirementWizard)getWizard()).getPageController().getStylesAndRegex();
-            tree.getChildren().clear();
-            if (newTree != null)
-            {
-                tree.getChildren().addAll(newTree.getChildren());
-            }
-            listFormat.refresh(true);
-           
-           
         } 
         else
         {
-            setIsSpreadsheet(true);
-            
-            valueToRecognizeReq = ((ImportRequirementWizard)getWizard()).getPageController().getIDColumn();
-             
-            if (valueToRecognizeReq != null)
-            {
-                reqIdComponent.setValueText(valueToRecognizeReq.getText());
-            } else {
-                reqIdComponent.setValueText(""); //$NON-NLS-1$
-            }
-            
-            RecognizedTree newTree = ((ImportRequirementWizard)getWizard()).getPageController().getColumns();
-            tree.getChildren().clear();
-            if (newTree != null)
-            {
-                tree.getChildren().addAll(newTree.getChildren());
-            }
-            listFormat.refresh(true);
-            
-            descriptionCheck.setSelection(false);
-            descriptionComposite.setEnabled(false);
-            descriptionComposite.setVisible(false);
-            descriptionComposite.setText(""); //$NON-NLS-1$
+            isSpreadsheet = true;
 
+            if (documentTypeSelected)
+            {
+                valueToRecognizeReq = controller.getIDColumn();
+                RecognizedTree newTree = controller.getColumns();
+                tree.getChildren().clear();
+                if (newTree != null)
+                {
+                    tree.getChildren().addAll(newTree.getChildren());
+                }
+            }
         }
         
-        descriptionCheck.setSelection(false);
-        descriptionComposite.setEnabled(false);
-        descriptionComposite.setVisible(false);
-        descriptionComposite.setText(""); //$NON-NLS-1$
-
-        if (Constants.REQUIREMENT_EXTENSION.equals(modelType))
+        if (Constants.REQUIREMENT_EXTENSION.equals(modelType) && documentTypeSelected)
         {
-            descriptionCheck.setVisible(true);
-            descriptionCheck.setEnabled(true);
             
-            String endText = ((ImportRequirementWizard)getWizard()).getPageController().getEndText();
-            String descriptionRegex = ((ImportRequirementWizard)getWizard()).getPageController().getDescriptionRegex();
-            if (endText != null || descriptionRegex != null)
-            {
-                descriptionCheck.setSelection(true);
-                descriptionComposite.setEnabled(true);
-                descriptionComposite.setVisible(true);
-                if (endText != null)
-                {
-                    descriptionComposite.setText(endText);
-                }
-                if (descriptionRegex != null)
-                {
-                    descriptionComposite.setDescriptionRegex(descriptionRegex);
-                }
-            }
-            
-            
-        } else
-        {
-            descriptionCheck.setVisible(false);
-            descriptionCheck.setEnabled(false);
-            descriptionComposite.setEnabled(false);
-            descriptionComposite.setVisible(false);
+            descriptionText = controller.getDescriptionEndText();
+            descriptionRegex = controller.getDescriptionRegex();
         }
         
         updateWizard();
@@ -1012,30 +1023,120 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
             if (inputDocument.contains("file:")) //$NON-NLS-1$
             {
                 currentFileSystem = new File(URI.createURI(inputDocument).toFileString());
-                ((ImportRequirementWizard)getWizard()).setCurrentFileSystem(currentFileSystem);
+                controller.setCurrentFileSystem(currentFileSystem);
             }
             else if (inputDocument.contains("platform:")) //$NON-NLS-1$
             {
                 currentFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(URI.createURI(inputDocument).toPlatformString(true)));
-                ((ImportRequirementWizard)getWizard()).setCurrentFile(currentFile);
+                controller.setCurrentFile(currentFile);
                 if (currentFile != null)
                 {
                     currentFileSystem = currentFile.getLocation().toFile();
-                    ((ImportRequirementWizard)getWizard()).setCurrentFileSystem(currentFileSystem);
+                    controller.setCurrentFileSystem(currentFileSystem);
                 }
             }
             else
             {
                 currentFile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(URI.createURI(inputDocument).toFileString()));
-                ((ImportRequirementWizard)getWizard()).setCurrentFile(currentFile);
+                controller.setCurrentFile(currentFile);
                 if (currentFile != null)
                 {
                     currentFileSystem = currentFile.getLocation().toFile();
-                    ((ImportRequirementWizard)getWizard()).setCurrentFileSystem(currentFileSystem);
+                    controller.setCurrentFileSystem(currentFileSystem);
                 }
             }
         }
         setDocumentFile(currentFileSystem);
+    }
+    
+    @Override
+    public void setVisible(boolean visible) {
+    	super.setVisible(visible);
+    	if (visible) {
+    		 refreshView();
+		}
+    }
+
+    /**
+     * Refresh graphical components
+     */
+    private void refreshView()
+    {
+        if (isSpreadsheet)
+            {
+                // Case xlsx or ods or csv
+                buttonNewColumn.setVisible(true);
+                buttonNewRegex.setVisible(false);
+                buttonNewStyle.setVisible(false);
+                chapterRecognizeComponent.setVisible(false);
+                labelChapter.setVisible(false);
+                
+                descriptionCheck.setVisible(false);
+                descriptionCheck.setEnabled(false);
+                descriptionComposite.setVisible(false);
+                descriptionComposite.setEnabled(false);
+                descriptionComposite.setText(""); //$NON-NLS-1$
+                descriptionComposite.setDescriptionRegex(""); //$NON-NLS-1$
+             
+                if (valueToRecognizeReq != null)
+                {
+                    reqIdComponent.setValueText(valueToRecognizeReq.getText());
+                } else {
+                    reqIdComponent.setValueText(""); //$NON-NLS-1$
+                }
+                listFormat.refresh(true);
+            }
+            else
+            {
+                
+                
+                if (Constants.REQUIREMENT_EXTENSION.equals(controller.getModelType()))
+                {
+                    descriptionCheck.setVisible(true);
+                    descriptionCheck.setEnabled(true);
+                    
+                    if (descriptionText != null || descriptionRegex != null)
+                    {
+                        descriptionCheck.setSelection(true);
+                        descriptionComposite.setEnabled(true);
+                        descriptionComposite.setVisible(true);
+                        if (descriptionText != null)
+                        {
+                            descriptionComposite.setText(descriptionText);
+                        }
+                        if (descriptionRegex != null)
+                        {
+                            descriptionComposite.setDescriptionRegex(descriptionRegex);
+                        }
+                    }
+                } else
+                {
+                    descriptionCheck.setVisible(false);
+                    descriptionCheck.setEnabled(false);
+                    descriptionComposite.setEnabled(false);
+                    descriptionComposite.setVisible(false);
+                    descriptionComposite.setText(""); //$NON-NLS-1$
+                    descriptionComposite.setDescriptionRegex(""); //$NON-NLS-1$
+                }
+                
+                // Case docx or odt
+                buttonNewColumn.setVisible(false);
+                buttonNewRegex.setVisible(true);
+                buttonNewStyle.setVisible(true);
+                chapterRecognizeComponent.setVisible(true);
+                labelChapter.setVisible(true);
+                
+                chapterRecognizeComponent.setHierachical(controller.isHierarchical());
+                
+                if (valueToRecognizeReq != null)
+                {
+                    reqIdComponent.setValueText(valueToRecognizeReq.getText());
+                } else {
+                    reqIdComponent.setValueText(""); //$NON-NLS-1$
+                }
+                
+                listFormat.refresh(true);
+            }
     }
     
 }
