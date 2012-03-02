@@ -14,6 +14,8 @@
 package org.topcased.requirement.document.ui;
 
 import java.io.File;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -50,6 +52,7 @@ import org.topcased.requirement.document.component.ComponentHelpCheckButton;
 import org.topcased.requirement.document.component.ComponentHelpRadioButtonModel;
 import org.topcased.requirement.document.component.ComponentHelpTextField;
 import org.topcased.requirement.document.component.ComponentHelpTextFieldButton;
+import org.topcased.requirement.document.elements.PageController;
 import org.topcased.requirement.document.utils.Constants;
 import org.topcased.requirement.document.utils.Messages;
 import org.topcased.typesmodel.model.inittypes.DocumentType;
@@ -59,6 +62,17 @@ import org.topcased.typesmodel.model.inittypes.DocumentType;
  */
 public class ImportRequirementWizardPageSelectDocument extends WizardPage implements NotifyElement
 {
+    /** the output regex constant */
+    private static final String OUTPUT_REGEX = ".*\\.uml|.*\\.sysml|.*\\.requirement";
+
+    /** the output pattern constant */
+    private static final Pattern OUTPUT_PATTERN = Pattern.compile(".*\\.uml|.*\\.sysml|.*\\.requirement");
+
+    /** the input regex constant */
+    private static final String INPUT_REGEX = ".*\\.docx|.*\\.odt|.*\\.csv|.*\\.xlsx|.*\\.ods";
+
+    /** the input pattern constant */
+    private static final Pattern INPUT_PATTERN = Pattern.compile(".*\\.docx|.*\\.odt|.*\\.csv|.*\\.xlsx|.*\\.ods");
 
     /** The Constants PREFERENCE. */
     public static final String PREFERENCE_FOR_INPUT_DOC = "inputdoc_reqimport"; //$NON-NLS-1$
@@ -152,39 +166,52 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
 
     /** The stereotype from pref. */
     private String stereotypeFromPref;
-    
+
     /** The check button to input typed documents */
     private ComponentHelpCheckButton inputTypedDocuments;
-    
+
     /** Composite to input typed documents */
     private DocumentTypeAndAttachmentRequirementComposite typedDocumentsComposite;
 
-    /** flag for initialization */
-	private boolean init = true;
-	
-	/** help check button component for requirement */
+    /** help check button component for requirement */
     private ComponentHelpCheckButton attachRequirement;
+
+    /** the pages controller */
+    private PageController controller;
+
+    /** Defines if the input type check button is activated */
+    private boolean InputTypedChecked = false;
+
+    /** Defines if the attache requirement check button is activated */
+    private boolean attachRequirementChecked = false;
 
     /**
      * Instantiates a new import requirement wizard page select document.
      * 
      * @param pageName the page name
-     * @param valueForInput the value for input
+     * @param pageController the page controller
      */
-    protected ImportRequirementWizardPageSelectDocument(String pageName, String valueForInput)
+    public ImportRequirementWizardPageSelectDocument(String pageName, PageController pageController)
     {
         super(pageName);
-        inputDocument = valueForInput;
+        controller = pageController;
+    }
+
+    /**
+     * @param valueForInput the value for input
+     **/
+    public void setInputDocument(String inputDocument)
+    {
+        this.inputDocument = inputDocument;
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
+     * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets .Composite)
      */
     public void createControl(Composite parent)
     {
-    	init = true;
         composite = new Composite(parent, SWT.NONE);
         composite.setLayout(new FillLayout());
         setImageDescriptor(workbench.getSharedImages().getImageDescriptor(Wizard.DEFAULT_IMAGE));
@@ -203,11 +230,8 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
         createSection();
 
         setControl(composite);
-        init = false;
 
     }
-
-
 
     /**
      * Creates the section.
@@ -225,56 +249,62 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
 
     /**
      * Create composite to attach requirement and initialize the wizard with types document
-     *  
+     * 
      * @param composite
      */
     private void createImportTypedDocumentAndAttachReq(Composite composite)
     {
-        
         String helpText = "<form><p>Check this option if you want to attach the requirement model to a diagram</p></form>";
-        attachRequirement =  new ComponentHelpCheckButton(new NotifyElement(){
+        attachRequirement = new ComponentHelpCheckButton(new NotifyElement()
+        {
             public void handleModelChange()
             {
                 typedDocumentsComposite.setAttachRequirementGroupEnabled(attachRequirement.getSelection());
                 outputModelComponent.setButtonEnable(!attachRequirement.getSelection());
                 outputModelComponent.setEnabled(!attachRequirement.getSelection());
                 radioButtonModelType.setEnabled(!attachRequirement.getSelection());
-                if (attachRequirement.getSelection())
+                attachRequirementChecked = attachRequirement.getSelection();
+                if (attachRequirementChecked)
                 {
                     outputModelComponent.setTextForeground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
                     radioButtonModelType.setselection(0);
-                } else {
+                }
+                else
+                {
                     outputModelComponent.setTextForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
                 }
                 ImportRequirementWizardPageSelectDocument.this.handleModelChange();
+                refreshView();
             }
         }, composite, toolkit, SWT.NONE, helpText);
         attachRequirement.setValueText("Attach Requirement");
-        attachRequirement.setLayoutData(new GridData(SWT.CENTER, SWT.NONE, false, true,1,1));
-        
+        attachRequirement.setLayoutData(new GridData(SWT.CENTER, SWT.NONE, false, true, 1, 1));
+
         helpText = "<form><p>Check this option if you want to initialize the wizard with types file (.types)</p></form>";
         inputTypedDocuments = new ComponentHelpCheckButton(new NotifyElement()
         {
-            
             public void handleModelChange()
             {
                 typedDocumentsComposite.setTypedDocumentGroupEnabled(inputTypedDocuments.getSelection());
+                InputTypedChecked = inputTypedDocuments.getSelection();
                 ImportRequirementWizardPageSelectDocument.this.handleModelChange();
+                refreshView();
             }
-        }, composite, toolkit, SWT.NONE, helpText); // toolkit.createButton(composite, "Input typed documents", SWT.CHECK);
+        }, composite, toolkit, SWT.NONE, helpText); // toolkit.createButton(composite,
+                                                    // "Input typed documents",
+                                                    // SWT.CHECK);
         inputTypedDocuments.setValueText("Input typed documents");
-        inputTypedDocuments.setLayoutData(new GridData(SWT.CENTER, SWT.NONE, false, true,1,1));
-        
+        inputTypedDocuments.setLayoutData(new GridData(SWT.CENTER, SWT.NONE, false, true, 1, 1));
+
         typedDocumentsComposite = new DocumentTypeAndAttachmentRequirementComposite(composite, SWT.NONE);
         typedDocumentsComposite.setNotifyElement(this);
-        typedDocumentsComposite.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,true,2,1));
-        
+        typedDocumentsComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
+
         if (typedDocumentsComposite.isTypedDocumentEmpty())
         {
             inputTypedDocuments.setEnabled(false);
             inputTypedDocuments.setVisible(false);
         }
-        
         typedDocumentsComposite.setTypedDocumentGroupEnabled(false);
         typedDocumentsComposite.setAttachRequirementGroupEnabled(false);
     }
@@ -282,7 +312,7 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
     /**
      * Load preferences.
      */
-    private void loadPreferences()
+    public void loadPreferences()
     {
         // Get InputDocument
         if (inputDocument == null || inputDocument.length() == 0)
@@ -309,7 +339,7 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
         {
             oldModelType = modelTypeFromPref;
             modelType = modelTypeFromPref;
-            ((ImportRequirementWizard)getWizard()).getPageController().setModelType(modelType);
+            controller.setModelType(modelType);
             if (Constants.REQUIREMENT_EXTENSION.equals(modelType))
             {
                 radioButtonModelType.setselection(0);
@@ -352,7 +382,7 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
                 }
             }
         }
-        
+
         File currentFileSystem;
         if (inputDocument != null)
         {
@@ -360,26 +390,26 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
             if (inputDocument.contains("file:"))
             {
                 currentFileSystem = new File(URI.createURI(inputDocument).toFileString());
-                ((ImportRequirementWizard)getWizard()).setCurrentFileSystem(currentFileSystem);
+                controller.setCurrentFileSystem(currentFileSystem);
             }
             else if (inputDocument.contains("platform:"))
             {
                 currentFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(URI.createURI(inputDocument).toPlatformString(true)));
-                ((ImportRequirementWizard)getWizard()).setCurrentFile(currentFile);
+                controller.setCurrentFile(currentFile);
                 if (currentFile != null)
                 {
                     currentFileSystem = currentFile.getLocation().toFile();
-                    ((ImportRequirementWizard)getWizard()).setCurrentFileSystem(currentFileSystem);
+                    controller.setCurrentFileSystem(currentFileSystem);
                 }
             }
             else
             {
                 currentFile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(URI.createURI(inputDocument).toFileString()));
-                ((ImportRequirementWizard)getWizard()).setCurrentFile(currentFile);
+                controller.setCurrentFile(currentFile);
                 if (currentFile != null)
                 {
                     currentFileSystem = currentFile.getLocation().toFile();
-                    ((ImportRequirementWizard)getWizard()).setCurrentFileSystem(currentFileSystem);
+                    controller.setCurrentFileSystem(currentFileSystem);
                 }
             }
         }
@@ -432,7 +462,16 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
     {
         toolkit.createLabel(composite, "Input Document: "); //$NON-NLS-1$
         String helpText = Messages.ImportRequirementWizardPageSelectDocument_INPUT_DOCUMENT;
-        inputDocumentComponent = new ComponentHelpTextFieldButton(this, composite, toolkit, SWT.NONE, helpText, SWT.OPEN, ".*\\.docx|.*\\.odt|.*\\.csv|.*\\.xlsx|.*\\.ods"); //$NON-NLS-1$
+        inputDocumentComponent = new ComponentHelpTextFieldButton(new NotifyElement()
+        {
+
+            public void handleModelChange()
+            {
+                inputDocument = inputDocumentComponent.getInput();
+                controller.clear();
+                ImportRequirementWizardPageSelectDocument.this.handleModelChange();
+            }
+        }, composite, toolkit, SWT.NONE, helpText, SWT.OPEN, INPUT_REGEX); //$NON-NLS-1$
         fill(inputDocumentComponent);
     }
 
@@ -458,7 +497,16 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
         toolkit.createLabel(composite, "Output Model: "); //$NON-NLS-1$
         // Create Text field
         String helpText = Messages.ImportRequirementWizardPageSelectDocument_OUTPUT_MODEL;
-        outputModelComponent = new ComponentHelpTextFieldButton(this, composite, toolkit, SWT.NONE, helpText, SWT.SAVE, ".*\\.uml|.*\\.sysml|.*\\.requirement"); //$NON-NLS-1$
+        outputModelComponent = new ComponentHelpTextFieldButton(new NotifyElement()
+        {
+
+            public void handleModelChange()
+            {
+                outputModel = outputModelComponent.getInput();
+                ImportRequirementWizardPageSelectDocument.this.handleModelChange();
+            }
+        }, composite, toolkit, SWT.NONE, helpText, SWT.SAVE, OUTPUT_REGEX); //$NON-NLS-1$
+
         outputModelComponent.setEditable(false);
         fill(outputModelComponent);
 
@@ -477,7 +525,15 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
     {
         toolkit.createLabel(composite, "Level: "); //$NON-NLS-1$
         String helpText = Messages.ImportRequirementWizardPageSelectDocument_EANNOTATION;
-        levelComponent = new ComponentHelpTextField(this, composite, toolkit, SWT.NONE, helpText);
+        levelComponent = new ComponentHelpTextField(new NotifyElement()
+        {
+
+            public void handleModelChange()
+            {
+                level = levelComponent.getInput();
+                ImportRequirementWizardPageSelectDocument.this.handleModelChange();
+            }
+        }, composite, toolkit, SWT.NONE, helpText);
         fill(levelComponent);
     }
 
@@ -507,7 +563,7 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
 
             public void widgetSelected(SelectionEvent e)
             {
-                setStereotype(null, true);
+                setStereotype(null);
             }
 
         });
@@ -542,58 +598,65 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
         boolean result = true;
         StringBuffer error = new StringBuffer(""); //$NON-NLS-1$
 
-        // Validation Input document
-        if (!inputDocumentComponent.isValid())
+        if (!isValid(inputDocument, INPUT_PATTERN))
         {
             result = false;
             error.append("Choose an input document (docx, odt, csv, ods or xlsx)\n"); //$NON-NLS-1$
         }
-        else
-        {
-            // Save input document
-            inputDocument = inputDocumentComponent.getInput();
-        }
 
-        // Validation Output document
-        if (!outputModelComponent.isValid())
+        if (!isValid(outputModel, OUTPUT_PATTERN))
         {
             result = false;
             error.append("Choose an output model (uml, sysml or requirement)\n"); //$NON-NLS-1$
-            stereotypeComponent.setButtonEnable(false);
+            if (stereotypeComponent != null)
+            {
+                stereotypeComponent.setButtonEnable(false);
+            }   
         }
         else
         {
             // Save output model
-            outputModel = outputModelComponent.getInput();
-            if (outputModel.endsWith(".uml") || outputModel.endsWith(".sysml")) //$NON-NLS-1$ //$NON-NLS-2$
+            if (outputModelComponent != null)
             {
-                if (!modelType.equals(oldModelType))
+                outputModel = outputModelComponent.getInput();
+                if (outputModel.endsWith(".uml") || outputModel.endsWith(".sysml")) //$NON-NLS-1$ //$NON-NLS-2$
                 {
-                    setStereotype(null, false);
+                    if (!modelType.equals(oldModelType))
+
+                    {
+                        setStereotype(null);
+
+                    }
+                    if (stereotypeComponent != null)
+                    {
+                        stereotypeComponent.setButtonEnable(true);
+                    }
 
                 }
-                stereotypeComponent.setButtonEnable(true);
+                else
+                {
+                    if (stereotypeComponent != null)
+                    {
+                        stereotypeComponent.setButtonEnable(false);
+                    }
 
-            }
-            else
-            {
-                stereotypeComponent.setButtonEnable(false);
-                setStereotype(null, false);
+                    setStereotype(null);
+                }
             }
         }
 
-        if (inputTypedDocuments.getSelection() && !typedDocumentsComposite.isTypedDocumentComplete() )
+        if (InputTypedChecked && !typedDocumentsComposite.isTypedDocumentComplete())
         {
             result = false;
             error.append("Choose a Document type\n"); //$NON-NLS-1$
         }
-        
-        if (attachRequirement.getSelection() && !typedDocumentsComposite.isAttachReqComplete())
+
+        if (attachRequirementChecked && !typedDocumentsComposite.isAttachReqComplete())
         {
             result = false;
             error.append("Choose a Diagram, a Project name and a Project description\n");
         }
-        
+
         if (result)
         {
             setErrorMessage(null);
@@ -613,29 +676,29 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
      */
     public void handleModelChange()
     {
-        getWizard().getContainer().updateMessage();
-        getWizard().getContainer().updateButtons();
-        // Save Level
-        level = levelComponent.getInput();
         // Save output model
-        if (attachRequirement.getSelection() && typedDocumentsComposite.getModelToAttach() != null)
+        if (attachRequirementChecked && typedDocumentsComposite.getModelToAttach() != null)
         {
-            outputModelComponent.setValueText(URI.createURI(typedDocumentsComposite.getModelToAttach().getLocationURI().toString()).trimFileExtension().toString().concat("TEMP.requirement"),true);//getLocationURI().trimFileExtension().appendFileExtension("temp").appendFileExtension("requirement").toString(),true);
+            outputModel = URI.createURI(typedDocumentsComposite.getModelToAttach().getLocationURI().toString()).trimFileExtension().toString().concat("TEMP.requirement");
         }
-        outputModel = outputModelComponent.getInput();
+
         // Get the model type
         oldModelType = modelType;
         modelType = getModelTypeFromComponent();
-        if(init )
-        {
-        	init = true;
-        	return;
-        }
-        ((ImportRequirementWizard)getWizard()).getPageController().pageSelectDocumentChanged(getInputDocument(), getDocumentType(), modelType, loadMappingPref());
+        controller.pageSelectDocumentChanged(getInputDocument(), getDocumentType(), modelType, loadMappingPref());
     }
 
     /**
-     * 
+     * Sets the level
+     * @param level
+     */
+    public void setLevel(String level)
+    {
+        this.level = level;
+    }
+
+    /**
+     * Returns the type document
      * @return
      */
     public DocumentType getDocumentType()
@@ -646,7 +709,7 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
         }
         return null;
     }
-    
+
     // //////////////////////////////////
     // / Getter and setter ///
     // //////////////////////////////////
@@ -671,24 +734,24 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
         {
             modelType = Constants.SYSML_EXTENSION;
         }
-		if (outputModel != null && outputModel.length() > 0) {
-			int lastIndexOfPoint = outputModel.lastIndexOf(".");
-			String type = outputModel.substring(lastIndexOfPoint + 1,
-					outputModel.length());
+        if (outputModel != null && outputModel.length() > 0)
+        {
+            int lastIndexOfPoint = outputModel.lastIndexOf(".");
+            String type = outputModel.substring(lastIndexOfPoint + 1, outputModel.length());
 
-			if (type.equals(Constants.REQUIREMENT_EXTENSION)
-					|| type.equals(Constants.UML_EXTENSION)
-					|| type.equals(Constants.SYSML_EXTENSION)) {
-				String splitedOutputModel = outputModel.substring(0,
-						lastIndexOfPoint);
+            if (type.equals(Constants.REQUIREMENT_EXTENSION) || type.equals(Constants.UML_EXTENSION) || type.equals(Constants.SYSML_EXTENSION))
+            {
+                String splitedOutputModel = outputModel.substring(0, lastIndexOfPoint);
 
-				outputModel = splitedOutputModel + "." + modelType;
+                outputModel = splitedOutputModel + "." + modelType;
 
-			} else {
-				outputModel = outputModel + "." + modelType;
-			}
-			outputModelComponent.setValueText(outputModel, true);
-		}
+            }
+            else
+            {
+                outputModel = outputModel + "." + modelType;
+            }
+            ;
+        }
 
         return modelType;
 
@@ -716,7 +779,7 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
         }
 
         // Check output model type
-        if (modelTypeFromPref!= null && !modelTypeFromPref.equalsIgnoreCase(modelType))
+        if (modelTypeFromPref != null && !modelTypeFromPref.equalsIgnoreCase(modelType))
         {
             load = false;
         }
@@ -794,20 +857,9 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
      * 
      * @param s the new stereotype
      */
-    public void setStereotype(Stereotype s, boolean handleChanges)
+    public void setStereotype(Stereotype s)
     {
         this.stereotype = s;
-        if (stereotype != null)
-        {
-            stereotypeComponent.setValueText(stereotype.getName(),!handleChanges);
-            buttonDelete.setEnabled(true);
-        }
-        else
-        {
-            stereotypeComponent.setValueText("",!handleChanges);
-            buttonDelete.setEnabled(false);
-
-        }
     }
 
     /**
@@ -895,11 +947,77 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
 
     /**
      * Gets the project Description for requirement attachment
+     * 
      * @return
      */
     public String getProjectDescription()
     {
         return typedDocumentsComposite.getProjectDescription();
+    }
+    
+    /**
+     * Verify if a regex expression is valid with the given pattern
+     * @param inputValue
+     * @param pattern
+     * @return
+     */
+    public boolean isValid(String inputValue, Pattern pattern)
+    {
+        boolean isValid = true;
+
+        // if a regex is defined
+        if (pattern != null)
+        {
+            // if the input is valid according to the regex
+            Matcher m = pattern.matcher(inputValue);
+            if (!m.matches())
+            {
+                isValid = false;
+            }
+        }
+        return isValid;
+    }
+
+    @Override
+    public void setVisible(boolean visible)
+    {
+        super.setVisible(visible);
+        if (visible)
+        {
+            refreshView();
+        }
+    }
+
+    /**
+     * Refresh graphical components
+     */
+    private void refreshView()
+    {
+        if (stereotype != null)
+        {
+            stereotypeComponent.setValueText(stereotype.getName());
+            buttonDelete.setEnabled(true);
+        }
+        else
+        {
+            stereotypeComponent.setValueText("");
+            buttonDelete.setEnabled(false);
+
+        }
+        outputModelComponent.setValueText(outputModel);
+    }
+    
+    /**
+     * Clears the type document selection 
+     */
+    public void clearDocumentType()
+    {
+        inputTypedDocuments.setSelection(false);
+        if (typedDocumentsComposite != null)
+        {
+            typedDocumentsComposite.setTypedDocumentGroupEnabled(false);
+        }
+        InputTypedChecked = false;
     }
 
 }
