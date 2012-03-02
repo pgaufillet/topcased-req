@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,6 +46,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.uml2.uml.DataType;
@@ -94,15 +96,6 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
     /** The list attributes. */
     private Collection<Attribute> listAttributes = new LinkedList<Attribute>();
 
-    /** The page1. */
-    private ImportRequirementWizardPageSelectDocument page1;
-
-    /** The page2. */
-    private ImportRequirementWizardPageSelectFormat page2;
-
-    /** The page3. */
-    private ImportRequirementWizardPageMapping page3;
-
     /** The file */
     private File currentFileSystem;
 
@@ -130,19 +123,14 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
                 valueForInput = currentFile.getLocationURI().toString();
             }
         }
-        // Create page one
-        page1 = new ImportRequirementWizardPageSelectDocument("Select Document", valueForInput);
-        addPage(page1);
-
-        // Create page two
-        page2 = new ImportRequirementWizardPageSelectFormat("Enter the file format", currentFile != null ? currentFile.getLocation().toFile() : null, tree);
-        addPage(page2);
-
-        // Create page three
-        page3 = new ImportRequirementWizardPageMapping("Enter the file format", tree, listAttributes, page1.getModelType());
-        addPage(page3);
-
+        
         pageController = new PageController(this);
+        
+        List<WizardPage> pages = pageController.createPages(valueForInput, currentFile != null ? currentFile.getLocation().toFile() : null, tree, listAttributes);
+        for (WizardPage wizardPage : pages) {
+			addPage(wizardPage);
+		}
+        
     }
 
     /*
@@ -153,20 +141,20 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
     @Override
     public boolean performFinish()
     {
-        String pathForDebug = getPathForDebug(page1.getLevel());
+        String pathForDebug = getPathForDebug(pageController.getLevel());
 
-        if (page2.getDescriptionState())
+        if (pageController.getDescriptionState())
         {
-            if (page2.isDescriptionText())
+            if (pageController.isDescriptionText())
             {
-                DescriptionChecker.setEndText(page2.getDescription());
+                DescriptionChecker.setEndText(pageController.getDescriptionEndText());
             }
-            if (page2.isDescriptionRegex())
+            if (pageController.isDescriptionRegex())
             {
-                DescriptionChecker.setRegDescription(page2.getDescriptionRegex());
+                DescriptionChecker.setRegDescription(pageController.getDescriptionRegex());
             }
         }
-        RecognizedElement id = page2.getIdentification();
+        RecognizedElement id = pageController.getIdentification();
         if (id instanceof Style)
         {
             DescriptionChecker.setStyleIdent(((Style) id).getStyle());
@@ -182,8 +170,8 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
         }
 
         /** Process **/
-        Doc2ModelCreator d2mc = new Doc2ModelCreator(page3.getListMapping(), page1.getModelType(), page2.isSpreadsheet(), page1.getProfileURI(), page1.getStereotype(), page2.getIsHiearachical(),
-                page2.getIdentification(), pathForDebug);
+        Doc2ModelCreator d2mc = new Doc2ModelCreator(pageController.getListMapping(), pageController.getModelType(), pageController.isSpreadsheet(), pageController.getProfileURI(), pageController.getStereotype(), pageController.isHierarchical(),
+                pageController.getIdentification(), pathForDebug);
         final doc2model model = d2mc.createDoc2Model();
         if (model != null)
         {
@@ -197,7 +185,7 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
                         try
                         {
                             final IProgressMonitor myMonitor = monitor;
-                            Doc2ModelParser parser = new Doc2ModelParser(currentFileSystem.getAbsolutePath(), model, page1.getOutputModel(), null, false);
+                            Doc2ModelParser parser = new Doc2ModelParser(currentFileSystem.getAbsolutePath(), model, pageController.getOutputModel(), null, false);
                             EObject result = parser.parse(new ProgressionObserver()
                             {
                                 public void worked(int i)
@@ -226,11 +214,11 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
                             });
                             // post processes
                             assignLevel(myMonitor, result);
-                            if (Constants.REQUIREMENT_EXTENSION.equals(page1.getModelType()))
+                            if (Constants.REQUIREMENT_EXTENSION.equals(pageController.getModelType()))
                             {
                                 assignAttributeConfiguration(myMonitor, result);
                             }
-                            IFile file = getFile(page1.getOutputModel());
+                            IFile file = getFile(pageController.getOutputModel());
                             if (file != null && file.exists())
                             {
                                 try
@@ -241,7 +229,7 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
                                 {
                                 }
                             }
-                            if (page1.isAttachRequirement())
+                            if (pageController.isAttachRequirement())
                             {
                                 myMonitor.beginTask("Attaching requirement", 3);
                                 if (!getPageController().attachRequirement(myMonitor).get())
@@ -300,7 +288,7 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
                         // sysml or uml so we apply eannotations
                         if (result != null)
                         {
-                            if (page1.getLevel() != null && page1.getLevel().length() > 0)
+                            if (pageController.getLevel() != null && pageController.getLevel().length() > 0)
                             {
                                 myMonitor.beginTask("Assign level", 1);
                                 Resource r = result.eResource();
@@ -313,7 +301,7 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
                                         EAnnotation annotation = EcoreFactory.eINSTANCE.createEAnnotation();
                                         annotation.setSource("http://www.topcased.org/author");
                                         element.getEAnnotations().add(annotation);
-                                        annotation.getDetails().put("author", page1.getLevel());
+                                        annotation.getDetails().put("author", pageController.getLevel());
                                     }
                                 }
                                 try
@@ -341,40 +329,40 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
             }
         }
         // re fill lists
-        for (Mapping m : page3.getListMapping())
+        for (Mapping m : pageController.getListMapping())
         {
             m.getElement().setSelected(false);
-            page3.getListAttributes().add(m.getAttribute());
+            pageController.getListAttributes().add(m.getAttribute());
         }
 
         /** Save preferences **/
 
         // Pref from the first page
-        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_INPUT_DOC, page1.getInputDocument());
-        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_OUTPUT_MODEL, page1.getOutputModel());
-        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_LEVEL, page1.getLevel());
-        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_STEREO, page1.getStereotypeName());
-        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_PROFILE, page1.getProfileURI());
-        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_MODEL_TYPE, page1.getModelType());
+        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_INPUT_DOC, pageController.getInputDocument());
+        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_OUTPUT_MODEL, pageController.getOutputModel());
+        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_LEVEL, pageController.getLevel());
+        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_STEREO, pageController.getStereotypeName());
+        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_PROFILE, pageController.getProfileURI());
+        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_MODEL_TYPE, pageController.getModelType());
 
         // Pref from the second page
-        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectFormat.PREFERENCE_FOR_CHAPTER, page2.getIsHiearachical());
-        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectFormat.PREFERENCE_FOR_VALUE_TO_RECOGNIZE_REQ, page2.getValueToRecognizeReq());
-        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectFormat.PREFERENCE_FOR_LIST_RECOGNIZED_ELEMENT, page2.getListAttributesPref());
+        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectFormat.PREFERENCE_FOR_CHAPTER, pageController.isHierarchical());
+        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectFormat.PREFERENCE_FOR_VALUE_TO_RECOGNIZE_REQ, pageController.getValueToRecognizeReq());
+        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectFormat.PREFERENCE_FOR_LIST_RECOGNIZED_ELEMENT, pageController.getListAttributesPref());
 
         // Pref from the third page
 
         // Save only if it is requirement model
-        if (Constants.REQUIREMENT_EXTENSION.equals(page1.getModelType()))
+        if (Constants.REQUIREMENT_EXTENSION.equals(pageController.getModelType()))
         {
-            Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageMapping.PREFERENCE_FOR_LIST_ATTRIBUT, page3.getListAttributesPref());
+            Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageMapping.PREFERENCE_FOR_LIST_ATTRIBUT, pageController.getListAttributesPref());
         }
-        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageMapping.PREFERENCE_FOR_LIST_MAPPING, page3.getListMappingPref());
+        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageMapping.PREFERENCE_FOR_LIST_MAPPING, pageController.getListMappingPref());
 
         IPreferenceStore preferenceStorePlugIn = RequirementCorePlugin.getDefault().getPreferenceStore();
         if (!preferenceStorePlugIn.getBoolean(RequirementPreferenceConstants.IMPORT_REQUIREMENT_WITHOUT_DIALOG))
         {
-            MessageDialog dialog = new MessageDialog(getShell(), "Information", null, "The .requirement file is generated in : " + currentFileSystem.getPath(), MessageDialog.INFORMATION,
+            MessageDialog dialog = new MessageDialog(getShell(), "Information", null, "The .requirement file is generated in : " + pageController.getOutputModel(), MessageDialog.INFORMATION,
                     new String[] {IDialogConstants.OK_LABEL}, Window.OK);
             dialog.open();
         }
@@ -437,17 +425,17 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
 
     protected void manageProfiles()
     {
-        if (page1.getProfile() != null && page1.getStereotype() != null)
+        if (pageController.getProfile() != null && pageController.getStereotype() != null)
         {
-            String profileName = page1.getProfile().getName();
+            String profileName = pageController.getProfile().getName();
             // Get all the properties
-            Iterator<Property> iter = page1.getStereotype().getAllAttributes().iterator();
+            Iterator<Property> iter = pageController.getStereotype().getAllAttributes().iterator();
             while (iter.hasNext())
             {
                 Property next = iter.next();
                 if (next.getName() != null && !next.getName().contains("base_"))
                 {
-                    if (Constants.UML_EXTENSION.equals(page1.getModelType()))
+                    if (Constants.UML_EXTENSION.equals(pageController.getModelType()))
                     {
                         if (!isRef(next) || (next.getType() != null && next.getType().getName() != null && "class".equals(next.getType().getName().toLowerCase())))
                         {
@@ -490,7 +478,7 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
                 listAttributes.add(a);
             }
         }
-        for (Mapping m : page3.getListMapping())
+        for (Mapping m : pageController.getListMapping())
         {
             attributesInMaping.add(m.getAttribute());
         }
@@ -548,7 +536,7 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
     public void setCurrentFileSystem(File currentFileSystem)
     {
         this.currentFileSystem = currentFileSystem;
-        page2.setDocumentFile(currentFileSystem);
+        pageController.setDocumentFile(currentFileSystem);
     }
 
     /**
