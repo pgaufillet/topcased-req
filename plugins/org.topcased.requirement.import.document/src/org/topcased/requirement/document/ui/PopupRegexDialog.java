@@ -56,6 +56,9 @@ public class PopupRegexDialog extends Dialog implements NotifyElement
     /** The form. */
     private Form form;
 
+    /** The patterns to add */
+    private int patterns;
+
     /**
      * Instantiates a new popup regex dialog.
      * 
@@ -63,9 +66,21 @@ public class PopupRegexDialog extends Dialog implements NotifyElement
      */
     protected PopupRegexDialog(Shell parentShell)
     {
-        super(parentShell);
+        this(parentShell, 0);
     }
 
+    /**
+     * Instantiates a new popup regex dialog.
+     * 
+     * @param parentShell the parent shell
+     * @param patterns the patterns to add for the configuration of the regex viewer
+     */
+    protected PopupRegexDialog(Shell parentShell, int patterns)
+    {
+        super(parentShell);
+        this.patterns = patterns;
+    }
+    
     /*
      * (non-Javadoc)
      * 
@@ -115,7 +130,7 @@ public class PopupRegexDialog extends Dialog implements NotifyElement
         componentHelpTextField.setLayoutData(data);
 
         // Add regex viewer component to the dialog
-        regex = new RegexViewerComposite(form.getBody(), SWT.NONE, RegexViewerComposite.EXPANDABLE | RegexViewerComposite.MATCH | RegexViewerComposite.DESCRIPTION | RegexViewerComposite.GROUP);
+        regex = new RegexViewerComposite(form.getBody(), SWT.NONE, RegexViewerComposite.EXPANDABLE | RegexViewerComposite.MATCH | RegexViewerComposite.DESCRIPTION | RegexViewerComposite.GROUP, Pattern.MULTILINE | patterns);
         regex.setDescription("Regex Test Area"); //$NON-NLS-1$
         regex.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
 
