@@ -13,7 +13,9 @@
  *****************************************************************************/
 package org.topcased.requirement.document.elements;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -37,6 +39,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.IWizardPage;
+import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
@@ -45,6 +48,8 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.uml2.uml.Profile;
+import org.eclipse.uml2.uml.Stereotype;
 import org.topcased.requirement.core.wizards.operation.NewRequirementModelOperation;
 import org.topcased.requirement.document.Activator;
 import org.topcased.requirement.document.ui.ImportRequirementWizard;
@@ -59,33 +64,65 @@ import org.topcased.typesmodel.model.inittypes.InittypesFactory;
 import org.topcased.typesmodel.model.inittypes.Type;
 
 /**
- * Control the page initialization of Import Requirement Document 
- *
+ * Control the page initialization of Import Requirement Document
+ * 
  */
 public class PageController
 {
 
+    /** the import document wizard */
     private ImportRequirementWizard wizard;
 
+    /** the document type */
     private DocumentType documentType;
-
+    
+    /** the model type */
     private String modelType;
 
+    /** Boolean to define if mapping has to be load from pref or not */
     private boolean loadMappingPref;
 
+    /** Map of recognized element and type */
     private Map<RecognizedElement, Type> recognizedElementToType;
 
-    private List<Mapping> mapping;
+    /** collection of all the mappings */
+    private Collection<Mapping> mapping;
 
+    /** the model to attach */
     private IFile modelToAttach;
 
+    /** the requirement path to attach */
     private String requirementToAttach;
-    
+
+    /** the requirement file */
     private IFile reqFile;
 
+    /** the page to select document */
+    private ImportRequirementWizardPageSelectDocument pageSelectDocument;
+
+    /** the page to select format */
+    private ImportRequirementWizardPageSelectFormat pageSelectFormat;
+
+    /** the page to set the mapping */
+    private ImportRequirementWizardPageMapping pageMapping;
+
+    /** the end text expression */
+    private String endText;
+
+    /** the description regex */
+    private String descriptionRegex;
+
+    /** the hierarchical boolean */
+    private boolean hierarchical;
+
+    /** Boolean to define if the hierarchical has been set of not */
+    private boolean hierarchicalSet = false;
+
+    /** the id */
+    private RecognizedElement identifier;
+
     /**
-     * constructor 
-     * 
+     * the page controller constructor
      * @param wizard the import requirement wizard
      */
     public PageController(ImportRequirementWizard wizard)
@@ -94,38 +131,90 @@ public class PageController
     }
 
     /**
+     * Creates all the pages for the import wizard
+     * 
+     * @param valueForInput the value for input
+     * @param file the new document file
+     * @param tree the tree of recognized elements
+     * @param listAttributes the attributes list
+     * @return list of created pages
+     */
+    public List<WizardPage> createPages(String valueForInput, File file, RecognizedTree tree, Collection<Attribute> listAttributes)
+    {
+        pageSelectDocument = new ImportRequirementWizardPageSelectDocument("Select Document", this);
+        pageSelectFormat = new ImportRequirementWizardPageSelectFormat("Enter the file format", this);
+        pageMapping = new ImportRequirementWizardPageMapping("Enter the file format", this);
+
+        initPages(valueForInput, file, tree, listAttributes);
+        return Arrays.asList(pageSelectDocument, pageSelectFormat, pageMapping);
+    }
+
+    /**
+     * 
+     * @param valueForInput the value for input
+     * @param document the new document file
+     * @param tree the tree of recognized elements
+     * @param listAttributes the attributes list
+     */
+    private void initPages(String valueForInput, File document, RecognizedTree tree, Collection<Attribute> listAttributes)
+    {
+        if (valueForInput != null)
+        {
+
+            pageSelectDocument.setInputDocument(valueForInput);
+        }
+
+        if (document != null)
+        {
+            pageSelectFormat.setDocumentFile(document);
+        }
+
+        if (tree != null)
+        {
+            pageSelectFormat.setTree(tree);
+            pageMapping.setTree(tree);
+        }
+
+        if (listAttributes != null)
+        {
+            pageMapping.setListAttributes(listAttributes);
+        }
+        // if (pageSelectDocument.getModelType() != null)
+        // {
+        // pageMapping.setModelType(pageSelectDocument.getModelType());
+        // }
+
+    }
+
+    /**
      * Called when Select Document Page changes in Import requirement Wizard
      * 
      * @param InputDocument the input document
-     * @param documentType the document type element 
+     * @param documentType the document type element
      * @param modelType the model type (Requirement, UML or SysML)
      * @param loadMappingPref boolean defining if preferences should be loaded or not
      */
     public void pageSelectDocumentChanged(String InputDocument, DocumentType documentType, String modelType, boolean loadMappingPref)
     {
+        wizard.getContainer().updateMessage();
+        wizard.getContainer().updateButtons();
+
         this.modelType = modelType;
         this.documentType = documentType;
         this.loadMappingPref = loadMappingPref;
-        wizard.getContainer().getCurrentPage();
-        for (IWizardPage iter : wizard.getPages())
-        {
-            if (iter instanceof ImportRequirementWizardPageSelectFormat)
-            {
-                ImportRequirementWizardPageSelectFormat page = (ImportRequirementWizardPageSelectFormat) iter;
-                page.pageChanged(InputDocument, modelType);
-            }
-        }
+        pageSelectFormat.pageChanged(InputDocument, modelType, documentType != null);
     }
 
     /**
-     *  return the type model element
+     * return the type model element
+     * 
      * @return
      */
     public String getModelType()
     {
         return modelType;
     }
-    
+
     /**
      * Sets the type model element
      * 
@@ -134,7 +223,7 @@ public class PageController
     {
         this.modelType = modelType;
     }
-    
+
     /**
      * Called when select format page of import requirement document changes
      * 
@@ -142,16 +231,10 @@ public class PageController
      */
     public void pageSelectFormatChanged(RecognizedTree recognizedTree)
     {
-
-        updateMap(recognizedTree);
-
-        for (IWizardPage iter : wizard.getPages())
+        if (documentType != null)
         {
-            if (iter instanceof ImportRequirementWizardPageMapping)
-            {
-                ImportRequirementWizardPageMapping page = (ImportRequirementWizardPageMapping) iter;
-                page.pageChanged(getAttributes(), getAllMapping(), modelType);
-            }
+            updateMap(recognizedTree);
+            pageMapping.pageChanged(getAttributes(), mapping, modelType, documentType != null);
         }
     }
 
@@ -173,17 +256,12 @@ public class PageController
         recognizedElementToType = tempMap;
     }
 
-    private List<Mapping> getAllMapping()
-    {
-        return mapping;
-    }
-
     /**
      * return list of attributes from the types documents then are mapped with a column, style or regex
      * 
      * @return list of attributes
      */
-    public List<Attribute> getAttributes()
+    public Collection<Attribute> getAttributes()
     {
         if (recognizedElementToType == null || recognizedElementToType.isEmpty())
         {
@@ -196,7 +274,7 @@ public class PageController
         {
             if (Constants.REQUIREMENT_EXTENSION.equals(modelType))
             {
-                AttributeRequirement attributeTemp = new AttributeRequirement(entryset.getValue().getName(), false,entryset.getValue().isIsText(), "Requirement");
+                AttributeRequirement attributeTemp = new AttributeRequirement(entryset.getValue().getName(), false, entryset.getValue().isIsText(), "Requirement");
                 mapping.add(new Mapping(entryset.getKey(), attributeTemp));
                 attributes.add(attributeTemp);
             }
@@ -221,15 +299,16 @@ public class PageController
 
     /**
      * Gets tree of recognized elements of style and regex from types document
+     * 
      * @return
      */
     public RecognizedTree getStylesAndRegex()
     {
-        recognizedElementToType = new HashMap<RecognizedElement, Type>();
         if (documentType == null)
         {
             return null;
         }
+        recognizedElementToType = new HashMap<RecognizedElement, Type>();
 
         RecognizedTree result = new RecognizedTree();
 
@@ -285,11 +364,11 @@ public class PageController
      */
     public RecognizedTree getColumns()
     {
-        recognizedElementToType = new HashMap<RecognizedElement, Type>();
         if (documentType == null)
         {
             return null;
         }
+        recognizedElementToType = new HashMap<RecognizedElement, Type>();
         RecognizedTree result = new RecognizedTree();
 
         List<Column> columns = IniManager.getInstance().getColumns(documentType);
@@ -319,6 +398,10 @@ public class PageController
      */
     public boolean isHierarchical()
     {
+        if (hierarchicalSet && documentType == null)
+        {
+            return hierarchical;
+        }
         if (documentType == null)
         {
             return false;
@@ -328,12 +411,13 @@ public class PageController
     }
 
     /**
-     * Gets recognized ID element of regex or style from types document 
+     * Gets recognized ID element of regex or style from types document
      * 
      * @return
      */
     public RecognizedElement getIDRegexOrStyle()
     {
+
         if (documentType == null || documentType.getId() == null)
         {
             return null;
@@ -347,10 +431,10 @@ public class PageController
             if (((org.topcased.typesmodel.model.inittypes.Style) id).getExpression() != null)
             {
                 result = new Style(((org.topcased.typesmodel.model.inittypes.Style) id).getLabel(), ((org.topcased.typesmodel.model.inittypes.Style) id).getExpression());
-            } 
+            }
             else
             {
-                result = new Style(((org.topcased.typesmodel.model.inittypes.Style) id).getLabel(),"");
+                result = new Style(((org.topcased.typesmodel.model.inittypes.Style) id).getLabel(), "");
             }
         }
         else if (id instanceof org.topcased.typesmodel.model.inittypes.Regex)
@@ -368,6 +452,7 @@ public class PageController
      */
     public RecognizedElement getIDColumn()
     {
+
         if (documentType == null || documentType.getId() == null)
         {
             return null;
@@ -456,7 +541,6 @@ public class PageController
         }
         IFile typesFile = ImportRequirementWizard.getFile(path.toString());
         IniManager.getInstance().save(typesFile, types, id, hierarchicalToSave, endText, descriptionRegex);
-
     }
 
     private Collection<Type> transformModel(Collection<Mapping> mappingToSave)
@@ -514,8 +598,12 @@ public class PageController
      * 
      * @return
      */
-    public String getEndText()
+    public String getDescriptionEndText()
     {
+        if (endText != null)
+        {
+            return endText;
+        }
         if (documentType == null)
         {
             return null;
@@ -530,14 +618,21 @@ public class PageController
      */
     public String getDescriptionRegex()
     {
+        if (descriptionRegex != null)
+        {
+            return descriptionRegex;
+        }
+        if (documentType == null && pageSelectFormat.getDescriptionState())
+        {
+            return pageSelectFormat.getDescriptionRegex();
+        }
         if (documentType == null)
         {
             return null;
         }
         return documentType.getTextRegex();
     }
-    
-    
+
     /**
      * Perform a requirement attachment
      * 
@@ -548,107 +643,376 @@ public class PageController
     {
         final AtomicBoolean result = new AtomicBoolean();
         result.set(false);
-        for (IWizardPage iter : wizard.getPages())
-        {
-            if (iter instanceof ImportRequirementWizardPageSelectDocument)
-            {
-                ImportRequirementWizardPageSelectDocument page = (ImportRequirementWizardPageSelectDocument) iter;
-                modelToAttach = page.getModeltoAttach();
-                requirementToAttach = page.getOutputModel();
-                final String projectName = page.getProjectName();
-                final String projectDescription = page.getProjectDescription();
-                
-                reqFile = ImportRequirementWizard.getFile(requirementToAttach);
-                
-                
-                final IFile regFileTarget = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(modelToAttach.getFullPath().removeFileExtension().toString()));
-                Display.getDefault().syncExec(new Runnable()
-                {
+        modelToAttach = pageSelectDocument.getModeltoAttach();
+        requirementToAttach = pageSelectDocument.getOutputModel();
+        final String projectName = pageSelectDocument.getProjectName();
+        final String projectDescription = pageSelectDocument.getProjectDescription();
 
-                    public void run()
+        reqFile = ImportRequirementWizard.getFile(requirementToAttach);
+
+        final IFile regFileTarget = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(modelToAttach.getFullPath().removeFileExtension().toString()));
+        Display.getDefault().syncExec(new Runnable()
+        {
+
+            public void run()
+            {
+                try
+                {
+                    IEditorReference[] editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
+
+                    IEditorReference matchingOpenedEditorReference = null;
+                    IEditorPart editor;
+
+                    IEditorDescriptor descriptor = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(modelToAttach.getFullPath().toString());
+                    String defaultEditorId = null;
+                    if (descriptor != null)
+                    {
+                        defaultEditorId = descriptor.getId();
+                    }
+                    for (IEditorReference editorReference : editorReferences)
+                    {
+                        IEditorInput input = editorReference.getEditorInput();
+                        IFile file = (IFile) input.getAdapter(IFile.class);
+                        IPath path = file.getFullPath().removeFileExtension();
+                        if (modelToAttach.getFullPath().removeFileExtension().equals(path))
+                        {
+                            MessageDialog dialog = new MessageDialog(Activator.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell(), "Information", null, "The model : "
+                                    + modelToAttach.getName() + " will be saved and closed.\n Would you continue?", MessageDialog.CONFIRM, new String[] {IDialogConstants.OK_LABEL,
+                                    IDialogConstants.CANCEL_LABEL}, Window.OK | Window.CANCEL);
+                            if (dialog.open() == Window.CANCEL)
+                            {
+                                result.set(false);
+                                return;
+                            }
+                            if (editorReference.getId().equals(defaultEditorId))
+                            {
+                                matchingOpenedEditorReference = editorReference;
+                            }
+                            else
+                            {
+                                PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditor(editorReference.getEditor(true), true);
+                            }
+                        }
+                    }
+
+                    if (matchingOpenedEditorReference == null)
+                    {
+                        editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(new FileEditorInput(modelToAttach), defaultEditorId);
+                    }
+                    else
+                    {
+                        editor = matchingOpenedEditorReference.getEditor(false);
+                    }
+
+                    if (!reqFile.exists())
                     {
                         try
                         {
-                            IEditorReference[] editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
-                            
-                            IEditorReference matchingOpenedEditorReference = null;
-                            IEditorPart editor;
-                            
-                            IEditorDescriptor descriptor = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(modelToAttach.getFullPath().toString());
-                            String defaultEditorId = null;
-                            if (descriptor != null)
-                            {
-                                defaultEditorId = descriptor.getId();
-                            }
-                                for (IEditorReference editorReference : editorReferences) {
-                                    IEditorInput input = editorReference.getEditorInput();
-                                    IFile file = (IFile)input.getAdapter(IFile.class);
-                                    IPath path = file.getFullPath().removeFileExtension();
-                                    if (modelToAttach.getFullPath().removeFileExtension().equals(path))
-                                    {
-                                        MessageDialog dialog = new MessageDialog(Activator.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell(), "Information", null, "The model : " + modelToAttach.getName() + " will be saved and closed.\n Would you continue?", MessageDialog.CONFIRM, new String[] {IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL}, Window.OK|Window.CANCEL);
-                                        if (dialog.open() == Window.CANCEL)
-                                        {
-                                            result.set(false);
-                                            return;
-                                        }
-                                        if (editorReference.getId().equals(defaultEditorId)) {
-                                            matchingOpenedEditorReference = editorReference;
-                                        } else {
-                                            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditor(editorReference.getEditor(true), true);
-                                        }
-                                    }
-                                }
-
-                            if (matchingOpenedEditorReference == null)
-                            {
-                                editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(new FileEditorInput(modelToAttach), defaultEditorId);
-                            } 
-                            else
-                            {
-                                editor = matchingOpenedEditorReference.getEditor(false);
-                            }
-                                
-                            if (!reqFile.exists()){
-                                try
-                                {
-                                    reqFile.refreshLocal(IResource.DEPTH_ZERO, new NullProgressMonitor());
-                                }
-                                catch (CoreException e)
-                                {
-                                }
-                            }
-                            
-                            NewRequirementModelOperation operation = new NewRequirementModelOperation(modelToAttach,reqFile, regFileTarget);
-                            operation.setProjectInformations(projectName, projectDescription);
-                            operation.run(myMonitor);
-                            editor.doSave(myMonitor);
-                            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditor(editor, true);
-                            reqFile.delete(true, myMonitor);
-                            result.set(true);
-                        }
-                        catch (InvocationTargetException e)
-                        {
-                            e.printStackTrace();
-                        }
-                        catch (InterruptedException e)
-                        {
-                            e.printStackTrace();
-                        }
-                        catch (PartInitException e1)
-                        {
-                            e1.printStackTrace();
+                            reqFile.refreshLocal(IResource.DEPTH_ZERO, new NullProgressMonitor());
                         }
                         catch (CoreException e)
                         {
-                            e.printStackTrace();
                         }
-
                     }
-                });
+
+                    NewRequirementModelOperation operation = new NewRequirementModelOperation(modelToAttach, reqFile, regFileTarget);
+                    operation.setProjectInformations(projectName, projectDescription);
+                    operation.run(myMonitor);
+                    editor.doSave(myMonitor);
+                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditor(editor, true);
+                    reqFile.delete(true, myMonitor);
+                    result.set(true);
+                }
+                catch (InvocationTargetException e)
+                {
+                    e.printStackTrace();
+                }
+                catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+                catch (PartInitException e1)
+                {
+                    e1.printStackTrace();
+                }
+                catch (CoreException e)
+                {
+                    e.printStackTrace();
+                }
+
             }
-        }
+        });
         return result;
+    }
+
+    /**
+     * Sets the wizard current file system
+     * 
+     * @param currentFileSystem the current file system
+     */
+    public void setCurrentFileSystem(File currentFileSystem)
+    {
+        wizard.setCurrentFileSystem(currentFileSystem);
+    }
+
+    /**
+     * set the wizard current file
+     * 
+     * @param currentFile the wizard current file
+     */
+    public void setCurrentFile(IFile currentFile)
+    {
+        wizard.setCurrentFile(currentFile);
+    }
+
+    /**
+     * Gets the description state
+     * 
+     * @return the description state
+     */
+    public boolean getDescriptionState()
+    {
+        return pageSelectFormat.getDescriptionState();
+    }
+
+    /**
+     * get the level
+     * 
+     * @return the level
+     */
+    public String getLevel()
+    {
+        return pageSelectDocument.getLevel();
+    }
+
+    /**
+     * return if the description regex has been set or not
+     * 
+     * @return
+     */
+    public boolean isDescriptionRegex()
+    {
+        return pageSelectFormat.isDescriptionRegex();
+    }
+
+    /**
+     * return if the description End Label has been set or not
+     * 
+     * @return
+     */
+    public boolean isDescriptionText()
+    {
+        return pageSelectFormat.isDescriptionText();
+    }
+
+    /**
+     * Gets the identification.
+     * 
+     * @return the identification
+     */
+    public RecognizedElement getIdentification()
+    {
+        return pageSelectFormat.getIdentification();
+    }
+
+    /**
+     * Gets the list mapping.
+     * 
+     * @return the list mapping
+     */
+    public Collection<Mapping> getListMapping()
+    {
+        return pageMapping.getListMapping();
+    }
+
+    /**
+     * Checks if is spreadsheet.
+     * 
+     * @return true, if is spreadsheet
+     */
+    public boolean isSpreadsheet()
+    {
+        return pageSelectFormat.isSpreadsheet();
+    }
+
+    /**
+     * Gets the profile uri.
+     * 
+     * @return the profile uri
+     */
+    public String getProfileURI()
+    {
+        return pageSelectDocument.getProfileURI();
+    }
+
+    /**
+     * Gets the stereotype.
+     * 
+     * @return the stereotype
+     */
+    public Stereotype getStereotype()
+    {
+        return pageSelectDocument.getStereotype();
+    }
+
+    /**
+     * Gets the output model.
+     * 
+     * @return the output model
+     */
+    public String getOutputModel()
+    {
+        return pageSelectDocument.getOutputModel();
+    }
+
+    /**
+     * Gets the list attributes.
+     * 
+     * @return the list attributes
+     */
+    public Collection<Attribute> getListAttributes()
+    {
+        return pageMapping.getListAttributes();
+    }
+
+    /**
+     * Gets the profile.
+     * 
+     * @return the profile
+     */
+    public Profile getProfile()
+    {
+        return pageSelectDocument.getProfile();
+    }
+
+    /**
+     * Sets the document file.
+     * 
+     * @param documentFile the new document file
+     */
+    public void setDocumentFile(File currentFileSystem)
+    {
+        pageSelectFormat.setDocumentFile(currentFileSystem);
+    }
+
+    /**
+     * Gets if an attach requirement is selected
+     * 
+     * @return
+     */
+    public boolean isAttachRequirement()
+    {
+        return pageSelectDocument.isAttachRequirement();
+    }
+
+    /**
+     * Gets the input document.
+     * 
+     * @return the input document
+     */
+    public String getInputDocument()
+    {
+        return pageSelectDocument.getInputDocument();
+    }
+
+    /**
+     * Gets the stereotype name.
+     * 
+     * @return the stereotype name
+     */
+    public String getStereotypeName()
+    {
+        return pageSelectDocument.getStereotypeName();
+    }
+
+    /**
+     * Gets the value to recognize req.
+     * 
+     * @return the value to recognize req
+     */
+    public String getValueToRecognizeReq()
+    {
+        return pageSelectFormat.getValueToRecognizeReq();
+    }
+
+    /**
+     * Gets the list attributes pref.
+     * 
+     * @return the list attributes pref
+     */
+    public String getListAttributesPref()
+    {
+        return pageSelectFormat.getListAttributesPref();
+    }
+
+    /**
+     * Gets the list mapping pref.
+     * 
+     * @return the list mapping pref
+     */
+    public String getListMappingPref()
+    {
+        return pageMapping.getListMappingPref();
+    }
+
+    /**
+     * Sets the description End text
+     * 
+     * @param endText the description End Text
+     */
+    public void setDescriptionEndText(String endText)
+    {
+        this.endText = endText;
+    }
+
+    /**
+     * Sets the description Regex
+     * 
+     * @param descriptionRegex the description regex
+     */
+    public void setDescriptionRegex(String descriptionRegex)
+    {
+        this.descriptionRegex = descriptionRegex;
+    }
+
+    /**
+     * Set if it's hierarchical or not
+     * 
+     * @param hierarchical
+     */
+    public void setHierarchical(boolean hierarchical)
+    {
+        hierarchicalSet = true;
+        this.hierarchical = hierarchical;
+    }
+
+    /**
+     * Sets the req ID
+     * 
+     * @param identifier
+     */
+    public void setIdentifier(RecognizedElement identifier)
+    {
+        this.identifier = identifier;
+    }
+
+    /**
+     * Clears the req ID, the end Text description and the regex description
+     */
+    public void clear()
+    {
+        identifier = null;
+        endText = null;
+        descriptionRegex = null;
+    }
+
+    /**
+     * Remove the selection of the types document
+     */
+    public void removeDocumentType()
+    {
+        documentType = null;
+        pageSelectDocument.clearDocumentType();
     }
 
 }
