@@ -6,3 +6,5 @@ String details(ttm::Requirement requirement):
 String configuration(requirement::RequirementProject project):
 	JAVA org.topcased.requirement.traceabilitymatrix.generator.template.GeneratorHelper.configuration(org.topcased.requirement.RequirementProject);
 	
+Collection[ttm::Document] getAllDocuments(requirement::RequirementProject project):
+	JAVA org.topcased.requirement.traceabilitymatrix.generator.template.GeneratorHelper.getAllDocuments(org.topcased.requirement.RequirementProject);

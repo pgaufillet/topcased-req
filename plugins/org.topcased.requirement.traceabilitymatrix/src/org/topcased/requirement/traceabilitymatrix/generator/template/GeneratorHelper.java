@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.topcased.requirement.Attribute;
 import org.topcased.requirement.AttributeConfiguration;
@@ -30,6 +31,7 @@ import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.TextAttribute;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
+import ttm.Document;
 import ttm.Requirement;
 
 /**
@@ -44,6 +46,16 @@ public class GeneratorHelper
 
     private static final String OPEN_CELL_TAG = "<td rowspan=\"1\" colspan=\"1\">";
 
+    /**
+     * This service is necessary to work with controlled upstream model
+     * @param project
+     * @return
+     */
+    public static List<Document> getAllDocuments(final RequirementProject project)
+    {
+    	return project.getUpstreamModel().getDocuments();
+    }
+    
     /**
      * Returns a string for the display of attribute names at the top of the table.
      * @param project
@@ -79,6 +91,14 @@ public class GeneratorHelper
         final List<CurrentRequirement> cReqs = RequirementsUtils.getLinkedCurrentRequirements(requirement);
 
         AttributeConfiguration conf = RequirementUtils.getAttributeConfiguration(requirement.eResource());
+        if (conf == null)
+        {
+        	EObject top = EcoreUtil.getRootContainer(requirement);
+        	if (top != null)
+        	{
+        		conf = RequirementUtils.getAttributeConfiguration(top.eResource());
+        	}
+        }
 
         if (cReqs.isEmpty()) {
             result.append("<td align=\"center\">" + requirement.getIdent() + "</td><td colspan=\"" + new Integer(3 + conf.getListAttributes().size()).toString() + "\"></td>");
@@ -151,7 +171,15 @@ public class GeneratorHelper
 
                 result.append(OPEN_CELL_TAG + cReq.getIdentifier() + CLOSE_CELL_TAG);
 
-                final EObject object = ((HierarchicalElement) cReq.eContainer()).getElement();
+                 EObject object = null ;
+                if(cReq.eContainer() instanceof HierarchicalElement)
+                {
+                	object = ((HierarchicalElement) cReq.eContainer()).getElement();
+                }
+                else
+                {
+                	object = cReq.eContainer();
+                }
                 result.append(OPEN_CELL_TAG + getDisplayableName(object) + CLOSE_CELL_TAG);
 
                 result.append(OPEN_CELL_TAG + cReq.getShortDescription() + CLOSE_CELL_TAG);

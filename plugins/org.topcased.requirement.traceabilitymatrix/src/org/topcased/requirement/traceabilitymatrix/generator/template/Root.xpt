@@ -5,7 +5,7 @@
 	<body>
 		<table border="1">
 			<tr><th>Upstream Req Id</th><th>Partial Coverage</th><th>Current Req Id</th><th>Associated Element</th><th>Description</th>«this.configuration()-»</tr>
-«EXPAND DocumentTemplate FOREACH this.upstreamModel.documents-»
+«EXPAND DocumentTemplate FOREACH this.getAllDocuments()-»
 		</table>
 	</body>
 </html>

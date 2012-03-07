@@ -17,9 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.topcased.requirement.Attribute;
-import org.topcased.requirement.AttributeLink;
 import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.RequirementProject;
@@ -85,33 +82,7 @@ public class RequirementsUtils
      */
     public static List<CurrentRequirement> getLinkedCurrentRequirements(final Requirement requirement)
     {
-        final List<CurrentRequirement> links = new ArrayList<CurrentRequirement>();
-        if (requirement != null)
-        {
-            Resource eResource = requirement.eResource();
-            if (eResource != null)
-            {
-                RequirementProject requirementProject = RequirementUtils.getRequirementProject(eResource);
-                if (requirementProject != null)
-                {
-                    for (final CurrentRequirement cReq : getCurrentRequirements(requirementProject))
-                    {
-                        for (final Attribute att : cReq.getAttribute())
-                        {
-                            if (att instanceof AttributeLink)
-                            {
-                                final EObject value = ((AttributeLink) att).getValue();
-                                if (requirement.equals(value))
-                                {
-                                    links.add(cReq);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return links;
+        return new ArrayList<CurrentRequirement>(RequirementUtils.getLinkedCurrentRequirements(requirement));
     }
 
 }
