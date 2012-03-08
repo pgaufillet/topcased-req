@@ -22,6 +22,7 @@ import org.topcased.requirement.document.elements.AttributeRequirement;
 import org.topcased.requirement.document.elements.Column;
 import org.topcased.requirement.document.elements.Mapping;
 import org.topcased.requirement.document.elements.RecognizedElement;
+import org.topcased.requirement.document.elements.RecognizedTree;
 import org.topcased.requirement.document.elements.Regex;
 import org.topcased.requirement.document.elements.Style;
 import org.topcased.typesmodel.handler.IniManager;
@@ -128,7 +129,7 @@ public class DocumentTypeParser
      */
     public Collection<Mapping> getMapping(String idType)
     {
-
+        RecognizedTree tree = new RecognizedTree();
         if (type == null)
         {
             return null;
@@ -148,6 +149,7 @@ public class DocumentTypeParser
                 if (oneRegex.getExpression() != null && oneRegex.getName() != null)
                 {
                     Regex newRegex = new Regex(oneRegex.getExpression());
+                    tree.add(newRegex);
                     AttributeRequirement regexAttribute = new AttributeRequirement(oneRegex.getName(), false,oneRegex.isIsText(), "Requirement");
                     mapping.add(new Mapping(newRegex, regexAttribute));
                 }
@@ -171,6 +173,7 @@ public class DocumentTypeParser
                     {
                         newStyle = new Style(style.getLabel(), "");
                     }
+                    tree.add(newStyle);
                     AttributeRequirement newAttribute = new AttributeRequirement(style.getName(), false, style.isIsText(), "Requirement");
                     mapping.add(new Mapping(newStyle, newAttribute));
                 }
@@ -192,7 +195,7 @@ public class DocumentTypeParser
                     Column newColumn = new Column(column.getNumber(), column.getExpression());
                     AttributeRequirement newAttribute = new AttributeRequirement(column.getName(), false,column.isIsText(), "Requirement");
                     mapping.add(new Mapping(newColumn, newAttribute));
-                    
+                    tree.add(newColumn);
                 }
                 else
                 {

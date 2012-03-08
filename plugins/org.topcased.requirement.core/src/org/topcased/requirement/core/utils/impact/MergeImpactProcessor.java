@@ -309,7 +309,7 @@ public class MergeImpactProcessor
                 }
                 if (newDocument != null)
                 {
-                    EMFMarkerUtil.addMarkerFor(newDocument, infoMsg, IMarker.SEVERITY_INFO);
+                    EMFMarkerUtil.addMarkerFor(document, infoMsg, IMarker.SEVERITY_INFO);
                 }
             }
             catch (CoreException e)
