@@ -135,5 +135,13 @@
             strategyExtension="org.topcased.requirement.bundle.papyrus.resourceloading.UpstreamRequirementsExtender">
       </strategyExtender>
    </extension>
+   <extension
+         point="org.eclipse.papyrus.core.resourceloading.loadedAssociatedResource">
+      <loadedAssociatedResource
+            autoLoad="false"
+            description="Requirements resource (.requirement)"
+            fileExtension="requirement">
+      </loadedAssociatedResource>
+   </extension>
    
 </plugin>
