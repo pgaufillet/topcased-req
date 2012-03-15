@@ -738,7 +738,7 @@ public class Merge
 
     private void addRequirements(Couple t)
     {
-        for (TreeIterator<EObject> i = EcoreUtil.getAllContents(t.getRequirement(),true); i.hasNext();)
+        for (TreeIterator<EObject> i = EcoreUtil.getAllProperContents(t.getRequirement(),true); i.hasNext();)
         {
             EObject tmp = i.next();
             if (tmp instanceof Requirement)
@@ -754,6 +754,11 @@ public class Merge
                     }
                     if (element != null && !element.eIsProxy())
                     {
+                    	// TODO improve the get of the requirement file
+                    	if (!element.eResource().getURI().trimFileExtension().equals(tmp.eResource().getURI().trimFileExtension()))
+                    	{
+                    		i.prune();
+                    	}
                         HierarchicalElement hierToAdd = get(hier.getElement());
                         if (hierToAdd != null)
                         {
