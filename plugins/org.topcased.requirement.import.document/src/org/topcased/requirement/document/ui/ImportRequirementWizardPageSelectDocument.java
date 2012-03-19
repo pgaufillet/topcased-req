@@ -966,7 +966,7 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
         boolean isValid = true;
 
         // if a regex is defined
-        if (pattern != null)
+        if (pattern != null && inputValue != null)
         {
             // if the input is valid according to the regex
             Matcher m = pattern.matcher(inputValue);
@@ -975,7 +975,7 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
                 isValid = false;
             }
         }
-        return isValid;
+        return isValid && inputValue != null;
     }
 
     @Override
@@ -1004,7 +1004,9 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
             buttonDelete.setEnabled(false);
 
         }
-        outputModelComponent.setValueText(outputModel);
+        if (outputModel!=null) {
+        	outputModelComponent.setValueText(outputModel);
+		}
     }
     
     /**

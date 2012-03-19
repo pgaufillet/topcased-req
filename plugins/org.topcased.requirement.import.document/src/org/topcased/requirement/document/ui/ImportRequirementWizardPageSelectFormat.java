@@ -273,7 +273,7 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
      */
     private void initSpreadSheet()
     {
-        if (documentFile.getName().endsWith(".docx") || documentFile.getName().endsWith(".odt"))
+        if (documentFile != null && (documentFile.getName().endsWith(".docx") || documentFile.getName().endsWith(".odt")))
         {
             setIsSpreadsheet(false);
         }
