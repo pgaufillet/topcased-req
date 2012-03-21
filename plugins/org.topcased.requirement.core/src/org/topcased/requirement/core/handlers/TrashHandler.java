@@ -25,8 +25,10 @@ import org.eclipse.emf.edit.command.CommandParameter;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.PlatformUI;
+import org.topcased.requirement.TrashChapter;
 import org.topcased.requirement.core.commands.TrashCurrentReqCommand;
 import org.topcased.requirement.core.internal.Messages;
+import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
  * This class handles the TrashCurrentReqCommand.
@@ -128,5 +130,19 @@ public class TrashHandler extends RequirementAbstractEMFCommandHandler
         }
 
         return eObjects;
+    }
+
+    /**
+     * Allows the execution only when no element from the selection is in the trash.
+     */
+    @Override
+    public boolean isEnabled()
+    {
+        boolean result = super.isEnabled();
+        TrashChapter trashChapter = RequirementUtils.getTrashChapter(editingDomain);
+        for (EObject eObject : this.getSelectedEObjects()){
+            result &= (eObject.eContainer() != trashChapter);
+        }
+        return result;
     }
 }
