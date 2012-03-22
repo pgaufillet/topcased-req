@@ -669,32 +669,46 @@ public class PageController
                     {
                         defaultEditorId = descriptor.getId();
                     }
+                    boolean firstTime = true;
                     for (IEditorReference editorReference : editorReferences)
                     {
-                        IEditorInput input = editorReference.getEditorInput();
-                        IFile file = (IFile) input.getAdapter(IFile.class);
-                        IPath path = file.getFullPath().removeFileExtension();
-                        if (modelToAttach.getFullPath().removeFileExtension().equals(path))
+                        if (editorReference.getId().equals(defaultEditorId))
                         {
-                            MessageDialog dialog = new MessageDialog(Activator.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell(), "Information", null, "The model : "
-                                    + modelToAttach.getName() + " will be saved and closed.\n Would you continue?", MessageDialog.CONFIRM, new String[] {IDialogConstants.OK_LABEL,
+                            
+                           
+                            if (firstTime )
+                            {
+                                MessageDialog dialog = new MessageDialog(Activator.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell(), "Information", null, "All opened MDT Papyus " +
+                                		"editors will be saved and closed.\n Would you continue?", MessageDialog.CONFIRM, new String[] {IDialogConstants.OK_LABEL,
                                     IDialogConstants.CANCEL_LABEL}, Window.OK | Window.CANCEL);
-                            if (dialog.open() == Window.CANCEL)
-                            {
-                                result.set(false);
-                                return;
+                                if (dialog.open() == Window.CANCEL)
+                                {
+                                    result.set(false);
+                                    return;
+                                }
+                                firstTime = false;
                             }
-                            if (editorReference.getId().equals(defaultEditorId))
+                            if (matchingOpenedEditorReference == null)
                             {
-                                matchingOpenedEditorReference = editorReference;
-                            }
-                            else
-                            {
-                                PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditor(editorReference.getEditor(true), true);
+                                IEditorInput input = editorReference.getEditorInput();
+                              IFile file = (IFile) input.getAdapter(IFile.class);
+                              IPath path = file.getFullPath().removeFileExtension();
+                              if (modelToAttach.getFullPath().removeFileExtension().equals(path))
+                              {
+                                  matchingOpenedEditorReference = editorReference;
+                              }
+                              else
+                              {
+                                  PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditor(editorReference.getEditor(true), true);
+                              }
                             }
                         }
+                        else
+                        {
+                            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditor(editorReference.getEditor(true), true);
+                        }
                     }
-
+                    
                     if (matchingOpenedEditorReference == null)
                     {
                         editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(new FileEditorInput(modelToAttach), defaultEditorId);
@@ -722,6 +736,8 @@ public class PageController
                     PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditor(editor, true);
                     reqFile.delete(true, myMonitor);
                     result.set(true);
+                    matchingOpenedEditorReference = null;
+                    firstTime = true;
                 }
                 catch (InvocationTargetException e)
                 {

@@ -70,7 +70,7 @@ public class DocumentTypeAndAttachmentRequirementComposite extends Composite
 
         Label lblDiagram = new Label(groupAttachRequirement, SWT.NONE);
         lblDiagram.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-        lblDiagram.setText("Diagram :");
+        lblDiagram.setText("Graphical model (*.di)");
 
         diagramTextBox = new Text(groupAttachRequirement, SWT.BORDER);
         diagramTextBox.setEditable(false);
@@ -81,14 +81,14 @@ public class DocumentTypeAndAttachmentRequirementComposite extends Composite
 
         Label label_1 = new Label(groupAttachRequirement, SWT.NONE);
         label_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-        label_1.setText("Project name : ");
+        label_1.setText("Requirement links prefix : ");
 
         projectNameTextBox = new Text(groupAttachRequirement, SWT.BORDER);
         projectNameTextBox.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 
         Label label_2 = new Label(groupAttachRequirement, SWT.NONE);
         label_2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-        label_2.setText("Project description : ");
+        label_2.setText("Links optional description : ");
 
         projectDescriptionTextBox = new Text(groupAttachRequirement, SWT.BORDER);
         projectDescriptionTextBox.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
@@ -265,7 +265,7 @@ public class DocumentTypeAndAttachmentRequirementComposite extends Composite
      */
     public boolean isAttachReqComplete()
     {
-        return !diagramTextBox.getText().isEmpty() && !projectNameTextBox.getText().isEmpty() && !projectDescriptionTextBox.getText().isEmpty(); 
+        return !diagramTextBox.getText().isEmpty() && !projectNameTextBox.getText().isEmpty(); 
     }
 
     /**

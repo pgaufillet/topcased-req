@@ -254,7 +254,7 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
      */
     private void createImportTypedDocumentAndAttachReq(Composite composite)
     {
-        String helpText = "<form><p>Check this option if you want to attach the requirement model to a diagram</p></form>";
+        String helpText = "<form><p>Check this option if you want to link the requirement model to a given graphical model (*.di)</p></form>";
         attachRequirement = new ComponentHelpCheckButton(new NotifyElement()
         {
             public void handleModelChange()
@@ -277,7 +277,7 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
                 refreshView();
             }
         }, composite, toolkit, SWT.NONE, helpText);
-        attachRequirement.setValueText("Attach Requirement");
+        attachRequirement.setValueText("link requirements to a given model");
         attachRequirement.setLayoutData(new GridData(SWT.CENTER, SWT.NONE, false, true, 1, 1));
 
         helpText = "<form><p>Check this option if you want to initialize the wizard with types file (.types)</p></form>";
@@ -654,7 +654,7 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
         if (attachRequirementChecked && !typedDocumentsComposite.isAttachReqComplete())
         {
             result = false;
-            error.append("Choose a Diagram, a Project name and a Project description\n");
+            error.append("Choose a Graphical model (*.di), a Requirement links prefix\n");
         }
 
         if (result)
@@ -1004,7 +1004,11 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
             buttonDelete.setEnabled(false);
 
         }
-        if (outputModel!=null) {
+        if (attachRequirementChecked && typedDocumentsComposite != null && typedDocumentsComposite.getModelToAttach() != null)
+        {
+            outputModelComponent.setValueText(URI.createURI(typedDocumentsComposite.getModelToAttach().getLocationURI().toString()).trimFileExtension().toString().concat("TEMP.requirement"));
+        }
+        else if (outputModel!=null) {
         	outputModelComponent.setValueText(outputModel);
 		}
     }
