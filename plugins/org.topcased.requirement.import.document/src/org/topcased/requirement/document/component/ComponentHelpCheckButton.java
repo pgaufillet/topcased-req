@@ -72,6 +72,11 @@ public class ComponentHelpCheckButton extends ComponentHelp
         this.text = text;
     }
 
+    public void setTooltip(String text)
+    {
+        checkButton.setToolTipText(text);
+    }
+    
     /**
      * get the check button
      * 

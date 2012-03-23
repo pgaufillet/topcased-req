@@ -14,15 +14,11 @@
 
 package org.topcased.requirement.document.ui;
 
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.layout.GridData;
+import java.util.Collections;
+
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.ui.dialogs.WorkspaceResourceDialog;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
@@ -32,14 +28,24 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.topcased.typesmodel.handler.IniManager;
 import org.topcased.typesmodel.model.inittypes.DocumentType;
 import org.topcased.typesmodel.model.inittypes.provider.InittypesItemProviderAdapterFactory;
-import org.eclipse.swt.widgets.Button;
 
 /**
  * Composite to add a types document and attach a requirement
@@ -71,6 +77,7 @@ public class DocumentTypeAndAttachmentRequirementComposite extends Composite
         Label lblDiagram = new Label(groupAttachRequirement, SWT.NONE);
         lblDiagram.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
         lblDiagram.setText("Graphical model (*.di)");
+        lblDiagram.setToolTipText("Check this option if you want to link the requirement model to a given graphical model (*.di)");
 
         diagramTextBox = new Text(groupAttachRequirement, SWT.BORDER);
         diagramTextBox.setEditable(false);
@@ -81,15 +88,17 @@ public class DocumentTypeAndAttachmentRequirementComposite extends Composite
 
         Label label_1 = new Label(groupAttachRequirement, SWT.NONE);
         label_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-        label_1.setText("Requirement links prefix : ");
+        label_1.setText("Project Name : ");
+        label_1.setToolTipText("Can be used for requirement links prefix  \n (through Window>Preferences>Topcased>Requirement>Requirement naming format)");
 
         projectNameTextBox = new Text(groupAttachRequirement, SWT.BORDER);
         projectNameTextBox.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 
         Label label_2 = new Label(groupAttachRequirement, SWT.NONE);
         label_2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
-        label_2.setText("Links optional description : ");
-
+        label_2.setText("Project Description (optional) : ");
+        label_2.setToolTipText("Links optional description");
+        
         projectDescriptionTextBox = new Text(groupAttachRequirement, SWT.BORDER);
         projectDescriptionTextBox.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1));
         new Label(groupAttachRequirement, SWT.NONE);
@@ -145,11 +154,29 @@ public class DocumentTypeAndAttachmentRequirementComposite extends Composite
             }
         });
 
+        final ViewerFilter diFilter = new ViewerFilter()
+        {
+          @Override
+          public boolean select(Viewer viewer, Object parentElement, Object element)
+          {
+            if (element instanceof IFolder || element instanceof IProject)
+            {
+                return true;
+            }
+            if (element instanceof IFile)
+            {
+              IFile file = (IFile)element;
+              return "di".equals(file.getFileExtension());
+            }
+            return false;
+          }
+        };
+        
         btnBrowse.addSelectionListener(new SelectionAdapter()
         {
             public void widgetSelected(SelectionEvent e)
             {
-                IFile[] files = WorkspaceResourceDialog.openFileSelection(getShell(), null, null, false, null, null);
+                IFile[] files = WorkspaceResourceDialog.openFileSelection(getShell(), null, null, false, null, Collections.singletonList(diFilter));
                 if (files.length > 0 && files[0] != null )
                 {
                     modelAttached = files[0]; //csDialog.getURIs().get(0);
@@ -160,6 +187,8 @@ public class DocumentTypeAndAttachmentRequirementComposite extends Composite
             }
         });
 
+        
+        
         diagramTextBox.addModifyListener(new ModifyListener()
         {
 

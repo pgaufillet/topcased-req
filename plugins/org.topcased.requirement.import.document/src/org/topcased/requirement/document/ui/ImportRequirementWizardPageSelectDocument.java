@@ -277,7 +277,8 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
                 refreshView();
             }
         }, composite, toolkit, SWT.NONE, helpText);
-        attachRequirement.setValueText("link requirements to a given model");
+        attachRequirement.setValueText("Link requirements to a given model");
+        attachRequirement.setTooltip("Check this option if you want to link the requirement model to a given graphical model (*.di)");
         attachRequirement.setLayoutData(new GridData(SWT.CENTER, SWT.NONE, false, true, 1, 1));
 
         helpText = "<form><p>Check this option if you want to initialize the wizard with types file (.types)</p></form>";
@@ -654,7 +655,7 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
         if (attachRequirementChecked && !typedDocumentsComposite.isAttachReqComplete())
         {
             result = false;
-            error.append("Choose a Graphical model (*.di), a Requirement links prefix\n");
+            error.append("Choose a Graphical model (*.di) and a Project name\n");
         }
 
         if (result)
