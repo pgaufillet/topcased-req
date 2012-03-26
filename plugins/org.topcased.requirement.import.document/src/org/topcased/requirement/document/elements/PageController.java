@@ -381,6 +381,12 @@ public class PageController
                 recognizedElementToType.put(columnTemp, column);
                 result.add(columnTemp);
             }
+            else if (column.getName() != null)
+            {
+                org.topcased.requirement.document.elements.Column columnTemp = new org.topcased.requirement.document.elements.Column(column.getNumber(), "");
+                recognizedElementToType.put(columnTemp, column);
+                result.add(columnTemp);
+            }
             else
             {
                 Activator.getDefault().getLog().log(

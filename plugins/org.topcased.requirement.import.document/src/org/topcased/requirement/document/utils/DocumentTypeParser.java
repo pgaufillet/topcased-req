@@ -197,6 +197,13 @@ public class DocumentTypeParser
                     mapping.add(new Mapping(newColumn, newAttribute));
                     tree.add(newColumn);
                 }
+                else if (column.getName() != null)
+                {
+                    Column newColumn = new Column(column.getNumber(), "");
+                    AttributeRequirement newAttribute = new AttributeRequirement(column.getName(), false,column.isIsText(), "Requirement");
+                    mapping.add(new Mapping(newColumn, newAttribute));
+                    tree.add(newColumn);
+                }
                 else
                 {
                     Activator.getDefault().getLog().log(
