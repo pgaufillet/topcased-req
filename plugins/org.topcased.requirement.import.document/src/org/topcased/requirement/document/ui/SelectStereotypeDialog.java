@@ -491,6 +491,8 @@ public class SelectStereotypeDialog extends CustomPopupDialog
             wizard.setProfile(currentProfile);
             wizard.setProfileURI(uriPrefString);
             close();
+            wizard.handleModelChange();
+            wizard.refreshView();
         }
     }
 
@@ -519,6 +521,8 @@ class CustomUMLUtil extends UMLUtil
 
 class profileContentProvider implements IStructuredContentProvider
 {
+    private ResourceSetImpl resourceSetImpl = new ResourceSetImpl();
+    
     public Object[] getElements(Object inputElement)
     {
         Collection<Profile> profiles = new LinkedList<Profile>();
@@ -530,7 +534,13 @@ class profileContentProvider implements IStructuredContentProvider
                 if (o instanceof URI)
                 {
                     URI uri = (URI) o;
-                    profiles.add((Profile) new ResourceSetImpl().getResource(uri.trimFragment(), true).getEObject(uri.fragment()));
+                    EObject resource = resourceSetImpl.getResource(uri.trimFragment(), true).getEObject(uri.fragment());
+                    if (resource instanceof Profile)
+                    {
+                        Profile profile = (Profile) resource;
+                        profiles.add((Profile) profile);
+                    }
+                    
                 }
             }
         }

@@ -514,7 +514,30 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
         // Create label
         toolkit.createLabel(composite, "Output Model Type: "); //$NON-NLS-1$
         // Create radio button
-        radioButtonModelType = new ComponentHelpRadioButtonModel(this, composite, toolkit, SWT.NONE, helpText);
+        radioButtonModelType = new ComponentHelpRadioButtonModel(new NotifyElement()
+        {
+            
+            public void handleModelChange()
+            {
+                if (radioButtonModelType.isUml())
+                {
+                    outputModel = outputModel.substring(0, outputModel.lastIndexOf('.')+1).concat("uml");
+                }
+                else if (radioButtonModelType.isRequirement())
+                {
+                    outputModel = outputModel.substring(0, outputModel.lastIndexOf('.')+1).concat("requirement");
+                }
+                else
+                {
+                    outputModel = outputModel.substring(0, outputModel.lastIndexOf('.')+1).concat("sysml");
+                }
+                
+                
+                ImportRequirementWizardPageSelectDocument.this.handleModelChange();
+                ImportRequirementWizardPageSelectDocument.this.refreshView();
+                
+            }
+        }, composite, toolkit, SWT.NONE, helpText);
     }
 
     /**
@@ -619,7 +642,7 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
             // Save output model
             if (outputModelComponent != null)
             {
-                outputModel = outputModelComponent.getInput();
+//                outputModel = outputModelComponent.getInput();
                 if (outputModel.endsWith(".uml") || outputModel.endsWith(".sysml")) //$NON-NLS-1$ //$NON-NLS-2$
                 {
                     if (!modelType.equals(oldModelType))
@@ -992,7 +1015,7 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
     /**
      * Refresh graphical components
      */
-    private void refreshView()
+    public void refreshView()
     {
         if (stereotype != null)
         {

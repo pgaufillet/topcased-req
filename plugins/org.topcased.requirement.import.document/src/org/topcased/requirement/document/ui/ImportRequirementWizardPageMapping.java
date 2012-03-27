@@ -49,10 +49,12 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.uml2.uml.Property;
 import org.topcased.requirement.document.Activator;
 import org.topcased.requirement.document.elements.Attribute;
 import org.topcased.requirement.document.elements.AttributeRequirement;
 import org.topcased.requirement.document.elements.AttributeSysml;
+import org.topcased.requirement.document.elements.AttributeSysmlReference;
 import org.topcased.requirement.document.elements.AttributeUml;
 import org.topcased.requirement.document.elements.IStructuredContentProviderTree;
 import org.topcased.requirement.document.elements.Mapping;
@@ -931,11 +933,11 @@ public class ImportRequirementWizardPageMapping extends WizardPage
         {
             if (Constants.SYSML_EXTENSION.equals(modelType))
             {
-                ((ImportRequirementWizard)getWizard()).manageSysml();
+                manageSysml();
             }
             if (Constants.UML_EXTENSION.equals(modelType) || Constants.SYSML_EXTENSION.equals(modelType))
             {
-                ((ImportRequirementWizard)getWizard()).manageProfiles();
+                manageProfiles();
             }
         }
 //        refreshLists();
@@ -946,6 +948,66 @@ public class ImportRequirementWizardPageMapping extends WizardPage
         }
     }
     
+    protected void manageSysml()
+    {
+        LinkedList<Attribute> defaultList = new LinkedList<Attribute>();
+        Attribute text = new AttributeSysml("text", false, "Requirement");
+        defaultList.add(text);
+        defaultList.add(new AttributeSysmlReference("Dependency", true, "Requirement", "Dependency"));
+        defaultList.add(new AttributeSysmlReference("Derive", true, "Requirement", "DeriveReqt"));
+        defaultList.add(new AttributeSysmlReference("Refine", true, "Requirement", "Refine"));
+        defaultList.add(new AttributeSysmlReference("Satisfy", true, "Requirement", "Satisfy"));
+        defaultList.add(new AttributeSysmlReference("Copy", true, "Requirement", "Copy"));
+        defaultList.add(new AttributeSysmlReference("Trace", true, "Requirement", "Trace"));
+        Collection<Attribute> attributesInMaping = new LinkedList<Attribute>();
+        for (Attribute a : defaultList)
+        {
+            if (!ImportRequirementWizard.contains(listAttributes, a) && !ImportRequirementWizard.contains(attributesInMaping, a))
+            {
+                listAttributes.add(a);
+            }
+        }
+        for (Mapping m : listMapping)
+        {
+            attributesInMaping.add(m.getAttribute());
+        }
+    }
+    
+    protected void manageProfiles()
+    {
+        if (controller.getProfile() != null && controller.getStereotype() != null)
+        {
+            String profileName = controller.getProfile().getName();
+            // Get all the properties
+            Iterator<Property> iter = controller.getStereotype().getAllAttributes().iterator();
+            while (iter.hasNext())
+            {
+                Property next = iter.next();
+                if (next.getName() != null && !next.getName().contains("base_"))
+                {
+                    if (Constants.UML_EXTENSION.equals(controller.getModelType()))
+                    {
+                        if (!ImportRequirementWizard.isRef(next) || (next.getType() != null && next.getType().getName() != null && "class".equals(next.getType().getName().toLowerCase())))
+                        {
+                            AttributeUml uml = new AttributeUml(next.getName(), ImportRequirementWizard.isRef(next), profileName, next.getName(), next.getType().getName());
+                            if (!ImportRequirementWizard.contains(listAttributes, uml))
+                            {
+                                listAttributes.add(uml);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        AttributeSysml sysML = new AttributeSysml(next.getName(), ImportRequirementWizard.isRef(next), profileName, next.getName(), next.getType().getName());
+                        if (!ImportRequirementWizard.contains(listAttributes, sysML))
+                        {
+                            listAttributes.add(sysML);
+                        }
+                    }
+                }
+            }
+        }
+    }
     
     @Override
     public void setVisible(boolean visible) {

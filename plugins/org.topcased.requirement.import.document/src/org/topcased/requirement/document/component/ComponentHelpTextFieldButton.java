@@ -99,12 +99,11 @@ public class ComponentHelpTextFieldButton extends ComponentHelpTextField
                         {
                             public void run()
                             {
-                                SelectStereotypeDialog dialog = new SelectStereotypeDialog(getShell(), Display.getDefault().getCursorLocation(), pageParent,
+                                SelectStereotypeDialog dialog = new SelectStereotypeDialog(Display.getDefault().getActiveShell(),Display.getDefault().getCursorLocation(), pageParent,
                                         ((ImportRequirementWizardPageSelectDocument) pageParent).getModelType());
                                 dialog.open();
                             }
                         });
-
                     }
                 }
                 else

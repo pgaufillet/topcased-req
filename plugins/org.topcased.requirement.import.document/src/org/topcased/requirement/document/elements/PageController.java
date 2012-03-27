@@ -234,8 +234,8 @@ public class PageController
         if (documentType != null)
         {
             updateMap(recognizedTree);
-            pageMapping.pageChanged(getAttributes(), mapping, modelType, documentType != null);
         }
+            pageMapping.pageChanged(getAttributes(), mapping, modelType, documentType != null);
     }
 
     private void updateMap(RecognizedTree recognizedTree)
