@@ -516,26 +516,25 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
         // Create radio button
         radioButtonModelType = new ComponentHelpRadioButtonModel(new NotifyElement()
         {
-            
+
             public void handleModelChange()
             {
                 if (radioButtonModelType.isUml())
                 {
-                    outputModel = outputModel.substring(0, outputModel.lastIndexOf('.')+1).concat("uml");
+                    outputModel = outputModel.substring(0, outputModel.lastIndexOf('.') + 1).concat("uml");
                 }
                 else if (radioButtonModelType.isRequirement())
                 {
-                    outputModel = outputModel.substring(0, outputModel.lastIndexOf('.')+1).concat("requirement");
+                    outputModel = outputModel.substring(0, outputModel.lastIndexOf('.') + 1).concat("requirement");
                 }
                 else
                 {
-                    outputModel = outputModel.substring(0, outputModel.lastIndexOf('.')+1).concat("sysml");
+                    outputModel = outputModel.substring(0, outputModel.lastIndexOf('.') + 1).concat("sysml");
                 }
-                
-                
+
                 ImportRequirementWizardPageSelectDocument.this.handleModelChange();
                 ImportRequirementWizardPageSelectDocument.this.refreshView();
-                
+
             }
         }, composite, toolkit, SWT.NONE, helpText);
     }
@@ -628,43 +627,46 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
             error.append("Choose an input document (docx, odt, csv, ods or xlsx)\n"); //$NON-NLS-1$
         }
 
-        if (!isValid(outputModel, OUTPUT_PATTERN))
+        if (!attachRequirementChecked)
         {
-            result = false;
-            error.append("Choose an output model (uml, sysml or requirement)\n"); //$NON-NLS-1$
-            if (stereotypeComponent != null)
+            if (!isValid(outputModel, OUTPUT_PATTERN))
             {
-                stereotypeComponent.setButtonEnable(false);
-            }   
-        }
-        else
-        {
-            // Save output model
-            if (outputModelComponent != null)
-            {
-//                outputModel = outputModelComponent.getInput();
-                if (outputModel.endsWith(".uml") || outputModel.endsWith(".sysml")) //$NON-NLS-1$ //$NON-NLS-2$
+                result = false;
+                error.append("Choose an output model (uml, sysml or requirement)\n"); //$NON-NLS-1$
+                if (stereotypeComponent != null)
                 {
-                    if (!modelType.equals(oldModelType))
-
-                    {
-                        setStereotype(null);
-
-                    }
-                    if (stereotypeComponent != null)
-                    {
-                        stereotypeComponent.setButtonEnable(true);
-                    }
-
+                    stereotypeComponent.setButtonEnable(false);
                 }
-                else
+            }
+            else
+            {
+                // Save output model
+                if (outputModelComponent != null)
                 {
-                    if (stereotypeComponent != null)
+                    // outputModel = outputModelComponent.getInput();
+                    if (outputModel.endsWith(".uml") || outputModel.endsWith(".sysml")) //$NON-NLS-1$ //$NON-NLS-2$
                     {
-                        stereotypeComponent.setButtonEnable(false);
-                    }
+                        if (!modelType.equals(oldModelType))
 
-                    setStereotype(null);
+                        {
+                            setStereotype(null);
+
+                        }
+                        if (stereotypeComponent != null)
+                        {
+                            stereotypeComponent.setButtonEnable(true);
+                        }
+
+                    }
+                    else
+                    {
+                        if (stereotypeComponent != null)
+                        {
+                            stereotypeComponent.setButtonEnable(false);
+                        }
+
+                        setStereotype(null);
+                    }
                 }
             }
         }
@@ -714,6 +716,7 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
 
     /**
      * Sets the level
+     * 
      * @param level
      */
     public void setLevel(String level)
@@ -723,6 +726,7 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
 
     /**
      * Returns the type document
+     * 
      * @return
      */
     public DocumentType getDocumentType()
@@ -978,9 +982,10 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
     {
         return typedDocumentsComposite.getProjectDescription();
     }
-    
+
     /**
      * Verify if a regex expression is valid with the given pattern
+     * 
      * @param inputValue
      * @param pattern
      * @return
@@ -1032,13 +1037,14 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
         {
             outputModelComponent.setValueText(URI.createURI(typedDocumentsComposite.getModelToAttach().getLocationURI().toString()).trimFileExtension().toString().concat("TEMP.requirement"));
         }
-        else if (outputModel!=null) {
-        	outputModelComponent.setValueText(outputModel);
-		}
+        else if (outputModel != null)
+        {
+            outputModelComponent.setValueText(outputModel);
+        }
     }
-    
+
     /**
-     * Clears the type document selection 
+     * Clears the type document selection
      */
     public void clearDocumentType()
     {
