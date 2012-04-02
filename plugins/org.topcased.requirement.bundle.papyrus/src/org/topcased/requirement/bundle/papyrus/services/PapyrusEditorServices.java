@@ -258,113 +258,116 @@ public class PapyrusEditorServices implements IEditorServices
             List<EditPart> editPartsToSelect = new ArrayList<EditPart>(listOfEObjects.size());
             // find appropriate viewer and edit parts to select
             EditPartViewer currentViewer = getGraphicalViewer(editor);
-            Map< ? , ? > currentRegistry = currentViewer.getEditPartRegistry();
-            if (openDiagramIfNeeded)
-            {
-                /*
-                 * Reference diagrams which represent these elements to know the best one (with most represented
-                 * elements)
-                 */
-                Map<Diagram, Integer> numberOfRepresentedElementsByDiagram = new HashMap<Diagram, Integer>();
-                for (EObject toSelect : listOfEObjects)
-                {
-                    Set<Diagram> diagramsRepresentingThisObject = new HashSet<Diagram>();
-                    List< ? > views = DiagramEditPartsUtil.getEObjectViews(toSelect);
-                    for (Object view : views)
-                    {
-                        if (view instanceof View && !(view instanceof Diagram))
-                        {
-                            Diagram diagram = ((View) view).getDiagram();
-                            // test if a representation has already been counted for this diagram
-                            if (!diagramsRepresentingThisObject.contains(diagram))
-                            {
-                                // the element is represented in this diagram
-                                diagramsRepresentingThisObject.add(diagram);
-                                if (!numberOfRepresentedElementsByDiagram.containsKey(diagram))
-                                {
-                                    numberOfRepresentedElementsByDiagram.put(diagram, 0);
-                                }
-                                Integer num = numberOfRepresentedElementsByDiagram.get(diagram);
-                                numberOfRepresentedElementsByDiagram.put(diagram, num + 1);
-                            }
-                        }
-                    }
-                }
-                // find diagram where the largest number of elements are available
-                Diagram bestDiagram = null;
-                int numberOfRepresented = 0;
-                for (Entry<Diagram, Integer> entry : numberOfRepresentedElementsByDiagram.entrySet())
-                {
-                    if (entry.getValue() > numberOfRepresented)
-                    {
-                        // take better diagram
-                        bestDiagram = entry.getKey();
-                        numberOfRepresented = entry.getValue();
-                    }
-                    else if (entry.getValue() == numberOfRepresented)
-                    {
-                        // take the currently opened diagram if it is as good
-                        if (currentRegistry.get(entry.getKey()) != null)
-                        {
-                            bestDiagram = entry.getKey();
-                        }
-                    }
-                }
-                // change active diagram if necessary
-                if (bestDiagram != null && currentRegistry.get(bestDiagram) == null)
-                {
-                    Object pageMngr = editor.getAdapter(IPageMngr.class);
-                    if (pageMngr instanceof IPageMngr)
-                    {
-                        IPageMngr pageManager = (IPageMngr) pageMngr;
-                        if (pageManager.isOpen(bestDiagram))
-                        {
-                            // bring to top
-                            pageManager.closePage(bestDiagram);
-                            pageManager.openPage(bestDiagram);
-                        }
-                        else
-                        {
-                            // open
-                            pageManager.openPage(bestDiagram);
-                        }
-                    }
-                    currentViewer = getGraphicalViewer(editor);
-                    currentRegistry = currentViewer.getEditPartRegistry();
-                }
-            }
-            // select edit parts in the current viewer
-            for (EObject toSelect : listOfEObjects)
-            {
-                List< ? > views = DiagramEditPartsUtil.getEObjectViews(toSelect);
-                for (Object view : views)
-                {
-                    if (currentRegistry.containsKey(view))
-                    {
-                        Object part = currentRegistry.get(view);
-                        if (part instanceof EditPart)
-                        {
-                            editPartsToSelect.add((EditPart) part);
-                        }
-                    }
-                }
-            }
-            // select edit parts if selection has to change
-            if (!(editPartsToSelect.containsAll(currentViewer.getSelectedEditParts()) && currentViewer.getSelectedEditParts().contains(editPartsToSelect)))
-            {
-                boolean firstSelectedPartInViewer = true;
-                for (EditPart editPart : editPartsToSelect)
-                {
-                    if (firstSelectedPartInViewer)
-                    {
-                        currentViewer.select(editPart);
-                        firstSelectedPartInViewer = false;
-                    }
-                    else
-                    {
-                        currentViewer.appendSelection(editPart);
-                    }
-                }
+            if( currentViewer != null){
+            	Map< ? , ? > currentRegistry = currentViewer.getEditPartRegistry();
+	        
+	            if (openDiagramIfNeeded)
+	            {
+	                /*
+	                 * Reference diagrams which represent these elements to know the best one (with most represented
+	                 * elements)
+	                 */
+	                Map<Diagram, Integer> numberOfRepresentedElementsByDiagram = new HashMap<Diagram, Integer>();
+	                for (EObject toSelect : listOfEObjects)
+	                {
+	                    Set<Diagram> diagramsRepresentingThisObject = new HashSet<Diagram>();
+	                    List< ? > views = DiagramEditPartsUtil.getEObjectViews(toSelect);
+	                    for (Object view : views)
+	                    {
+	                        if (view instanceof View && !(view instanceof Diagram))
+	                        {
+	                            Diagram diagram = ((View) view).getDiagram();
+	                            // test if a representation has already been counted for this diagram
+	                            if (!diagramsRepresentingThisObject.contains(diagram))
+	                            {
+	                                // the element is represented in this diagram
+	                                diagramsRepresentingThisObject.add(diagram);
+	                                if (!numberOfRepresentedElementsByDiagram.containsKey(diagram))
+	                                {
+	                                    numberOfRepresentedElementsByDiagram.put(diagram, 0);
+	                                }
+	                                Integer num = numberOfRepresentedElementsByDiagram.get(diagram);
+	                                numberOfRepresentedElementsByDiagram.put(diagram, num + 1);
+	                            }
+	                        }
+	                    }
+	                }
+	                // find diagram where the largest number of elements are available
+	                Diagram bestDiagram = null;
+	                int numberOfRepresented = 0;
+	                for (Entry<Diagram, Integer> entry : numberOfRepresentedElementsByDiagram.entrySet())
+	                {
+	                    if (entry.getValue() > numberOfRepresented)
+	                    {
+	                        // take better diagram
+	                        bestDiagram = entry.getKey();
+	                        numberOfRepresented = entry.getValue();
+	                    }
+	                    else if (entry.getValue() == numberOfRepresented)
+	                    {
+	                        // take the currently opened diagram if it is as good
+	                        if (currentRegistry.get(entry.getKey()) != null)
+	                        {
+	                            bestDiagram = entry.getKey();
+	                        }
+	                    }
+	                }
+	                // change active diagram if necessary
+	                if (bestDiagram != null && currentRegistry.get(bestDiagram) == null)
+	                {
+	                    Object pageMngr = editor.getAdapter(IPageMngr.class);
+	                    if (pageMngr instanceof IPageMngr)
+	                    {
+	                        IPageMngr pageManager = (IPageMngr) pageMngr;
+	                        if (pageManager.isOpen(bestDiagram))
+	                        {
+	                            // bring to top
+	                            pageManager.closePage(bestDiagram);
+	                            pageManager.openPage(bestDiagram);
+	                        }
+	                        else
+	                        {
+	                            // open
+	                            pageManager.openPage(bestDiagram);
+	                        }
+	                    }
+	                    currentViewer = getGraphicalViewer(editor);
+	                    currentRegistry = currentViewer.getEditPartRegistry();
+	                }
+	            }
+	            // select edit parts in the current viewer
+	            for (EObject toSelect : listOfEObjects)
+	            {
+	                List< ? > views = DiagramEditPartsUtil.getEObjectViews(toSelect);
+	                for (Object view : views)
+	                {
+	                    if (currentRegistry.containsKey(view))
+	                    {
+	                        Object part = currentRegistry.get(view);
+	                        if (part instanceof EditPart)
+	                        {
+	                            editPartsToSelect.add((EditPart) part);
+	                        }
+	                    }
+	                }
+	            }
+	            // select edit parts if selection has to change
+	            if (!(editPartsToSelect.containsAll(currentViewer.getSelectedEditParts()) && currentViewer.getSelectedEditParts().contains(editPartsToSelect)))
+	            {
+	                boolean firstSelectedPartInViewer = true;
+	                for (EditPart editPart : editPartsToSelect)
+	                {
+	                    if (firstSelectedPartInViewer)
+	                    {
+	                        currentViewer.select(editPart);
+	                        firstSelectedPartInViewer = false;
+	                    }
+	                    else
+	                    {
+	                        currentViewer.appendSelection(editPart);
+	                    }
+	                }
+	            }
             }
         }
     }
