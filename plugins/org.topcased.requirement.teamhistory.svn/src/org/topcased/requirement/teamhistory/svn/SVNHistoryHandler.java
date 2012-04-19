@@ -10,6 +10,7 @@
  **********************************************************************************************************************/
 package org.topcased.requirement.teamhistory.svn;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PipedInputStream;
@@ -21,6 +22,7 @@ import org.eclipse.team.core.history.IFileRevision;
 import org.eclipse.team.svn.core.connector.ISVNConnector;
 import org.eclipse.team.svn.core.connector.SVNChangeStatus;
 import org.eclipse.team.svn.core.connector.SVNConnectorException;
+import org.eclipse.team.svn.core.connector.SVNEntryInfo;
 import org.eclipse.team.svn.core.connector.SVNEntryReference;
 import org.eclipse.team.svn.core.connector.SVNEntryRevisionReference;
 import org.eclipse.team.svn.core.connector.SVNRevision;
@@ -41,17 +43,20 @@ import org.topcased.requirement.teamhistory.TeamHistoryException;
 
 /**
  * Handles IHistoryHandler operations for SVN history
+ * 
  * @author mvelten
  */
 public class SVNHistoryHandler implements IHistoryHandler {
 
 	public boolean handle(IResource r) {
-		SVNChangeStatus svnInfos = SVNUtility.getSVNInfoForNotConnected(r);
-		if (svnInfos == null)
-		{
-			svnInfos = SVNUtility.getSVNInfoForNotConnected(r.getProject());
+		File file = r.getFullPath().toFile();
+		SVNEntryInfo svnInfos = SVNUtility.getSVNInfo(file);
+		if (svnInfos == null) {
+			SVNChangeStatus svnInfos2 = SVNUtility.getSVNInfoForNotConnected(r
+					.getProject());
+			return svnInfos2 != null;
 		}
-		return svnInfos != null;
+		return true;
 	}
 
 	public String getCurrentRevisionLabel(IResource r) {
@@ -63,48 +68,61 @@ public class SVNHistoryHandler implements IHistoryHandler {
 		}
 	}
 
-	public void showHistoryView(IResource r, String revisionLabelToSelect) throws TeamHistoryException {
-		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+	public void showHistoryView(IResource r, String revisionLabelToSelect)
+			throws TeamHistoryException {
+		IWorkbenchPage page = PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow().getActivePage();
 
 		try {
-			IHistoryView historyView = (IHistoryView)page.showView(IHistoryView.VIEW_ID);
-			SVNHistoryPage historyPage = (SVNHistoryPage)historyView.showHistoryFor(r);
+			IHistoryView historyView = (IHistoryView) page
+					.showView(IHistoryView.VIEW_ID);
+			SVNHistoryPage historyPage = (SVNHistoryPage) historyView
+					.showHistoryFor(r);
 
 			long rev = Long.parseLong(revisionLabelToSelect);
 			historyPage.selectRevision(rev);
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (PartInitException e) {
-			throw new TeamHistoryException("Error when opening the history view", e);
+			throw new TeamHistoryException(
+					"Error when opening the history view", e);
 		}
 
 	}
 
-	public InputStream getStreamFromHistoryEntry(final IFile file, Object historyEntry) throws TeamHistoryException {
+	public InputStream getStreamFromHistoryEntry(final IFile file,
+			Object historyEntry) throws TeamHistoryException {
 
 		if (historyEntry instanceof LocalLogNode) {
 			LocalLogNode localLogNode = (LocalLogNode) historyEntry;
-			return LocalHistoryHandler.getStreamFromFileRevision(file, (IFileRevision)localLogNode.getAdapter(IFileRevision.class));
+			return LocalHistoryHandler.getStreamFromFileRevision(file,
+					(IFileRevision) localLogNode
+							.getAdapter(IFileRevision.class));
 		}
 
 		if (historyEntry instanceof SVNLogNode) {
 			SVNLogNode svnLogNode = (SVNLogNode) historyEntry;
 			long revision = svnLogNode.getRevision();
 
-			SVNChangeStatus svnInfos = SVNUtility.getSVNInfoForNotConnected(file);
+			SVNChangeStatus svnInfos = SVNUtility
+					.getSVNInfoForNotConnected(file);
 
-			final SVNEntryRevisionReference reference = new SVNEntryRevisionReference(new SVNEntryReference(svnInfos.url), SVNRevision.fromNumber(revision));
+			final SVNEntryRevisionReference reference = new SVNEntryRevisionReference(
+					new SVNEntryReference(svnInfos.url),
+					SVNRevision.fromNumber(revision));
 
 			PipedInputStream in = new PipedInputStream(10240);
 			try {
 				final PipedOutputStream out = new PipedOutputStream(in);
 				new Thread(new Runnable() {
 					public void run() {
-						IRepositoryLocation repoLocation = SVNRemoteStorage.instance().getRepositoryLocation(file);
+						IRepositoryLocation repoLocation = SVNRemoteStorage
+								.instance().getRepositoryLocation(file);
 						ISVNConnector proxy = repoLocation.acquireSVNProxy();
 						try {
-							
-							proxy.streamFileContent(reference, 10240, out, new SVNNullProgressMonitor());
+
+							proxy.streamFileContent(reference, 10240, out,
+									new SVNNullProgressMonitor());
 						} catch (SVNConnectorException e) {
 							e.printStackTrace();
 						} finally {
@@ -119,11 +137,13 @@ public class SVNHistoryHandler implements IHistoryHandler {
 				}).start();
 				return in;
 			} catch (IOException e) {
-				throw new TeamHistoryException("Cannot retrieve the content of this revision", e);
+				throw new TeamHistoryException(
+						"Cannot retrieve the content of this revision", e);
 			}
 		}
 
-		throw new TeamHistoryException("Cannot retrieve the content of this revision");
+		throw new TeamHistoryException(
+				"Cannot retrieve the content of this revision");
 	}
 
 }
