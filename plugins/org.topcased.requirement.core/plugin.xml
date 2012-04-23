@@ -539,12 +539,26 @@
             <visibleWhen
                   checkEnabled="false">
                <and>
+                  <or>
                   <with
                         variable="activeWorkbenchWindow.activePerspective">
                      <equals
                            value="org.topcased.requirement.core.perspective">
                      </equals>
                   </with>
+                  <with
+                        variable="activeWorkbenchWindow.activePerspective">
+                     <equals
+                           value="org.topcased.ui.perspective.papyrus.PapyrusModelerPerspective">
+                     </equals>
+                  </with>
+                  <with
+                        variable="activeWorkbenchWindow.activePerspective">
+                     <equals
+                           value="org.topcased.modeler.uml.TopcasedModelerPerspective">
+                     </equals>
+                  </with>
+                  </or>
                   <with
                         variable="activeMenuSelection">
                      <iterate
