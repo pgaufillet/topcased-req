@@ -21,7 +21,7 @@ import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.gef.commands.Command;
-import org.topcased.modeler.editor.TopcasedAdapterFactoryEditingDomain.TopcasedAdapterFactoryLabeler;
+import org.topcased.modeler.editor.naming.TopcasedAdapterFactoryLabeler;
 import org.topcased.requirement.bundle.topcased.internal.Messages;
 import org.topcased.requirement.common.commands.EMFtoGEFCommandWrapper;
 import org.topcased.requirement.core.commands.RenameRequirementCommand;
