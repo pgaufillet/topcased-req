@@ -103,13 +103,12 @@ public class EObjectHelperAdvice extends AbstractEditHelperAdvice
                 final EObject eobject = request.getElementToDestroy();
                 AbstractTransactionalCommand deleteCmdWithCancel = new AbstractTransactionalCommand(domain, Messages.getString("DeleteModelObjectAction.CmdLabel"), null)
                 {
-
                     @Override
                     protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable adapt) throws ExecutionException
                     {
                         boolean canContinue = true;
                         HierarchicalElement hierarchicalElement = RequirementUtils.getHierarchicalElementFor(eobject);
-                        if (hierarchicalElement != null && !hierarchicalElement.eContents().isEmpty())
+                        if (RequirementUtils.getTrashChapter(domain) != null && hierarchicalElement != null && !hierarchicalElement.eContents().isEmpty())
                         {
                             ConfirmationDialog dialog = new ConfirmationDialog(Display.getCurrent().getActiveShell(), Messages.getString("DeleteModelObjectAction.CmdLabel"),
                                     Messages.getString("DeleteModelObjectAction.ConfirmMessage"), RequirementCorePlugin.getDefault().getPreferenceStore(),
@@ -291,7 +290,7 @@ public class EObjectHelperAdvice extends AbstractEditHelperAdvice
                     {
                         RenameRequirementCommand cmd = new RenameRequirementCommand(namedElt, oldNameValue, newNameValue);
                         if(!cmd.isEmpty()) {
-                        	return new EMFtoGMFCommandWrapper(cmd);
+                            return new EMFtoGMFCommandWrapper(cmd);
                         }
                     }
                 }

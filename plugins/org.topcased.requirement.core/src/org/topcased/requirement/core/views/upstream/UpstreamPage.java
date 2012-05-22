@@ -393,10 +393,10 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
                             // refresh decorator only if needed
                             if (msg.getNotifier() instanceof AttributeLink)
                             {
-                                EObject hierElt = ((AttributeLink) msg.getNotifier()).eContainer().eContainer();
-                                if (hierElt instanceof HierarchicalElement)
-                                {
-                                    refreshLinkedEditPartsDecorators((HierarchicalElement) hierElt);
+                                AttributeLink attLink = (AttributeLink) msg.getNotifier();
+                                if (attLink.eContainer() != null && attLink.eContainer().eContainer() instanceof HierarchicalElement) {
+                                    HierarchicalElement hierElt = (HierarchicalElement) attLink.eContainer().eContainer();
+                                    refreshLinkedEditPartsDecorators(hierElt);
                                 }
                             }
                             break;
@@ -415,7 +415,7 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
             if (object instanceof AttributeLink)
             {
                 Object value = ((AttributeLink) object).getValue();
-                internalRefresh(value);
+                internalRefresh(value); //TODO value == null -> invert add/set order and try again
             }
             else if (object instanceof ttm.Requirement)
             {
