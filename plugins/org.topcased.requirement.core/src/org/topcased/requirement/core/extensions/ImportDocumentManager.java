@@ -1,7 +1,7 @@
 package org.topcased.requirement.core.extensions;
 
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -24,7 +24,7 @@ public class ImportDocumentManager extends AbstractExtensionManager
     private static ImportDocumentManager manager;
     
     /** Map of the graphical model file extension patterns and the document importer for it */
-    public SortedSet<IImportDocument> setImporter;
+    public Set<IImportDocument> setImporter;
     
     
     /**
@@ -33,7 +33,7 @@ public class ImportDocumentManager extends AbstractExtensionManager
     private ImportDocumentManager()
     {
         super(RequirementCorePlugin.getId() + "." + IMPORT_DOCUMENT_EXTENSION_POINT);
-        setImporter = new TreeSet<IImportDocument>();
+        setImporter = new HashSet<IImportDocument>();
         readRegistry();
     }
 
@@ -97,7 +97,7 @@ public class ImportDocumentManager extends AbstractExtensionManager
     {
         if (!setImporter.isEmpty())
         {
-            return setImporter.first();
+            return setImporter.iterator().next();
          }
         return null;
     }

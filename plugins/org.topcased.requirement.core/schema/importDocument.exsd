@@ -55,7 +55,7 @@
                   
                </documentation>
                <appInfo>
-                  <meta.attribute kind="java" basedOn=":org.topcased.requirement.core.wizards.operation.IImportDocument"/>
+                  <meta.attribute kind="java" basedOn=":org.topcased.requirement.core.extensions.IImportDocument"/>
                </appInfo>
             </annotation>
          </attribute>
