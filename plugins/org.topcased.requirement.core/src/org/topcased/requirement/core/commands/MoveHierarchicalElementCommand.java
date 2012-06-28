@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors: Sebastien GABEL (CS) - initial API and implementation
- * 
+ * Arthur Daussy (Atos) {Arthur.daussy@atos.net - [#4168] Current requirement when semantic object its move to another container
  **********************************************************************************************************************/
 package org.topcased.requirement.core.commands;
 
@@ -75,41 +75,37 @@ public class MoveHierarchicalElementCommand extends CompoundCommand
      */
     protected void initializeCommands()
     {
-        removeFromSource();
-        addToTarget();
+        for (Object element : elements){
+            HierarchicalElement sourceElt = RequirementUtils.getHierarchicalElementFor(element);
+            if (sourceElt != null){     
+                initializeTarget();
+                if (targetCreated && targetElt != null){
+                	//Prevent from move the Hierarchical element twice. If it is in its correct target. Than do nothing
+                    if (!targetElt.getChildren().contains(sourceElt)){
+                        removeFromSource(sourceElt);
+                        addToTarget(sourceElt);
+                    }
+                }
+            }
+        }
     }
 
     /**
      * Adds {@link RemoveCommand}s responsible for deleting the older {@link HierarchicalElement}.
      */
-    private void removeFromSource()
+    private void removeFromSource( HierarchicalElement sourceElt)
     {
-        for (Object element : elements)
-        {
-            HierarchicalElement sourceElt = RequirementUtils.getHierarchicalElementFor(element);
-            if (sourceElt != null)
-            {
                 appendIfCanExecute(RemoveCommand.create(domain, sourceElt));
-            }
-        }
     }
 
     /**
      * Adds {@link AddCommand}s responsible for adding the new {@link HierarchicalElement}.
      */
-    private void addToTarget()
+    private void addToTarget( HierarchicalElement sourceElt)
     {
-        for (Object element : elements)
-        {
-            HierarchicalElement sourceElt = RequirementUtils.getHierarchicalElementFor(element);
-            if (sourceElt != null)
-            {
-                // adjustTarget(element);
-                initializeTarget();
+                
                 appendIfCanExecute(AddCommand.create(domain, targetElt, RequirementPackage.eINSTANCE.getHierarchicalElement_Children(), sourceElt));
                 toSelect.add(sourceElt);
-            }
-        }
     }
 
     /**
