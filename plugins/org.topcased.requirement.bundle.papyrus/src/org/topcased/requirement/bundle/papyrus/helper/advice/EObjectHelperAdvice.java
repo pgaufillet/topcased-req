@@ -10,7 +10,7 @@
  * Contributors:
  *  Vincent Hemery (Atos Origin}) {vincent.hemery@atosorigin.com} - Initial API and implementation
  *	David Ribeiro (Atos Origin}) {david.ribeirocampelo@atosorigin.com}
- *
+ *  Arthur Daussy (Atos) {Arthur.daussy@atos.net - [#4168] Current requirement when semantic object its move to another container
  *****************************************************************************/
 package org.topcased.requirement.bundle.papyrus.helper.advice;
 
@@ -44,9 +44,9 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.IEditCommandRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.MoveRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.SetRequest;
 import org.eclipse.jface.window.Window;
+import org.eclipse.papyrus.commands.wrappers.EMFtoGMFCommandWrapper;
 import org.eclipse.papyrus.core.editor.IMultiDiagramEditor;
 import org.eclipse.papyrus.core.utils.EditorUtils;
-import org.eclipse.papyrus.diagram.common.command.wrappers.EMFtoGMFCommandWrapper;
 import org.eclipse.swt.widgets.Display;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.RequirementPackage;
