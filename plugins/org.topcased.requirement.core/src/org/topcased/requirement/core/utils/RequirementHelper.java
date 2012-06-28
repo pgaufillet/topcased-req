@@ -470,9 +470,9 @@ public final class RequirementHelper
 
         if (algorithm == null)
         {
-            throw new RuntimeException(String.format("algorithm not found : %s",ComputeRequirementIdentifier.getCurrentAlgorithm()));
+            throw new RuntimeException(String.format("algorithm not found : %s", ComputeRequirementIdentifier.getCurrentAlgorithm()));
         }
-        
+
         // Handle the create from upstream case
         if (upstream != null)
         {
@@ -566,28 +566,31 @@ public final class RequirementHelper
     private void createDefaultAttributes(Requirement upstream, org.topcased.requirement.Requirement current)
     {
         AttributeConfiguration configuration = RequirementUtils.getAttributeConfiguration(editingDomain);
-        for (ConfiguratedAttribute attribute : configuration.getListAttributes())
+        if (configuration != null)
         {
-            org.topcased.requirement.Attribute newAttribute = null;
-            if (AttributesType.TEXT_VALUE == attribute.getType().getValue())
+            for (ConfiguratedAttribute attribute : configuration.getListAttributes())
             {
-                newAttribute = createAttributeText(attribute, upstream);
-            }
-            else if (AttributesType.ALLOCATE_VALUE == attribute.getType().getValue())
-            {
-                newAttribute = createAttributeAllocate(attribute.getName());
-            }
-            else if (current instanceof CurrentRequirement && AttributesType.LINK_VALUE == attribute.getType().getValue())
-            {
-                newAttribute = createAttributeLink(attribute.getName(), upstream);
-            }
-            else if (AttributesType.OBJECT_VALUE == attribute.getType().getValue())
-            {
-                newAttribute = createAttributeReference(attribute.getName());
-            }
-            if (newAttribute != null)
-            {
-                current.getAttribute().add(newAttribute);
+                org.topcased.requirement.Attribute newAttribute = null;
+                if (AttributesType.TEXT_VALUE == attribute.getType().getValue())
+                {
+                    newAttribute = createAttributeText(attribute, upstream);
+                }
+                else if (AttributesType.ALLOCATE_VALUE == attribute.getType().getValue())
+                {
+                    newAttribute = createAttributeAllocate(attribute.getName());
+                }
+                else if (current instanceof CurrentRequirement && AttributesType.LINK_VALUE == attribute.getType().getValue())
+                {
+                    newAttribute = createAttributeLink(attribute.getName(), upstream);
+                }
+                else if (AttributesType.OBJECT_VALUE == attribute.getType().getValue())
+                {
+                    newAttribute = createAttributeReference(attribute.getName());
+                }
+                if (newAttribute != null)
+                {
+                    current.getAttribute().add(newAttribute);
+                }
             }
         }
     }
