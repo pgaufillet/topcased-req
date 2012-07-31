@@ -27,44 +27,44 @@ import org.topcased.typesmodel.model.inittypes.Style;
 public class StyleImpl extends RegexImpl implements Style
 {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected StyleImpl()
     {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass()
     {
-        return InittypesPackage.Literals.STYLE;
-    }
+		return InittypesPackage.Literals.STYLE;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public String getLabel()
     {
-        return (String)eGet(InittypesPackage.Literals.STYLE__LABEL, true);
-    }
+		return (String)eGet(InittypesPackage.Literals.STYLE__LABEL, true);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void setLabel(String newLabel)
     {
-        eSet(InittypesPackage.Literals.STYLE__LABEL, newLabel);
-    }
+		eSet(InittypesPackage.Literals.STYLE__LABEL, newLabel);
+	}
 
 } //StyleImpl

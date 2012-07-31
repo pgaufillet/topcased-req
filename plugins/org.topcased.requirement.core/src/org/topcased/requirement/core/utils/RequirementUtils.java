@@ -1028,6 +1028,9 @@ public final class RequirementUtils
      */
     public static boolean isDeletedDocumentIdent(String ident)
     {
+        if (ident == null) {
+            return false;
+        }
         return DELETED_DOCUMENT_PATTERN.matcher(ident).matches();
     }
 

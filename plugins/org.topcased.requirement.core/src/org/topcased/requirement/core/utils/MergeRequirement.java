@@ -194,7 +194,7 @@ public final class MergeRequirement
                     }
                     MergeService.merge(diff, true);
                 }
-                else if (removedElement instanceof ttm.Requirement && !isPartialImport)
+                else if (removedElement instanceof ttm.Requirement)
                 {
                     // the element is marked as deleted
                     addRequirementToDeleted((ttm.Requirement) removedElement);

@@ -12,7 +12,8 @@ Export-Package: org.topcased.typesmodel.handler,
  org.topcased.typesmodel.model.inittypes,
  org.topcased.typesmodel.model.inittypes.impl,
  org.topcased.typesmodel.model.inittypes.provider,
- org.topcased.typesmodel.model.inittypes.util
+ org.topcased.typesmodel.model.inittypes.util,
+ org.topcased.typesmodel.ui
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.emf.edit;visibility:=reexport,

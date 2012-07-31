@@ -27,44 +27,44 @@ import org.topcased.typesmodel.model.inittypes.InittypesPackage;
 public class ColumnImpl extends RegexImpl implements Column
 {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ColumnImpl()
     {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass()
     {
-        return InittypesPackage.Literals.COLUMN;
-    }
+		return InittypesPackage.Literals.COLUMN;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public int getNumber()
     {
-        return (Integer)eGet(InittypesPackage.Literals.COLUMN__NUMBER, true);
-    }
+		return (Integer)eGet(InittypesPackage.Literals.COLUMN__NUMBER, true);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void setNumber(int newNumber)
     {
-        eSet(InittypesPackage.Literals.COLUMN__NUMBER, newNumber);
-    }
+		eSet(InittypesPackage.Literals.COLUMN__NUMBER, newNumber);
+	}
 
 } //ColumnImpl

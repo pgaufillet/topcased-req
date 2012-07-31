@@ -21,6 +21,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.topcased.typesmodel.model.inittypes.Column;
 import org.topcased.typesmodel.model.inittypes.DocumentType;
+import org.topcased.typesmodel.model.inittypes.InittypesFactory;
 import org.topcased.typesmodel.model.inittypes.InittypesPackage;
 import org.topcased.typesmodel.model.inittypes.Regex;
 import org.topcased.typesmodel.model.inittypes.Style;
@@ -87,10 +88,25 @@ public class IniManager
         return registry.getElementsByType(documentType, InittypesPackage.Literals.REGEX);
     }
 
-    public void save(IFile typesFile, Collection<Type> types, Type id, boolean hierarchical, String endText, String descriptionRegex)
+    public void save(IFile typesFile, DocumentType documentType)
     {
-        IniManagerRegistry.save(typesFile, types, id, hierarchical, endText, descriptionRegex);
+        IniManagerRegistry.save(typesFile, documentType);
         
+    }
+    
+    public void save(IFile typesFile, Collection<Type> types, Type id, boolean hierarchical, String endText, String descriptionRegex) {
+
+    	DocumentType documentType = InittypesFactory.eINSTANCE.createDocumentType();
+    	documentType.getTypes().addAll(types);
+    	documentType.setId(id);
+    	documentType.setHierarchical(hierarchical);
+    	documentType.setTextType(endText);
+    	documentType.setTextRegex(descriptionRegex);
+    	
+    	String name = typesFile.getName().replace(".types", "");
+    	documentType.setName(name);
+    	
+    	save(typesFile, documentType);
     }
     
 }

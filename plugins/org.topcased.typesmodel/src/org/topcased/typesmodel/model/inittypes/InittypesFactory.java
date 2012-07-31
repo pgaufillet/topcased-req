@@ -19,65 +19,74 @@ import org.eclipse.emf.ecore.EFactory;
 public interface InittypesFactory extends EFactory
 {
     /**
-     * The singleton instance of the factory.
-     * <!-- begin-user-doc -->
+	 * The singleton instance of the factory.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     InittypesFactory eINSTANCE = org.topcased.typesmodel.model.inittypes.impl.InittypesFactoryImpl.init();
 
     /**
-     * Returns a new object of class '<em>Type Model</em>'.
-     * <!-- begin-user-doc -->
+	 * Returns a new object of class '<em>Type Model</em>'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return a new object of class '<em>Type Model</em>'.
-     * @generated
-     */
+	 * @return a new object of class '<em>Type Model</em>'.
+	 * @generated
+	 */
     TypeModel createTypeModel();
 
     /**
-     * Returns a new object of class '<em>Regex</em>'.
-     * <!-- begin-user-doc -->
+	 * Returns a new object of class '<em>Regex</em>'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return a new object of class '<em>Regex</em>'.
-     * @generated
-     */
+	 * @return a new object of class '<em>Regex</em>'.
+	 * @generated
+	 */
     Regex createRegex();
 
     /**
-     * Returns a new object of class '<em>Column</em>'.
-     * <!-- begin-user-doc -->
+	 * Returns a new object of class '<em>Column</em>'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return a new object of class '<em>Column</em>'.
-     * @generated
-     */
+	 * @return a new object of class '<em>Column</em>'.
+	 * @generated
+	 */
     Column createColumn();
 
     /**
-     * Returns a new object of class '<em>Document Type</em>'.
-     * <!-- begin-user-doc -->
+	 * Returns a new object of class '<em>Document Type</em>'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return a new object of class '<em>Document Type</em>'.
-     * @generated
-     */
+	 * @return a new object of class '<em>Document Type</em>'.
+	 * @generated
+	 */
     DocumentType createDocumentType();
 
     /**
-     * Returns a new object of class '<em>Style</em>'.
-     * <!-- begin-user-doc -->
+	 * Returns a new object of class '<em>Style</em>'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return a new object of class '<em>Style</em>'.
-     * @generated
-     */
+	 * @return a new object of class '<em>Style</em>'.
+	 * @generated
+	 */
     Style createStyle();
 
     /**
-     * Returns the package supported by this factory.
-     * <!-- begin-user-doc -->
+	 * Returns a new object of class '<em>Deletion Parameters</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Deletion Parameters</em>'.
+	 * @generated
+	 */
+	DeletionParameters createDeletionParameters();
+
+				/**
+	 * Returns the package supported by this factory.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the package supported by this factory.
-     * @generated
-     */
+	 * @return the package supported by this factory.
+	 * @generated
+	 */
     InittypesPackage getInittypesPackage();
 
 } //InittypesFactory

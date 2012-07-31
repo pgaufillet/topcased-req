@@ -11,13 +11,13 @@
  *  Anass RADOUANI (Atos) anass.radouani@atos.net - Initial API and implementation
  *
  *****************************************************************************/
-package org.topcased.typesmodel.handler;
+package org.topcased.typesmodel;
 
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS
 {
-    private static final String BUNDLE_NAME = "org.topcased.typesmodel.handler.messages"; //$NON-NLS-1$
+    private static final String BUNDLE_NAME = "org.topcased.typesmodel.messages"; //$NON-NLS-1$
 
     public static String AttributeName;
 
@@ -56,6 +56,21 @@ public class Messages extends NLS
     public static String StyleRegex;
 
     public static String Types;
+    
+    public static String lblToMatch;
+    
+    public static String btnMatchId;
+    
+    public static String btnMatchDescription;
+    
+    public static String btnAttributesToMatch;
+    
+    public static String txtAttributesToMatch;
+    
+    public static String lblRegex;
+    
+    public static String txtRegex;
+    
     static
     {
         // initialize resource bundle

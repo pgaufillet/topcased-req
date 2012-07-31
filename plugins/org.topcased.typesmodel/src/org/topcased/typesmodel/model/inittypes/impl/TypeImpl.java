@@ -31,95 +31,95 @@ import org.topcased.typesmodel.model.inittypes.Type;
 public abstract class TypeImpl extends MinimalEObjectImpl.Container implements Type
 {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected TypeImpl()
     {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass()
     {
-        return InittypesPackage.Literals.TYPE;
-    }
+		return InittypesPackage.Literals.TYPE;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected int eStaticFeatureCount()
     {
-        return 0;
-    }
+		return 0;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public String getName()
     {
-        return (String)eGet(InittypesPackage.Literals.TYPE__NAME, true);
-    }
+		return (String)eGet(InittypesPackage.Literals.TYPE__NAME, true);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void setName(String newName)
     {
-        eSet(InittypesPackage.Literals.TYPE__NAME, newName);
-    }
+		eSet(InittypesPackage.Literals.TYPE__NAME, newName);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public boolean isIsText()
     {
-        return (Boolean)eGet(InittypesPackage.Literals.TYPE__IS_TEXT, true);
-    }
+		return (Boolean)eGet(InittypesPackage.Literals.TYPE__IS_TEXT, true);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void setIsText(boolean newIsText)
     {
-        eSet(InittypesPackage.Literals.TYPE__IS_TEXT, newIsText);
-    }
+		eSet(InittypesPackage.Literals.TYPE__IS_TEXT, newIsText);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public boolean isIsReference()
     {
-        return (Boolean)eGet(InittypesPackage.Literals.TYPE__IS_REFERENCE, true);
-    }
+		return (Boolean)eGet(InittypesPackage.Literals.TYPE__IS_REFERENCE, true);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void setIsReference(boolean newIsReference)
     {
-        eSet(InittypesPackage.Literals.TYPE__IS_REFERENCE, newIsReference);
-    }
+		eSet(InittypesPackage.Literals.TYPE__IS_REFERENCE, newIsReference);
+	}
 
 } //TypeImpl

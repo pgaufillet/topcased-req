@@ -32,46 +32,46 @@ import org.topcased.typesmodel.model.inittypes.TypeModel;
 public class TypeModelImpl extends MinimalEObjectImpl.Container implements TypeModel
 {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected TypeModelImpl()
     {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass()
     {
-        return InittypesPackage.Literals.TYPE_MODEL;
-    }
+		return InittypesPackage.Literals.TYPE_MODEL;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected int eStaticFeatureCount()
     {
-        return 0;
-    }
+		return 0;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @SuppressWarnings("unchecked")
     public EList<DocumentType> getDocumentTypes()
     {
-        return (EList<DocumentType>)eGet(InittypesPackage.Literals.TYPE_MODEL__DOCUMENT_TYPES, true);
-    }
+		return (EList<DocumentType>)eGet(InittypesPackage.Literals.TYPE_MODEL__DOCUMENT_TYPES, true);
+	}
 
 } //TypeModelImpl

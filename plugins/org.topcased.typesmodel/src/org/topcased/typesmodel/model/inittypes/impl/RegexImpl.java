@@ -27,44 +27,44 @@ import org.topcased.typesmodel.model.inittypes.Regex;
 public class RegexImpl extends TypeImpl implements Regex
 {
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected RegexImpl()
     {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     protected EClass eStaticClass()
     {
-        return InittypesPackage.Literals.REGEX;
-    }
+		return InittypesPackage.Literals.REGEX;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public String getExpression()
     {
-        return (String)eGet(InittypesPackage.Literals.REGEX__EXPRESSION, true);
-    }
+		return (String)eGet(InittypesPackage.Literals.REGEX__EXPRESSION, true);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void setExpression(String newExpression)
     {
-        eSet(InittypesPackage.Literals.REGEX__EXPRESSION, newExpression);
-    }
+		eSet(InittypesPackage.Literals.REGEX__EXPRESSION, newExpression);
+	}
 
 } //RegexImpl

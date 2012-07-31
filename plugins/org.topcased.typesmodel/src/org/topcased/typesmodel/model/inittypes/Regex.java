@@ -26,29 +26,29 @@ package org.topcased.typesmodel.model.inittypes;
 public interface Regex extends Type
 {
     /**
-     * Returns the value of the '<em><b>Expression</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Expression</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Expression</em>' attribute isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Expression</em>' attribute.
-     * @see #setExpression(String)
-     * @see org.topcased.typesmodel.model.inittypes.InittypesPackage#getRegex_Expression()
-     * @model
-     * @generated
-     */
+	 * @return the value of the '<em>Expression</em>' attribute.
+	 * @see #setExpression(String)
+	 * @see org.topcased.typesmodel.model.inittypes.InittypesPackage#getRegex_Expression()
+	 * @model
+	 * @generated
+	 */
     String getExpression();
 
     /**
-     * Sets the value of the '{@link org.topcased.typesmodel.model.inittypes.Regex#getExpression <em>Expression</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link org.topcased.typesmodel.model.inittypes.Regex#getExpression <em>Expression</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Expression</em>' attribute.
-     * @see #getExpression()
-     * @generated
-     */
+	 * @param value the new value of the '<em>Expression</em>' attribute.
+	 * @see #getExpression()
+	 * @generated
+	 */
     void setExpression(String value);
 
 } // Regex

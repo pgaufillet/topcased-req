@@ -67,8 +67,10 @@ import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.util.RequirementResource;
 import org.topcased.typesmodel.handler.IniManager;
+import org.topcased.typesmodel.model.inittypes.DeletionParameters;
 import org.topcased.typesmodel.model.inittypes.DocumentType;
 import org.topcased.typesmodel.model.inittypes.provider.InittypesItemProviderAdapterFactory;
+import org.topcased.typesmodel.ui.DeletionParametersComposite;
 
 import ttm.Document;
 
@@ -86,7 +88,7 @@ public class MergeRequirementModelWizardPage extends WizardPage
     public static final String PREFERENCE_FOR_IS_PARTIAL = "isPartial_updateReq"; //$NON-NLS-1$
 
     public static final String PREFERENCE_FOR_PERFORM_IMPACT_ANALYSIS = "performAnalysis_updateReq"; //$NON-NLS-1$
-
+    
     private static final String DEFAULT_MODEL_NAME = "My"; //$NON-NLS-1$
 
     private Resource alreadyAttachedRequirement;
@@ -167,7 +169,10 @@ public class MergeRequirementModelWizardPage extends WizardPage
         }
     };
 
-    private Label lblNewLabel;
+    private Group deletionGroup;
+
+    private DeletionParametersComposite deletionParametersComposite;
+    private Label label;
 
     /**
      * Constructor for SampleNewWizardPage.
@@ -241,7 +246,7 @@ public class MergeRequirementModelWizardPage extends WizardPage
         modelText.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 2, 1));
         modelText.setEditable(false);
 
-        scrolledComp = new ScrolledComposite(mainGroup, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+        scrolledComp = new ScrolledComposite(mainGroup, SWT.H_SCROLL | SWT.V_SCROLL);
         scrolledComp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1));
         scrolledComp.setExpandHorizontal(true);
         scrolledComp.setExpandVertical(true);
@@ -284,9 +289,9 @@ public class MergeRequirementModelWizardPage extends WizardPage
         requirementModelLbl.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
         new Label(docsGroup, SWT.NONE);
 
-        lblNewLabel = new Label(docsGroup, SWT.NONE);
-        lblNewLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-        lblNewLabel.setText(Messages.getString("MergeRequirementModelWizardPage.lblNewLabel.text"));
+        Label lblDocumentType = new Label(docsGroup, SWT.NONE);
+        lblDocumentType.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+        lblDocumentType.setText(Messages.getString("MergeRequirementModelWizardPage.lblDocumentType.text"));
 
         Label newDocument = new Label(docsGroup, SWT.NONE);
         newDocument.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
@@ -380,6 +385,18 @@ public class MergeRequirementModelWizardPage extends WizardPage
         impactAnalysisBt = new Button(mainGroup, SWT.CHECK);
         impactAnalysisBt.setText(Messages.getString("RequirementWizardPage.27")); //$NON-NLS-1$
         impactAnalysisBt.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 3, 1));
+        
+        label = new Label(mainGroup, SWT.SEPARATOR | SWT.HORIZONTAL);
+        label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
+        
+        deletionGroup = new Group(mainGroup, SWT.NONE);
+        deletionGroup.setText(Messages.getString("MergeRequirementModelWizardPage.deleteGroup.text")); //$NON-NLS-1$
+        deletionGroup.setLayout(new GridLayout(2, false));
+        
+        deletionParametersComposite = new DeletionParametersComposite(deletionGroup, RequirementCorePlugin.getDefault().getPreferenceStore());
+
+        new Label(mainGroup, SWT.NONE);
+        new Label(mainGroup, SWT.NONE);
     }
 
     /**
@@ -894,9 +911,10 @@ public class MergeRequirementModelWizardPage extends WizardPage
      * @return documents to merge
      * @throws InterruptedException
      */
-    protected Map<Document, Document> getDocumentsToMerge()
+    protected Map<Document, Document> getDocumentsToMerge(Map<Document, DeletionParameters> deletionParametersDocMap)
     {
         Map<Document, Document> docsToMerge = new HashMap<Document, Document>();
+        DeletionParameters defaultDeletionParameters = getDefaultDeletionParameters();
         for (Button b : buttonsCheck)
         {
             if (b.getSelection())
@@ -927,10 +945,13 @@ public class MergeRequirementModelWizardPage extends WizardPage
                         file.toURI();
                         importer.getDocument(type, URI.createFileURI(fileToMerge), URI.createFileURI(file.getAbsolutePath()), new NullProgressMonitor());
                         List<Document> docs = RequirementUtils.getUpstreamDocuments(resourceSet.getResource(URI.createFileURI(file.getAbsolutePath()), true));
-                        for (Document d : docs)
-                        {
-                            docsToMerge.put(inputDocuments.get(index), d);
-
+                        if (!docs.isEmpty()) {
+                            docsToMerge.put(inputDocuments.get(index), docs.get(0));
+                            if (type.getDeletionParameters() != null) {
+                                deletionParametersDocMap.put(inputDocuments.get(index), type.getDeletionParameters());
+                            } else {
+                                deletionParametersDocMap.put(inputDocuments.get(index), defaultDeletionParameters);
+                            }
                         }
                     }
                     catch (IOException e)
@@ -942,6 +963,11 @@ public class MergeRequirementModelWizardPage extends WizardPage
         }
         return docsToMerge;
     }
+    
+    protected DeletionParameters getDefaultDeletionParameters() {
+        return deletionParametersComposite.getDeletionParameters();
+    }
+    
 
     /**
      * Gets the selected document type element
@@ -987,5 +1013,13 @@ public class MergeRequirementModelWizardPage extends WizardPage
         inputTypedDocumentComboViewer.setContentProvider(contentProvider);
 
         inputTypedDocumentComboViewer.setInput(IniManager.getInstance().getModel());
+    }
+
+    public void savePrefs()
+    {
+        // Save is partial and perform analysis preferences
+        RequirementCorePlugin.getDefault().getPreferenceStore().setValue(MergeRequirementModelWizardPage.PREFERENCE_FOR_IS_PARTIAL, isPartialImport());
+        RequirementCorePlugin.getDefault().getPreferenceStore().setValue(MergeRequirementModelWizardPage.PREFERENCE_FOR_PERFORM_IMPACT_ANALYSIS, isImpactAnalysis());
+        deletionParametersComposite.savePrefs();
     }
 }

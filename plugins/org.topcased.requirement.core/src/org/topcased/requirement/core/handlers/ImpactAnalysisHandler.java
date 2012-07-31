@@ -342,7 +342,7 @@ public class ImpactAnalysisHandler extends AbstractHandler
             RequirementDifferenceCalculator calculator;
             try
             {
-                calculator = new RequirementDifferenceCalculator(documentsToImpactAnalyze, false);
+                calculator = new RequirementDifferenceCalculator(documentsToImpactAnalyze, null, false);
                 calculator.calculate(null);
                 new MergeImpactProcessor(resources, oldModelResource.getResourceSet(), calculator).processImpact();
                 ResourceSet set = oldModelResource.getResourceSet();

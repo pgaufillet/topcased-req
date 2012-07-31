@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.wizards.MergeRequirementModelWizardPage;
+import org.topcased.typesmodel.ui.DeletionParametersComposite;
 
 /**
  * This class contributes to the <code>org.eclipse.core.runtime.preferences</code> extension point.
@@ -52,5 +53,9 @@ public class RequirementPreferenceInitializer extends AbstractPreferenceInitiali
         store.setDefault(RequirementPreferenceConstants.DISPLAY_CURRENT_DECORATOR, false);
         store.setDefault(RequirementPreferenceConstants.IMPORT_REQUIREMENT_WITHOUT_DIALOG, false);
         store.setDefault(MergeRequirementModelWizardPage.PREFERENCE_FOR_PERFORM_IMPACT_ANALYSIS, true);
+        store.setDefault(DeletionParametersComposite.PREFERENCE_DELETION_MATCH_ID, false);
+        store.setDefault(DeletionParametersComposite.PREFERENCE_DELETION_MATCH_DESCRIPTION, false);
+        store.setDefault(DeletionParametersComposite.PREFERENCE_DELETION_ATTS_TO_MATCH, "");
+        store.setDefault(DeletionParametersComposite.PREFERENCE_DELETION_REGEX, "\\s*deleted\\s*");
     }
 }

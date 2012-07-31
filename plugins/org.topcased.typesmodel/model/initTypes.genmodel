@@ -34,9 +34,16 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute initTypes.ecore#//DocumentType/textType"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute initTypes.ecore#//DocumentType/documentPath"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute initTypes.ecore#//DocumentType/textRegex"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference initTypes.ecore#//DocumentType/deletionParameters"/>
     </genClasses>
     <genClasses ecoreClass="initTypes.ecore#//Style">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute initTypes.ecore#//Style/label"/>
+    </genClasses>
+    <genClasses ecoreClass="initTypes.ecore#//DeletionParameters">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute initTypes.ecore#//DeletionParameters/attributesToMatch"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute initTypes.ecore#//DeletionParameters/matchDescription"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute initTypes.ecore#//DeletionParameters/matchId"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute initTypes.ecore#//DeletionParameters/deleteRegex"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

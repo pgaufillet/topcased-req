@@ -29,602 +29,731 @@ import org.eclipse.emf.ecore.EReference;
 public interface InittypesPackage extends EPackage
 {
     /**
-     * The package name.
-     * <!-- begin-user-doc -->
+	 * The package name.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     String eNAME = "inittypes";
 
     /**
-     * The package namespace URI.
-     * <!-- begin-user-doc -->
+	 * The package namespace URI.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     String eNS_URI = "http://inittypes/1.0";
 
     /**
-     * The package namespace name.
-     * <!-- begin-user-doc -->
+	 * The package namespace name.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     String eNS_PREFIX = "inittypes";
 
     /**
-     * The singleton instance of the package.
-     * <!-- begin-user-doc -->
+	 * The singleton instance of the package.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     InittypesPackage eINSTANCE = org.topcased.typesmodel.model.inittypes.impl.InittypesPackageImpl.init();
 
     /**
-     * The meta object id for the '{@link org.topcased.typesmodel.model.inittypes.impl.TypeModelImpl <em>Type Model</em>}' class.
-     * <!-- begin-user-doc -->
+	 * The meta object id for the '{@link org.topcased.typesmodel.model.inittypes.impl.TypeModelImpl <em>Type Model</em>}' class.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see org.topcased.typesmodel.model.inittypes.impl.TypeModelImpl
-     * @see org.topcased.typesmodel.model.inittypes.impl.InittypesPackageImpl#getTypeModel()
-     * @generated
-     */
+	 * @see org.topcased.typesmodel.model.inittypes.impl.TypeModelImpl
+	 * @see org.topcased.typesmodel.model.inittypes.impl.InittypesPackageImpl#getTypeModel()
+	 * @generated
+	 */
     int TYPE_MODEL = 0;
 
     /**
-     * The feature id for the '<em><b>Document Types</b></em>' containment reference list.
-     * <!-- begin-user-doc -->
+	 * The feature id for the '<em><b>Document Types</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
+	 * @generated
+	 * @ordered
+	 */
     int TYPE_MODEL__DOCUMENT_TYPES = 0;
 
     /**
-     * The number of structural features of the '<em>Type Model</em>' class.
-     * <!-- begin-user-doc -->
+	 * The number of structural features of the '<em>Type Model</em>' class.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
+	 * @generated
+	 * @ordered
+	 */
     int TYPE_MODEL_FEATURE_COUNT = 1;
 
     /**
-     * The meta object id for the '{@link org.topcased.typesmodel.model.inittypes.impl.TypeImpl <em>Type</em>}' class.
-     * <!-- begin-user-doc -->
+	 * The meta object id for the '{@link org.topcased.typesmodel.model.inittypes.impl.TypeImpl <em>Type</em>}' class.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see org.topcased.typesmodel.model.inittypes.impl.TypeImpl
-     * @see org.topcased.typesmodel.model.inittypes.impl.InittypesPackageImpl#getType()
-     * @generated
-     */
+	 * @see org.topcased.typesmodel.model.inittypes.impl.TypeImpl
+	 * @see org.topcased.typesmodel.model.inittypes.impl.InittypesPackageImpl#getType()
+	 * @generated
+	 */
     int TYPE = 1;
 
     /**
-     * The feature id for the '<em><b>Name</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
+	 * @generated
+	 * @ordered
+	 */
     int TYPE__NAME = 0;
 
     /**
-     * The feature id for the '<em><b>Is Text</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * The feature id for the '<em><b>Is Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
+	 * @generated
+	 * @ordered
+	 */
     int TYPE__IS_TEXT = 1;
 
     /**
-     * The feature id for the '<em><b>Is Reference</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * The feature id for the '<em><b>Is Reference</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
+	 * @generated
+	 * @ordered
+	 */
     int TYPE__IS_REFERENCE = 2;
 
     /**
-     * The number of structural features of the '<em>Type</em>' class.
-     * <!-- begin-user-doc -->
+	 * The number of structural features of the '<em>Type</em>' class.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
+	 * @generated
+	 * @ordered
+	 */
     int TYPE_FEATURE_COUNT = 3;
 
     /**
-     * The meta object id for the '{@link org.topcased.typesmodel.model.inittypes.impl.RegexImpl <em>Regex</em>}' class.
-     * <!-- begin-user-doc -->
+	 * The meta object id for the '{@link org.topcased.typesmodel.model.inittypes.impl.RegexImpl <em>Regex</em>}' class.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see org.topcased.typesmodel.model.inittypes.impl.RegexImpl
-     * @see org.topcased.typesmodel.model.inittypes.impl.InittypesPackageImpl#getRegex()
-     * @generated
-     */
+	 * @see org.topcased.typesmodel.model.inittypes.impl.RegexImpl
+	 * @see org.topcased.typesmodel.model.inittypes.impl.InittypesPackageImpl#getRegex()
+	 * @generated
+	 */
     int REGEX = 2;
 
     /**
-     * The feature id for the '<em><b>Name</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
+	 * @generated
+	 * @ordered
+	 */
     int REGEX__NAME = TYPE__NAME;
 
     /**
-     * The feature id for the '<em><b>Is Text</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * The feature id for the '<em><b>Is Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
+	 * @generated
+	 * @ordered
+	 */
     int REGEX__IS_TEXT = TYPE__IS_TEXT;
 
     /**
-     * The feature id for the '<em><b>Is Reference</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * The feature id for the '<em><b>Is Reference</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
+	 * @generated
+	 * @ordered
+	 */
     int REGEX__IS_REFERENCE = TYPE__IS_REFERENCE;
 
     /**
-     * The feature id for the '<em><b>Expression</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * The feature id for the '<em><b>Expression</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
+	 * @generated
+	 * @ordered
+	 */
     int REGEX__EXPRESSION = TYPE_FEATURE_COUNT + 0;
 
     /**
-     * The number of structural features of the '<em>Regex</em>' class.
-     * <!-- begin-user-doc -->
+	 * The number of structural features of the '<em>Regex</em>' class.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
+	 * @generated
+	 * @ordered
+	 */
     int REGEX_FEATURE_COUNT = TYPE_FEATURE_COUNT + 1;
 
     /**
-     * The meta object id for the '{@link org.topcased.typesmodel.model.inittypes.impl.ColumnImpl <em>Column</em>}' class.
-     * <!-- begin-user-doc -->
+	 * The meta object id for the '{@link org.topcased.typesmodel.model.inittypes.impl.ColumnImpl <em>Column</em>}' class.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see org.topcased.typesmodel.model.inittypes.impl.ColumnImpl
-     * @see org.topcased.typesmodel.model.inittypes.impl.InittypesPackageImpl#getColumn()
-     * @generated
-     */
+	 * @see org.topcased.typesmodel.model.inittypes.impl.ColumnImpl
+	 * @see org.topcased.typesmodel.model.inittypes.impl.InittypesPackageImpl#getColumn()
+	 * @generated
+	 */
     int COLUMN = 3;
 
     /**
-     * The feature id for the '<em><b>Name</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
+	 * @generated
+	 * @ordered
+	 */
     int COLUMN__NAME = REGEX__NAME;
 
     /**
-     * The feature id for the '<em><b>Is Text</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * The feature id for the '<em><b>Is Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
+	 * @generated
+	 * @ordered
+	 */
     int COLUMN__IS_TEXT = REGEX__IS_TEXT;
 
     /**
-     * The feature id for the '<em><b>Is Reference</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * The feature id for the '<em><b>Is Reference</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
+	 * @generated
+	 * @ordered
+	 */
     int COLUMN__IS_REFERENCE = REGEX__IS_REFERENCE;
 
     /**
-     * The feature id for the '<em><b>Expression</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * The feature id for the '<em><b>Expression</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
+	 * @generated
+	 * @ordered
+	 */
     int COLUMN__EXPRESSION = REGEX__EXPRESSION;
 
     /**
-     * The feature id for the '<em><b>Number</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * The feature id for the '<em><b>Number</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
+	 * @generated
+	 * @ordered
+	 */
     int COLUMN__NUMBER = REGEX_FEATURE_COUNT + 0;
 
     /**
-     * The number of structural features of the '<em>Column</em>' class.
-     * <!-- begin-user-doc -->
+	 * The number of structural features of the '<em>Column</em>' class.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
+	 * @generated
+	 * @ordered
+	 */
     int COLUMN_FEATURE_COUNT = REGEX_FEATURE_COUNT + 1;
 
     /**
-     * The meta object id for the '{@link org.topcased.typesmodel.model.inittypes.impl.DocumentTypeImpl <em>Document Type</em>}' class.
-     * <!-- begin-user-doc -->
+	 * The meta object id for the '{@link org.topcased.typesmodel.model.inittypes.impl.DocumentTypeImpl <em>Document Type</em>}' class.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see org.topcased.typesmodel.model.inittypes.impl.DocumentTypeImpl
-     * @see org.topcased.typesmodel.model.inittypes.impl.InittypesPackageImpl#getDocumentType()
-     * @generated
-     */
+	 * @see org.topcased.typesmodel.model.inittypes.impl.DocumentTypeImpl
+	 * @see org.topcased.typesmodel.model.inittypes.impl.InittypesPackageImpl#getDocumentType()
+	 * @generated
+	 */
     int DOCUMENT_TYPE = 4;
 
     /**
-     * The feature id for the '<em><b>Types</b></em>' containment reference list.
-     * <!-- begin-user-doc -->
+	 * The feature id for the '<em><b>Types</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
+	 * @generated
+	 * @ordered
+	 */
     int DOCUMENT_TYPE__TYPES = 0;
 
     /**
-     * The feature id for the '<em><b>Id</b></em>' containment reference.
-     * <!-- begin-user-doc -->
+	 * The feature id for the '<em><b>Id</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
+	 * @generated
+	 * @ordered
+	 */
     int DOCUMENT_TYPE__ID = 1;
 
     /**
-     * The feature id for the '<em><b>Name</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
+	 * @generated
+	 * @ordered
+	 */
     int DOCUMENT_TYPE__NAME = 2;
 
     /**
-     * The feature id for the '<em><b>Hierarchical</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * The feature id for the '<em><b>Hierarchical</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
+	 * @generated
+	 * @ordered
+	 */
     int DOCUMENT_TYPE__HIERARCHICAL = 3;
 
     /**
-     * The feature id for the '<em><b>Text Type</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * The feature id for the '<em><b>Text Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
+	 * @generated
+	 * @ordered
+	 */
     int DOCUMENT_TYPE__TEXT_TYPE = 4;
 
     /**
-     * The feature id for the '<em><b>Document Path</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * The feature id for the '<em><b>Document Path</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
+	 * @generated
+	 * @ordered
+	 */
     int DOCUMENT_TYPE__DOCUMENT_PATH = 5;
 
     /**
-     * The feature id for the '<em><b>Text Regex</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * The feature id for the '<em><b>Text Regex</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
+	 * @generated
+	 * @ordered
+	 */
     int DOCUMENT_TYPE__TEXT_REGEX = 6;
 
     /**
-     * The number of structural features of the '<em>Document Type</em>' class.
-     * <!-- begin-user-doc -->
+	 * The feature id for the '<em><b>Deletion Parameters</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DOCUMENT_TYPE__DELETION_PARAMETERS = 7;
+
+				/**
+	 * The number of structural features of the '<em>Document Type</em>' class.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int DOCUMENT_TYPE_FEATURE_COUNT = 7;
+	 * @generated
+	 * @ordered
+	 */
+    int DOCUMENT_TYPE_FEATURE_COUNT = 8;
 
     /**
-     * The meta object id for the '{@link org.topcased.typesmodel.model.inittypes.impl.StyleImpl <em>Style</em>}' class.
-     * <!-- begin-user-doc -->
+	 * The meta object id for the '{@link org.topcased.typesmodel.model.inittypes.impl.StyleImpl <em>Style</em>}' class.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @see org.topcased.typesmodel.model.inittypes.impl.StyleImpl
-     * @see org.topcased.typesmodel.model.inittypes.impl.InittypesPackageImpl#getStyle()
-     * @generated
-     */
+	 * @see org.topcased.typesmodel.model.inittypes.impl.StyleImpl
+	 * @see org.topcased.typesmodel.model.inittypes.impl.InittypesPackageImpl#getStyle()
+	 * @generated
+	 */
     int STYLE = 5;
 
     /**
-     * The feature id for the '<em><b>Name</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
+	 * @generated
+	 * @ordered
+	 */
     int STYLE__NAME = REGEX__NAME;
 
     /**
-     * The feature id for the '<em><b>Is Text</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * The feature id for the '<em><b>Is Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
+	 * @generated
+	 * @ordered
+	 */
     int STYLE__IS_TEXT = REGEX__IS_TEXT;
 
     /**
-     * The feature id for the '<em><b>Is Reference</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * The feature id for the '<em><b>Is Reference</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
+	 * @generated
+	 * @ordered
+	 */
     int STYLE__IS_REFERENCE = REGEX__IS_REFERENCE;
 
     /**
-     * The feature id for the '<em><b>Expression</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * The feature id for the '<em><b>Expression</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
+	 * @generated
+	 * @ordered
+	 */
     int STYLE__EXPRESSION = REGEX__EXPRESSION;
 
     /**
-     * The feature id for the '<em><b>Label</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * The feature id for the '<em><b>Label</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
+	 * @generated
+	 * @ordered
+	 */
     int STYLE__LABEL = REGEX_FEATURE_COUNT + 0;
 
     /**
-     * The number of structural features of the '<em>Style</em>' class.
-     * <!-- begin-user-doc -->
+	 * The number of structural features of the '<em>Style</em>' class.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
+	 * @generated
+	 * @ordered
+	 */
     int STYLE_FEATURE_COUNT = REGEX_FEATURE_COUNT + 1;
 
 
     /**
-     * Returns the meta object for class '{@link org.topcased.typesmodel.model.inittypes.TypeModel <em>Type Model</em>}'.
-     * <!-- begin-user-doc -->
+	 * The meta object id for the '{@link org.topcased.typesmodel.model.inittypes.impl.DeletionParametersImpl <em>Deletion Parameters</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.topcased.typesmodel.model.inittypes.impl.DeletionParametersImpl
+	 * @see org.topcased.typesmodel.model.inittypes.impl.InittypesPackageImpl#getDeletionParameters()
+	 * @generated
+	 */
+	int DELETION_PARAMETERS = 6;
+
+				/**
+	 * The feature id for the '<em><b>Regex</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELETION_PARAMETERS__REGEX = 0;
+
+				/**
+	 * The feature id for the '<em><b>Attributes To Match</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELETION_PARAMETERS__ATTRIBUTES_TO_MATCH = 1;
+
+				/**
+	 * The feature id for the '<em><b>Match Description</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELETION_PARAMETERS__MATCH_DESCRIPTION = 2;
+
+				/**
+	 * The feature id for the '<em><b>Match Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELETION_PARAMETERS__MATCH_ID = 3;
+
+				/**
+	 * The number of structural features of the '<em>Deletion Parameters</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELETION_PARAMETERS_FEATURE_COUNT = 4;
+
+				/**
+	 * Returns the meta object for class '{@link org.topcased.typesmodel.model.inittypes.TypeModel <em>Type Model</em>}'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for class '<em>Type Model</em>'.
-     * @see org.topcased.typesmodel.model.inittypes.TypeModel
-     * @generated
-     */
+	 * @return the meta object for class '<em>Type Model</em>'.
+	 * @see org.topcased.typesmodel.model.inittypes.TypeModel
+	 * @generated
+	 */
     EClass getTypeModel();
 
     /**
-     * Returns the meta object for the containment reference list '{@link org.topcased.typesmodel.model.inittypes.TypeModel#getDocumentTypes <em>Document Types</em>}'.
-     * <!-- begin-user-doc -->
+	 * Returns the meta object for the containment reference list '{@link org.topcased.typesmodel.model.inittypes.TypeModel#getDocumentTypes <em>Document Types</em>}'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for the containment reference list '<em>Document Types</em>'.
-     * @see org.topcased.typesmodel.model.inittypes.TypeModel#getDocumentTypes()
-     * @see #getTypeModel()
-     * @generated
-     */
+	 * @return the meta object for the containment reference list '<em>Document Types</em>'.
+	 * @see org.topcased.typesmodel.model.inittypes.TypeModel#getDocumentTypes()
+	 * @see #getTypeModel()
+	 * @generated
+	 */
     EReference getTypeModel_DocumentTypes();
 
     /**
-     * Returns the meta object for class '{@link org.topcased.typesmodel.model.inittypes.Type <em>Type</em>}'.
-     * <!-- begin-user-doc -->
+	 * Returns the meta object for class '{@link org.topcased.typesmodel.model.inittypes.Type <em>Type</em>}'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for class '<em>Type</em>'.
-     * @see org.topcased.typesmodel.model.inittypes.Type
-     * @generated
-     */
+	 * @return the meta object for class '<em>Type</em>'.
+	 * @see org.topcased.typesmodel.model.inittypes.Type
+	 * @generated
+	 */
     EClass getType();
 
     /**
-     * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.Type#getName <em>Name</em>}'.
-     * <!-- begin-user-doc -->
+	 * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.Type#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Name</em>'.
-     * @see org.topcased.typesmodel.model.inittypes.Type#getName()
-     * @see #getType()
-     * @generated
-     */
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see org.topcased.typesmodel.model.inittypes.Type#getName()
+	 * @see #getType()
+	 * @generated
+	 */
     EAttribute getType_Name();
 
     /**
-     * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.Type#isIsText <em>Is Text</em>}'.
-     * <!-- begin-user-doc -->
+	 * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.Type#isIsText <em>Is Text</em>}'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Is Text</em>'.
-     * @see org.topcased.typesmodel.model.inittypes.Type#isIsText()
-     * @see #getType()
-     * @generated
-     */
+	 * @return the meta object for the attribute '<em>Is Text</em>'.
+	 * @see org.topcased.typesmodel.model.inittypes.Type#isIsText()
+	 * @see #getType()
+	 * @generated
+	 */
     EAttribute getType_IsText();
 
     /**
-     * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.Type#isIsReference <em>Is Reference</em>}'.
-     * <!-- begin-user-doc -->
+	 * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.Type#isIsReference <em>Is Reference</em>}'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Is Reference</em>'.
-     * @see org.topcased.typesmodel.model.inittypes.Type#isIsReference()
-     * @see #getType()
-     * @generated
-     */
+	 * @return the meta object for the attribute '<em>Is Reference</em>'.
+	 * @see org.topcased.typesmodel.model.inittypes.Type#isIsReference()
+	 * @see #getType()
+	 * @generated
+	 */
     EAttribute getType_IsReference();
 
     /**
-     * Returns the meta object for class '{@link org.topcased.typesmodel.model.inittypes.Regex <em>Regex</em>}'.
-     * <!-- begin-user-doc -->
+	 * Returns the meta object for class '{@link org.topcased.typesmodel.model.inittypes.Regex <em>Regex</em>}'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for class '<em>Regex</em>'.
-     * @see org.topcased.typesmodel.model.inittypes.Regex
-     * @generated
-     */
+	 * @return the meta object for class '<em>Regex</em>'.
+	 * @see org.topcased.typesmodel.model.inittypes.Regex
+	 * @generated
+	 */
     EClass getRegex();
 
     /**
-     * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.Regex#getExpression <em>Expression</em>}'.
-     * <!-- begin-user-doc -->
+	 * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.Regex#getExpression <em>Expression</em>}'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Expression</em>'.
-     * @see org.topcased.typesmodel.model.inittypes.Regex#getExpression()
-     * @see #getRegex()
-     * @generated
-     */
+	 * @return the meta object for the attribute '<em>Expression</em>'.
+	 * @see org.topcased.typesmodel.model.inittypes.Regex#getExpression()
+	 * @see #getRegex()
+	 * @generated
+	 */
     EAttribute getRegex_Expression();
 
     /**
-     * Returns the meta object for class '{@link org.topcased.typesmodel.model.inittypes.Column <em>Column</em>}'.
-     * <!-- begin-user-doc -->
+	 * Returns the meta object for class '{@link org.topcased.typesmodel.model.inittypes.Column <em>Column</em>}'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for class '<em>Column</em>'.
-     * @see org.topcased.typesmodel.model.inittypes.Column
-     * @generated
-     */
+	 * @return the meta object for class '<em>Column</em>'.
+	 * @see org.topcased.typesmodel.model.inittypes.Column
+	 * @generated
+	 */
     EClass getColumn();
 
     /**
-     * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.Column#getNumber <em>Number</em>}'.
-     * <!-- begin-user-doc -->
+	 * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.Column#getNumber <em>Number</em>}'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Number</em>'.
-     * @see org.topcased.typesmodel.model.inittypes.Column#getNumber()
-     * @see #getColumn()
-     * @generated
-     */
+	 * @return the meta object for the attribute '<em>Number</em>'.
+	 * @see org.topcased.typesmodel.model.inittypes.Column#getNumber()
+	 * @see #getColumn()
+	 * @generated
+	 */
     EAttribute getColumn_Number();
 
     /**
-     * Returns the meta object for class '{@link org.topcased.typesmodel.model.inittypes.DocumentType <em>Document Type</em>}'.
-     * <!-- begin-user-doc -->
+	 * Returns the meta object for class '{@link org.topcased.typesmodel.model.inittypes.DocumentType <em>Document Type</em>}'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for class '<em>Document Type</em>'.
-     * @see org.topcased.typesmodel.model.inittypes.DocumentType
-     * @generated
-     */
+	 * @return the meta object for class '<em>Document Type</em>'.
+	 * @see org.topcased.typesmodel.model.inittypes.DocumentType
+	 * @generated
+	 */
     EClass getDocumentType();
 
     /**
-     * Returns the meta object for the containment reference list '{@link org.topcased.typesmodel.model.inittypes.DocumentType#getTypes <em>Types</em>}'.
-     * <!-- begin-user-doc -->
+	 * Returns the meta object for the containment reference list '{@link org.topcased.typesmodel.model.inittypes.DocumentType#getTypes <em>Types</em>}'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for the containment reference list '<em>Types</em>'.
-     * @see org.topcased.typesmodel.model.inittypes.DocumentType#getTypes()
-     * @see #getDocumentType()
-     * @generated
-     */
+	 * @return the meta object for the containment reference list '<em>Types</em>'.
+	 * @see org.topcased.typesmodel.model.inittypes.DocumentType#getTypes()
+	 * @see #getDocumentType()
+	 * @generated
+	 */
     EReference getDocumentType_Types();
 
     /**
-     * Returns the meta object for the containment reference '{@link org.topcased.typesmodel.model.inittypes.DocumentType#getId <em>Id</em>}'.
-     * <!-- begin-user-doc -->
+	 * Returns the meta object for the containment reference '{@link org.topcased.typesmodel.model.inittypes.DocumentType#getId <em>Id</em>}'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for the containment reference '<em>Id</em>'.
-     * @see org.topcased.typesmodel.model.inittypes.DocumentType#getId()
-     * @see #getDocumentType()
-     * @generated
-     */
+	 * @return the meta object for the containment reference '<em>Id</em>'.
+	 * @see org.topcased.typesmodel.model.inittypes.DocumentType#getId()
+	 * @see #getDocumentType()
+	 * @generated
+	 */
     EReference getDocumentType_Id();
 
     /**
-     * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.DocumentType#getName <em>Name</em>}'.
-     * <!-- begin-user-doc -->
+	 * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.DocumentType#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Name</em>'.
-     * @see org.topcased.typesmodel.model.inittypes.DocumentType#getName()
-     * @see #getDocumentType()
-     * @generated
-     */
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see org.topcased.typesmodel.model.inittypes.DocumentType#getName()
+	 * @see #getDocumentType()
+	 * @generated
+	 */
     EAttribute getDocumentType_Name();
 
     /**
-     * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.DocumentType#isHierarchical <em>Hierarchical</em>}'.
-     * <!-- begin-user-doc -->
+	 * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.DocumentType#isHierarchical <em>Hierarchical</em>}'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Hierarchical</em>'.
-     * @see org.topcased.typesmodel.model.inittypes.DocumentType#isHierarchical()
-     * @see #getDocumentType()
-     * @generated
-     */
+	 * @return the meta object for the attribute '<em>Hierarchical</em>'.
+	 * @see org.topcased.typesmodel.model.inittypes.DocumentType#isHierarchical()
+	 * @see #getDocumentType()
+	 * @generated
+	 */
     EAttribute getDocumentType_Hierarchical();
 
     /**
-     * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.DocumentType#getTextType <em>Text Type</em>}'.
-     * <!-- begin-user-doc -->
+	 * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.DocumentType#getTextType <em>Text Type</em>}'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Text Type</em>'.
-     * @see org.topcased.typesmodel.model.inittypes.DocumentType#getTextType()
-     * @see #getDocumentType()
-     * @generated
-     */
+	 * @return the meta object for the attribute '<em>Text Type</em>'.
+	 * @see org.topcased.typesmodel.model.inittypes.DocumentType#getTextType()
+	 * @see #getDocumentType()
+	 * @generated
+	 */
     EAttribute getDocumentType_TextType();
 
     /**
-     * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.DocumentType#getDocumentPath <em>Document Path</em>}'.
-     * <!-- begin-user-doc -->
+	 * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.DocumentType#getDocumentPath <em>Document Path</em>}'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Document Path</em>'.
-     * @see org.topcased.typesmodel.model.inittypes.DocumentType#getDocumentPath()
-     * @see #getDocumentType()
-     * @generated
-     */
+	 * @return the meta object for the attribute '<em>Document Path</em>'.
+	 * @see org.topcased.typesmodel.model.inittypes.DocumentType#getDocumentPath()
+	 * @see #getDocumentType()
+	 * @generated
+	 */
     EAttribute getDocumentType_DocumentPath();
 
     /**
-     * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.DocumentType#getTextRegex <em>Text Regex</em>}'.
-     * <!-- begin-user-doc -->
+	 * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.DocumentType#getTextRegex <em>Text Regex</em>}'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Text Regex</em>'.
-     * @see org.topcased.typesmodel.model.inittypes.DocumentType#getTextRegex()
-     * @see #getDocumentType()
-     * @generated
-     */
+	 * @return the meta object for the attribute '<em>Text Regex</em>'.
+	 * @see org.topcased.typesmodel.model.inittypes.DocumentType#getTextRegex()
+	 * @see #getDocumentType()
+	 * @generated
+	 */
     EAttribute getDocumentType_TextRegex();
 
     /**
-     * Returns the meta object for class '{@link org.topcased.typesmodel.model.inittypes.Style <em>Style</em>}'.
-     * <!-- begin-user-doc -->
+	 * Returns the meta object for the containment reference '{@link org.topcased.typesmodel.model.inittypes.DocumentType#getDeletionParameters <em>Deletion Parameters</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Deletion Parameters</em>'.
+	 * @see org.topcased.typesmodel.model.inittypes.DocumentType#getDeletionParameters()
+	 * @see #getDocumentType()
+	 * @generated
+	 */
+	EReference getDocumentType_DeletionParameters();
+
+				/**
+	 * Returns the meta object for class '{@link org.topcased.typesmodel.model.inittypes.Style <em>Style</em>}'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for class '<em>Style</em>'.
-     * @see org.topcased.typesmodel.model.inittypes.Style
-     * @generated
-     */
+	 * @return the meta object for class '<em>Style</em>'.
+	 * @see org.topcased.typesmodel.model.inittypes.Style
+	 * @generated
+	 */
     EClass getStyle();
 
     /**
-     * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.Style#getLabel <em>Label</em>}'.
-     * <!-- begin-user-doc -->
+	 * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.Style#getLabel <em>Label</em>}'.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Label</em>'.
-     * @see org.topcased.typesmodel.model.inittypes.Style#getLabel()
-     * @see #getStyle()
-     * @generated
-     */
+	 * @return the meta object for the attribute '<em>Label</em>'.
+	 * @see org.topcased.typesmodel.model.inittypes.Style#getLabel()
+	 * @see #getStyle()
+	 * @generated
+	 */
     EAttribute getStyle_Label();
 
     /**
-     * Returns the factory that creates the instances of the model.
-     * <!-- begin-user-doc -->
+	 * Returns the meta object for class '{@link org.topcased.typesmodel.model.inittypes.DeletionParameters <em>Deletion Parameters</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Deletion Parameters</em>'.
+	 * @see org.topcased.typesmodel.model.inittypes.DeletionParameters
+	 * @generated
+	 */
+	EClass getDeletionParameters();
+
+				/**
+	 * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.DeletionParameters#getRegex <em>Regex</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Regex</em>'.
+	 * @see org.topcased.typesmodel.model.inittypes.DeletionParameters#getRegex()
+	 * @see #getDeletionParameters()
+	 * @generated
+	 */
+	EAttribute getDeletionParameters_Regex();
+
+				/**
+	 * Returns the meta object for the attribute list '{@link org.topcased.typesmodel.model.inittypes.DeletionParameters#getAttributesToMatch <em>Attributes To Match</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute list '<em>Attributes To Match</em>'.
+	 * @see org.topcased.typesmodel.model.inittypes.DeletionParameters#getAttributesToMatch()
+	 * @see #getDeletionParameters()
+	 * @generated
+	 */
+	EAttribute getDeletionParameters_AttributesToMatch();
+
+				/**
+	 * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.DeletionParameters#isMatchDescription <em>Match Description</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Match Description</em>'.
+	 * @see org.topcased.typesmodel.model.inittypes.DeletionParameters#isMatchDescription()
+	 * @see #getDeletionParameters()
+	 * @generated
+	 */
+	EAttribute getDeletionParameters_MatchDescription();
+
+				/**
+	 * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.DeletionParameters#isMatchId <em>Match Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Match Id</em>'.
+	 * @see org.topcased.typesmodel.model.inittypes.DeletionParameters#isMatchId()
+	 * @see #getDeletionParameters()
+	 * @generated
+	 */
+	EAttribute getDeletionParameters_MatchId();
+
+				/**
+	 * Returns the factory that creates the instances of the model.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @return the factory that creates the instances of the model.
-     * @generated
-     */
+	 * @return the factory that creates the instances of the model.
+	 * @generated
+	 */
     InittypesFactory getInittypesFactory();
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * Defines literals for the meta objects that represent
      * <ul>
      *   <li>each class,</li>
@@ -633,181 +762,231 @@ public interface InittypesPackage extends EPackage
      *   <li>and each data type</li>
      * </ul>
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     interface Literals
     {
         /**
-         * The meta object literal for the '{@link org.topcased.typesmodel.model.inittypes.impl.TypeModelImpl <em>Type Model</em>}' class.
-         * <!-- begin-user-doc -->
+		 * The meta object literal for the '{@link org.topcased.typesmodel.model.inittypes.impl.TypeModelImpl <em>Type Model</em>}' class.
+		 * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
-         * @see org.topcased.typesmodel.model.inittypes.impl.TypeModelImpl
-         * @see org.topcased.typesmodel.model.inittypes.impl.InittypesPackageImpl#getTypeModel()
-         * @generated
-         */
+		 * @see org.topcased.typesmodel.model.inittypes.impl.TypeModelImpl
+		 * @see org.topcased.typesmodel.model.inittypes.impl.InittypesPackageImpl#getTypeModel()
+		 * @generated
+		 */
         EClass TYPE_MODEL = eINSTANCE.getTypeModel();
 
         /**
-         * The meta object literal for the '<em><b>Document Types</b></em>' containment reference list feature.
-         * <!-- begin-user-doc -->
+		 * The meta object literal for the '<em><b>Document Types</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
-         * @generated
-         */
+		 * @generated
+		 */
         EReference TYPE_MODEL__DOCUMENT_TYPES = eINSTANCE.getTypeModel_DocumentTypes();
 
         /**
-         * The meta object literal for the '{@link org.topcased.typesmodel.model.inittypes.impl.TypeImpl <em>Type</em>}' class.
-         * <!-- begin-user-doc -->
+		 * The meta object literal for the '{@link org.topcased.typesmodel.model.inittypes.impl.TypeImpl <em>Type</em>}' class.
+		 * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
-         * @see org.topcased.typesmodel.model.inittypes.impl.TypeImpl
-         * @see org.topcased.typesmodel.model.inittypes.impl.InittypesPackageImpl#getType()
-         * @generated
-         */
+		 * @see org.topcased.typesmodel.model.inittypes.impl.TypeImpl
+		 * @see org.topcased.typesmodel.model.inittypes.impl.InittypesPackageImpl#getType()
+		 * @generated
+		 */
         EClass TYPE = eINSTANCE.getType();
 
         /**
-         * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
-         * @generated
-         */
+		 * @generated
+		 */
         EAttribute TYPE__NAME = eINSTANCE.getType_Name();
 
         /**
-         * The meta object literal for the '<em><b>Is Text</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
+		 * The meta object literal for the '<em><b>Is Text</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
-         * @generated
-         */
+		 * @generated
+		 */
         EAttribute TYPE__IS_TEXT = eINSTANCE.getType_IsText();
 
         /**
-         * The meta object literal for the '<em><b>Is Reference</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
+		 * The meta object literal for the '<em><b>Is Reference</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
-         * @generated
-         */
+		 * @generated
+		 */
         EAttribute TYPE__IS_REFERENCE = eINSTANCE.getType_IsReference();
 
         /**
-         * The meta object literal for the '{@link org.topcased.typesmodel.model.inittypes.impl.RegexImpl <em>Regex</em>}' class.
-         * <!-- begin-user-doc -->
+		 * The meta object literal for the '{@link org.topcased.typesmodel.model.inittypes.impl.RegexImpl <em>Regex</em>}' class.
+		 * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
-         * @see org.topcased.typesmodel.model.inittypes.impl.RegexImpl
-         * @see org.topcased.typesmodel.model.inittypes.impl.InittypesPackageImpl#getRegex()
-         * @generated
-         */
+		 * @see org.topcased.typesmodel.model.inittypes.impl.RegexImpl
+		 * @see org.topcased.typesmodel.model.inittypes.impl.InittypesPackageImpl#getRegex()
+		 * @generated
+		 */
         EClass REGEX = eINSTANCE.getRegex();
 
         /**
-         * The meta object literal for the '<em><b>Expression</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
+		 * The meta object literal for the '<em><b>Expression</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
-         * @generated
-         */
+		 * @generated
+		 */
         EAttribute REGEX__EXPRESSION = eINSTANCE.getRegex_Expression();
 
         /**
-         * The meta object literal for the '{@link org.topcased.typesmodel.model.inittypes.impl.ColumnImpl <em>Column</em>}' class.
-         * <!-- begin-user-doc -->
+		 * The meta object literal for the '{@link org.topcased.typesmodel.model.inittypes.impl.ColumnImpl <em>Column</em>}' class.
+		 * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
-         * @see org.topcased.typesmodel.model.inittypes.impl.ColumnImpl
-         * @see org.topcased.typesmodel.model.inittypes.impl.InittypesPackageImpl#getColumn()
-         * @generated
-         */
+		 * @see org.topcased.typesmodel.model.inittypes.impl.ColumnImpl
+		 * @see org.topcased.typesmodel.model.inittypes.impl.InittypesPackageImpl#getColumn()
+		 * @generated
+		 */
         EClass COLUMN = eINSTANCE.getColumn();
 
         /**
-         * The meta object literal for the '<em><b>Number</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
+		 * The meta object literal for the '<em><b>Number</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
-         * @generated
-         */
+		 * @generated
+		 */
         EAttribute COLUMN__NUMBER = eINSTANCE.getColumn_Number();
 
         /**
-         * The meta object literal for the '{@link org.topcased.typesmodel.model.inittypes.impl.DocumentTypeImpl <em>Document Type</em>}' class.
-         * <!-- begin-user-doc -->
+		 * The meta object literal for the '{@link org.topcased.typesmodel.model.inittypes.impl.DocumentTypeImpl <em>Document Type</em>}' class.
+		 * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
-         * @see org.topcased.typesmodel.model.inittypes.impl.DocumentTypeImpl
-         * @see org.topcased.typesmodel.model.inittypes.impl.InittypesPackageImpl#getDocumentType()
-         * @generated
-         */
+		 * @see org.topcased.typesmodel.model.inittypes.impl.DocumentTypeImpl
+		 * @see org.topcased.typesmodel.model.inittypes.impl.InittypesPackageImpl#getDocumentType()
+		 * @generated
+		 */
         EClass DOCUMENT_TYPE = eINSTANCE.getDocumentType();
 
         /**
-         * The meta object literal for the '<em><b>Types</b></em>' containment reference list feature.
-         * <!-- begin-user-doc -->
+		 * The meta object literal for the '<em><b>Types</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
-         * @generated
-         */
+		 * @generated
+		 */
         EReference DOCUMENT_TYPE__TYPES = eINSTANCE.getDocumentType_Types();
 
         /**
-         * The meta object literal for the '<em><b>Id</b></em>' containment reference feature.
-         * <!-- begin-user-doc -->
+		 * The meta object literal for the '<em><b>Id</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
-         * @generated
-         */
+		 * @generated
+		 */
         EReference DOCUMENT_TYPE__ID = eINSTANCE.getDocumentType_Id();
 
         /**
-         * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
-         * @generated
-         */
+		 * @generated
+		 */
         EAttribute DOCUMENT_TYPE__NAME = eINSTANCE.getDocumentType_Name();
 
         /**
-         * The meta object literal for the '<em><b>Hierarchical</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
+		 * The meta object literal for the '<em><b>Hierarchical</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
-         * @generated
-         */
+		 * @generated
+		 */
         EAttribute DOCUMENT_TYPE__HIERARCHICAL = eINSTANCE.getDocumentType_Hierarchical();
 
         /**
-         * The meta object literal for the '<em><b>Text Type</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
+		 * The meta object literal for the '<em><b>Text Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
-         * @generated
-         */
+		 * @generated
+		 */
         EAttribute DOCUMENT_TYPE__TEXT_TYPE = eINSTANCE.getDocumentType_TextType();
 
         /**
-         * The meta object literal for the '<em><b>Document Path</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
+		 * The meta object literal for the '<em><b>Document Path</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
-         * @generated
-         */
+		 * @generated
+		 */
         EAttribute DOCUMENT_TYPE__DOCUMENT_PATH = eINSTANCE.getDocumentType_DocumentPath();
 
         /**
-         * The meta object literal for the '<em><b>Text Regex</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
+		 * The meta object literal for the '<em><b>Text Regex</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
-         * @generated
-         */
+		 * @generated
+		 */
         EAttribute DOCUMENT_TYPE__TEXT_REGEX = eINSTANCE.getDocumentType_TextRegex();
 
         /**
-         * The meta object literal for the '{@link org.topcased.typesmodel.model.inittypes.impl.StyleImpl <em>Style</em>}' class.
-         * <!-- begin-user-doc -->
+		 * The meta object literal for the '<em><b>Deletion Parameters</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DOCUMENT_TYPE__DELETION_PARAMETERS = eINSTANCE.getDocumentType_DeletionParameters();
+
+								/**
+		 * The meta object literal for the '{@link org.topcased.typesmodel.model.inittypes.impl.StyleImpl <em>Style</em>}' class.
+		 * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
-         * @see org.topcased.typesmodel.model.inittypes.impl.StyleImpl
-         * @see org.topcased.typesmodel.model.inittypes.impl.InittypesPackageImpl#getStyle()
-         * @generated
-         */
+		 * @see org.topcased.typesmodel.model.inittypes.impl.StyleImpl
+		 * @see org.topcased.typesmodel.model.inittypes.impl.InittypesPackageImpl#getStyle()
+		 * @generated
+		 */
         EClass STYLE = eINSTANCE.getStyle();
 
         /**
-         * The meta object literal for the '<em><b>Label</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
+		 * The meta object literal for the '<em><b>Label</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
-         * @generated
-         */
+		 * @generated
+		 */
         EAttribute STYLE__LABEL = eINSTANCE.getStyle_Label();
+
+								/**
+		 * The meta object literal for the '{@link org.topcased.typesmodel.model.inittypes.impl.DeletionParametersImpl <em>Deletion Parameters</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.topcased.typesmodel.model.inittypes.impl.DeletionParametersImpl
+		 * @see org.topcased.typesmodel.model.inittypes.impl.InittypesPackageImpl#getDeletionParameters()
+		 * @generated
+		 */
+		EClass DELETION_PARAMETERS = eINSTANCE.getDeletionParameters();
+
+								/**
+		 * The meta object literal for the '<em><b>Regex</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DELETION_PARAMETERS__REGEX = eINSTANCE.getDeletionParameters_Regex();
+
+								/**
+		 * The meta object literal for the '<em><b>Attributes To Match</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DELETION_PARAMETERS__ATTRIBUTES_TO_MATCH = eINSTANCE.getDeletionParameters_AttributesToMatch();
+
+								/**
+		 * The meta object literal for the '<em><b>Match Description</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DELETION_PARAMETERS__MATCH_DESCRIPTION = eINSTANCE.getDeletionParameters_MatchDescription();
+
+								/**
+		 * The meta object literal for the '<em><b>Match Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DELETION_PARAMETERS__MATCH_ID = eINSTANCE.getDeletionParameters_MatchId();
 
     }
 

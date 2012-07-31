@@ -12,6 +12,7 @@
 
 package org.topcased.requirement.core.wizards;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -21,6 +22,7 @@ import org.eclipse.jface.window.Window;
 import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.wizards.operation.AbstractRequirementModelOperation;
 import org.topcased.requirement.core.wizards.operation.MergeRequirementModelOperation;
+import org.topcased.typesmodel.model.inittypes.DeletionParameters;
 
 import ttm.Document;
 
@@ -65,7 +67,8 @@ public class MergeRequirementModelWizard extends AbstractRequirementModelWizard
     protected AbstractRequirementModelOperation getOperation() throws InterruptedException
     {
         String messages = null;
-        Map<Document, Document> documentsToMerge = pageMerge.getDocumentsToMerge();
+        HashMap<Document, DeletionParameters> deletionParametersDocMap = new HashMap<Document, DeletionParameters>();
+        Map<Document, Document> documentsToMerge = pageMerge.getDocumentsToMerge(deletionParametersDocMap);
         for (Entry<Document, Document> doc : documentsToMerge.entrySet())
         {
             if (doc.getValue().eContents().isEmpty())
@@ -89,7 +92,6 @@ public class MergeRequirementModelWizard extends AbstractRequirementModelWizard
                 throw new InterruptedException();
             }
         }
-        
-        return new MergeRequirementModelOperation(pageMerge.getTargetModelFile(), pageMerge.getSourceModelFile(), pageMerge.getDestModelFile(),pageMerge.getDocumentsToMerge(), pageMerge.isPartialImport(), pageMerge.isImpactAnalysis());
+        return new MergeRequirementModelOperation(pageMerge.getTargetModelFile(), pageMerge.getSourceModelFile(), pageMerge.getDestModelFile(), documentsToMerge, deletionParametersDocMap, pageMerge.isPartialImport(), pageMerge.isImpactAnalysis());
     }
 }

@@ -25,134 +25,141 @@ import org.topcased.typesmodel.model.inittypes.*;
 public class InittypesFactoryImpl extends EFactoryImpl implements InittypesFactory
 {
     /**
-     * Creates the default factory implementation.
-     * <!-- begin-user-doc -->
+	 * Creates the default factory implementation.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public static InittypesFactory init()
     {
-        try
-        {
-            InittypesFactory theInittypesFactory = (InittypesFactory)EPackage.Registry.INSTANCE.getEFactory("http://inittypes/1.0"); 
-            if (theInittypesFactory != null)
-            {
-                return theInittypesFactory;
-            }
-        }
-        catch (Exception exception)
-        {
-            EcorePlugin.INSTANCE.log(exception);
-        }
-        return new InittypesFactoryImpl();
-    }
+		try {
+			InittypesFactory theInittypesFactory = (InittypesFactory)EPackage.Registry.INSTANCE.getEFactory("http://inittypes/1.0"); 
+			if (theInittypesFactory != null) {
+				return theInittypesFactory;
+			}
+		}
+		catch (Exception exception) {
+			EcorePlugin.INSTANCE.log(exception);
+		}
+		return new InittypesFactoryImpl();
+	}
 
     /**
-     * Creates an instance of the factory.
-     * <!-- begin-user-doc -->
+	 * Creates an instance of the factory.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public InittypesFactoryImpl()
     {
-        super();
-    }
+		super();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public EObject create(EClass eClass)
     {
-        switch (eClass.getClassifierID())
-        {
-            case InittypesPackage.TYPE_MODEL: return createTypeModel();
-            case InittypesPackage.REGEX: return createRegex();
-            case InittypesPackage.COLUMN: return createColumn();
-            case InittypesPackage.DOCUMENT_TYPE: return createDocumentType();
-            case InittypesPackage.STYLE: return createStyle();
-            default:
-                throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
-        }
-    }
+		switch (eClass.getClassifierID()) {
+			case InittypesPackage.TYPE_MODEL: return createTypeModel();
+			case InittypesPackage.REGEX: return createRegex();
+			case InittypesPackage.COLUMN: return createColumn();
+			case InittypesPackage.DOCUMENT_TYPE: return createDocumentType();
+			case InittypesPackage.STYLE: return createStyle();
+			case InittypesPackage.DELETION_PARAMETERS: return createDeletionParameters();
+			default:
+				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
+		}
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public TypeModel createTypeModel()
     {
-        TypeModelImpl typeModel = new TypeModelImpl();
-        return typeModel;
-    }
+		TypeModelImpl typeModel = new TypeModelImpl();
+		return typeModel;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public Regex createRegex()
     {
-        RegexImpl regex = new RegexImpl();
-        return regex;
-    }
+		RegexImpl regex = new RegexImpl();
+		return regex;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public Column createColumn()
     {
-        ColumnImpl column = new ColumnImpl();
-        return column;
-    }
+		ColumnImpl column = new ColumnImpl();
+		return column;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public DocumentType createDocumentType()
     {
-        DocumentTypeImpl documentType = new DocumentTypeImpl();
-        return documentType;
-    }
+		DocumentTypeImpl documentType = new DocumentTypeImpl();
+		return documentType;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public Style createStyle()
     {
-        StyleImpl style = new StyleImpl();
-        return style;
-    }
+		StyleImpl style = new StyleImpl();
+		return style;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public DeletionParameters createDeletionParameters() {
+		DeletionParametersImpl deletionParameters = new DeletionParametersImpl();
+		return deletionParameters;
+	}
+
+				/**
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public InittypesPackage getInittypesPackage()
     {
-        return (InittypesPackage)getEPackage();
-    }
+		return (InittypesPackage)getEPackage();
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @deprecated
-     * @generated
-     */
+	 * @deprecated
+	 * @generated
+	 */
     @Deprecated
     public static InittypesPackage getPackage()
     {
-        return InittypesPackage.eINSTANCE;
-    }
+		return InittypesPackage.eINSTANCE;
+	}
 
 } //InittypesFactoryImpl

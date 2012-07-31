@@ -26,7 +26,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.topcased.facilities.resources.SharedImageHelper;
-import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.extensions.IEditorServices;
 import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.utils.RequirementUtils;
@@ -144,8 +143,7 @@ public abstract class AbstractRequirementModelWizard extends Wizard implements I
         if (pageMerge != null && pageMerge.isPageComplete())
         {
             // Save is partial and perform analysis preferences
-            RequirementCorePlugin.getDefault().getPreferenceStore().setValue(MergeRequirementModelWizardPage.PREFERENCE_FOR_IS_PARTIAL, pageMerge.isPartialImport());
-            RequirementCorePlugin.getDefault().getPreferenceStore().setValue(MergeRequirementModelWizardPage.PREFERENCE_FOR_PERFORM_IMPACT_ANALYSIS, pageMerge.isImpactAnalysis());
+            pageMerge.savePrefs();
             projectName = pageMerge.getProjectFd();
             projectDescription = pageMerge.getProjectDescrFd();
             result = createModelFile();

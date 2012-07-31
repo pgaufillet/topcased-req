@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.topcased.typesmodel.model.inittypes.DocumentType#getTextType <em>Text Type</em>}</li>
  *   <li>{@link org.topcased.typesmodel.model.inittypes.DocumentType#getDocumentPath <em>Document Path</em>}</li>
  *   <li>{@link org.topcased.typesmodel.model.inittypes.DocumentType#getTextRegex <em>Text Regex</em>}</li>
+ *   <li>{@link org.topcased.typesmodel.model.inittypes.DocumentType#getDeletionParameters <em>Deletion Parameters</em>}</li>
  * </ul>
  * </p>
  *
@@ -35,175 +36,201 @@ import org.eclipse.emf.ecore.EObject;
 public interface DocumentType extends EObject
 {
     /**
-     * Returns the value of the '<em><b>Types</b></em>' containment reference list.
-     * The list contents are of type {@link org.topcased.typesmodel.model.inittypes.Type}.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Types</b></em>' containment reference list.
+	 * The list contents are of type {@link org.topcased.typesmodel.model.inittypes.Type}.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Types</em>' containment reference list isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Types</em>' containment reference list.
-     * @see org.topcased.typesmodel.model.inittypes.InittypesPackage#getDocumentType_Types()
-     * @model containment="true"
-     * @generated
-     */
+	 * @return the value of the '<em>Types</em>' containment reference list.
+	 * @see org.topcased.typesmodel.model.inittypes.InittypesPackage#getDocumentType_Types()
+	 * @model containment="true"
+	 * @generated
+	 */
     EList<Type> getTypes();
 
     /**
-     * Returns the value of the '<em><b>Id</b></em>' containment reference.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Id</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Id</em>' containment reference isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Id</em>' containment reference.
-     * @see #setId(Type)
-     * @see org.topcased.typesmodel.model.inittypes.InittypesPackage#getDocumentType_Id()
-     * @model containment="true"
-     * @generated
-     */
+	 * @return the value of the '<em>Id</em>' containment reference.
+	 * @see #setId(Type)
+	 * @see org.topcased.typesmodel.model.inittypes.InittypesPackage#getDocumentType_Id()
+	 * @model containment="true"
+	 * @generated
+	 */
     Type getId();
 
     /**
-     * Sets the value of the '{@link org.topcased.typesmodel.model.inittypes.DocumentType#getId <em>Id</em>}' containment reference.
-     * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link org.topcased.typesmodel.model.inittypes.DocumentType#getId <em>Id</em>}' containment reference.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Id</em>' containment reference.
-     * @see #getId()
-     * @generated
-     */
+	 * @param value the new value of the '<em>Id</em>' containment reference.
+	 * @see #getId()
+	 * @generated
+	 */
     void setId(Type value);
 
     /**
-     * Returns the value of the '<em><b>Name</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Name</em>' attribute isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Name</em>' attribute.
-     * @see #setName(String)
-     * @see org.topcased.typesmodel.model.inittypes.InittypesPackage#getDocumentType_Name()
-     * @model
-     * @generated
-     */
+	 * @return the value of the '<em>Name</em>' attribute.
+	 * @see #setName(String)
+	 * @see org.topcased.typesmodel.model.inittypes.InittypesPackage#getDocumentType_Name()
+	 * @model
+	 * @generated
+	 */
     String getName();
 
     /**
-     * Sets the value of the '{@link org.topcased.typesmodel.model.inittypes.DocumentType#getName <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link org.topcased.typesmodel.model.inittypes.DocumentType#getName <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Name</em>' attribute.
-     * @see #getName()
-     * @generated
-     */
+	 * @param value the new value of the '<em>Name</em>' attribute.
+	 * @see #getName()
+	 * @generated
+	 */
     void setName(String value);
 
     /**
-     * Returns the value of the '<em><b>Hierarchical</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Hierarchical</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Hierarchical</em>' attribute isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Hierarchical</em>' attribute.
-     * @see #setHierarchical(boolean)
-     * @see org.topcased.typesmodel.model.inittypes.InittypesPackage#getDocumentType_Hierarchical()
-     * @model
-     * @generated
-     */
+	 * @return the value of the '<em>Hierarchical</em>' attribute.
+	 * @see #setHierarchical(boolean)
+	 * @see org.topcased.typesmodel.model.inittypes.InittypesPackage#getDocumentType_Hierarchical()
+	 * @model
+	 * @generated
+	 */
     boolean isHierarchical();
 
     /**
-     * Sets the value of the '{@link org.topcased.typesmodel.model.inittypes.DocumentType#isHierarchical <em>Hierarchical</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link org.topcased.typesmodel.model.inittypes.DocumentType#isHierarchical <em>Hierarchical</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Hierarchical</em>' attribute.
-     * @see #isHierarchical()
-     * @generated
-     */
+	 * @param value the new value of the '<em>Hierarchical</em>' attribute.
+	 * @see #isHierarchical()
+	 * @generated
+	 */
     void setHierarchical(boolean value);
 
     /**
-     * Returns the value of the '<em><b>Text Type</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Text Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Text Type</em>' attribute isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Text Type</em>' attribute.
-     * @see #setTextType(String)
-     * @see org.topcased.typesmodel.model.inittypes.InittypesPackage#getDocumentType_TextType()
-     * @model
-     * @generated
-     */
+	 * @return the value of the '<em>Text Type</em>' attribute.
+	 * @see #setTextType(String)
+	 * @see org.topcased.typesmodel.model.inittypes.InittypesPackage#getDocumentType_TextType()
+	 * @model
+	 * @generated
+	 */
     String getTextType();
 
     /**
-     * Sets the value of the '{@link org.topcased.typesmodel.model.inittypes.DocumentType#getTextType <em>Text Type</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link org.topcased.typesmodel.model.inittypes.DocumentType#getTextType <em>Text Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Text Type</em>' attribute.
-     * @see #getTextType()
-     * @generated
-     */
+	 * @param value the new value of the '<em>Text Type</em>' attribute.
+	 * @see #getTextType()
+	 * @generated
+	 */
     void setTextType(String value);
 
     /**
-     * Returns the value of the '<em><b>Document Path</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Document Path</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Document Path</em>' attribute isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Document Path</em>' attribute.
-     * @see #setDocumentPath(String)
-     * @see org.topcased.typesmodel.model.inittypes.InittypesPackage#getDocumentType_DocumentPath()
-     * @model
-     * @generated
-     */
+	 * @return the value of the '<em>Document Path</em>' attribute.
+	 * @see #setDocumentPath(String)
+	 * @see org.topcased.typesmodel.model.inittypes.InittypesPackage#getDocumentType_DocumentPath()
+	 * @model
+	 * @generated
+	 */
     String getDocumentPath();
 
     /**
-     * Sets the value of the '{@link org.topcased.typesmodel.model.inittypes.DocumentType#getDocumentPath <em>Document Path</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link org.topcased.typesmodel.model.inittypes.DocumentType#getDocumentPath <em>Document Path</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Document Path</em>' attribute.
-     * @see #getDocumentPath()
-     * @generated
-     */
+	 * @param value the new value of the '<em>Document Path</em>' attribute.
+	 * @see #getDocumentPath()
+	 * @generated
+	 */
     void setDocumentPath(String value);
 
     /**
-     * Returns the value of the '<em><b>Text Regex</b></em>' attribute.
-     * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Text Regex</b></em>' attribute.
+	 * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Text Regex</em>' attribute isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Text Regex</em>' attribute.
-     * @see #setTextRegex(String)
-     * @see org.topcased.typesmodel.model.inittypes.InittypesPackage#getDocumentType_TextRegex()
-     * @model
-     * @generated
-     */
+	 * @return the value of the '<em>Text Regex</em>' attribute.
+	 * @see #setTextRegex(String)
+	 * @see org.topcased.typesmodel.model.inittypes.InittypesPackage#getDocumentType_TextRegex()
+	 * @model
+	 * @generated
+	 */
     String getTextRegex();
 
     /**
-     * Sets the value of the '{@link org.topcased.typesmodel.model.inittypes.DocumentType#getTextRegex <em>Text Regex</em>}' attribute.
-     * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link org.topcased.typesmodel.model.inittypes.DocumentType#getTextRegex <em>Text Regex</em>}' attribute.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Text Regex</em>' attribute.
-     * @see #getTextRegex()
-     * @generated
-     */
+	 * @param value the new value of the '<em>Text Regex</em>' attribute.
+	 * @see #getTextRegex()
+	 * @generated
+	 */
     void setTextRegex(String value);
+
+				/**
+	 * Returns the value of the '<em><b>Deletion Parameters</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Deletion Parameters</em>' containment reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Deletion Parameters</em>' containment reference.
+	 * @see #setDeletionParameters(DeletionParameters)
+	 * @see org.topcased.typesmodel.model.inittypes.InittypesPackage#getDocumentType_DeletionParameters()
+	 * @model containment="true"
+	 * @generated
+	 */
+	DeletionParameters getDeletionParameters();
+
+				/**
+	 * Sets the value of the '{@link org.topcased.typesmodel.model.inittypes.DocumentType#getDeletionParameters <em>Deletion Parameters</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Deletion Parameters</em>' containment reference.
+	 * @see #getDeletionParameters()
+	 * @generated
+	 */
+	void setDeletionParameters(DeletionParameters value);
 
 } // DocumentType

@@ -48,6 +48,7 @@ import org.topcased.requirement.core.utils.RequirementDifferenceCalculator;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.core.utils.impact.MergeImpactProcessor;
 import org.topcased.requirement.util.RequirementResource;
+import org.topcased.typesmodel.model.inittypes.DeletionParameters;
 
 import ttm.Document;
 
@@ -199,7 +200,7 @@ public abstract class AbstractRequirementModelOperation extends WorkspaceModifyO
      * @param isImpactAnalysis 
      * @param tempURI 
      */
-    protected void mergeOperation(Map<Document,Document> documentsToMerge,boolean isPartialImport, boolean isImpactAnalysis, IProgressMonitor monitor)
+    protected void mergeOperation(Map<Document,Document> documentsToMerge, Map<Document, DeletionParameters> deletionParametersDocMap, boolean isPartialImport, boolean isImpactAnalysis, IProgressMonitor monitor)
     {
         monitor.subTask(Messages.getString("AbstractRequirementModelOperation.1")); //$NON-NLS-1$
         try
@@ -240,7 +241,7 @@ public abstract class AbstractRequirementModelOperation extends WorkspaceModifyO
                     }
                 }
             }
-            RequirementDifferenceCalculator calculator = new RequirementDifferenceCalculator(mergedDocuments, isPartialImport);
+            RequirementDifferenceCalculator calculator = new RequirementDifferenceCalculator(mergedDocuments, deletionParametersDocMap, isPartialImport);
             calculator.calculate(monitor);
             if (isImpactAnalysis) {
                 new MergeImpactProcessor(resources, requirementResource2.getResourceSet(), calculator).processImpact();

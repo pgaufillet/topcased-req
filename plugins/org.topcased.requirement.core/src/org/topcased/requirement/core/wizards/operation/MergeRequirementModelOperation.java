@@ -28,6 +28,7 @@ import org.topcased.requirement.core.extensions.RequirementTransformationManager
 import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.util.RequirementResource;
+import org.topcased.typesmodel.model.inittypes.DeletionParameters;
 
 import ttm.Document;
 
@@ -54,10 +55,12 @@ public class MergeRequirementModelOperation extends AbstractRequirementModelOper
     
     private boolean isImpactAnalysis;
 
+    private Map<Document, DeletionParameters> deletionParametersDocMap;
+
     
-    public MergeRequirementModelOperation(IFile targetFile, IFile sourceFile, IFile reqFile, Map<Document,Document> docs, boolean isPartialImport)
+    public MergeRequirementModelOperation(IFile targetFile, IFile sourceFile, IFile reqFile, Map<Document,Document> docs, Map<Document, DeletionParameters> deletionParametersDocMap, boolean isPartialImport)
     {
-        this(targetFile,sourceFile,reqFile,docs,isPartialImport,true);
+        this(targetFile,sourceFile,reqFile,docs,deletionParametersDocMap,isPartialImport,true);
     }
     
     /**
@@ -68,11 +71,12 @@ public class MergeRequirementModelOperation extends AbstractRequirementModelOper
      * @param isImpactAnalysis 
      * @param destFile
      */
-    public MergeRequirementModelOperation(IFile targetFile, IFile sourceFile, IFile reqFile, Map<Document,Document> docs, boolean isPartialImport, boolean isImpactAnalysis)
+    public MergeRequirementModelOperation(IFile targetFile, IFile sourceFile, IFile reqFile, Map<Document,Document> docs, Map<Document, DeletionParameters> deletionParametersDocMap, boolean isPartialImport, boolean isImpactAnalysis)
     {
         super(targetFile, reqFile);
         sourceModelFile = sourceFile;
         documentsToMerge = docs;
+        this.deletionParametersDocMap = deletionParametersDocMap;
         this.isPartialImport = isPartialImport;
         this.isImpactAnalysis = isImpactAnalysis;
     }
@@ -168,6 +172,6 @@ public class MergeRequirementModelOperation extends AbstractRequirementModelOper
         monitor.worked(1);
 
         // merge operation
-        mergeOperation(documentsToMerge, isPartialImport, isImpactAnalysis, monitor);
+        mergeOperation(documentsToMerge, deletionParametersDocMap, isPartialImport, isImpactAnalysis, monitor);
     }
 }
