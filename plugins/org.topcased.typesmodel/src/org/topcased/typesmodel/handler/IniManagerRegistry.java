@@ -166,149 +166,151 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
 		}
 		for (String type : types)
 		{
-			Map<String, Type> allElements = new HashMap<String, Type>();
-			Type id = null;
-
-			DocumentType documentType = InittypesFactory.eINSTANCE.createDocumentType();
-			documentType.setName(type);
-			documentType.setDocumentPath(resource.getFullPath().toString());
-
 			Section section = parser.getElements(type);
-			for (Entry<String, String> element : section.entrySet())
-			{
-				if (attributePattern.matcher(element.getKey()).matches())
-				{
-					manageElement(allElements, element,InittypesPackage.Literals.REGEX,InittypesPackage.Literals.REGEX__EXPRESSION);
-				}
-				else if (attributeIsTextPattern.matcher(element.getKey()).matches())
-				{
-					manageElement(allElements, element,InittypesPackage.Literals.REGEX,InittypesPackage.Literals.TYPE__IS_TEXT);
-				}
-				else if (attributeNamePattern.matcher(element.getKey()).matches())
-				{
-					manageElement(allElements, element,InittypesPackage.Literals.REGEX,InittypesPackage.Literals.TYPE__NAME);
-				}
-				else if (columnPattern.matcher(element.getKey()).matches())
-				{
-					manageElement(allElements, element,InittypesPackage.Literals.COLUMN,InittypesPackage.Literals.REGEX__EXPRESSION);
-				}
-				else if (columnIsTextPattern.matcher(element.getKey()).matches())
-				{
-					manageElement(allElements, element,InittypesPackage.Literals.COLUMN,InittypesPackage.Literals.TYPE__IS_TEXT);
-				}
-				else if (columnNamePattern.matcher(element.getKey()).matches())
-				{
-					manageElement(allElements, element,InittypesPackage.Literals.COLUMN,InittypesPackage.Literals.TYPE__NAME);
-				}
-				else if (stylePattern.matcher(element.getKey()).matches())
-				{
-					manageElement(allElements, element,InittypesPackage.Literals.STYLE,InittypesPackage.Literals.REGEX__EXPRESSION);
-				}
-				else if (styleIsTextPattern.matcher(element.getKey()).matches())
-				{
-					manageElement(allElements, element,InittypesPackage.Literals.STYLE,InittypesPackage.Literals.TYPE__IS_TEXT);
-				}
-				else if (styleNamePattern.matcher(element.getKey()).matches())
-				{
-					manageElement(allElements, element,InittypesPackage.Literals.STYLE,InittypesPackage.Literals.TYPE__NAME);
-				}
-				else if (styleLabelPattern.matcher(element.getKey()).matches())
-				{
-					manageElement(allElements, element,InittypesPackage.Literals.STYLE,InittypesPackage.Literals.STYLE__LABEL);
-				}
-				else if (requirementPattern.matcher(element.getKey()).matches())
-				{
-					if (id == null)
-					{
-						id = manageId(element,InittypesPackage.Literals.REGEX, InittypesPackage.Literals.REGEX__EXPRESSION);
-					} else if (id instanceof Style)
-					{
-						String labelTemp = ((Style) id).getLabel();
-						id = manageId(element,InittypesPackage.Literals.STYLE, InittypesPackage.Literals.REGEX__EXPRESSION);
-						((Style)id).setLabel(labelTemp);
-					}
-				}
-				else if (requirementStylePattern.matcher(element.getKey()).matches())
-				{
-					if (id == null)
-					{
-						id = manageId(element,InittypesPackage.Literals.STYLE,InittypesPackage.Literals.STYLE__LABEL);
-					} 
-					else if (id instanceof Regex && !(id instanceof Style))
-					{
-						String expressionTemp = ((Regex) id).getExpression();
-						id = manageId(element,InittypesPackage.Literals.STYLE,InittypesPackage.Literals.STYLE__LABEL);
-						((Style)id).setExpression(expressionTemp);
-					}
-				}
-				else if (requirementColumnPattern.matcher(element.getKey()).matches())
-				{
-					if (id == null)
-					{
-						id = manageId(element,InittypesPackage.Literals.COLUMN, InittypesPackage.Literals.REGEX__EXPRESSION);
-						Pattern patternColumn = Pattern.compile("Requirement(\\d*)Column");
-						Matcher m = patternColumn.matcher(element.getKey());
-						if (m.matches())
-						{
-							((Column) id).setNumber(Integer.parseInt(m.group(1)));
-						}
+			if (section != null) {
+				Map<String, Type> allElements = new HashMap<String, Type>();
+				Type id = null;
 
-					}
-				}
-				else if (hierarchicalPattern.matcher(element.getKey()).matches())
+				DocumentType documentType = InittypesFactory.eINSTANCE.createDocumentType();
+				documentType.setName(type);
+				documentType.setDocumentPath(resource.getFullPath().toString());
+
+				for (Entry<String, String> element : section.entrySet())
 				{
-					if ("True".equalsIgnoreCase(element.getValue())) { //$NON-NLS-1$
-						documentType.setHierarchical(true);
-					}
-					else
+					if (attributePattern.matcher(element.getKey()).matches())
 					{
-						documentType.setHierarchical(false);
+						manageElement(allElements, element,InittypesPackage.Literals.REGEX,InittypesPackage.Literals.REGEX__EXPRESSION);
 					}
-				}
-				else if (endTextPattern.matcher(element.getKey()).matches())
-				{
-					documentType.setTextType(element.getValue());
-				}
-				else if (textRegexPattern.matcher(element.getKey()).matches()) {
-					documentType.setTextRegex(element.getValue());
-				}
-				else if (deletionMatchIdPattern.matcher(element.getKey()).matches())
-				{
-					DeletionParameters deletionParameters = getOrInitDeletionParameters(documentType);
-					if ("True".equalsIgnoreCase(element.getValue())) { //$NON-NLS-1$
-						deletionParameters.setMatchId(true);
-					}
-					else
+					else if (attributeIsTextPattern.matcher(element.getKey()).matches())
 					{
-						deletionParameters.setMatchId(false);
+						manageElement(allElements, element,InittypesPackage.Literals.REGEX,InittypesPackage.Literals.TYPE__IS_TEXT);
 					}
-				}
-				else if (deletionMatchDescriptionPattern.matcher(element.getKey()).matches())
-				{
-					DeletionParameters deletionParameters = getOrInitDeletionParameters(documentType);
-					if ("True".equalsIgnoreCase(element.getValue())) { //$NON-NLS-1$
-						deletionParameters.setMatchDescription(true);
-					}
-					else
+					else if (attributeNamePattern.matcher(element.getKey()).matches())
 					{
-						deletionParameters.setMatchDescription(false);
+						manageElement(allElements, element,InittypesPackage.Literals.REGEX,InittypesPackage.Literals.TYPE__NAME);
+					}
+					else if (columnPattern.matcher(element.getKey()).matches())
+					{
+						manageElement(allElements, element,InittypesPackage.Literals.COLUMN,InittypesPackage.Literals.REGEX__EXPRESSION);
+					}
+					else if (columnIsTextPattern.matcher(element.getKey()).matches())
+					{
+						manageElement(allElements, element,InittypesPackage.Literals.COLUMN,InittypesPackage.Literals.TYPE__IS_TEXT);
+					}
+					else if (columnNamePattern.matcher(element.getKey()).matches())
+					{
+						manageElement(allElements, element,InittypesPackage.Literals.COLUMN,InittypesPackage.Literals.TYPE__NAME);
+					}
+					else if (stylePattern.matcher(element.getKey()).matches())
+					{
+						manageElement(allElements, element,InittypesPackage.Literals.STYLE,InittypesPackage.Literals.REGEX__EXPRESSION);
+					}
+					else if (styleIsTextPattern.matcher(element.getKey()).matches())
+					{
+						manageElement(allElements, element,InittypesPackage.Literals.STYLE,InittypesPackage.Literals.TYPE__IS_TEXT);
+					}
+					else if (styleNamePattern.matcher(element.getKey()).matches())
+					{
+						manageElement(allElements, element,InittypesPackage.Literals.STYLE,InittypesPackage.Literals.TYPE__NAME);
+					}
+					else if (styleLabelPattern.matcher(element.getKey()).matches())
+					{
+						manageElement(allElements, element,InittypesPackage.Literals.STYLE,InittypesPackage.Literals.STYLE__LABEL);
+					}
+					else if (requirementPattern.matcher(element.getKey()).matches())
+					{
+						if (id == null)
+						{
+							id = manageId(element,InittypesPackage.Literals.REGEX, InittypesPackage.Literals.REGEX__EXPRESSION);
+						} else if (id instanceof Style)
+						{
+							String labelTemp = ((Style) id).getLabel();
+							id = manageId(element,InittypesPackage.Literals.STYLE, InittypesPackage.Literals.REGEX__EXPRESSION);
+							((Style)id).setLabel(labelTemp);
+						}
+					}
+					else if (requirementStylePattern.matcher(element.getKey()).matches())
+					{
+						if (id == null)
+						{
+							id = manageId(element,InittypesPackage.Literals.STYLE,InittypesPackage.Literals.STYLE__LABEL);
+						} 
+						else if (id instanceof Regex && !(id instanceof Style))
+						{
+							String expressionTemp = ((Regex) id).getExpression();
+							id = manageId(element,InittypesPackage.Literals.STYLE,InittypesPackage.Literals.STYLE__LABEL);
+							((Style)id).setExpression(expressionTemp);
+						}
+					}
+					else if (requirementColumnPattern.matcher(element.getKey()).matches())
+					{
+						if (id == null)
+						{
+							id = manageId(element,InittypesPackage.Literals.COLUMN, InittypesPackage.Literals.REGEX__EXPRESSION);
+							Pattern patternColumn = Pattern.compile("Requirement(\\d*)Column");
+							Matcher m = patternColumn.matcher(element.getKey());
+							if (m.matches())
+							{
+								((Column) id).setNumber(Integer.parseInt(m.group(1)));
+							}
+
+						}
+					}
+					else if (hierarchicalPattern.matcher(element.getKey()).matches())
+					{
+						if ("True".equalsIgnoreCase(element.getValue())) { //$NON-NLS-1$
+							documentType.setHierarchical(true);
+						}
+						else
+						{
+							documentType.setHierarchical(false);
+						}
+					}
+					else if (endTextPattern.matcher(element.getKey()).matches())
+					{
+						documentType.setTextType(element.getValue());
+					}
+					else if (textRegexPattern.matcher(element.getKey()).matches()) {
+						documentType.setTextRegex(element.getValue());
+					}
+					else if (deletionMatchIdPattern.matcher(element.getKey()).matches())
+					{
+						DeletionParameters deletionParameters = getOrInitDeletionParameters(documentType);
+						if ("True".equalsIgnoreCase(element.getValue())) { //$NON-NLS-1$
+							deletionParameters.setMatchId(true);
+						}
+						else
+						{
+							deletionParameters.setMatchId(false);
+						}
+					}
+					else if (deletionMatchDescriptionPattern.matcher(element.getKey()).matches())
+					{
+						DeletionParameters deletionParameters = getOrInitDeletionParameters(documentType);
+						if ("True".equalsIgnoreCase(element.getValue())) { //$NON-NLS-1$
+							deletionParameters.setMatchDescription(true);
+						}
+						else
+						{
+							deletionParameters.setMatchDescription(false);
+						}
+					}
+					else if (deletionRegexPattern.matcher(element.getKey()).matches())
+					{
+						DeletionParameters deletionParameters = getOrInitDeletionParameters(documentType);
+						deletionParameters.setRegex(element.getValue());
+					}
+					else if (deletionAttributesToMatchPattern.matcher(element.getKey()).matches())
+					{
+						DeletionParameters deletionParameters = getOrInitDeletionParameters(documentType);
+						deletionParameters.getAttributesToMatch().addAll(parseCommaSeparated(element.getValue()));
 					}
 				}
-				else if (deletionRegexPattern.matcher(element.getKey()).matches())
-				{
-					DeletionParameters deletionParameters = getOrInitDeletionParameters(documentType);
-					deletionParameters.setRegex(element.getValue());
-				}
-				else if (deletionAttributesToMatchPattern.matcher(element.getKey()).matches())
-				{
-					DeletionParameters deletionParameters = getOrInitDeletionParameters(documentType);
-					deletionParameters.getAttributesToMatch().addAll(parseCommaSeparated(element.getValue()));
-				}
+				documentType.getTypes().addAll(allElements.values());
+				documentType.setId(id);
+
+				documentTypes.put(type, documentType);
 			}
-			documentType.getTypes().addAll(allElements.values());
-			documentType.setId(id);
-			
-			documentTypes.put(type, documentType);
 		}
 
 		return documentTypes;
