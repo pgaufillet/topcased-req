@@ -197,6 +197,12 @@ public class RequirementAdapterFactory extends AdapterFactoryImpl
         }
 
         @Override
+        public Adapter caseDeletedChapter(DeletedChapter object)
+        {
+            return createDeletedChapterAdapter();
+        }
+
+        @Override
         public Adapter caseEModelElement(EModelElement object)
         {
             return createEModelElementAdapter();
@@ -523,6 +529,21 @@ public class RequirementAdapterFactory extends AdapterFactoryImpl
      * @generated
      */
     public Adapter createAnonymousRequirementAdapter()
+    {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.topcased.requirement.DeletedChapter <em>Deleted Chapter</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.topcased.requirement.DeletedChapter
+     * @generated
+     */
+    public Adapter createDeletedChapterAdapter()
     {
         return null;
     }

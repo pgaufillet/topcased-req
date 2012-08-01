@@ -527,6 +527,14 @@
             </with>
          </activeWhen>
       </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.TrackDeletedCurrentRequirementsHandler"
+            commandId="org.topcased.requirement.core.trackDeletedCurrentRequirements">
+      </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.UntrackDeletedCurrentRequirementsHandler"
+            commandId="org.topcased.requirement.core.untrackDeletedCurrentRequirements">
+      </handler>
    </extension>
    <extension
          point="org.eclipse.ui.menus">
@@ -1246,6 +1254,31 @@
                      style="push">
                </command>
             </menuContribution>
+            <menuContribution
+                  locationURI="popup:org.topcased.requirement.core.views.current.popupMenu?after=lastSeparator">
+               <command
+                     commandId="org.topcased.requirement.core.trackDeletedCurrentRequirements"
+                     icon="icons/trackdelrq.gif"
+                     label="&amp;Track deleted current requirements"
+                     style="push">
+                  <visibleWhen
+                        checkEnabled="true">
+                  </visibleWhen>
+               </command>
+               <command
+                     commandId="org.topcased.requirement.core.untrackDeletedCurrentRequirements"
+                     icon="icons/trackdelrq.gif"
+                     label="Do &amp;not track deleted current requirements"
+                     style="push">
+                  <visibleWhen
+                        checkEnabled="true">
+                  </visibleWhen>
+               </command>
+               <separator
+                     name="SEPARATOR5"
+                     visible="true">
+               </separator>
+            </menuContribution>
      </extension>
    <extension
          point="org.eclipse.ui.services">
@@ -1377,6 +1410,14 @@
             commandId="org.topcased.requirement.core.addDoc"
             disabledIcon="IMG_OBJ_ADD_DISABLED"
             icon="IMG_OBJ_ADD">
+      </image>
+      <image
+            commandId="org.topcased.requirement.core.trackDeletedCurrentRequirements"
+            icon="icons/trackdelrq.gif">
+      </image>
+      <image
+            commandId="org.topcased.requirement.core.untrackDeletedCurrentRequirements"
+            icon="icons/trackdelrq.gif">
       </image>
    </extension>
    <extension
@@ -1625,6 +1666,14 @@
       <command
             id="org.topcased.requirement.core.impactAnalysis"
             name="Launch requirement impact analysis from this revision">
+      </command>
+      <command
+            id="org.topcased.requirement.core.trackDeletedCurrentRequirements"
+            name="Track deleted current requirements">
+      </command>
+      <command
+            id="org.topcased.requirement.core.untrackDeletedCurrentRequirements"
+            name="Untrack deleted current requirements">
       </command>
    </extension>
    <extension

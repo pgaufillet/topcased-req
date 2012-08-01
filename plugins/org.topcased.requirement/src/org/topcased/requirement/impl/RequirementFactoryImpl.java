@@ -95,6 +95,8 @@ public class RequirementFactoryImpl extends EFactoryImpl implements RequirementF
                 return createTrashChapter();
             case RequirementPackage.ANONYMOUS_REQUIREMENT:
                 return createAnonymousRequirement();
+            case RequirementPackage.DELETED_CHAPTER:
+                return createDeletedChapter();
             default:
                 throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier"); //$NON-NLS-1$ //$NON-NLS-2$
         }
@@ -290,6 +292,17 @@ public class RequirementFactoryImpl extends EFactoryImpl implements RequirementF
     {
         AnonymousRequirementImpl anonymousRequirement = new AnonymousRequirementImpl();
         return anonymousRequirement;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public DeletedChapter createDeletedChapter()
+    {
+        DeletedChapterImpl deletedChapter = new DeletedChapterImpl();
+        return deletedChapter;
     }
 
     /**

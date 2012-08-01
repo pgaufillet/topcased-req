@@ -70,7 +70,7 @@ public class AttributeAllocateItemProvider extends ObjectAttributeItemProvider i
     @Override
     public Object getImage(Object object)
     {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/AttributeAllocate"));
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/AttributeAllocate")); //$NON-NLS-1$
     }
 
     /**

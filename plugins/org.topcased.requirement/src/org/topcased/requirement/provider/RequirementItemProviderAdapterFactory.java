@@ -477,6 +477,31 @@ public class RequirementItemProviderAdapterFactory extends RequirementAdapterFac
     }
 
     /**
+     * This keeps track of the one adapter used for all {@link org.topcased.requirement.DeletedChapter} instances. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    protected DeletedChapterItemProvider deletedChapterItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.topcased.requirement.DeletedChapter}. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
+     * @generated
+     */
+    @Override
+    public Adapter createDeletedChapterAdapter()
+    {
+        if (deletedChapterItemProvider == null)
+        {
+            deletedChapterItemProvider = new DeletedChapterItemProvider(this);
+        }
+
+        return deletedChapterItemProvider;
+    }
+
+    /**
      * This returns the root adapter factory that contains this factory. <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
      * @generated
@@ -614,6 +639,8 @@ public class RequirementItemProviderAdapterFactory extends RequirementAdapterFac
             trashChapterItemProvider.dispose();
         if (anonymousRequirementItemProvider != null)
             anonymousRequirementItemProvider.dispose();
+        if (deletedChapterItemProvider != null)
+            deletedChapterItemProvider.dispose();
     }
 
 }

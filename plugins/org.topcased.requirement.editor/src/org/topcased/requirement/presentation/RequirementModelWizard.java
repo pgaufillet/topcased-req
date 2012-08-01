@@ -148,8 +148,8 @@ public class RequirementModelWizard extends Wizard implements INewWizard
     {
         this.workbench = workbench;
         this.selection = selection;
-        setWindowTitle(RequirementEditorPlugin.INSTANCE.getString("_UI_Wizard_label"));
-        setDefaultPageImageDescriptor(ExtendedImageRegistry.INSTANCE.getImageDescriptor(RequirementEditorPlugin.INSTANCE.getImage("full/wizban/NewRequirement")));
+        setWindowTitle(RequirementEditorPlugin.INSTANCE.getString("_UI_Wizard_label")); //$NON-NLS-1$
+        setDefaultPageImageDescriptor(ExtendedImageRegistry.INSTANCE.getImageDescriptor(RequirementEditorPlugin.INSTANCE.getImage("full/wizban/NewRequirement"))); //$NON-NLS-1$
     }
 
     /**
@@ -278,7 +278,7 @@ public class RequirementModelWizard extends Wizard implements INewWizard
             }
             catch (PartInitException exception)
             {
-                MessageDialog.openError(workbenchWindow.getShell(), RequirementEditorPlugin.INSTANCE.getString("_UI_OpenEditorError_label"), exception.getMessage());
+                MessageDialog.openError(workbenchWindow.getShell(), RequirementEditorPlugin.INSTANCE.getString("_UI_OpenEditorError_label"), exception.getMessage()); //$NON-NLS-1$
                 return false;
             }
 
@@ -321,7 +321,7 @@ public class RequirementModelWizard extends Wizard implements INewWizard
                 String extension = new Path(getFileName()).getFileExtension();
                 if (extension == null || !FILE_EXTENSIONS.contains(extension))
                 {
-                    String key = FILE_EXTENSIONS.size() > 1 ? "_WARN_FilenameExtensions" : "_WARN_FilenameExtension";
+                    String key = FILE_EXTENSIONS.size() > 1 ? "_WARN_FilenameExtensions" : "_WARN_FilenameExtension"; //$NON-NLS-1$ //$NON-NLS-2$
                     setErrorMessage(RequirementEditorPlugin.INSTANCE.getString(key, new Object[] {FORMATTED_FILE_EXTENSIONS}));
                     return false;
                 }
@@ -400,7 +400,7 @@ public class RequirementModelWizard extends Wizard implements INewWizard
 
             Label containerLabel = new Label(composite, SWT.LEFT);
             {
-                containerLabel.setText(RequirementEditorPlugin.INSTANCE.getString("_UI_ModelObject"));
+                containerLabel.setText(RequirementEditorPlugin.INSTANCE.getString("_UI_ModelObject")); //$NON-NLS-1$
 
                 GridData data = new GridData();
                 data.horizontalAlignment = GridData.FILL;
@@ -428,7 +428,7 @@ public class RequirementModelWizard extends Wizard implements INewWizard
 
             Label encodingLabel = new Label(composite, SWT.LEFT);
             {
-                encodingLabel.setText(RequirementEditorPlugin.INSTANCE.getString("_UI_XMLEncoding"));
+                encodingLabel.setText(RequirementEditorPlugin.INSTANCE.getString("_UI_XMLEncoding")); //$NON-NLS-1$
 
                 GridData data = new GridData();
                 data.horizontalAlignment = GridData.FILL;
@@ -539,7 +539,7 @@ public class RequirementModelWizard extends Wizard implements INewWizard
         {
             try
             {
-                return RequirementEditPlugin.INSTANCE.getString("_UI_" + typeName + "_type");
+                return RequirementEditPlugin.INSTANCE.getString("_UI_" + typeName + "_type"); //$NON-NLS-1$ //$NON-NLS-2$
             }
             catch (MissingResourceException mre)
             {
@@ -558,7 +558,7 @@ public class RequirementModelWizard extends Wizard implements INewWizard
             if (encodings == null)
             {
                 encodings = new ArrayList<String>();
-                for (StringTokenizer stringTokenizer = new StringTokenizer(RequirementEditorPlugin.INSTANCE.getString("_UI_XMLEncodingChoices")); stringTokenizer.hasMoreTokens();)
+                for (StringTokenizer stringTokenizer = new StringTokenizer(RequirementEditorPlugin.INSTANCE.getString("_UI_XMLEncodingChoices")); stringTokenizer.hasMoreTokens();) //$NON-NLS-1$
                 {
                     encodings.add(stringTokenizer.nextToken());
                 }
@@ -577,10 +577,10 @@ public class RequirementModelWizard extends Wizard implements INewWizard
     {
         // Create a page, set the title, and the initial model file name.
         //
-        newFileCreationPage = new RequirementModelWizardNewFileCreationPage("Whatever", selection);
-        newFileCreationPage.setTitle(RequirementEditorPlugin.INSTANCE.getString("_UI_RequirementModelWizard_label"));
-        newFileCreationPage.setDescription(RequirementEditorPlugin.INSTANCE.getString("_UI_RequirementModelWizard_description"));
-        newFileCreationPage.setFileName(RequirementEditorPlugin.INSTANCE.getString("_UI_RequirementEditorFilenameDefaultBase") + "." + FILE_EXTENSIONS.get(0));
+        newFileCreationPage = new RequirementModelWizardNewFileCreationPage("Whatever", selection); //$NON-NLS-1$
+        newFileCreationPage.setTitle(RequirementEditorPlugin.INSTANCE.getString("_UI_RequirementModelWizard_label")); //$NON-NLS-1$
+        newFileCreationPage.setDescription(RequirementEditorPlugin.INSTANCE.getString("_UI_RequirementModelWizard_description")); //$NON-NLS-1$
+        newFileCreationPage.setFileName(RequirementEditorPlugin.INSTANCE.getString("_UI_RequirementEditorFilenameDefaultBase") + "." + FILE_EXTENSIONS.get(0)); //$NON-NLS-1$ //$NON-NLS-2$
         addPage(newFileCreationPage);
 
         // Try and get the resource selection to determine a current directory for the file dialog.
@@ -610,20 +610,20 @@ public class RequirementModelWizard extends Wizard implements INewWizard
 
                     // Make up a unique new name here.
                     //
-                    String defaultModelBaseFilename = RequirementEditorPlugin.INSTANCE.getString("_UI_RequirementEditorFilenameDefaultBase");
+                    String defaultModelBaseFilename = RequirementEditorPlugin.INSTANCE.getString("_UI_RequirementEditorFilenameDefaultBase"); //$NON-NLS-1$
                     String defaultModelFilenameExtension = FILE_EXTENSIONS.get(0);
-                    String modelFilename = defaultModelBaseFilename + "." + defaultModelFilenameExtension;
+                    String modelFilename = defaultModelBaseFilename + "." + defaultModelFilenameExtension; //$NON-NLS-1$
                     for (int i = 1; ((IContainer) selectedResource).findMember(modelFilename) != null; ++i)
                     {
-                        modelFilename = defaultModelBaseFilename + i + "." + defaultModelFilenameExtension;
+                        modelFilename = defaultModelBaseFilename + i + "." + defaultModelFilenameExtension; //$NON-NLS-1$
                     }
                     newFileCreationPage.setFileName(modelFilename);
                 }
             }
         }
-        initialObjectCreationPage = new RequirementModelWizardInitialObjectCreationPage("Whatever2");
-        initialObjectCreationPage.setTitle(RequirementEditorPlugin.INSTANCE.getString("_UI_RequirementModelWizard_label"));
-        initialObjectCreationPage.setDescription(RequirementEditorPlugin.INSTANCE.getString("_UI_Wizard_initial_object_description"));
+        initialObjectCreationPage = new RequirementModelWizardInitialObjectCreationPage("Whatever2"); //$NON-NLS-1$
+        initialObjectCreationPage.setTitle(RequirementEditorPlugin.INSTANCE.getString("_UI_RequirementModelWizard_label")); //$NON-NLS-1$
+        initialObjectCreationPage.setDescription(RequirementEditorPlugin.INSTANCE.getString("_UI_Wizard_initial_object_description")); //$NON-NLS-1$
         addPage(initialObjectCreationPage);
     }
 

@@ -24,6 +24,7 @@ import org.topcased.requirement.AttributesType;
 import org.topcased.requirement.ConfiguratedAttribute;
 import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.DefaultAttributeValue;
+import org.topcased.requirement.DeletedChapter;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.IdentifiedElement;
 import org.topcased.requirement.ObjectAttribute;
@@ -165,6 +166,13 @@ public class RequirementPackageImpl extends EPackageImpl implements RequirementP
      * @generated
      */
     private EClass anonymousRequirementEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass deletedChapterEClass = null;
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -662,6 +670,16 @@ public class RequirementPackageImpl extends EPackageImpl implements RequirementP
     }
 
     /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getDeletedChapter()
+    {
+        return deletedChapterEClass;
+    }
+
+    /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      */
@@ -765,6 +783,8 @@ public class RequirementPackageImpl extends EPackageImpl implements RequirementP
 
         anonymousRequirementEClass = createEClass(ANONYMOUS_REQUIREMENT);
 
+        deletedChapterEClass = createEClass(DELETED_CHAPTER);
+
         // Create enums
         attributesTypeEEnum = createEEnum(ATTRIBUTES_TYPE);
     }
@@ -816,6 +836,7 @@ public class RequirementPackageImpl extends EPackageImpl implements RequirementP
         trashChapterEClass.getESuperTypes().add(this.getSpecialChapter());
         requirementEClass.getESuperTypes().add(this.getIdentifiedElement());
         anonymousRequirementEClass.getESuperTypes().add(this.getRequirement());
+        deletedChapterEClass.getESuperTypes().add(this.getSpecialChapter());
 
         // Initialize classes and features; add operations and parameters
         initEClass(requirementProjectEClass, RequirementProject.class, "RequirementProject", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
@@ -926,6 +947,8 @@ public class RequirementPackageImpl extends EPackageImpl implements RequirementP
                 "externalResources", null, 0, -1, Requirement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED); //$NON-NLS-1$
 
         initEClass(anonymousRequirementEClass, AnonymousRequirement.class, "AnonymousRequirement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
+
+        initEClass(deletedChapterEClass, DeletedChapter.class, "DeletedChapter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS); //$NON-NLS-1$
 
         // Initialize enums and add enum literals
         initEEnum(attributesTypeEEnum, AttributesType.class, "AttributesType"); //$NON-NLS-1$

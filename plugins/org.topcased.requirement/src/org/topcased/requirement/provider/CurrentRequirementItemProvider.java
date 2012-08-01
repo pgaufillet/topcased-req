@@ -75,7 +75,8 @@ public class CurrentRequirementItemProvider extends RequirementItemProvider impl
     protected void addImpactedPropertyDescriptor(Object object)
     {
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-                getString("_UI_CurrentRequirement_impacted_feature"), getString("_UI_PropertyDescriptor_description", "_UI_CurrentRequirement_impacted_feature", "_UI_CurrentRequirement_type"),
+                getString("_UI_CurrentRequirement_impacted_feature"), //$NON-NLS-1$
+                getString("_UI_PropertyDescriptor_description", "_UI_CurrentRequirement_impacted_feature", "_UI_CurrentRequirement_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 RequirementPackage.Literals.CURRENT_REQUIREMENT__IMPACTED, true, false, false, ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE, null, null));
     }
 
@@ -87,7 +88,7 @@ public class CurrentRequirementItemProvider extends RequirementItemProvider impl
     @Override
     public Object getImage(Object object)
     {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/CurrentRequirement"));
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/CurrentRequirement")); //$NON-NLS-1$
     }
 
     /**

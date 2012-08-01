@@ -604,7 +604,8 @@ public class RequirementEditor extends MultiPageEditorPart implements IEditingDo
     {
         if (updateProblemIndication)
         {
-            BasicDiagnostic diagnostic = new BasicDiagnostic(Diagnostic.OK, "org.topcased.requirement.editor", 0, null, new Object[] {editingDomain.getResourceSet()});
+            BasicDiagnostic diagnostic = new BasicDiagnostic(Diagnostic.OK, "org.topcased.requirement.editor", //$NON-NLS-1$
+                    0, null, new Object[] {editingDomain.getResourceSet()});
             for (Diagnostic childDiagnostic : resourceToDiagnosticMap.values())
             {
                 if (childDiagnostic.getSeverity() != Diagnostic.OK)
@@ -666,7 +667,8 @@ public class RequirementEditor extends MultiPageEditorPart implements IEditingDo
      */
     protected boolean handleDirtyConflict()
     {
-        return MessageDialog.openQuestion(getSite().getShell(), getString("_UI_FileConflict_label"), getString("_WARN_FileConflict"));
+        return MessageDialog.openQuestion(getSite().getShell(), getString("_UI_FileConflict_label"), //$NON-NLS-1$
+                getString("_WARN_FileConflict")); //$NON-NLS-1$
     }
 
     /**
@@ -683,7 +685,7 @@ public class RequirementEditor extends MultiPageEditorPart implements IEditingDo
     /**
      * This sets up the editing domain for the model editor. <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
-     * @generated
+     * @generated not
      */
     protected void initializeEditingDomain()
     {
@@ -697,13 +699,11 @@ public class RequirementEditor extends MultiPageEditorPart implements IEditingDo
         adapterFactory.addAdapterFactory(new TtmItemProviderAdapterFactory());
         adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 
-        // Create the command stack that will notify this editor as commands are
-        // executed.
+        // Create the command stack that will notify this editor as commands are executed.
         //
         BasicCommandStack commandStack = new BasicCommandStack();
 
-        // Add a listener to set the most recent command's affected objects to
-        // be the selection of the viewer with
+        // Add a listener to set the most recent command's affected objects to be the selection of the viewer with
         // focus.
         //
         commandStack.addCommandStackListener(new CommandStackListener()
@@ -766,8 +766,7 @@ public class RequirementEditor extends MultiPageEditorPart implements IEditingDo
             {
                 public void run()
                 {
-                    // Try to select the items in the current content viewer of
-                    // the editor.
+                    // Try to select the items in the current content viewer of the editor.
                     //
                     if (currentViewer != null)
                     {
@@ -892,8 +891,7 @@ public class RequirementEditor extends MultiPageEditorPart implements IEditingDo
                 //
                 selectionChangedListener = new ISelectionChangedListener()
                 {
-                    // This just notifies those things that are affected by the
-                    // section.
+                    // This just notifies those things that are affected by the section.
                     //
                     public void selectionChanged(SelectionChangedEvent selectionChangedEvent)
                     {
@@ -920,8 +918,7 @@ public class RequirementEditor extends MultiPageEditorPart implements IEditingDo
             //
             currentViewer = viewer;
 
-            // Set the editors selection based on the current viewer's
-            // selection.
+            // Set the editors selection based on the current viewer's selection.
             //
             setSelection(currentViewer == null ? StructuredSelection.EMPTY : currentViewer.getSelection());
         }
@@ -946,8 +943,8 @@ public class RequirementEditor extends MultiPageEditorPart implements IEditingDo
      */
     protected void createContextMenuFor(StructuredViewer viewer)
     {
-        MenuManager contextMenu = new MenuManager("#PopUp");
-        contextMenu.add(new Separator("additions"));
+        MenuManager contextMenu = new MenuManager("#PopUp"); //$NON-NLS-1$
+        contextMenu.add(new Separator("additions")); //$NON-NLS-1$
         contextMenu.setRemoveAllWhenShown(true);
         contextMenu.addMenuListener(this);
         Menu menu = contextMenu.createContextMenu(viewer.getControl());
@@ -1001,14 +998,17 @@ public class RequirementEditor extends MultiPageEditorPart implements IEditingDo
     {
         if (!resource.getErrors().isEmpty() || !resource.getWarnings().isEmpty())
         {
-            BasicDiagnostic basicDiagnostic = new BasicDiagnostic(Diagnostic.ERROR, "org.topcased.requirement.editor", 0, getString("_UI_CreateModelError_message", resource.getURI()),
+            BasicDiagnostic basicDiagnostic = new BasicDiagnostic(Diagnostic.ERROR, "org.topcased.requirement.editor", //$NON-NLS-1$
+                    0, getString("_UI_CreateModelError_message", resource.getURI()), //$NON-NLS-1$
                     new Object[] {exception == null ? (Object) resource : exception});
             basicDiagnostic.merge(EcoreUtil.computeDiagnostic(resource, true));
             return basicDiagnostic;
         }
         else if (exception != null)
         {
-            return new BasicDiagnostic(Diagnostic.ERROR, "org.topcased.requirement.editor", 0, getString("_UI_CreateModelError_message", resource.getURI()), new Object[] {exception});
+            return new BasicDiagnostic(Diagnostic.ERROR, "org.topcased.requirement.editor", //$NON-NLS-1$
+                    0, getString("_UI_CreateModelError_message", resource.getURI()), //$NON-NLS-1$
+                    new Object[] {exception});
         }
         else
         {
@@ -1100,7 +1100,7 @@ public class RequirementEditor extends MultiPageEditorPart implements IEditingDo
     {
         if (getPageCount() <= 1)
         {
-            setPageText(0, "");
+            setPageText(0, ""); //$NON-NLS-1$
             if (getContainer() instanceof CTabFolder)
             {
                 ((CTabFolder) getContainer()).setTabHeight(1);
@@ -1120,7 +1120,7 @@ public class RequirementEditor extends MultiPageEditorPart implements IEditingDo
     {
         if (getPageCount() > 1)
         {
-            setPageText(0, getString("_UI_SelectionPage_label"));
+            setPageText(0, getString("_UI_SelectionPage_label")); //$NON-NLS-1$
             if (getContainer() instanceof CTabFolder)
             {
                 ((CTabFolder) getContainer()).setTabHeight(SWT.DEFAULT);
@@ -1283,8 +1283,7 @@ public class RequirementEditor extends MultiPageEditorPart implements IEditingDo
                 //
                 Object selectedElement = selectedElements.next();
 
-                // If it's the selection viewer, then we want it to select the
-                // same selection as this selection.
+                // If it's the selection viewer, then we want it to select the same selection as this selection.
                 //
                 if (currentViewerPane.getViewer() == selectionViewer)
                 {
@@ -1339,8 +1338,7 @@ public class RequirementEditor extends MultiPageEditorPart implements IEditingDo
         final Map<Object, Object> saveOptions = new HashMap<Object, Object>();
         saveOptions.put(Resource.OPTION_SAVE_ONLY_IF_CHANGED, Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER);
 
-        // Do the work within an operation because this is a long running
-        // activity that modifies the workbench.
+        // Do the work within an operation because this is a long running activity that modifies the workbench.
         //
         WorkspaceModifyOperation operation = new WorkspaceModifyOperation()
         {
@@ -1599,23 +1597,23 @@ public class RequirementEditor extends MultiPageEditorPart implements IEditingDo
                 switch (collection.size())
                 {
                     case 0: {
-                        statusLineManager.setMessage(getString("_UI_NoObjectSelected"));
+                        statusLineManager.setMessage(getString("_UI_NoObjectSelected")); //$NON-NLS-1$
                         break;
                     }
                     case 1: {
                         String text = new AdapterFactoryItemDelegator(adapterFactory).getText(collection.iterator().next());
-                        statusLineManager.setMessage(getString("_UI_SingleObjectSelected", text));
+                        statusLineManager.setMessage(getString("_UI_SingleObjectSelected", text)); //$NON-NLS-1$
                         break;
                     }
                     default: {
-                        statusLineManager.setMessage(getString("_UI_MultiObjectSelected", Integer.toString(collection.size())));
+                        statusLineManager.setMessage(getString("_UI_MultiObjectSelected", Integer.toString(collection.size()))); //$NON-NLS-1$
                         break;
                     }
                 }
             }
             else
             {
-                statusLineManager.setMessage("");
+                statusLineManager.setMessage(""); //$NON-NLS-1$
             }
         }
     }

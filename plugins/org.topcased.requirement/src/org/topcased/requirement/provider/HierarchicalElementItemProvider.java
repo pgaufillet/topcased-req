@@ -71,7 +71,8 @@ public class HierarchicalElementItemProvider extends IdentifiedElementItemProvid
     protected void addElementPropertyDescriptor(Object object)
     {
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-                getString("_UI_HierarchicalElement_element_feature"), getString("_UI_PropertyDescriptor_description", "_UI_HierarchicalElement_element_feature", "_UI_HierarchicalElement_type"),
+                getString("_UI_HierarchicalElement_element_feature"), //$NON-NLS-1$
+                getString("_UI_PropertyDescriptor_description", "_UI_HierarchicalElement_element_feature", "_UI_HierarchicalElement_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 RequirementPackage.Literals.HIERARCHICAL_ELEMENT__ELEMENT, false, false, true, null, null, null));
     }
 
@@ -83,8 +84,8 @@ public class HierarchicalElementItemProvider extends IdentifiedElementItemProvid
     protected void addNextReqIndexPropertyDescriptor(Object object)
     {
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-                getString("_UI_HierarchicalElement_nextReqIndex_feature"),
-                getString("_UI_PropertyDescriptor_description", "_UI_HierarchicalElement_nextReqIndex_feature", "_UI_HierarchicalElement_type"),
+                getString("_UI_HierarchicalElement_nextReqIndex_feature"), //$NON-NLS-1$
+                getString("_UI_PropertyDescriptor_description", "_UI_HierarchicalElement_nextReqIndex_feature", "_UI_HierarchicalElement_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 RequirementPackage.Literals.HIERARCHICAL_ELEMENT__NEXT_REQ_INDEX, true, false, false, ItemPropertyDescriptor.INTEGRAL_VALUE_IMAGE, null, null));
     }
 
@@ -130,7 +131,7 @@ public class HierarchicalElementItemProvider extends IdentifiedElementItemProvid
     @Override
     public Object getImage(Object object)
     {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/HierarchicalElement"));
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/HierarchicalElement")); //$NON-NLS-1$
     }
 
     /**
@@ -142,7 +143,8 @@ public class HierarchicalElementItemProvider extends IdentifiedElementItemProvid
     public String getText(Object object)
     {
         String label = ((HierarchicalElement) object).getIdentifier();
-        return label == null || label.length() == 0 ? getString("_UI_HierarchicalElement_type") : getString("_UI_HierarchicalElement_type") + " " + label;
+        return label == null || label.length() == 0 ? getString("_UI_HierarchicalElement_type") : //$NON-NLS-1$
+                getString("_UI_HierarchicalElement_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**

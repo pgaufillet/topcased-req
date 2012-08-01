@@ -75,7 +75,7 @@ public class AnonymousRequirementItemProvider extends RequirementItemProvider im
     @Override
     public Object getImage(Object object)
     {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/AnonymousRequirement"));
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/AnonymousRequirement")); //$NON-NLS-1$
     }
 
     /**

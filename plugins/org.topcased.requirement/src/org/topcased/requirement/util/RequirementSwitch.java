@@ -275,6 +275,15 @@ public class RequirementSwitch<T> extends Switch<T>
                     result = defaultCase(theEObject);
                 return result;
             }
+            case RequirementPackage.DELETED_CHAPTER: {
+                DeletedChapter deletedChapter = (DeletedChapter) theEObject;
+                T result = caseDeletedChapter(deletedChapter);
+                if (result == null)
+                    result = caseSpecialChapter(deletedChapter);
+                if (result == null)
+                    result = defaultCase(theEObject);
+                return result;
+            }
             default:
                 return defaultCase(theEObject);
         }
@@ -572,6 +581,22 @@ public class RequirementSwitch<T> extends Switch<T>
      * @generated
      */
     public T caseAnonymousRequirement(AnonymousRequirement object)
+    {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Deleted Chapter</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Deleted Chapter</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseDeletedChapter(DeletedChapter object)
     {
         return null;
     }

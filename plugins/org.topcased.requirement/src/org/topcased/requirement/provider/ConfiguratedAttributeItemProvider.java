@@ -81,7 +81,8 @@ public class ConfiguratedAttributeItemProvider extends ItemProviderAdapter imple
     protected void addNamePropertyDescriptor(Object object)
     {
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-                getString("_UI_ConfiguratedAttribute_name_feature"), getString("_UI_PropertyDescriptor_description", "_UI_ConfiguratedAttribute_name_feature", "_UI_ConfiguratedAttribute_type"),
+                getString("_UI_ConfiguratedAttribute_name_feature"), //$NON-NLS-1$
+                getString("_UI_PropertyDescriptor_description", "_UI_ConfiguratedAttribute_name_feature", "_UI_ConfiguratedAttribute_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 RequirementPackage.Literals.CONFIGURATED_ATTRIBUTE__NAME, true, false, false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
     }
 
@@ -93,7 +94,8 @@ public class ConfiguratedAttributeItemProvider extends ItemProviderAdapter imple
     protected void addTypePropertyDescriptor(Object object)
     {
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-                getString("_UI_ConfiguratedAttribute_type_feature"), getString("_UI_PropertyDescriptor_description", "_UI_ConfiguratedAttribute_type_feature", "_UI_ConfiguratedAttribute_type"),
+                getString("_UI_ConfiguratedAttribute_type_feature"), //$NON-NLS-1$
+                getString("_UI_PropertyDescriptor_description", "_UI_ConfiguratedAttribute_type_feature", "_UI_ConfiguratedAttribute_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 RequirementPackage.Literals.CONFIGURATED_ATTRIBUTE__TYPE, true, false, false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
     }
 

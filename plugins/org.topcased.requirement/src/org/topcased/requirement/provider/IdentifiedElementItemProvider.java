@@ -72,7 +72,8 @@ public class IdentifiedElementItemProvider extends EModelElementItemProvider imp
     protected void addIdentifierPropertyDescriptor(Object object)
     {
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-                getString("_UI_IdentifiedElement_identifier_feature"), getString("_UI_PropertyDescriptor_description", "_UI_IdentifiedElement_identifier_feature", "_UI_IdentifiedElement_type"),
+                getString("_UI_IdentifiedElement_identifier_feature"), //$NON-NLS-1$
+                getString("_UI_PropertyDescriptor_description", "_UI_IdentifiedElement_identifier_feature", "_UI_IdentifiedElement_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 RequirementPackage.Literals.IDENTIFIED_ELEMENT__IDENTIFIER, true, false, false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
     }
 
@@ -84,8 +85,8 @@ public class IdentifiedElementItemProvider extends EModelElementItemProvider imp
     protected void addShortDescriptionPropertyDescriptor(Object object)
     {
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-                getString("_UI_IdentifiedElement_shortDescription_feature"),
-                getString("_UI_PropertyDescriptor_description", "_UI_IdentifiedElement_shortDescription_feature", "_UI_IdentifiedElement_type"),
+                getString("_UI_IdentifiedElement_shortDescription_feature"), //$NON-NLS-1$
+                getString("_UI_PropertyDescriptor_description", "_UI_IdentifiedElement_shortDescription_feature", "_UI_IdentifiedElement_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 RequirementPackage.Literals.IDENTIFIED_ELEMENT__SHORT_DESCRIPTION, true, false, false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
     }
 
@@ -98,7 +99,8 @@ public class IdentifiedElementItemProvider extends EModelElementItemProvider imp
     public String getText(Object object)
     {
         String label = ((IdentifiedElement) object).getIdentifier();
-        return label == null || label.length() == 0 ? getString("_UI_IdentifiedElement_type") : getString("_UI_IdentifiedElement_type") + " " + label;
+        return label == null || label.length() == 0 ? getString("_UI_IdentifiedElement_type") : //$NON-NLS-1$
+                getString("_UI_IdentifiedElement_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**

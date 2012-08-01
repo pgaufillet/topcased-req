@@ -8,7 +8,7 @@
  *
  * Contributors:
  *  	Christophe Mertz (CS) <christophe.mertz@c-s.fr>
- *      Olivier Mélois <a href="mailto:olivier.melois@atos.net">olivier.melois@atos.net</a>"
+ *      Olivier Mï¿½lois <a href="mailto:olivier.melois@atos.net">olivier.melois@atos.net</a>"
  *    
  ******************************************************************************/
 package org.topcased.requirement.core.utils;
@@ -66,6 +66,7 @@ import org.topcased.requirement.AttributeAllocate;
 import org.topcased.requirement.AttributeConfiguration;
 import org.topcased.requirement.AttributeLink;
 import org.topcased.requirement.CurrentRequirement;
+import org.topcased.requirement.DeletedChapter;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.ObjectAttribute;
 import org.topcased.requirement.RequirementProject;
@@ -709,6 +710,28 @@ public final class RequirementUtils
                 if (chapter instanceof TrashChapter)
                 {
                     return (TrashChapter) chapter;
+                }
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Gets the Deleted Chapter model object contained in a Requirement Project.
+     * 
+     * @param editingDomain The Deleted chapter must be searched inside the domain.
+     * @return the special Deleted chapter found.
+     */
+    public static DeletedChapter getDeletedChapter(EditingDomain editingDomain)
+    {
+        RequirementProject project = getRequirementProject(editingDomain);
+        if (project != null)
+        {
+            for (SpecialChapter chapter : project.getChapter())
+            {
+                if (chapter instanceof DeletedChapter)
+                {
+                    return (DeletedChapter) chapter;
                 }
             }
         }

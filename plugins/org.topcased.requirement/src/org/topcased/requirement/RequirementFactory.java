@@ -152,6 +152,15 @@ public interface RequirementFactory extends EFactory
     AnonymousRequirement createAnonymousRequirement();
 
     /**
+     * Returns a new object of class '<em>Deleted Chapter</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Deleted Chapter</em>'.
+     * @generated
+     */
+    DeletedChapter createDeletedChapter();
+
+    /**
      * Returns the package supported by this factory.
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @return the package supported by this factory.

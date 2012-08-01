@@ -24,7 +24,6 @@ import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 import org.topcased.requirement.RequirementFactory;
 import org.topcased.requirement.RequirementPackage;
-import org.topcased.requirement.RequirementPlugin;
 import org.topcased.requirement.SpecialChapter;
 
 /**
@@ -104,7 +103,7 @@ public class SpecialChapterItemProvider extends ItemProviderAdapter implements I
     @Override
     public String getText(Object object)
     {
-        return getString("_UI_SpecialChapter_type");
+        return getString("_UI_SpecialChapter_type"); //$NON-NLS-1$
     }
 
     /**
@@ -155,7 +154,7 @@ public class SpecialChapterItemProvider extends ItemProviderAdapter implements I
     @Override
     public ResourceLocator getResourceLocator()
     {
-        return RequirementPlugin.INSTANCE;
+        return RequirementEditPlugin.INSTANCE;
     }
 
 }

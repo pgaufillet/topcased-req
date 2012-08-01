@@ -9,6 +9,6 @@
     <relativePath>../org.topcased.releng.tycho.parent</relativePath>
   </parent>
   <artifactId>org.topcased.requirement</artifactId>
-  <version>4.1.0-SNAPSHOT</version>
+  <version>4.2.0-SNAPSHOT</version>
   <packaging>eclipse-feature</packaging>
 </project>

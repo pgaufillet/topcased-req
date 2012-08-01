@@ -13,44 +13,51 @@ package org.topcased.requirement.core.handlers;
 
 import java.util.List;
 
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.expressions.EvaluationContext;
 import org.eclipse.emf.common.command.Command;
-import org.eclipse.emf.edit.command.CommandParameter;
-import org.eclipse.emf.edit.command.DeleteCommand;
+import org.eclipse.emf.common.command.CompoundCommand;
+import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.ui.IEditorPart;
+import org.topcased.requirement.core.commands.DeleteRequirementCommand;
+import org.topcased.requirement.core.extensions.IEditorServices;
+import org.topcased.requirement.core.extensions.SupportingEditorsManager;
+import org.topcased.requirement.core.internal.Messages;
+import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
  * This class defines the EMF <b>delete</b> command
  * 
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
- *
+ * 
  */
-public class DeleteHandler extends RequirementAbstractEMFCommandHandler
+public class DeleteHandler extends AbstractHandler
 {
-
     /**
-     * @see org.topcased.requirement.core.handlers.RequirementAbstractEMFCommandHandler#getCommand()
+     * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
      */
-    @Override
-    public Class< ? extends Command> getCommand()
+    public Object execute(ExecutionEvent event) throws ExecutionException
     {
-        return DeleteCommand.class;
-    }
+        IEditorPart editor = RequirementUtils.getCurrentEditor();
+        IEditorServices services = SupportingEditorsManager.getInstance().getServices(editor);
 
-    /**
-     * @see org.topcased.requirement.core.handlers.RequirementAbstractEMFCommandHandler#getParam()
-     */
-    @Override
-    public CommandParameter getParam()
-    {
-        if (((EvaluationContext)evt.getApplicationContext()).getDefaultVariable() instanceof List<?>)
+        if (services != null && ((EvaluationContext) event.getApplicationContext()).getDefaultVariable() instanceof List< ? >)
         {
-            return new CommandParameter(null, null, ((List<?>)((EvaluationContext)evt.getApplicationContext()).getDefaultVariable()));
-        }
-        else
-        {
-            return null;
-        }
-        
-    }
+            EditingDomain editingDomain = services.getEditingDomain(editor);
+            // Get the current selection
+            List< ? > elements = ((List< ? >) ((EvaluationContext) event.getApplicationContext()).getDefaultVariable());
+            CompoundCommand compoundCmd = new CompoundCommand(Messages.getString("DeleteHandler.0")); //$NON-NLS-1$
 
+            Command delete = new DeleteRequirementCommand(editingDomain, elements);
+            compoundCmd.appendIfCanExecute(delete);
+
+            if (!compoundCmd.isEmpty() && compoundCmd.canExecute())
+            {
+                editingDomain.getCommandStack().execute(compoundCmd);
+            }
+        }
+        return null;
+    }
 }

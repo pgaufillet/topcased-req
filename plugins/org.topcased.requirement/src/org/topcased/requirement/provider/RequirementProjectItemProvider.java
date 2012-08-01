@@ -105,7 +105,7 @@ public class RequirementProjectItemProvider extends IdentifiedElementItemProvide
     @Override
     public Object getImage(Object object)
     {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/RequirementProject"));
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/RequirementProject")); //$NON-NLS-1$
     }
 
     /**
@@ -117,7 +117,8 @@ public class RequirementProjectItemProvider extends IdentifiedElementItemProvide
     public String getText(Object object)
     {
         String label = ((RequirementProject) object).getIdentifier();
-        return label == null || label.length() == 0 ? getString("_UI_RequirementProject_type") : getString("_UI_RequirementProject_type") + " " + label;
+        return label == null || label.length() == 0 ? getString("_UI_RequirementProject_type") : //$NON-NLS-1$
+                getString("_UI_RequirementProject_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**
@@ -164,6 +165,8 @@ public class RequirementProjectItemProvider extends IdentifiedElementItemProvide
         newChildDescriptors.add(createChildParameter(RequirementPackage.Literals.REQUIREMENT_PROJECT__CHAPTER, RequirementFactory.eINSTANCE.createProblemChapter()));
 
         newChildDescriptors.add(createChildParameter(RequirementPackage.Literals.REQUIREMENT_PROJECT__CHAPTER, RequirementFactory.eINSTANCE.createTrashChapter()));
+
+        newChildDescriptors.add(createChildParameter(RequirementPackage.Literals.REQUIREMENT_PROJECT__CHAPTER, RequirementFactory.eINSTANCE.createDeletedChapter()));
 
         newChildDescriptors.add(createChildParameter(RequirementPackage.Literals.REQUIREMENT_PROJECT__UPSTREAM_MODEL, RequirementFactory.eINSTANCE.createUpstreamModel()));
     }

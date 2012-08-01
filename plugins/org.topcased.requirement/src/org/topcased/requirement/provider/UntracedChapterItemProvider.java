@@ -63,7 +63,7 @@ public class UntracedChapterItemProvider extends SpecialChapterItemProvider impl
     @Override
     public Object getImage(Object object)
     {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/UntracedChapter"));
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/UntracedChapter")); //$NON-NLS-1$
     }
 
     /**
@@ -74,7 +74,7 @@ public class UntracedChapterItemProvider extends SpecialChapterItemProvider impl
     @Override
     public String getText(Object object)
     {
-        return getString("_UI_UntracedChapter_type");
+        return getString("_UI_UntracedChapter_type"); //$NON-NLS-1$
     }
 
     /**

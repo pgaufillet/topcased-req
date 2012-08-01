@@ -74,7 +74,8 @@ public class ObjectAttributeItemProvider extends AttributeItemProvider implement
     protected void addValuePropertyDescriptor(Object object)
     {
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-                getString("_UI_ObjectAttribute_value_feature"), getString("_UI_PropertyDescriptor_description", "_UI_ObjectAttribute_value_feature", "_UI_ObjectAttribute_type"),
+                getString("_UI_ObjectAttribute_value_feature"), //$NON-NLS-1$
+                getString("_UI_PropertyDescriptor_description", "_UI_ObjectAttribute_value_feature", "_UI_ObjectAttribute_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 RequirementPackage.Literals.OBJECT_ATTRIBUTE__VALUE, true, false, true, null, null, null));
     }
 
@@ -86,7 +87,7 @@ public class ObjectAttributeItemProvider extends AttributeItemProvider implement
     @Override
     public Object getImage(Object object)
     {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/ObjectAttribute"));
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/ObjectAttribute")); //$NON-NLS-1$
     }
 
     /**

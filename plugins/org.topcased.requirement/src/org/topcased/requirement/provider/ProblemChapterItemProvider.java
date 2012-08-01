@@ -63,7 +63,7 @@ public class ProblemChapterItemProvider extends SpecialChapterItemProvider imple
     @Override
     public Object getImage(Object object)
     {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/ProblemChapter"));
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/ProblemChapter")); //$NON-NLS-1$
     }
 
     /**
@@ -74,7 +74,7 @@ public class ProblemChapterItemProvider extends SpecialChapterItemProvider imple
     @Override
     public String getText(Object object)
     {
-        return getString("_UI_ProblemChapter_type");
+        return getString("_UI_ProblemChapter_type"); //$NON-NLS-1$
     }
 
     /**

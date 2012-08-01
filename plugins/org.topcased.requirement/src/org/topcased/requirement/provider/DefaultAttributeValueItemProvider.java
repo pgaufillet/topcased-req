@@ -68,7 +68,8 @@ public class DefaultAttributeValueItemProvider extends ItemProviderAdapter imple
     protected void addValuePropertyDescriptor(Object object)
     {
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-                getString("_UI_DefaultAttributeValue_value_feature"), getString("_UI_PropertyDescriptor_description", "_UI_DefaultAttributeValue_value_feature", "_UI_DefaultAttributeValue_type"),
+                getString("_UI_DefaultAttributeValue_value_feature"), //$NON-NLS-1$
+                getString("_UI_PropertyDescriptor_description", "_UI_DefaultAttributeValue_value_feature", "_UI_DefaultAttributeValue_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 RequirementPackage.Literals.DEFAULT_ATTRIBUTE_VALUE__VALUE, true, false, true, null, null, null));
     }
 
@@ -80,7 +81,7 @@ public class DefaultAttributeValueItemProvider extends ItemProviderAdapter imple
     @Override
     public Object getImage(Object object)
     {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/DefaultAttributeValue"));
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/DefaultAttributeValue")); //$NON-NLS-1$
     }
 
     /**
@@ -91,7 +92,7 @@ public class DefaultAttributeValueItemProvider extends ItemProviderAdapter imple
     @Override
     public String getText(Object object)
     {
-        return getString("_UI_DefaultAttributeValue_type");
+        return getString("_UI_DefaultAttributeValue_type"); //$NON-NLS-1$
     }
 
     /**

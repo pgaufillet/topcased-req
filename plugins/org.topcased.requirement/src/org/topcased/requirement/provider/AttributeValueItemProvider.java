@@ -25,7 +25,6 @@ import org.eclipse.emf.edit.provider.ItemProviderAdapter;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 import org.topcased.requirement.AttributeValue;
 import org.topcased.requirement.RequirementPackage;
-import org.topcased.requirement.RequirementPlugin;
 
 /**
  * This is the item provider adapter for a {@link org.topcased.requirement.AttributeValue} object. <!-- begin-user-doc
@@ -71,7 +70,8 @@ public class AttributeValueItemProvider extends ItemProviderAdapter implements I
     protected void addValuePropertyDescriptor(Object object)
     {
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-                getString("_UI_AttributeValue_value_feature"), getString("_UI_PropertyDescriptor_description", "_UI_AttributeValue_value_feature", "_UI_AttributeValue_type"),
+                getString("_UI_AttributeValue_value_feature"), //$NON-NLS-1$
+                getString("_UI_PropertyDescriptor_description", "_UI_AttributeValue_value_feature", "_UI_AttributeValue_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 RequirementPackage.Literals.ATTRIBUTE_VALUE__VALUE, true, false, false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
     }
 
@@ -83,7 +83,7 @@ public class AttributeValueItemProvider extends ItemProviderAdapter implements I
     @Override
     public Object getImage(Object object)
     {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/AttributeValue"));
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/AttributeValue")); //$NON-NLS-1$
     }
 
     /**
@@ -95,7 +95,8 @@ public class AttributeValueItemProvider extends ItemProviderAdapter implements I
     public String getText(Object object)
     {
         String label = ((AttributeValue) object).getValue();
-        return label == null || label.length() == 0 ? getString("_UI_AttributeValue_type") : getString("_UI_AttributeValue_type") + " " + label;
+        return label == null || label.length() == 0 ? getString("_UI_AttributeValue_type") : //$NON-NLS-1$
+                getString("_UI_AttributeValue_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**
@@ -139,7 +140,7 @@ public class AttributeValueItemProvider extends ItemProviderAdapter implements I
     @Override
     public ResourceLocator getResourceLocator()
     {
-        return RequirementPlugin.INSTANCE;
+        return RequirementEditPlugin.INSTANCE;
     }
 
 }

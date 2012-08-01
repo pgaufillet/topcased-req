@@ -1052,6 +1052,43 @@ public interface RequirementPackage extends EPackage
     int ANONYMOUS_REQUIREMENT_FEATURE_COUNT = REQUIREMENT_FEATURE_COUNT + 0;
 
     /**
+     * The meta object id for the '{@link org.topcased.requirement.impl.DeletedChapterImpl <em>Deleted Chapter</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.topcased.requirement.impl.DeletedChapterImpl
+     * @see org.topcased.requirement.impl.RequirementPackageImpl#getDeletedChapter()
+     * @generated
+     */
+    int DELETED_CHAPTER = 20;
+
+    /**
+     * The feature id for the '<em><b>Hierarchical Element</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DELETED_CHAPTER__HIERARCHICAL_ELEMENT = SPECIAL_CHAPTER__HIERARCHICAL_ELEMENT;
+
+    /**
+     * The feature id for the '<em><b>Requirement</b></em>' containment reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DELETED_CHAPTER__REQUIREMENT = SPECIAL_CHAPTER__REQUIREMENT;
+
+    /**
+     * The number of structural features of the '<em>Deleted Chapter</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int DELETED_CHAPTER_FEATURE_COUNT = SPECIAL_CHAPTER_FEATURE_COUNT + 0;
+
+    /**
      * The meta object id for the '{@link org.topcased.requirement.AttributesType <em>Attributes Type</em>}' enum. <!--
      * begin-user-doc --> <!-- end-user-doc -->
      * 
@@ -1059,7 +1096,7 @@ public interface RequirementPackage extends EPackage
      * @see org.topcased.requirement.impl.RequirementPackageImpl#getAttributesType()
      * @generated
      */
-    int ATTRIBUTES_TYPE = 20;
+    int ATTRIBUTES_TYPE = 21;
 
     /**
      * Returns the meta object for class '{@link org.topcased.requirement.RequirementProject <em>Project</em>}'. <!--
@@ -1536,6 +1573,16 @@ public interface RequirementPackage extends EPackage
     EClass getAnonymousRequirement();
 
     /**
+     * Returns the meta object for class '{@link org.topcased.requirement.DeletedChapter <em>Deleted Chapter</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>Deleted Chapter</em>'.
+     * @see org.topcased.requirement.DeletedChapter
+     * @generated
+     */
+    EClass getDeletedChapter();
+
+    /**
      * Returns the meta object for enum '{@link org.topcased.requirement.AttributesType <em>Attributes Type</em>}'. <!--
      * begin-user-doc --> <!-- end-user-doc -->
      * 
@@ -1959,6 +2006,16 @@ public interface RequirementPackage extends EPackage
          * @generated
          */
         EClass ANONYMOUS_REQUIREMENT = eINSTANCE.getAnonymousRequirement();
+
+        /**
+         * The meta object literal for the '{@link org.topcased.requirement.impl.DeletedChapterImpl <em>Deleted Chapter</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.topcased.requirement.impl.DeletedChapterImpl
+         * @see org.topcased.requirement.impl.RequirementPackageImpl#getDeletedChapter()
+         * @generated
+         */
+        EClass DELETED_CHAPTER = eINSTANCE.getDeletedChapter();
 
         /**
          * The meta object literal for the '{@link org.topcased.requirement.AttributesType <em>Attributes Type</em>}' enum.

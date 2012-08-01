@@ -103,7 +103,7 @@ public class AttributeConfigurationItemProvider extends ItemProviderAdapter impl
     @Override
     public Object getImage(Object object)
     {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/AttributeConfiguration"));
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/AttributeConfiguration")); //$NON-NLS-1$
     }
 
     /**
@@ -114,7 +114,7 @@ public class AttributeConfigurationItemProvider extends ItemProviderAdapter impl
     @Override
     public String getText(Object object)
     {
-        return getString("_UI_AttributeConfiguration_type");
+        return getString("_UI_AttributeConfiguration_type"); //$NON-NLS-1$
     }
 
     /**

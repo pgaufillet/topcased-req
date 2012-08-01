@@ -25,7 +25,6 @@ import org.eclipse.emf.edit.provider.ItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.ViewerNotification;
 import org.topcased.requirement.Attribute;
 import org.topcased.requirement.RequirementPackage;
-import org.topcased.requirement.RequirementPlugin;
 
 /**
  * This is the item provider adapter for a {@link org.topcased.requirement.Attribute} object. <!-- begin-user-doc -->
@@ -70,9 +69,9 @@ public class AttributeItemProvider extends EModelElementItemProvider implements 
      */
     protected void addNamePropertyDescriptor(Object object)
     {
-        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(), getString("_UI_Attribute_name_feature"),
-                getString("_UI_PropertyDescriptor_description", "_UI_Attribute_name_feature", "_UI_Attribute_type"), RequirementPackage.Literals.ATTRIBUTE__NAME, true, false, false,
-                ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
+        itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(), getString("_UI_Attribute_name_feature"), //$NON-NLS-1$
+                getString("_UI_PropertyDescriptor_description", "_UI_Attribute_name_feature", "_UI_Attribute_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                RequirementPackage.Literals.ATTRIBUTE__NAME, true, false, false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
     }
 
     /**
@@ -84,7 +83,8 @@ public class AttributeItemProvider extends EModelElementItemProvider implements 
     public String getText(Object object)
     {
         String label = ((Attribute) object).getName();
-        return label == null || label.length() == 0 ? getString("_UI_Attribute_type") : getString("_UI_Attribute_type") + " " + label;
+        return label == null || label.length() == 0 ? getString("_UI_Attribute_type") : //$NON-NLS-1$
+                getString("_UI_Attribute_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**
@@ -128,7 +128,7 @@ public class AttributeItemProvider extends EModelElementItemProvider implements 
     @Override
     public ResourceLocator getResourceLocator()
     {
-        return RequirementPlugin.INSTANCE;
+        return RequirementEditPlugin.INSTANCE;
     }
 
 }

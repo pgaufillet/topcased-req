@@ -6,6 +6,7 @@
  */
 package org.topcased.requirement.provider;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
@@ -18,7 +19,6 @@ import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
-import org.topcased.requirement.RequirementPlugin;
 import org.topcased.requirement.UpstreamModel;
 
 import ttm.provider.ProjectItemProvider;
@@ -66,7 +66,7 @@ public class UpstreamModelItemProvider extends ProjectItemProvider implements IE
     @Override
     public Object getImage(Object object)
     {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/UpstreamModel"));
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/UpstreamModel")); //$NON-NLS-1$
     }
 
     /**
@@ -78,7 +78,8 @@ public class UpstreamModelItemProvider extends ProjectItemProvider implements IE
     public String getText(Object object)
     {
         String label = ((UpstreamModel) object).getIdent();
-        return label == null || label.length() == 0 ? getString("_UI_UpstreamModel_type") : getString("_UI_UpstreamModel_type") + " " + label;
+        return label == null || label.length() == 0 ? getString("_UI_UpstreamModel_type") : //$NON-NLS-1$
+                getString("_UI_UpstreamModel_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**
@@ -96,6 +97,18 @@ public class UpstreamModelItemProvider extends ProjectItemProvider implements IE
     }
 
     /**
+     * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children that can be created
+     * under this object. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @generated
+     */
+    @Override
+    protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object)
+    {
+        super.collectNewChildDescriptors(newChildDescriptors, object);
+    }
+
+    /**
      * Return the resource locator for this item provider's resources. <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
      * @generated
@@ -103,7 +116,7 @@ public class UpstreamModelItemProvider extends ProjectItemProvider implements IE
     @Override
     public ResourceLocator getResourceLocator()
     {
-        return RequirementPlugin.INSTANCE;
+        return RequirementEditPlugin.INSTANCE;
     }
 
 }

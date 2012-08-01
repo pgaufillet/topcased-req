@@ -75,7 +75,8 @@ public class TextAttributeItemProvider extends AttributeItemProvider implements 
     protected void addValuePropertyDescriptor(Object object)
     {
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-                getString("_UI_TextAttribute_value_feature"), getString("_UI_PropertyDescriptor_description", "_UI_TextAttribute_value_feature", "_UI_TextAttribute_type"),
+                getString("_UI_TextAttribute_value_feature"), //$NON-NLS-1$
+                getString("_UI_PropertyDescriptor_description", "_UI_TextAttribute_value_feature", "_UI_TextAttribute_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 RequirementPackage.Literals.TEXT_ATTRIBUTE__VALUE, true, false, false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
     }
 
@@ -87,7 +88,7 @@ public class TextAttributeItemProvider extends AttributeItemProvider implements 
     @Override
     public Object getImage(Object object)
     {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/TextAttribute"));
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/TextAttribute")); //$NON-NLS-1$
     }
 
     /**

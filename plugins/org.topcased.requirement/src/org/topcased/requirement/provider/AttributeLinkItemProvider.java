@@ -75,7 +75,8 @@ public class AttributeLinkItemProvider extends ObjectAttributeItemProvider imple
     protected void addPartialPropertyDescriptor(Object object)
     {
         itemPropertyDescriptors.add(createItemPropertyDescriptor(((ComposeableAdapterFactory) adapterFactory).getRootAdapterFactory(), getResourceLocator(),
-                getString("_UI_AttributeLink_partial_feature"), getString("_UI_PropertyDescriptor_description", "_UI_AttributeLink_partial_feature", "_UI_AttributeLink_type"),
+                getString("_UI_AttributeLink_partial_feature"), //$NON-NLS-1$
+                getString("_UI_PropertyDescriptor_description", "_UI_AttributeLink_partial_feature", "_UI_AttributeLink_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 RequirementPackage.Literals.ATTRIBUTE_LINK__PARTIAL, true, false, false, ItemPropertyDescriptor.GENERIC_VALUE_IMAGE, null, null));
     }
 
@@ -87,7 +88,7 @@ public class AttributeLinkItemProvider extends ObjectAttributeItemProvider imple
     @Override
     public Object getImage(Object object)
     {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/AttributeLink"));
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/AttributeLink")); //$NON-NLS-1$
     }
 
     /**
