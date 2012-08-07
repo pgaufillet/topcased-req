@@ -10,16 +10,26 @@
  **********************************************************************************************************************/
 package org.topcased.requirement.core.views;
 
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.ui.viewer.IViewerProvider;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.domain.IEditingDomainProvider;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.ui.part.Page;
+import org.eclipse.ui.views.markers.MarkerItem;
 import org.topcased.requirement.core.extensions.IEditorServices;
 import org.topcased.requirement.core.extensions.SupportingEditorsManager;
 import org.topcased.requirement.core.utils.RequirementUtils;
@@ -30,7 +40,7 @@ import org.topcased.requirement.core.utils.RequirementUtils;
  * @author <a href="mailto:sebastien.gabel@c-s.fr">Sebastien GABEL</a>
  * @since Topcased 2.2.0
  */
-public abstract class AbstractRequirementPage extends Page implements IViewerProvider, IEditingDomainProvider
+public abstract class AbstractRequirementPage extends Page implements IViewerProvider, IEditingDomainProvider, IGotoMarker
 {
     protected static String firstPopupMenuSeparator = "firstSeparator"; //$NON-NLS-1$
 
@@ -122,5 +132,45 @@ public abstract class AbstractRequirementPage extends Page implements IViewerPro
     public void setFocus()
     {
         // do nothing
+    }
+
+    /**
+     * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart,
+     *      org.eclipse.jface.viewers.ISelection)
+     */
+    public void selectionChanged(IWorkbenchPart part, ISelection theSelection)
+    {
+        if (theSelection != null && !theSelection.isEmpty() && theSelection instanceof StructuredSelection)
+        {
+            Object object = ((StructuredSelection) theSelection).getFirstElement();
+            if (object instanceof MarkerItem)
+            {
+                IMarker marker = ((MarkerItem) object).getMarker();
+                gotoMarker(marker);
+            }
+        }
+    }
+
+    /**
+     * Select an EObject in the TreeViewer
+     * 
+     * @param marker The marker related to a current requirement.
+     * @throws CoreException If something failed.
+     */
+    public void gotoMarker(IMarker marker)
+    {
+        if (marker != null)
+        {
+            String emfURI = (String) marker.getAttribute(EValidator.URI_ATTRIBUTE, null);
+            if (emfURI != null)
+            {
+                URI uri = URI.createURI(emfURI);
+                EObject toSelect = editingDomain.getResourceSet().getEObject(uri, false);
+                if (toSelect != null)
+                {
+                    viewer.setSelection(new StructuredSelection(toSelect));
+                }
+            }
+        }
     }
 }

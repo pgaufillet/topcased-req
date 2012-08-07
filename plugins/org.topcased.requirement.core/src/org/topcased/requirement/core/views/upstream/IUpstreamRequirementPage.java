@@ -10,6 +10,7 @@
  **********************************************************************************************************************/
 package org.topcased.requirement.core.views.upstream;
 
+import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.part.IPageBookViewPage;
 
 /**
@@ -18,7 +19,7 @@ import org.eclipse.ui.part.IPageBookViewPage;
  * @author <a href="mailto:christophe.mertz@c-s.fr">Christophe Mertz</a>
  * 
  */
-public interface IUpstreamRequirementPage extends IPageBookViewPage
+public interface IUpstreamRequirementPage extends IPageBookViewPage, ISelectionListener
 {
     Boolean DEFAULT_SHOW_TREE_HIERARCHY = true;
 

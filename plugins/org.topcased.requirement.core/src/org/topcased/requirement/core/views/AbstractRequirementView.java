@@ -12,6 +12,7 @@
 package org.topcased.requirement.core.views;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.Platform;
@@ -28,6 +29,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.IContributedContentsView;
 import org.eclipse.ui.part.IPage;
@@ -55,7 +57,7 @@ import org.topcased.requirement.core.utils.RequirementUtils;
  * @author <a href="mailto:maxime.audrain@c-s.fr">Maxime AUDRAIN</a>
  * 
  */
-public abstract class AbstractRequirementView extends PageBookView implements ISelectionProvider
+public abstract class AbstractRequirementView extends PageBookView implements ISelectionProvider, IGotoMarker
 {
     /** The initial selection when the view opens */
     protected ISelection bootstrapSelection;
@@ -311,6 +313,14 @@ public abstract class AbstractRequirementView extends PageBookView implements IS
         if (editor != null)
         {
             partActivated(editor);
+        }
+    }
+
+    public void gotoMarker(IMarker marker)
+    {
+        IPage currentPage = getCurrentPage();
+        if (currentPage instanceof IGotoMarker) {
+            ((IGotoMarker) currentPage).gotoMarker(marker);
         }
     }
 }

@@ -13,13 +13,9 @@
 package org.topcased.requirement.core.views.current;
 
 import org.eclipse.core.commands.Command;
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.TreeIterator;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.ui.actions.RedoAction;
@@ -52,7 +48,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.RegistryToggleState;
 import org.eclipse.ui.part.IPage;
-import org.eclipse.ui.views.markers.MarkerItem;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.Requirement;
 import org.topcased.requirement.RequirementProject;
@@ -464,57 +459,6 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
                     }
                 }
             });
-        }
-    }
-
-    /**
-     * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart,
-     *      org.eclipse.jface.viewers.ISelection)
-     */
-    public void selectionChanged(IWorkbenchPart part, ISelection theSelection)
-    {
-        if (theSelection != null && !theSelection.isEmpty() && theSelection instanceof StructuredSelection)
-        {
-            Object object = ((StructuredSelection) theSelection).getFirstElement();
-            if (object instanceof MarkerItem)
-            {
-                try
-                {
-                    IMarker marker = ((MarkerItem) object).getMarker();
-                    goToEObject(marker);
-                }
-                catch (CoreException e)
-                {
-                    RequirementCorePlugin.log(e);
-                }
-            }
-        }
-    }
-
-    /**
-     * Select an EObject in the TreeViewer
-     * 
-     * @param marker The marker related to a current requirement.
-     * @throws CoreException If something failed.
-     */
-    private void goToEObject(IMarker marker) throws CoreException
-    {
-        if (marker != null)
-        {
-            int severity = marker.getAttribute(IMarker.SEVERITY, 0);
-            if (EValidator.MARKER.equals(marker.getType()) && IMarker.SEVERITY_WARNING == severity)
-            {
-                String emfURI = (String) marker.getAttribute(EValidator.URI_ATTRIBUTE);
-                if (emfURI != null)
-                {
-                    URI uri = URI.createURI(emfURI);
-                    EObject toSelect = editingDomain.getResourceSet().getEObject(uri, false);
-                    if (toSelect != null)
-                    {
-                        viewer.setSelection(new StructuredSelection(toSelect));
-                    }
-                }
-            }
         }
     }
 

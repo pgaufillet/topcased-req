@@ -12,12 +12,14 @@
  ******************************************************************************/
 package org.topcased.requirement.core.views.upstream;
 
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.Page;
 import org.topcased.requirement.core.internal.Messages;
 
@@ -60,5 +62,11 @@ public class EmptyUpstreamPage extends Page implements IUpstreamRequirementPage
     public void setFocus()
     {
         // Do nothing
+    }
+
+    public void selectionChanged(IWorkbenchPart part, ISelection selection)
+    {
+        // TODO Auto-generated method stub
+        
     }
 }

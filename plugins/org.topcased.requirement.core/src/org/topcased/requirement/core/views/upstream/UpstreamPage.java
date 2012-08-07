@@ -45,6 +45,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
@@ -268,6 +269,8 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
 
         RequirementUtils.getAdapterFactory().addListener(changeListener);
         AbstractRequirementView.getPreferenceStore().addPropertyChangeListener(prefListener);
+
+        getSite().getPage().addSelectionListener(IPageLayout.ID_PROBLEM_VIEW, this);
 
         hookUpstreamSelectionChangedListener();
     }

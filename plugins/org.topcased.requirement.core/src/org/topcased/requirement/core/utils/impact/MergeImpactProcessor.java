@@ -15,7 +15,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.core.resources.IMarker;
@@ -34,9 +33,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
-import org.topcased.facilities.util.EMFMarkerUtil;
 import org.topcased.requirement.Attribute;
 import org.topcased.requirement.AttributeAllocate;
 import org.topcased.requirement.AttributeLink;
@@ -171,7 +168,7 @@ public class MergeImpactProcessor
                 // a hierarchical element has been added.
                 if (moved instanceof HierarchicalElement)
                 {
-                    processElementImpact(diff, moved);
+                    processElementImpact(diff, moved, moved);
                 }
             }
         }
@@ -180,11 +177,15 @@ public class MergeImpactProcessor
         {
             if (diff instanceof ModelElementChangeLeftTarget)
             {
-                EObject added = ((ModelElementChangeLeftTarget) diff).getLeftElement();
+                ModelElementChangeLeftTarget addDiff = (ModelElementChangeLeftTarget) diff;
+                EObject added = addDiff.getLeftElement();
                 // a hierarchical element or an attribute has been added.
-                if (added instanceof UpstreamModel || added instanceof HierarchicalElement || added instanceof ttm.Attribute || added instanceof ttm.Text)
+                if (added instanceof UpstreamModel || added instanceof ttm.Attribute || added instanceof ttm.Text)
                 {
-                    processElementImpact(diff, ((ModelElementChangeLeftTarget) diff).getRightParent());
+                    processElementImpact(diff, addDiff.getRightParent(), addDiff.getRightParent());
+                }
+                else if (added instanceof HierarchicalElement) {
+                    processElementImpact(diff, addDiff.getLeftElement(), addDiff.getRightParent());
                 }
             }
         }
@@ -202,7 +203,7 @@ public class MergeImpactProcessor
                 if (modifiedObject instanceof HierarchicalElement)
                 {
                     // the element is marked as modified
-                    processElementImpact(diff, modifiedObject);
+                    processElementImpact(diff, modifiedObject, modifiedObject);
                 }
             }
         }
@@ -215,20 +216,20 @@ public class MergeImpactProcessor
                 // an attribute has been removed. We need to mark its parent
                 if (removedElement instanceof ttm.Attribute || removedElement instanceof ttm.Text)
                 {
-                    processElementImpact(diff, removedElement.eContainer());
+                    processElementImpact(diff, removedElement.eContainer(), removedElement);
                 }
                 // a hierarchical element has been removed
                 else if (removedElement instanceof Document || removedElement instanceof Section)
                 {
                     for (EObject o : RequirementUtils.getUpstreams(removedElement))
                     {
-                        processElementImpact(diff, o);
+                        processElementImpact(diff, o, removedElement);
                     }
                 }
                 else if (removedElement instanceof ttm.Requirement)
                 {
                     // the element is marked as deleted
-                    processElementImpact(diff, removedElement);
+                    processElementImpact(diff, removedElement, removedElement);
                 }
             }
         }
@@ -244,24 +245,25 @@ public class MergeImpactProcessor
      * @param diff The difference extracted from the EMF Compare diff model
      * @param element An EObject involved into the difference.
      */
-    private void processElementImpact(DiffElement diff, EObject element)
+    private void processElementImpact(DiffElement diff, EObject elementToMark, EObject modifiedElement)
     {
         AdapterFactoryLabelProvider factory = new AdapterFactoryLabelProvider(RequirementUtils.getAdapterFactory());
         List<EObject> foundList = null;
-        if (element instanceof ttm.Requirement)
+        if (elementToMark instanceof ttm.Requirement)
         {
             // when deleting a requirement the objects are not equal in a Java sense -> check idents
-            ttm.Requirement ttm = (ttm.Requirement) element ;
+            ttm.Requirement ttm = (ttm.Requirement) elementToMark ;
             EObject eObject = ids.get(ttm.getIdent());
             if (eObject != null)
             {
                 foundList = impact.get(eObject);
             }
         }
-        else if (impact.containsKey(element))
+        else if (impact.containsKey(elementToMark))
         {
-            foundList = impact.get(element);
+            foundList = impact.get(elementToMark);
         }
+        
         if (foundList != null)
         {
             for (EObject linkTo : foundList)
@@ -271,19 +273,13 @@ public class MergeImpactProcessor
                     if (linkTo.eContainer() != null && linkTo.eContainer() instanceof CurrentRequirement)
                     {
                         CurrentRequirement currentReq = (CurrentRequirement) linkTo.eContainer();
-                        Document d = getDocument(currentReq);
+                        Document d = getDocument(modifiedElement);
                         currentReq.setImpacted(true);
                         // the information is logged
                         String requirement = factory.getText(currentReq);
                         String reason = factory.getText(diff);
-                        if (d != null)
-                        {
-                            addMarkerFor(linkTo, requirement + " : " + reason, IMarker.SEVERITY_WARNING, d); //$NON-NLS-1$
-                        }
-                        else
-                        {
-                            EMFMarkerUtil.addMarkerFor(linkTo, requirement + " : " + reason, IMarker.SEVERITY_WARNING); //$NON-NLS-1$
-                        }
+
+                        addMarkerFor(linkTo, requirement + " : " + reason, IMarker.SEVERITY_WARNING, d); //$NON-NLS-1$
                     }
                 }
                 catch (CoreException e)
@@ -298,19 +294,9 @@ public class MergeImpactProcessor
             try
             {
                 String infoMsg = factory.getText(diff);
-                Document document = getDocument(element);
-                Document newDocument = null;
-                for (Entry<Document, Document> entry : calc.getMergedDocuments().entrySet())
-                {
-                    if (entry.getValue().equals(document))
-                    {
-                        newDocument = entry.getKey();
-                    }
-                }
-                if (newDocument != null)
-                {
-                    EMFMarkerUtil.addMarkerFor(document, infoMsg, IMarker.SEVERITY_INFO);
-                }
+                Document document = getDocument(modifiedElement);
+
+                addMarkerFor(elementToMark, infoMsg, IMarker.SEVERITY_INFO, document);
             }
             catch (CoreException e)
             {
@@ -392,22 +378,33 @@ public class MergeImpactProcessor
     private void addMarkerFor(EObject toLog, String message, int severity, Document d) throws CoreException
     {
         // find the concerned element.
-        IResource resource = findResourceFor(toLog.eResource());
+        IResource resource = null;
+        URI uri = null;
+        if (d != null && d.eResource() != null) {
+            resource = findResourceFor(d.eResource());
+            uri = d.eResource().getURI();
+        }
+        else if (toLog.eResource() != null) {
+            resource = findResourceFor(toLog.eResource());
+            uri = toLog.eResource().getURI();
+        }
+
         if (resource != null)
         {
             IMarker marker = resource.createMarker(EValidator.MARKER);
             marker.setAttribute(IMarker.SEVERITY, severity);
-            marker.setAttribute(EValidator.URI_ATTRIBUTE, EcoreUtil.getURI(toLog).toString());
+            marker.setAttribute(EValidator.URI_ATTRIBUTE, uri.appendFragment(toLog.eResource().getURIFragment(toLog)).toString());
             marker.setAttribute(IMarker.MESSAGE, message);
-            marker.setAttribute(IMarker.LOCATION, d.getIdent());
+            if (d != null) {
+                marker.setAttribute(IMarker.LOCATION, d.getIdent());
+            }
         }
         else
         {
             StringBuffer uriMessage = new StringBuffer();
             int error = IStatus.ERROR;
-            if (toLog.eResource() != null && toLog.eResource().getURI() != null)
+            if (uri != null)
             {
-                URI uri = toLog.eResource().getURI();
                 uriMessage.append(" : ").append(uri.toString());
                 if (!(uri.isFile() || uri.isPlatform()))
                 {
