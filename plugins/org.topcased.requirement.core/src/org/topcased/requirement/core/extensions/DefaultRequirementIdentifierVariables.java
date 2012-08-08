@@ -22,9 +22,12 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.RequirementProject;
+import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.preferences.ComputeRequirementIdentifier;
+import org.topcased.requirement.core.preferences.RequirementNamingConstants;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
 /**
@@ -36,6 +39,8 @@ import org.topcased.requirement.core.utils.RequirementUtils;
 public final class DefaultRequirementIdentifierVariables implements IRequirementIdentifierVariables
 {
 
+    private IPreferenceStore preferenceStore = RequirementCorePlugin.getDefault().getPreferenceStore();
+    
     public static final String PROJECT_VAR = "{project name}"; //$NON-NLS-1$
  
     public static final String RESOURCE_VAR = "{resource name}"; //$NON-NLS-1$
@@ -57,7 +62,7 @@ public final class DefaultRequirementIdentifierVariables implements IRequirement
 
         // Number's formatter
         NumberFormat nf = NumberFormat.getInstance();
-        nf.setMinimumIntegerDigits(5);
+        nf.setMinimumIntegerDigits(preferenceStore.getInt(RequirementNamingConstants.REQUIREMENT_MINIMUM_DIGITS));
         nf.setGroupingUsed(false);
 
         Resource requirement = RequirementUtils.getRequirementModel(editingDomain);

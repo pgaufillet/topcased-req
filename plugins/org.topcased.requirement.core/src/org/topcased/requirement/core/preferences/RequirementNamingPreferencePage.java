@@ -52,6 +52,8 @@ import org.topcased.requirement.core.internal.Messages;
 public class RequirementNamingPreferencePage extends AbstractTopcasedPreferencePage
 {
     private Text formatText;
+    
+    private Text minimumDigitsText;
 
     private Text stepText;
 
@@ -60,6 +62,8 @@ public class RequirementNamingPreferencePage extends AbstractTopcasedPreferenceP
     private Table tableViewer;
 
     private StringFieldEditor namingFormat;
+    
+    private StringFieldEditor minimumDigitsFormat;
 
     private IntegerFieldEditor indexStep;
 
@@ -110,11 +114,16 @@ public class RequirementNamingPreferencePage extends AbstractTopcasedPreferenceP
         textComposite.setLayout(textCompoLayout);
         textComposite.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 2, 1));
 
+        
+        
+        
         // Text format
         namingFormat = new StringFieldEditor(RequirementNamingConstants.REQUIREMENT_NAMING_FORMAT, Messages.getString("RequirementNamingPreferencePage.6"), textComposite); //$NON-NLS-1$
         namingFormat.setPreferenceStore(getPreferenceStore());
         formatText = namingFormat.getTextControl(textComposite);
         formatText.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+        
+        
 
         // Select Label
         final Label selectLabel = new Label(mainGroup, SWT.NONE);
@@ -149,6 +158,24 @@ public class RequirementNamingPreferencePage extends AbstractTopcasedPreferenceP
         countingGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         countingGroup.setText(Messages.getString("RequirementNamingPreferencePage.group.naming")); //$NON-NLS-1$
 
+        
+        // Minimum Digits Composite
+        final Composite digitComposite = new Composite(countingGroup, SWT.NONE);
+        final GridLayout digitCompoLayout = new GridLayout(2, false);
+        digitCompoLayout.marginHeight = 0;
+        digitCompoLayout.marginWidth = 0;
+        digitComposite.setLayout(digitCompoLayout);
+        digitComposite.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+        
+        
+        // Text format
+        minimumDigitsFormat = new IntegerFieldEditor(RequirementNamingConstants.REQUIREMENT_MINIMUM_DIGITS, Messages.getString("RequirementMinimumDigitsPreferencePage.0"), digitComposite); //$NON-NLS-1$
+        minimumDigitsFormat.setPreferenceStore(getPreferenceStore());
+        minimumDigitsText = minimumDigitsFormat.getTextControl(digitComposite);
+        minimumDigitsText.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+        minimumDigitsText.addModifyListener(new MinimumDigitsTextModifyListener());
+        
+        
         // Index Step Composite
         final Composite stepComposite = new Composite(countingGroup, SWT.NONE);
         final GridLayout stepCompoLayout = new GridLayout(2, false);
@@ -166,8 +193,10 @@ public class RequirementNamingPreferencePage extends AbstractTopcasedPreferenceP
         stepText = indexStep.getTextControl(stepComposite);
         stepText.setTextLimit(4);
         stepText.addModifyListener(new StepTextModifyListener());
+        
         formatText.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
         stepText.setLayoutData(layoutData);
+        minimumDigitsText.setLayoutData(layoutData);
 
         // Algorithm Composite
         final Composite algorithmComposite = new Composite(countingGroup, SWT.NONE);
@@ -208,6 +237,7 @@ public class RequirementNamingPreferencePage extends AbstractTopcasedPreferenceP
     private void loadPreferences()
     {
         namingFormat.load();
+        minimumDigitsFormat.load();
         indexStep.load();
         algorithmUsed.load();
     }
@@ -218,6 +248,7 @@ public class RequirementNamingPreferencePage extends AbstractTopcasedPreferenceP
     private void storePreferences()
     {
         namingFormat.store();
+        minimumDigitsFormat.store();
         indexStep.store();
         algorithmUsed.store();
     }
@@ -228,6 +259,7 @@ public class RequirementNamingPreferencePage extends AbstractTopcasedPreferenceP
     private void loadDefaultPreferences()
     {
         namingFormat.loadDefault();
+        minimumDigitsFormat.loadDefault();
         indexStep.loadDefault();
         algorithmUsed.loadDefault();
     }
@@ -307,6 +339,32 @@ public class RequirementNamingPreferencePage extends AbstractTopcasedPreferenceP
         }
     }
 
+    
+    /**
+     * Internal listener to control value fill into the Minimum Digits text field
+     */
+    private class MinimumDigitsTextModifyListener implements ModifyListener
+    {
+        public void modifyText(ModifyEvent e)
+        {
+            try{
+                if ("".equals(minimumDigitsText.getText()) || Integer.parseInt(minimumDigitsText.getText())<1)
+                {
+                    setErrorMessage(Messages.getString("RequirementMinimumDigitsPreferencePage.1")); //$NON-NLS-1$
+                    setValid(false);
+                } else {
+                    setErrorMessage(null);
+                    setValid(true);
+                }
+            }
+            catch (NumberFormatException e1)
+            {
+                setErrorMessage(Messages.getString("RequirementMinimumDigitsPreferencePage.2")); //$NON-NLS-1$
+                setValid(false);
+            }
+        }
+    }
+    
     /**
      * Internal listener to control value fill into the Step Index text field
      */

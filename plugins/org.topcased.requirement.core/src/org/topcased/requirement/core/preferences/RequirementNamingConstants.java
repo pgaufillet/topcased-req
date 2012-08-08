@@ -25,6 +25,8 @@ public interface RequirementNamingConstants
 
     // keys
     String REQUIREMENT_NAMING_FORMAT = "namingFormatRequirement"; //$NON-NLS-1$
+    
+    String REQUIREMENT_MINIMUM_DIGITS = "minimumDigitsRequirement"; //$NON-NLS-1$
 
     String REQUIREMENT_STEP_INDEX = "requirementStepIndex"; //$NON-NLS-1$
 
@@ -36,4 +38,6 @@ public interface RequirementNamingConstants
     String DEFAULT_COUNTING_ALGORITHM = "Default Algorithm"; //$NON-NLS-1$
 
     int DEFAULT_INDEX_STEP = 10;
+    
+    int DEFAULT_MINIMUM_DIGITS = 5;
 }
