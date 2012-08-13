@@ -47,6 +47,14 @@ public class DeletionParametersComposite {
 		this(composite, null);
 	}
 
+	public void setEnabled(boolean enabled) {
+		btnMatchId.setEnabled(enabled);
+		btnAttributesToMatch.setEnabled(enabled);
+		btnMatchDescription.setEnabled(enabled);
+		txtAttributesToMatch.setEnabled(enabled);
+		txtRegex.setEnabled(enabled);
+	}
+
 	public DeletionParametersComposite(Composite composite, IPreferenceStore prefStore) {
 		this.prefStore = prefStore;
 		

@@ -382,6 +382,14 @@ public class MergeRequirementModelWizardPage extends WizardPage
         partialImportBt.setText(Messages.getString("RequirementWizardPage.21")); //$NON-NLS-1$
         partialImportBt.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 3, 1));
 
+        partialImportBt.addSelectionListener(new SelectionAdapter()
+        {
+            public void widgetSelected(SelectionEvent e)
+            {
+                deletionParametersComposite.setEnabled(partialImportBt.getSelection());
+            }
+        });
+
         impactAnalysisBt = new Button(mainGroup, SWT.CHECK);
         impactAnalysisBt.setText(Messages.getString("RequirementWizardPage.27")); //$NON-NLS-1$
         impactAnalysisBt.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 3, 1));
@@ -619,6 +627,7 @@ public class MergeRequirementModelWizardPage extends WizardPage
         // Get is partial preference
         boolean isPartial = RequirementCorePlugin.getDefault().getPreferenceStore().getBoolean(PREFERENCE_FOR_IS_PARTIAL);
         partialImportBt.setSelection(isPartial);
+        deletionParametersComposite.setEnabled(isPartial);
 
         // Get perform impact analysis preference
         boolean performAnalysis = RequirementCorePlugin.getDefault().getPreferenceStore().getBoolean(PREFERENCE_FOR_PERFORM_IMPACT_ANALYSIS);

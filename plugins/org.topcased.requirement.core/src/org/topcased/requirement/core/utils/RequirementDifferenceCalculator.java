@@ -231,7 +231,7 @@ public class RequirementDifferenceCalculator
 
     protected Requirement computeReqToDelete(EObject modifiedReq, Document originalDocument) {
         DeletionParameters deletionParameters = deletionParametersDocMap.get(originalDocument);
-        if (deletionParameters != null) {
+        if (isPartialImport && deletionParameters != null) {
             Pattern deletionPattern = Pattern.compile(deletionParameters.getRegex(), Pattern.CASE_INSENSITIVE);
 
             if (modifiedReq instanceof Requirement) {
