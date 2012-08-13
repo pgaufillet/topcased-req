@@ -243,6 +243,7 @@ public abstract class AbstractRequirementModelOperation extends WorkspaceModifyO
             }
             RequirementDifferenceCalculator calculator = new RequirementDifferenceCalculator(mergedDocuments, deletionParametersDocMap, isPartialImport);
             calculator.calculate(monitor);
+          //we process the impact if it was chosen
             if (isImpactAnalysis) {
                 new MergeImpactProcessor(resources, requirementResource2.getResourceSet(), calculator).processImpact();
             }

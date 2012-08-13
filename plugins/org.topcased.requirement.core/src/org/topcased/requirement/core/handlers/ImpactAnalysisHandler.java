@@ -362,10 +362,12 @@ public class ImpactAnalysisHandler extends AbstractHandler
                 {
                     public void run()
                     {
+                        //Information dialog informing about the end of the execution
                         MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.getString("ImpactAnalysisHandler.0"), Messages.getString("ImpactAnalysisHandler.14")); //$NON-NLS-1$ //$NON-NLS-2$
 
                         try
                         {
+                            //the problems view is executed
                             PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("org.eclipse.ui.views.ProblemView"); //$NON-NLS-1$
                         }
                         catch (PartInitException e)

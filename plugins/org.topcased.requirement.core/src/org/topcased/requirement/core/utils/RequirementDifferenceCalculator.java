@@ -12,8 +12,10 @@ package org.topcased.requirement.core.utils;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,6 +45,7 @@ import ttm.Document;
 import ttm.IdentifiedElement;
 import ttm.Requirement;
 import ttm.Text;
+import ttm.TtmFactory;
 import ttm.TtmPackage;
 
 /**
@@ -55,8 +58,10 @@ import ttm.TtmPackage;
 public class RequirementDifferenceCalculator
 {
     private EList<DiffElement> deletions;
-
+    
     private EList<DiffElement> changes;
+    
+    private EList<DiffElement> addToRoot;
 
     private EList<DiffElement> additions;
 
@@ -67,6 +72,9 @@ public class RequirementDifferenceCalculator
     private Map<Document, Document> mergedDocuments;
 
     private Map<Document, DeletionParameters> deletionParametersDocMap;
+    
+    private Set<Requirement> coveredReq;
+    
 
     public RequirementDifferenceCalculator(Map<Document, Document> mergedDocuments, Map<Document, DeletionParameters> deletionParametersDocMap, boolean isPartialImport)
     {
@@ -76,7 +84,8 @@ public class RequirementDifferenceCalculator
         changes = new BasicEList<DiffElement>();
         additions = new BasicEList<DiffElement>();
         moves = new BasicEList<DiffElement>();
-
+        addToRoot = new BasicEList<DiffElement>();
+        
         this.mergedDocuments = mergedDocuments;
 
         if (deletionParametersDocMap == null) {
@@ -87,6 +96,9 @@ public class RequirementDifferenceCalculator
     }
 
     public void calculate(IProgressMonitor monitor) throws InterruptedException {
+
+        coveredReq  = new HashSet<Requirement>();
+        
         // Call the EMF comparison service
         HashMap<String, Object> matchOptions = new HashMap<String, Object>();
         matchOptions.put(MatchOptions.OPTION_IGNORE_ID, false);
@@ -110,6 +122,7 @@ public class RequirementDifferenceCalculator
             {
                 buildDifferenceLists(aDifference, entry.getValue());
             }
+            diff.getOwnedElements().addAll(addToRoot);
             container1.backup();
             container2.backup();
         }
@@ -138,7 +151,6 @@ public class RequirementDifferenceCalculator
                 {
                     deletions.add(difference);
                 }
-
             }
 
             if (difference.getKind().equals(DifferenceKind.CHANGE))
@@ -147,6 +159,7 @@ public class RequirementDifferenceCalculator
                 if (difference instanceof UpdateAttribute)
                 {
                     UpdateAttribute update = (UpdateAttribute) difference;
+                    
                     Requirement reqToDelete = matchDeleteOnAttributeChange(update, originalDocument);
                     if (reqToDelete != null) {
                         ModelElementChangeRightTarget deleteDiffElement = DiffFactory.eINSTANCE.createModelElementChangeRightTarget();
@@ -161,26 +174,70 @@ public class RequirementDifferenceCalculator
                     {
                         changes.add(difference);
                     }
+                    
+                    String newText = matchTextOnAttributeChange(update, originalDocument);
+                    if (newText != null)
+                    {
+                        Text text = TtmFactory.eINSTANCE.createText();
+                        text.setValue(newText);
+                        
+                        UpdateAttribute updateAttribute = DiffFactory.eINSTANCE.createUpdateAttribute();
+                        updateAttribute.setAttribute(TtmPackage.Literals.TEXT__VALUE);
+                        updateAttribute.setLeftElement(text);
+                        updateAttribute.setRightElement(((Text)update.getRightElement()));
+                        addToRoot.add(updateAttribute);
+                        changes.add(updateAttribute);
+                        
+                        EList<Text> texts = ((Text)update.getRightElement()).getParent().getTexts();
+                        if (texts.size()>1)
+                        {
+                            for (int i = 1; i < texts.size(); i++)
+                            {
+                                ModelElementChangeRightTarget deleteElement = DiffFactory.eINSTANCE.createModelElementChangeRightTarget();
+                                deleteElement.setRightElement(texts.get(i));
+                                deleteElement.setLeftParent(originalDocument);
+                                addToRoot.add(deleteElement);
+                                deletions.add(deleteElement);
+                            }
+                        }
+                        
+                    }
+                    
                 }
 
             }
 
             if (difference.getKind().equals(DifferenceKind.ADDITION))
             {
+               
                 Requirement reqToDelete = null;
+                String newText = null;
                 if (difference instanceof ModelElementChangeLeftTarget) {
                     ModelElementChangeLeftTarget change = (ModelElementChangeLeftTarget) difference;
                     reqToDelete = matchDeleteOnAddition(change, originalDocument);
-                }
+                    newText= matchTextOnAttributeAddition(change);
+
 
                 if (reqToDelete != null) {
                     ModelElementChangeRightTarget deleteDiffElement = DiffFactory.eINSTANCE.createModelElementChangeRightTarget();
                     deleteDiffElement.setRightElement(reqToDelete);
                     deleteDiffElement.setLeftParent(originalDocument);
                     deletions.add(deleteDiffElement);
-                } else {
+                } else if (newText != null) {
+                    // retrieve the exisiting add text and modify it
+                    Text t = (Text)change.getLeftElement();
+                    t.setValue(newText);
+
+                    additions.add(change);
+                } else if (!(((ModelElementChangeLeftTarget) difference).getLeftElement() instanceof Text)
+                        || !(((Text)((ModelElementChangeLeftTarget) difference).getLeftElement()).getParent() instanceof Requirement))
+                {
                     additions.add(difference);
                 }
+                
+                
+                }
+                
             }
         }
 
@@ -192,6 +249,56 @@ public class RequirementDifferenceCalculator
                 buildDifferenceLists(subDiff, originalDocument);
             }
         }
+    }
+    
+    protected String matchTextOnAttributeAddition(ModelElementChangeLeftTarget change)
+    {
+        
+        if (change.getLeftElement() instanceof Text && ((Text)change.getLeftElement()).getParent() instanceof Requirement && !coveredReq.contains(((Text)change.getLeftElement()).getParent()))
+        {
+            CharSequence description = buildDescription(((Text)change.getLeftElement()).getParent());
+            coveredReq.add((Requirement) ((Text)change.getLeftElement()).getParent());
+            return description.toString();
+        }
+
+        return null;
+        
+    }
+    
+    protected String matchTextOnAttributeDeletion(ModelElementChangeRightTarget change)
+    {
+        Requirement modifiedReq = null;
+        if (change.getRightElement() instanceof Text && ((Text)change.getRightElement()).getParent() instanceof Requirement) {
+            modifiedReq = (Requirement)((Text)change.getRightElement()).getParent();
+        }
+        
+        if (modifiedReq != null)
+        {
+            return "";
+        }
+        
+        return null;
+    }
+
+    protected String matchTextOnAttributeChange(UpdateAttribute update, Document originalDocument)
+    {
+        if (TtmPackage.Literals.TEXT__VALUE.equals(update.getAttribute())) {
+            return computeTextToChange((Requirement)((Text)update.getLeftElement()).getParent(), (Requirement)((Text)update.getRightElement()).getParent());
+        }
+
+        return null;
+    }
+    
+    protected String computeTextToChange(Requirement modifiedReq, Requirement originalReq) {
+        
+        CharSequence origDesc = buildDescription(originalReq);
+        CharSequence modifiedDesc = buildDescription(modifiedReq);
+        
+        if (modifiedDesc.equals(origDesc)) {
+            return null;
+        }
+                
+        return modifiedDesc.toString();
     }
     
     protected Requirement matchDeleteOnAddition(ModelElementChangeLeftTarget change, Document originalDocument)

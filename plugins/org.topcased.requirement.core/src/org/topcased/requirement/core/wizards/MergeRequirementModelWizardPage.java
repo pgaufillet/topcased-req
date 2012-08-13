@@ -234,7 +234,8 @@ public class MergeRequirementModelWizardPage extends WizardPage
     {
         mainGroup = new Group(parent, SWT.NONE);
         mainGroup.setLayout(new GridLayout(3, false));
-        mainGroup.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, true, 1, 1));
+        GridData gd_mainGroup = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+        mainGroup.setLayoutData(gd_mainGroup);
 
         /*
          * Selection of the existing model file
@@ -382,14 +383,6 @@ public class MergeRequirementModelWizardPage extends WizardPage
         partialImportBt.setText(Messages.getString("RequirementWizardPage.21")); //$NON-NLS-1$
         partialImportBt.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 3, 1));
 
-        partialImportBt.addSelectionListener(new SelectionAdapter()
-        {
-            public void widgetSelected(SelectionEvent e)
-            {
-                deletionParametersComposite.setEnabled(partialImportBt.getSelection());
-            }
-        });
-
         impactAnalysisBt = new Button(mainGroup, SWT.CHECK);
         impactAnalysisBt.setText(Messages.getString("RequirementWizardPage.27")); //$NON-NLS-1$
         impactAnalysisBt.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 3, 1));
@@ -398,6 +391,7 @@ public class MergeRequirementModelWizardPage extends WizardPage
         label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
         
         deletionGroup = new Group(mainGroup, SWT.NONE);
+        deletionGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
         deletionGroup.setText(Messages.getString("MergeRequirementModelWizardPage.deleteGroup.text")); //$NON-NLS-1$
         deletionGroup.setLayout(new GridLayout(2, false));
         
@@ -627,7 +621,6 @@ public class MergeRequirementModelWizardPage extends WizardPage
         // Get is partial preference
         boolean isPartial = RequirementCorePlugin.getDefault().getPreferenceStore().getBoolean(PREFERENCE_FOR_IS_PARTIAL);
         partialImportBt.setSelection(isPartial);
-        deletionParametersComposite.setEnabled(isPartial);
 
         // Get perform impact analysis preference
         boolean performAnalysis = RequirementCorePlugin.getDefault().getPreferenceStore().getBoolean(PREFERENCE_FOR_PERFORM_IMPACT_ANALYSIS);
@@ -905,7 +898,7 @@ public class MergeRequirementModelWizardPage extends WizardPage
     }
 
     /**
-     * Return if the impact analysis si to be performed
+     * Return if the impact analysis is to be performed
      * 
      * @return true if the impact analysis si to be performed
      */
