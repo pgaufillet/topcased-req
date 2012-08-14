@@ -173,6 +173,11 @@ public final class RequirementHelper
                     if (policy != null)
                     {
                         Resource mainRes = policy.getLinkedTargetModel(anyResource.getResourceSet());
+                        if (mainRes == null)
+                        {
+                        	// to prevent mainRes equals to null
+                            mainRes = anyResource;
+                        }
                         result = policy.getRequirementProjectFromTargetMainResource(mainRes);
                     }
                     else
