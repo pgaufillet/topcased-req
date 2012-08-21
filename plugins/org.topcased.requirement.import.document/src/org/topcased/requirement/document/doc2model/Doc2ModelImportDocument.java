@@ -69,6 +69,13 @@ public class Doc2ModelImportDocument implements IImportDocument
             DescriptionChecker.setEndText(description);
         }
         
+        String descriptionReg = parser.getDescriptionReg();
+        
+        if (descriptionReg != null && !descriptionReg.isEmpty())
+        {
+            DescriptionChecker.setRegDescription(descriptionReg);
+        }
+        
         String idType = getIdType();
         RecognizedElement id = parser.getIdentification(idType);
         

@@ -214,4 +214,12 @@ public class DocumentTypeParser
 
         return mapping;
     }
+    
+    /**
+     * Returns the description Regex
+     */
+    public String getDescriptionReg(){
+        return type.getTextRegex();
+    }
+    
 }
