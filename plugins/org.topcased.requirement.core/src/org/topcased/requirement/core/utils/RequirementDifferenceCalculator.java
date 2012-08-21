@@ -169,75 +169,73 @@ public class RequirementDifferenceCalculator
                     }
 
                     //Workaround? setting the ident before the doMatch is done yeilded strange results...
-                    else if (!(update.getRightElement() instanceof Document && update.getLeftElement() instanceof Document &&
-                            update.getAttribute() != null && TtmPackage.Literals.IDENTIFIED_ELEMENT__IDENT.equals(update.getAttribute()))) 
-                    {
-                        changes.add(difference);
-                    }
-                    
-                    String newText = matchTextOnAttributeChange(update, originalDocument);
-                    if (newText != null)
-                    {
-                        Text text = TtmFactory.eINSTANCE.createText();
-                        text.setValue(newText);
-                        
-                        UpdateAttribute updateAttribute = DiffFactory.eINSTANCE.createUpdateAttribute();
-                        updateAttribute.setAttribute(TtmPackage.Literals.TEXT__VALUE);
-                        updateAttribute.setLeftElement(text);
-                        updateAttribute.setRightElement(((Text)update.getRightElement()));
-                        addToRoot.add(updateAttribute);
-                        changes.add(updateAttribute);
-                        
-                        EList<Text> texts = ((Text)update.getRightElement()).getParent().getTexts();
-                        if (texts.size()>1)
+                    else {
+                        String newText = matchTextOnAttributeChange(update, originalDocument);
+                        if (newText != null)
                         {
-                            for (int i = 1; i < texts.size(); i++)
+                            Text text = TtmFactory.eINSTANCE.createText();
+                            text.setValue(newText);
+
+                            UpdateAttribute updateAttribute = DiffFactory.eINSTANCE.createUpdateAttribute();
+                            updateAttribute.setAttribute(TtmPackage.Literals.TEXT__VALUE);
+                            updateAttribute.setLeftElement(text);
+                            updateAttribute.setRightElement(((Text)update.getRightElement()));
+                            addToRoot.add(updateAttribute);
+                            changes.add(updateAttribute);
+
+                            EList<Text> texts = ((Text)update.getRightElement()).getParent().getTexts();
+                            if (texts.size()>1)
                             {
-                                ModelElementChangeRightTarget deleteElement = DiffFactory.eINSTANCE.createModelElementChangeRightTarget();
-                                deleteElement.setRightElement(texts.get(i));
-                                deleteElement.setLeftParent(originalDocument);
-                                addToRoot.add(deleteElement);
-                                deletions.add(deleteElement);
+                                for (int i = 1; i < texts.size(); i++)
+                                {
+                                    ModelElementChangeRightTarget deleteElement = DiffFactory.eINSTANCE.createModelElementChangeRightTarget();
+                                    deleteElement.setRightElement(texts.get(i));
+                                    deleteElement.setLeftParent(originalDocument);
+                                    addToRoot.add(deleteElement);
+                                    deletions.add(deleteElement);
+                                }
                             }
+
+                        } else if (!(update.getRightElement() instanceof Document && update.getLeftElement() instanceof Document &&
+                                update.getAttribute() != null && TtmPackage.Literals.IDENTIFIED_ELEMENT__IDENT.equals(update.getAttribute()))) 
+                        {
+                            changes.add(difference);
                         }
-                        
                     }
-                    
                 }
 
             }
 
             if (difference.getKind().equals(DifferenceKind.ADDITION))
             {
-               
+
                 Requirement reqToDelete = null;
                 String newText = null;
                 if (difference instanceof ModelElementChangeLeftTarget) {
                     ModelElementChangeLeftTarget change = (ModelElementChangeLeftTarget) difference;
                     reqToDelete = matchDeleteOnAddition(change, originalDocument);
-                    newText= matchTextOnAttributeAddition(change);
 
+                    if (reqToDelete != null) {
+                        ModelElementChangeRightTarget deleteDiffElement = DiffFactory.eINSTANCE.createModelElementChangeRightTarget();
+                        deleteDiffElement.setRightElement(reqToDelete);
+                        deleteDiffElement.setLeftParent(originalDocument);
+                        deletions.add(deleteDiffElement);
+                    } else {
+                        newText = matchTextOnAttributeAddition(change);
+                        if (newText != null) {
+                            // retrieve the exisiting add text and modify it
+                            Text t = (Text)change.getLeftElement();
+                            t.setValue(newText);
 
-                if (reqToDelete != null) {
-                    ModelElementChangeRightTarget deleteDiffElement = DiffFactory.eINSTANCE.createModelElementChangeRightTarget();
-                    deleteDiffElement.setRightElement(reqToDelete);
-                    deleteDiffElement.setLeftParent(originalDocument);
-                    deletions.add(deleteDiffElement);
-                } else if (newText != null) {
-                    // retrieve the exisiting add text and modify it
-                    Text t = (Text)change.getLeftElement();
-                    t.setValue(newText);
-
-                    additions.add(change);
-                } else if (!(((ModelElementChangeLeftTarget) difference).getLeftElement() instanceof Text)
-                        || !(((Text)((ModelElementChangeLeftTarget) difference).getLeftElement()).getParent() instanceof Requirement))
-                {
-                    additions.add(difference);
+                            additions.add(change);
+                        } else if (!(((ModelElementChangeLeftTarget) difference).getLeftElement() instanceof Text)
+                                || !(((Text)((ModelElementChangeLeftTarget) difference).getLeftElement()).getParent() instanceof Requirement))
+                        {
+                            additions.add(difference);
+                        }
+                    }
                 }
-                
-                
-                }
-                
+
             }
         }
 
@@ -282,7 +280,8 @@ public class RequirementDifferenceCalculator
 
     protected String matchTextOnAttributeChange(UpdateAttribute update, Document originalDocument)
     {
-        if (TtmPackage.Literals.TEXT__VALUE.equals(update.getAttribute())) {
+        if (TtmPackage.Literals.TEXT__VALUE.equals(update.getAttribute()) && !coveredReq.contains(((Text)update.getLeftElement()).getParent())) {
+            coveredReq.add((Requirement) ((Text)update.getLeftElement()).getParent());
             return computeTextToChange((Requirement)((Text)update.getLeftElement()).getParent(), (Requirement)((Text)update.getRightElement()).getParent());
         }
 
