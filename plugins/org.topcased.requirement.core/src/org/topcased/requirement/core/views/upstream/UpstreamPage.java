@@ -7,6 +7,7 @@
  * 
  * Contributors: Christophe Mertz (CS) - initial API and implementation
  *               Maxime AUDRAIN (CS) - API Changes
+ *               Philippe ROLAND (Atos) - Added plugin transfer support
  * 
  **********************************************************************************************************************/
 package org.topcased.requirement.core.views.upstream;
@@ -14,6 +15,9 @@ package org.topcased.requirement.core.views.upstream;
 import java.util.Collection;
 
 import org.eclipse.core.commands.Command;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
@@ -50,6 +54,7 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.RegistryToggleState;
+import org.eclipse.ui.part.PluginTransfer;
 import org.topcased.requirement.Attribute;
 import org.topcased.requirement.AttributeLink;
 import org.topcased.requirement.CurrentRequirement;
@@ -90,6 +95,9 @@ import ttm.Document;
  */
 public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRequirementPage
 {
+    /** constant representing the name of the extension point */
+    private static final String UPSTREAM_DROP_ADAPTER_POINT = RequirementCorePlugin.getId() + "." + "upstreamDropAdapter";
+    
     private IStructuredSelection currSelection;
 
     private UpstreamRequirementContentProvider ctPvd;
@@ -135,7 +143,13 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
         });
 
         int dndOperations = DND.DROP_COPY | DND.DROP_MOVE;
-        Transfer[] transfers = new Transfer[] {RequirementTransfer.getInstance()};
+       
+        // In the event that an Upstream plugin transfer adapter is detected, add PluginTransfer to our supported transfer types
+        Transfer[] transfers;
+        IExtensionRegistry reg = Platform.getExtensionRegistry();
+        IConfigurationElement[] extensions = reg.getConfigurationElementsFor(UPSTREAM_DROP_ADAPTER_POINT);
+        transfers = (extensions.length == 0? new Transfer[] {RequirementTransfer.getInstance()} : new Transfer[] {RequirementTransfer.getInstance(), PluginTransfer.getInstance()});
+        
         viewer.addDragSupport(dndOperations, transfers, new DragSourceUpstreamAdapter(viewer));
         RequirementFilter upstreamRequirementFilter = new RequirementFilter(false, true);
         viewer.addFilter(upstreamRequirementFilter);

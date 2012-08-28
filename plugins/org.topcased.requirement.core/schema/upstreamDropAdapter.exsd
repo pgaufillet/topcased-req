@@ -1,0 +1,109 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.topcased.requirement.core" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.topcased.requirement.core" id="upstreamDropAdapter" name="Upstream Requirement Drop Adapter"/>
+      </appInfo>
+      <documentation>
+         Allows the user to register an extension id and enable plugin-specific PluginTransfer drag-and-drop of upstream requirelent objects. This id must be the id of an extension extending org.eclipse.ui.dropActions.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
+      <complexType>
+         <sequence minOccurs="0" maxOccurs="unbounded">
+            <element ref="dropAction"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="dropAction">
+      <annotation>
+         <documentation>
+            The drop action id to use. The given id must be the id of an extension for org.eclipse.ui.dropActions
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="dropActionId" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         Topcased 5.3.0
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         &lt;extension
+         point=&quot;org.topcased.requirement.core.upstreamDropAdapter&quot;&gt;
+      &lt;dropAction
+            id=&quot;com.mycompany.requirement.myupstreamdrop&quot;&gt;
+      &lt;/dropAction&gt;
+   &lt;/extension&gt;
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiinfo"/>
+      </appInfo>
+      <documentation>
+         The id contained in the extensions to this extension point will be referenced by Requirement&apos;s DragSourceUpstreamAdapter for use in any drag-and-drop event from the upstream requirement view to a view that supports PluginTransfer.
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         See examples
+      </documentation>
+   </annotation>
+
+
+</schema>
