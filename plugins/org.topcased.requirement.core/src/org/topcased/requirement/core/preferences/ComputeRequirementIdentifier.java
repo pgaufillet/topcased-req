@@ -15,6 +15,7 @@ package org.topcased.requirement.core.preferences;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.topcased.requirement.CurrentRequirement;
@@ -58,6 +59,7 @@ public class ComputeRequirementIdentifier
      */
     public String computeIdentifier(EditingDomain domain, HierarchicalElement hierarchicalElt, String source, long nextIndex)
     {
+        Assert.isNotNull(domain, "The editing domain should not be null");
         editingDomain = domain;
         hierarchicalElement = hierarchicalElt;
         upstreamIdentifier = source;

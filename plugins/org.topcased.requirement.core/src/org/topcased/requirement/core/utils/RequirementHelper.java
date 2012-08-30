@@ -33,6 +33,7 @@ import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.DragAndDropCommand;
 import org.eclipse.emf.edit.command.MoveCommand;
 import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -254,8 +255,8 @@ public final class RequirementHelper
                 AnonymousRequirement anonymmous = createAnonymousRequirement(hierarchicalElement);
                 createdRequirements.add(anonymmous);
                 Integer pos = AddRequirementMarker.eINSTANCE.computeIndex(hierarchicalElement);
-                appendIfCanExecute(globalCmd, hierarchicalElement.eResource(), editingDomain,
-                        AddCommand.create(editingDomain, hierarchicalElement, RequirementPackage.eINSTANCE.getHierarchicalElement_Requirement(), anonymmous, pos));
+                appendIfCanExecute(globalCmd, hierarchicalElement.eResource(), getEditingDomain(targetObject),
+                        AddCommand.create(getEditingDomain(targetObject), hierarchicalElement, RequirementPackage.eINSTANCE.getHierarchicalElement_Requirement(), anonymmous, pos));
             }
 
             // it is only here that all the commands are executed
@@ -340,14 +341,14 @@ public final class RequirementHelper
         if (isElementRoot(parent))
         {
             // Add child to the model as a hierarchical element
-            EObject project = RequirementUtils.getRequirementProject(editingDomain);
-            appendIfCanExecute(cmd, project.eResource(), editingDomain, AddCommand.create(editingDomain, project, RequirementPackage.eINSTANCE.getRequirementProject_HierarchicalElement(), child));
+            EObject project = RequirementUtils.getRequirementProject(getEditingDomain(parent,child));
+            appendIfCanExecute(cmd, project.eResource(), getEditingDomain(parent,child), AddCommand.create(getEditingDomain(parent,child), project, RequirementPackage.eINSTANCE.getRequirementProject_HierarchicalElement(), child));
             return null;
         }
         else
         {
             HierarchicalElement element = getHierarchicalElement(parent, cmd);
-            appendIfCanExecute(cmd, element.eResource(), editingDomain, AddCommand.create(editingDomain, element, RequirementPackage.eINSTANCE.getHierarchicalElement_Children(), child));
+            appendIfCanExecute(cmd, element.eResource(), getEditingDomain(parent,child), AddCommand.create(getEditingDomain(parent,child), element, RequirementPackage.eINSTANCE.getHierarchicalElement_Children(), child));
             return element;
         }
     }
@@ -433,8 +434,8 @@ public final class RequirementHelper
                         // drag) only if the parent is not the same
                         if (!target.equals(requirement.eContainer()))
                         {
-                            Command dndCmd = DragAndDropCommand.create(editingDomain, target, pos, DND.DROP_MOVE, DND.DROP_MOVE, Collections.singleton(requirement));
-                            appendIfCanExecute(compoundCmd, target.eResource(), editingDomain, dndCmd);
+                            Command dndCmd = DragAndDropCommand.create(getEditingDomain(object), target, pos, DND.DROP_MOVE, DND.DROP_MOVE, Collections.singleton(requirement));
+                            appendIfCanExecute(compoundCmd, target.eResource(), getEditingDomain(object), dndCmd);
                         }
                         toSelect.add(requirement);
                     }
@@ -469,7 +470,7 @@ public final class RequirementHelper
     public CurrentRequirement create(HierarchicalElement target, Requirement upstream, CompoundCommand compoundCmd)
     {
         long index = 0;
-        HierarchicalElement root = RequirementHelper.INSTANCE.getHierarchicalElementRoot(RequirementUtils.getRequirementProject(editingDomain));
+        HierarchicalElement root = RequirementHelper.INSTANCE.getHierarchicalElementRoot(RequirementUtils.getRequirementProject(getEditingDomain(target,upstream)));
         String source = ""; //$NON-NLS-1$
         IRequirementCountingAlgorithm algorithm = RequirementCountingAlgorithmManager.getInstance().getCountingAlgorithm(ComputeRequirementIdentifier.getCurrentAlgorithm());
 
@@ -489,7 +490,7 @@ public final class RequirementHelper
         CurrentRequirement newCurrentReq = createCurrentRequirementFromUpstream(upstream);
 
         // Attach the requirement to the model
-        if (!compoundCmd.appendAndExecute(AddCommand.create(editingDomain, target, RequirementPackage.eINSTANCE.getHierarchicalElement_Requirement(), newCurrentReq, pos)))
+        if (!compoundCmd.appendAndExecute(AddCommand.create(getEditingDomain(upstream,target), target, RequirementPackage.eINSTANCE.getHierarchicalElement_Requirement(), newCurrentReq, pos)))
         {
             IEditorPart editor = RequirementUtils.getCurrentEditor();
             IEditorServices services = SupportingEditorsManager.getInstance().getServices(editor);
@@ -508,7 +509,7 @@ public final class RequirementHelper
 
         // Compute the identifier of the newly created requirement
         index = algorithm.getCurrentIndex(newCurrentReq);
-        newCurrentReq.setIdentifier(ComputeRequirementIdentifier.INSTANCE.computeIdentifier(editingDomain, target, source, index));
+        newCurrentReq.setIdentifier(ComputeRequirementIdentifier.INSTANCE.computeIdentifier(getEditingDomain(upstream,target), target, source, index));
 
         // Increase index after requirement creation
         algorithm.increaseIndexWhenCreateRequirement(newCurrentReq, index);
@@ -570,7 +571,7 @@ public final class RequirementHelper
      */
     private void createDefaultAttributes(Requirement upstream, org.topcased.requirement.Requirement current)
     {
-        AttributeConfiguration configuration = RequirementUtils.getAttributeConfiguration(editingDomain);
+        AttributeConfiguration configuration = RequirementUtils.getAttributeConfiguration(getEditingDomain(upstream,current));
         if (configuration != null)
         {
             for (ConfiguratedAttribute attribute : configuration.getListAttributes())
@@ -637,7 +638,7 @@ public final class RequirementHelper
     public Collection<AttributeLink> createAttributeLink(Requirement reqSource)
     {
         Collection<AttributeLink> result = new ArrayList<AttributeLink>();
-        AttributeConfiguration configuration = RequirementUtils.getAttributeConfiguration(editingDomain);
+        AttributeConfiguration configuration = RequirementUtils.getAttributeConfiguration(getEditingDomain(reqSource));
         for (ConfiguratedAttribute attribute : configuration.getListAttributes())
         {
             if (attribute.getType().getValue() == AttributesType.LINK_VALUE)
@@ -768,9 +769,9 @@ public final class RequirementHelper
             String ident = requirement.getIdentifier();
             HierarchicalElement parent = (HierarchicalElement) requirement.eContainer();
             index = algorithm.getCurrentIndex(requirement);
-            String newIdent = ComputeRequirementIdentifier.INSTANCE.computeIdentifier(editingDomain, parent, ident, index);
+            String newIdent = ComputeRequirementIdentifier.INSTANCE.computeIdentifier(getEditingDomain(requirement), parent, ident, index);
             algorithm.increaseIndexWhenCreateRequirement(requirement, index);
-            return SetCommand.create(editingDomain, requirement, RequirementPackage.eINSTANCE.getIdentifiedElement_Identifier(), newIdent);
+            return SetCommand.create(getEditingDomain(requirement), requirement, RequirementPackage.eINSTANCE.getIdentifiedElement_Identifier(), newIdent);
         }
         return UnexecutableCommand.INSTANCE;
     }
@@ -787,6 +788,39 @@ public final class RequirementHelper
             return reqProject.getHierarchicalElement().get(0);
         }
         return null;
+    }
+    
+    /**
+     * Retreive the editing domain
+     * @param eObject
+     * @return
+     */
+    private EditingDomain getEditingDomain(Object... objs){
+        for (Object o : objs){
+            if (o != null){
+                EditingDomain editingDomain = AdapterFactoryEditingDomain.getEditingDomainFor(o);
+                if (editingDomain != null){
+                    return editingDomain;
+                }
+            }
+        }
+        
+         IEditorPart editor = RequirementUtils.getCurrentEditor();
+         if (editor != null){
+             EditingDomain editorEditingDomain = (EditingDomain)editor.getAdapter(EditingDomain.class);
+             if (editorEditingDomain != null){
+                 return editorEditingDomain;
+             }
+         }
+        return this.editingDomain;
+    }
+    
+    /**
+     * Set the editing domain
+     * @param editingDomain
+     */
+    private void setEditingDomain(EditingDomain editingDomain){
+        this.editingDomain = editingDomain;
     }
 
     /**
@@ -824,12 +858,12 @@ public final class RequirementHelper
         if (current.eContainer() instanceof HierarchicalElement)
         {
             EList<org.topcased.requirement.Requirement> list = ((HierarchicalElement) current.eContainer()).getRequirement();
-            return MoveCommand.create(editingDomain, current.eContainer(), RequirementPackage.eINSTANCE.getHierarchicalElement_Requirement(), current, list.lastIndexOf(current) + (up ? -1 : 1));
+            return MoveCommand.create(getEditingDomain(current), current.eContainer(), RequirementPackage.eINSTANCE.getHierarchicalElement_Requirement(), current, list.lastIndexOf(current) + (up ? -1 : 1));
         }
         else if (current.eContainer() instanceof SpecialChapter)
         {
             EList<org.topcased.requirement.Requirement> list = ((SpecialChapter) current.eContainer()).getRequirement();
-            return MoveCommand.create(editingDomain, current.eContainer(), RequirementPackage.eINSTANCE.getSpecialChapter_Requirement(), current, list.lastIndexOf(current) + (up ? -1 : 1));
+            return MoveCommand.create(getEditingDomain(current), current.eContainer(), RequirementPackage.eINSTANCE.getSpecialChapter_Requirement(), current, list.lastIndexOf(current) + (up ? -1 : 1));
         }
         return UnexecutableCommand.INSTANCE;
     }
@@ -859,7 +893,7 @@ public final class RequirementHelper
             reference = RequirementPackage.eINSTANCE.getHierarchicalElement_Children();
 
         }
-        return MoveCommand.create(editingDomain, hierarchicalElt.eContainer(), reference, hierarchicalElt, list.lastIndexOf(hierarchicalElt) + (up ? -1 : 1));
+        return MoveCommand.create(getEditingDomain(hierarchicalElt), hierarchicalElt.eContainer(), reference, hierarchicalElt, list.lastIndexOf(hierarchicalElt) + (up ? -1 : 1));
     }
 
     /**
@@ -870,7 +904,7 @@ public final class RequirementHelper
      */
     public Command revertImpact(EObject requirement)
     {
-        return SetCommand.create(editingDomain, requirement, RequirementPackage.eINSTANCE.getCurrentRequirement_Impacted(), false);
+        return SetCommand.create(getEditingDomain(requirement), requirement, RequirementPackage.eINSTANCE.getCurrentRequirement_Impacted(), false);
     }
 
     /**
@@ -888,11 +922,11 @@ public final class RequirementHelper
                 // Recompute coverage data
                 RequirementCoverageComputer.INSTANCE.reset(page.getEditingDomain());
             }
-            editingDomain = page.getEditingDomain();
+            setEditingDomain(page.getEditingDomain());
         }
         else
         {
-            editingDomain = null;
+            setEditingDomain(null);
         }
         upstreamPage = page;
     }
@@ -906,11 +940,11 @@ public final class RequirementHelper
     {
         if (page != null)
         {
-            editingDomain = page.getEditingDomain();
+            setEditingDomain(page.getEditingDomain());
         }
         else
         {
-            editingDomain = null;
+            setEditingDomain(null);
         }
         currentPage = page;
     }
@@ -943,9 +977,9 @@ public final class RequirementHelper
      */
     public IRunnableWithProgress encapsulateEMFRunnable(final IRunnableWithProgress runnable, String label)
     {
-        if (editingDomain instanceof TransactionalEditingDomain)
+        if (getEditingDomain() instanceof TransactionalEditingDomain)
         {
-            return new EMFRunnableOperation((TransactionalEditingDomain) editingDomain, label)
+            return new EMFRunnableOperation((TransactionalEditingDomain) getEditingDomain(), label)
             {
 
                 @Override
