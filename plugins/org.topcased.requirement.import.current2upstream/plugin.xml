@@ -2,11 +2,10 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         point="org.eclipse.m2m.atl.engine.emfvm.typeextension">
-      <typeextension
-            class="org.topcased.requirement.import.current2upstream.typeextension1"
-            name="org.topcased.requirement.import.current2upstream.typeextension1">
-      </typeextension>
+         point="org.topcased.requirement.core.updateTransformationProvider">
+      <Provider
+            providerInstance="org.topcased.requirement.current2upstream.files.Cur2UpTransformation$Cur2UpProvider">
+      </Provider>
    </extension>
 
 </plugin>

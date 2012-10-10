@@ -3,10 +3,10 @@
 <schema targetNamespace="org.topcased.requirement.core" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.topcased.requirement.core" id="upstreamDropAdapter" name="Upstream Requirement Drop Adapter"/>
+         <meta.schema plugin="org.topcased.requirement.core" id="updateTransformationProvider" name="Update Transformation Provider"/>
       </appInfo>
       <documentation>
-         Allows the user to register an extension id and enable plugin-specific PluginTransfer drag-and-drop of upstream requirement objects. This id must be the id of an extension extending org.eclipse.ui.dropActions.
+         Allows the user to register a transformation provider which enables user-defined Document transformation (according to user-defined file extensions). Called from the MergeRequirementModelWizardPage. 
       </documentation>
    </annotation>
 
@@ -17,8 +17,8 @@
          </appInfo>
       </annotation>
       <complexType>
-         <sequence minOccurs="0" maxOccurs="unbounded">
-            <element ref="dropAction"/>
+         <sequence minOccurs="1" maxOccurs="unbounded">
+            <element ref="Provider"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -47,18 +47,16 @@
       </complexType>
    </element>
 
-   <element name="dropAction">
-      <annotation>
-         <documentation>
-            The drop action id to use. The given id must be the id of an extension for org.eclipse.ui.dropActions
-         </documentation>
-      </annotation>
+   <element name="Provider">
       <complexType>
-         <attribute name="dropActionId" type="string" use="required">
+         <attribute name="providerInstance" type="string" use="required">
             <annotation>
                <documentation>
                   
                </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn=":org.topcased.requirement.core.transformation.ITransformation$Provider"/>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
@@ -69,7 +67,7 @@
          <meta.section type="since"/>
       </appInfo>
       <documentation>
-         Topcased 5.3.0
+         [Enter the first release in which this extension point appears.]
       </documentation>
    </annotation>
 
@@ -78,12 +76,7 @@
          <meta.section type="examples"/>
       </appInfo>
       <documentation>
-         &lt;extension
-         point=&quot;org.topcased.requirement.core.upstreamDropAdapter&quot;&gt;
-      &lt;dropAction
-            id=&quot;com.mycompany.requirement.myupstreamdrop&quot;&gt;
-      &lt;/dropAction&gt;
-   &lt;/extension&gt;
+         [Enter extension point usage example here.]
       </documentation>
    </annotation>
 
@@ -92,7 +85,7 @@
          <meta.section type="apiinfo"/>
       </appInfo>
       <documentation>
-         The id contained in the extensions to this extension point will be referenced by Requirement&apos;s DragSourceUpstreamAdapter for use in any drag-and-drop event from the upstream requirement view to a view that supports PluginTransfer.
+         [Enter API information here.]
       </documentation>
    </annotation>
 
@@ -101,7 +94,7 @@
          <meta.section type="implementation"/>
       </appInfo>
       <documentation>
-         See examples
+         [Enter information about supplied implementation of this extension point.]
       </documentation>
    </annotation>
 

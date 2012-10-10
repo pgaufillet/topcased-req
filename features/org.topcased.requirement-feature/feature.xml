@@ -155,4 +155,11 @@
          version="0.0.0"
          unpack="false"/>
 
+   <plugin
+         id="org.topcased.requirement.import.current2upstream"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
 </feature>

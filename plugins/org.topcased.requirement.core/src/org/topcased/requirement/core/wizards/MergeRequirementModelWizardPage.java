@@ -13,9 +13,8 @@
  ******************************************************************************/
 package org.topcased.requirement.core.wizards;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,16 +23,14 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.ui.dialogs.WorkspaceResourceDialog;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.edit.ui.provider.AdapterFactoryContentProvider;
-import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
+import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -41,6 +38,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -53,23 +51,25 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.topcased.requirement.core.RequirementCorePlugin;
-import org.topcased.requirement.core.extensions.IImportDocument;
-import org.topcased.requirement.core.extensions.ImportDocumentManager;
 import org.topcased.requirement.core.extensions.ModelAttachmentPolicyManager;
 import org.topcased.requirement.core.extensions.RequirementTransformationManager;
 import org.topcased.requirement.core.internal.Messages;
+import org.topcased.requirement.core.transformation.ITransformation;
+import org.topcased.requirement.core.transformation.ITransformation.Provider;
+import org.topcased.requirement.core.transformation.TransformationManager;
+import org.topcased.requirement.core.transformation.impl.TypeTransformation;
+import org.topcased.requirement.core.transformation.impl.providers.TransformationLabelProvider;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.util.RequirementResource;
-import org.topcased.typesmodel.handler.IniManager;
 import org.topcased.typesmodel.model.inittypes.DeletionParameters;
-import org.topcased.typesmodel.model.inittypes.DocumentType;
-import org.topcased.typesmodel.model.inittypes.provider.InittypesItemProviderAdapterFactory;
 import org.topcased.typesmodel.ui.DeletionParametersComposite;
 
 import ttm.Document;
@@ -88,7 +88,7 @@ public class MergeRequirementModelWizardPage extends WizardPage
     public static final String PREFERENCE_FOR_IS_PARTIAL = "isPartial_updateReq"; //$NON-NLS-1$
 
     public static final String PREFERENCE_FOR_PERFORM_IMPACT_ANALYSIS = "performAnalysis_updateReq"; //$NON-NLS-1$
-    
+
     private static final String DEFAULT_MODEL_NAME = "My"; //$NON-NLS-1$
 
     private Resource alreadyAttachedRequirement;
@@ -106,7 +106,7 @@ public class MergeRequirementModelWizardPage extends WizardPage
 
     private Image folderImg;
 
-    private ResourceSet resourceSet = new ResourceSetImpl();
+    private ResourceSet resourceSet ;
 
     /*
      * target Model
@@ -197,6 +197,12 @@ public class MergeRequirementModelWizardPage extends WizardPage
             alreadyAttachedRequirement = null;
         }
         folderImg = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER);
+        resourceSet = new ResourceSetImpl();
+        resourceSet.eSetDeliver(false);
+        resourceSet.eAdapters().clear();
+        resourceSet.getLoadOptions().put(XMLResource.OPTION_DEFER_ATTACHMENT, true);
+        resourceSet.getLoadOptions().put(XMLResource.OPTION_DEFER_IDREF_RESOLUTION, true);
+        resourceSet.getLoadOptions().put(XMLResource.OPTION_DISABLE_NOTIFY, true);
     }
 
     /**
@@ -268,7 +274,6 @@ public class MergeRequirementModelWizardPage extends WizardPage
         checkAllBt = new Button(docsGroup, SWT.CHECK);
         checkAllBt.setText(Messages.getString("RequirementWizardPage.25"));
         checkAllBt.setToolTipText(Messages.getString("RequirementWizardPage.tooltip.selectAll.chk"));
-        checkAllBt.setSelection(true);
 
         importModelFd = new Text(docsGroup, SWT.BORDER);
         importModelFd.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 4, 1));
@@ -309,7 +314,6 @@ public class MergeRequirementModelWizardPage extends WizardPage
                 // Check button
                 Button docBt = new Button(docsGroup, SWT.CHECK);
                 docBt.setText(d.getIdent());
-                docBt.setSelection(true);
                 docBt.addSelectionListener(selectionListener);
                 docBt.setToolTipText(Messages.getString("RequirementWizardPage.tooltip.initialDocument"));
                 buttonsCheck.add(docBt);
@@ -386,15 +390,15 @@ public class MergeRequirementModelWizardPage extends WizardPage
         impactAnalysisBt = new Button(mainGroup, SWT.CHECK);
         impactAnalysisBt.setText(Messages.getString("RequirementWizardPage.27")); //$NON-NLS-1$
         impactAnalysisBt.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 3, 1));
-        
+
         label = new Label(mainGroup, SWT.SEPARATOR | SWT.HORIZONTAL);
         label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
-        
+
         deletionGroup = new Group(mainGroup, SWT.NONE);
         deletionGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
         deletionGroup.setText(Messages.getString("MergeRequirementModelWizardPage.deleteGroup.text")); //$NON-NLS-1$
         deletionGroup.setLayout(new GridLayout(2, false));
-        
+
         deletionParametersComposite = new DeletionParametersComposite(deletionGroup, RequirementCorePlugin.getDefault().getPreferenceStore());
 
         new Label(mainGroup, SWT.NONE);
@@ -481,7 +485,7 @@ public class MergeRequirementModelWizardPage extends WizardPage
 
                 public void selectionChanged(SelectionChangedEvent event)
                 {
-                    dialogChanged();
+                    updateDocumentsCombo((ComboViewer)event.getSource());
                 }
             });
         }
@@ -502,34 +506,84 @@ public class MergeRequirementModelWizardPage extends WizardPage
         });
     }
 
+    
+    /**
+     * Updates the documentCombo according to the selection of the documentsComboViewer
+     * @param comboViewer the documentsComboViewer that will be used to update the associated documentCombo
+     */
+    private void updateDocumentsCombo(ComboViewer comboViewer){
+        ITransformation transformation = getSelectedTransformation(comboViewer.getSelection());
+        int comboViewerIndex = documentsComboViewers.indexOf(comboViewer);
+        String docToMerge = documentsTexts.get(comboViewerIndex).getText();
+        documentsCombos.get(comboViewerIndex).removeAll();
+        if(transformation != null){
+            try{
+                Resource r = getResource(docToMerge);
+                //List<Document> docList = transformation.getDocuments(URI.createPlatformResourceURI(docToMerge,true), resourceSet);
+                List<Document> docList = transformation.getDocuments(r);
+                if(docList.isEmpty()){
+                    documentsCombos.get(comboViewerIndex).setEnabled(false);
+                } else {
+                    addCombosTextsAndSelection(buttonsCheck.get(comboViewerIndex).getText(), documentsCombos.get(comboViewerIndex), docList);
+                    documentsCombos.get(comboViewerIndex).setEnabled(true);
+                }
+            } catch (Exception e) {
+                documentsCombos.get(comboViewerIndex).setEnabled(false);
+            }
+            dialogChanged();
+        } else {
+            documentsCombos.get(comboViewerIndex).setEnabled(false);
+        }
+    }
+    
     private void handleDocumentRequirementChoose(int index, String documentToUpdate)
     {
         IFile[] files = WorkspaceResourceDialog.openFileSelection(getShell(), null, null, false, null, null);
         if (files.length > 0 && files[0] != null)
         {
-
-            Combo c = documentsCombos.get(index);
-            c.removeAll();
-            IFile f = files[0];
-            documentsTexts.get(index).setText(f.getFullPath().toString());
-            if ("docx".equals(f.getFileExtension()) || "odt".equals(f.getFileExtension()) || "csv".equals(f.getFileExtension()) || "ods".equals(f.getFileExtension())
-                    || "xlsx".equals(f.getFileExtension()))
-            {
-                documentsComboViewers.get(index).getCombo().setEnabled(true);
-            }
-            else
-            {
-                documentsComboViewers.get(index).getCombo().setEnabled(false);
-                documentsComboViewers.get(index).setSelection(null);
-            }
-            documentsCombos.get(index).setEnabled(RequirementResource.FILE_EXTENSION.equals(f.getFileExtension()));
-            List<Document> documents = null;
-            if (RequirementResource.FILE_EXTENSION.equals(f.getFileExtension()))
-            {
-                documents = getDocuments(f);
-            }
-            addCombosTextsAndSelection(documentToUpdate, c, documents);
+            updateControlsDocumentRequirement(index, files[0], documentToUpdate);
         }
+    }
+
+
+    /**
+     * Updates the wizard controls of the current document
+     * @param index the index of the current document
+     * @param f the file corresponding to the current document  
+     * @param documentToUpdate name of the document to update
+     */
+    private void updateControlsDocumentRequirement(int index, IFile f, String documentToUpdate){
+//        Combo c = documentsCombos.get(index);
+//        c.removeAll();
+        documentsTexts.get(index).setText(f.getFullPath().toString());
+//        if ("docx".equals(f.getFileExtension()) || "odt".equals(f.getFileExtension()) || "csv".equals(f.getFileExtension()) || "ods".equals(f.getFileExtension())
+//                || "xlsx".equals(f.getFileExtension()))
+//        {
+//            documentsComboViewers.get(index).getCombo().setEnabled(true);
+//        }
+//        else
+//        {
+//            //documentsComboViewers.get(index).getCombo().setEnabled(false);
+//            //documentsComboViewers.get(index).setSelection(null);
+//        }
+//        documentsCombos.get(index).setEnabled(RequirementResource.FILE_EXTENSION.equals(f.getFileExtension()));
+//        List<Document> documents = null;
+//        if (RequirementResource.FILE_EXTENSION.equals(f.getFileExtension()))
+//        {
+//            documents = getDocuments(f);
+//        }
+//        addCombosTextsAndSelection(documentToUpdate, c, documents);
+        updateComboTransformationSelection(documentsComboViewers.get(index), f.getFileExtension());
+    }
+
+    private void updateComboTransformationSelection(ComboViewer comboViewer, String extension){
+        List<Provider> providersList = TransformationManager.getInstance().getProviders(extension);
+        List<ITransformation> trasformationsList = new ArrayList<ITransformation>();
+        for(Provider provider:providersList){
+            trasformationsList.addAll((Collection< ? extends ITransformation>) provider.getTransformations());
+        }
+        comboViewer.setInput(trasformationsList);
+        comboViewer.refresh();
     }
 
     /**
@@ -613,7 +667,6 @@ public class MergeRequirementModelWizardPage extends WizardPage
                 name = alreadyAttachedRequirement.getURI().trimFileExtension().lastSegment();
                 Path path = new Path(alreadyAttachedRequirement.getURI().toPlatformString(true));
                 importModelFd.setText(path.toString());
-                changeAllDocumentsFile(ResourcesPlugin.getWorkspace().getRoot().getFile(path));
             }
         }
         requirementNameFd.setText(name);
@@ -626,6 +679,39 @@ public class MergeRequirementModelWizardPage extends WizardPage
         boolean performAnalysis = RequirementCorePlugin.getDefault().getPreferenceStore().getBoolean(PREFERENCE_FOR_PERFORM_IMPACT_ANALYSIS);
         impactAnalysisBt.setSelection(performAnalysis);
 
+        // All the documents preferences are restored
+        for (Button b : buttonsCheck){
+            // Check box state
+            boolean checkState = RequirementCorePlugin.getDefault().getPreferenceStore().getBoolean(importModelFd.getText()+"_"+b.getText()+"_checkbox");
+            b.setSelection(checkState);
+            
+            // Requirement resource
+            String requirementResource = RequirementCorePlugin.getDefault().getPreferenceStore().getString(importModelFd.getText()+"_"+b.getText()+"_resource");
+            if("".equals(requirementResource)){
+                requirementResource = importModelFd.getText();
+            }
+            documentsTexts.get(buttonsCheck.indexOf(b)).setText(requirementResource);
+            updateControlsDocumentRequirement(buttonsCheck.indexOf(b), ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(requirementResource)), b.getText());
+
+            // Document type
+            String selectedDocType = RequirementCorePlugin.getDefault().getPreferenceStore().getString(importModelFd.getText()+"_"+b.getText()+"_doctype");
+            Control controlDocType = documentsComboViewers.get(buttonsCheck.indexOf(b)).getControl();
+            int docTypeSelectedIndex;
+            if(controlDocType instanceof Combo){
+                docTypeSelectedIndex = ((Combo)controlDocType).indexOf(selectedDocType);
+                ((Combo)controlDocType).select(docTypeSelectedIndex);
+            } else if(controlDocType instanceof CCombo){
+                docTypeSelectedIndex = ((CCombo)controlDocType).indexOf(selectedDocType);
+                ((CCombo)controlDocType).select(docTypeSelectedIndex);
+            }
+            updateDocumentsCombo(documentsComboViewers.get(buttonsCheck.indexOf(b)));
+            
+            // New document
+            String selectedNewDoc = RequirementCorePlugin.getDefault().getPreferenceStore().getString(importModelFd.getText()+"_"+b.getText()+"_newdoc");
+            int selectedNewDocIndex = documentsCombos.get(buttonsCheck.indexOf(b)).indexOf(selectedNewDoc);
+            documentsCombos.get(buttonsCheck.indexOf(b)).select(selectedNewDocIndex);
+        }
+
         setPageComplete(false);
     }
 
@@ -636,22 +722,11 @@ public class MergeRequirementModelWizardPage extends WizardPage
      */
     private void changeAllDocumentsFile(IFile file)
     {
-        for (int i = 0; i < documentsTexts.size(); i++)
-        {
-            documentsTexts.get(i).setText(file.getFullPath().toString());
-            documentsCombos.get(i).setEnabled(RequirementResource.FILE_EXTENSION.equals(file.getFileExtension()));
-            documentsComboViewers.get(i).getCombo().setEnabled(!RequirementResource.FILE_EXTENSION.equals(file.getFileExtension()));
-        }
-        // for (Text t : documentsTexts)
-        // {
-        // t.setText(file.getFullPath().toString());
-        // }
         for (int i = 0; i < documentsCombos.size(); i++)
         {
             documentsCombos.get(i).removeAll();
             addCombosTextsAndSelection(buttonsCheck.get(i).getText(), documentsCombos.get(i), getDocuments(file));
         }
-
     }
 
     /**
@@ -741,18 +816,15 @@ public class MergeRequirementModelWizardPage extends WizardPage
                 {
                     return false;
                 }
-                if (documentsTexts.get(buttonsCheck.indexOf(b)).getText() != null && documentsTexts.get(buttonsCheck.indexOf(b)).getText().endsWith("." + RequirementResource.FILE_EXTENSION)
-                        && documentsCombos.get(buttonsCheck.indexOf(b)).getSelectionIndex() == -1)
-                {
+                if (documentsTexts.get(buttonsCheck.indexOf(b)).getText() != null && documentsCombos.get(buttonsCheck.indexOf(b)).isEnabled()
+                        && documentsCombos.get(buttonsCheck.indexOf(b)).getSelectionIndex() == -1){
                     setErrorMessage("Please choose a New Document");
                     return false;
                 }
                 if (documentsTexts.get(buttonsCheck.indexOf(b)).getText() != null
-                        && (documentsTexts.get(buttonsCheck.indexOf(b)).getText().endsWith(".docx") || documentsTexts.get(buttonsCheck.indexOf(b)).getText().endsWith(".odt")
-                                || documentsTexts.get(buttonsCheck.indexOf(b)).getText().endsWith(".csv") || documentsTexts.get(buttonsCheck.indexOf(b)).getText().endsWith(".ods") || documentsTexts.get(
-                                buttonsCheck.indexOf(b)).getText().endsWith(".xlsx")) && documentsComboViewers.get(buttonsCheck.indexOf(b)).getSelection().isEmpty())
+                        && documentsComboViewers.get(buttonsCheck.indexOf(b)).getSelection().isEmpty())
                 {
-                    setErrorMessage("Please choose a document type");
+                    setErrorMessage("Please choose a document transformation");
                     return false;
                 }
 
@@ -760,7 +832,7 @@ public class MergeRequirementModelWizardPage extends WizardPage
                         && (!documentsTexts.get(buttonsCheck.indexOf(b)).getText().endsWith("." + RequirementResource.FILE_EXTENSION)
                                 && !documentsTexts.get(buttonsCheck.indexOf(b)).getText().endsWith(".docx") && !documentsTexts.get(buttonsCheck.indexOf(b)).getText().endsWith(".odt")
                                 && !documentsTexts.get(buttonsCheck.indexOf(b)).getText().endsWith(".csv") && !documentsTexts.get(buttonsCheck.indexOf(b)).getText().endsWith(".ods") && !documentsTexts.get(
-                                buttonsCheck.indexOf(b)).getText().endsWith(".xlsx")))
+                                        buttonsCheck.indexOf(b)).getText().endsWith(".xlsx")))
                 {
                     setErrorMessage("Please choose a valide input file (valide file extensions : .requirement, .docx, .odt, .csv, .ods or .xlsx)");
                     return false;
@@ -917,71 +989,50 @@ public class MergeRequirementModelWizardPage extends WizardPage
     {
         Map<Document, Document> docsToMerge = new HashMap<Document, Document>();
         DeletionParameters defaultDeletionParameters = getDefaultDeletionParameters();
-        for (Button b : buttonsCheck)
-        {
-            if (b.getSelection())
-            {
+        for (Button b : buttonsCheck){
+            if (b.getSelection()){
                 int index = buttonsCheck.indexOf(b);
 
                 String fileToMerge = documentsTexts.get(index).getText();
-                if (fileToMerge != null && fileToMerge.endsWith("." + RequirementResource.FILE_EXTENSION))
-                {
-                    List<Document> docs = RequirementUtils.getUpstreamDocuments(getResource(fileToMerge));
-                    for (Document d : docs)
-                    {
-                        if (d.getIdent().equals(documentsCombos.get(index).getText()))
-                        {
-                            docsToMerge.put(inputDocuments.get(index), d);
-                        }
-                    }
-                }
-                else if (fileToMerge != null
-                        && (fileToMerge.endsWith(".docx") || fileToMerge.endsWith(".odt") || fileToMerge.endsWith(".csv") || fileToMerge.endsWith(".ods") || fileToMerge.endsWith(".xlsx")))
-                {
-                    try
-                    {
-                        ISelection selection = documentsComboViewers.get(index).getSelection();
-                        DocumentType type = getSelectedType(selection);
-                        IImportDocument importer = ImportDocumentManager.getInstance().getImporter();
-                        File file = File.createTempFile("updateRequirementTemp", ".requirement");
-                        file.toURI();
-                        importer.getDocument(type, URI.createFileURI(fileToMerge), URI.createFileURI(file.getAbsolutePath()), new NullProgressMonitor());
-                        List<Document> docs = RequirementUtils.getUpstreamDocuments(resourceSet.getResource(URI.createFileURI(file.getAbsolutePath()), true));
-                        if (!docs.isEmpty()) {
-                            docsToMerge.put(inputDocuments.get(index), docs.get(0));
-                            if (type.getDeletionParameters() != null) {
-                                deletionParametersDocMap.put(inputDocuments.get(index), type.getDeletionParameters());
+                if(fileToMerge != null){
+                    ISelection selection = documentsComboViewers.get(index).getSelection();
+                    ITransformation transformation = getSelectedTransformation(selection);
+                    Document doc = transformation.transform(URI.createFileURI(fileToMerge), resourceSet, documentsCombos.get(index).getText());
+                    if(doc!=null){
+                        docsToMerge.put(inputDocuments.get(index), doc);
+                        if(transformation instanceof TypeTransformation){
+                            if (((TypeTransformation)transformation).getType().getDeletionParameters() != null) {
+                                deletionParametersDocMap.put(inputDocuments.get(index), ((TypeTransformation)transformation).getType().getDeletionParameters());
                             } else {
                                 deletionParametersDocMap.put(inputDocuments.get(index), defaultDeletionParameters);
                             }
                         }
-                    }
-                    catch (IOException e)
-                    {
-                        e.printStackTrace();
+                    } else {
+                        MessageBox dialog = new MessageBox(this.getShell(), SWT.ICON_ERROR | SWT.OK);
+                        dialog.setText("Transformation error");
+                        dialog.setMessage("The "+transformation.getText()+" tranformtion has not been performed.");
+                        dialog.open(); 
                     }
                 }
             }
         }
         return docsToMerge;
     }
-    
-    protected DeletionParameters getDefaultDeletionParameters() {
-        return deletionParametersComposite.getDeletionParameters();
-    }
-    
 
     /**
      * Gets the selected document type element
      * 
      * @return
      */
-    public DocumentType getSelectedType(ISelection selection)
+    protected ITransformation getSelectedTransformation(ISelection selection)
     {
         if (!selection.isEmpty() && selection instanceof IStructuredSelection)
         {
             IStructuredSelection selec = (IStructuredSelection) selection;
-            return (DocumentType) selec.iterator().next();
+            Object ret = selec.iterator().next();
+            if(ret instanceof ITransformation){
+                return (ITransformation) ret;
+            }
         }
         return null;
     }
@@ -1008,20 +1059,54 @@ public class MergeRequirementModelWizardPage extends WizardPage
      */
     public void initTypeViewer(ComboViewer inputTypedDocumentComboViewer)
     {
-        AdapterFactory factory = new InittypesItemProviderAdapterFactory();
-        AdapterFactoryLabelProvider labelProvider = new AdapterFactoryLabelProvider(factory);
+        TransformationLabelProvider labelProvider = new TransformationLabelProvider();
         inputTypedDocumentComboViewer.setLabelProvider(labelProvider);
-        AdapterFactoryContentProvider contentProvider = new AdapterFactoryContentProvider(factory);
-        inputTypedDocumentComboViewer.setContentProvider(contentProvider);
-
-        inputTypedDocumentComboViewer.setInput(IniManager.getInstance().getModel());
+        inputTypedDocumentComboViewer.setContentProvider(new ArrayContentProvider());
     }
 
     public void savePrefs()
     {
+        // All the documents preferences are saved
+        for (Button b : buttonsCheck){
+            // Check box state
+            RequirementCorePlugin.getDefault().getPreferenceStore().setValue(importModelFd.getText()+"_"+b.getText()+"_checkbox", b.getSelection());
+            if (b.getSelection()){
+                int buttonCheckIndex = buttonsCheck.indexOf(b);
+                
+                // Resource documents
+                RequirementCorePlugin.getDefault().getPreferenceStore().setValue(importModelFd.getText()+"_"+b.getText()+"_resource", documentsTexts.get(buttonCheckIndex).getText());
+                
+                // Document type
+                Control controlDocType = documentsComboViewers.get(buttonCheckIndex).getControl();
+                int docTypeSelectedIndex = -1;
+                if(controlDocType instanceof Combo){
+                    docTypeSelectedIndex = ((Combo)controlDocType).getSelectionIndex();
+                    if(docTypeSelectedIndex>=0){
+                        RequirementCorePlugin.getDefault().getPreferenceStore().setValue(importModelFd.getText()+"_"+b.getText()+"_doctype",  ((Combo)controlDocType).getItem(docTypeSelectedIndex));
+                    }
+                } else if(controlDocType instanceof CCombo){
+                    docTypeSelectedIndex = ((CCombo)controlDocType).getSelectionIndex();
+                    if(docTypeSelectedIndex>=0){
+                        RequirementCorePlugin.getDefault().getPreferenceStore().setValue(importModelFd.getText()+"_"+b.getText()+"_doctype",  ((CCombo)controlDocType).getItem(docTypeSelectedIndex));
+                    }
+                }
+                
+                // New document
+                int newDocSelectedIndex = documentsCombos.get(buttonCheckIndex).getSelectionIndex();
+                if(newDocSelectedIndex>=0){
+                    RequirementCorePlugin.getDefault().getPreferenceStore().setValue(importModelFd.getText()+"_"+b.getText()+"_newdoc", documentsCombos.get(buttonCheckIndex).getItem(newDocSelectedIndex));
+                }
+            }
+        }
+
         // Save is partial and perform analysis preferences
         RequirementCorePlugin.getDefault().getPreferenceStore().setValue(MergeRequirementModelWizardPage.PREFERENCE_FOR_IS_PARTIAL, isPartialImport());
         RequirementCorePlugin.getDefault().getPreferenceStore().setValue(MergeRequirementModelWizardPage.PREFERENCE_FOR_PERFORM_IMPACT_ANALYSIS, isImpactAnalysis());
         deletionParametersComposite.savePrefs();
     }
+
+    public DeletionParameters getDefaultDeletionParameters() {
+        return deletionParametersComposite.getDeletionParameters();
+    }
+
 }

@@ -323,9 +323,16 @@ public class MergeImpactProcessor
         {
             upstream = (ttm.Requirement) element;
         }
-        if (upstream != null)
+        if (upstream != null || element instanceof Section)
         {
-            EObject parent = upstream.eContainer();
+            EObject parent = null;
+            if (upstream == null)
+            {
+                parent = element.eContainer();
+            }
+            else {
+                parent = upstream.eContainer();
+            }
             while (parent != null && !(parent instanceof Document))
             {
                 parent = parent.eContainer();

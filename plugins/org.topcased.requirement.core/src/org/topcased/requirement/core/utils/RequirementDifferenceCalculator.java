@@ -101,7 +101,8 @@ public class RequirementDifferenceCalculator
         
         // Call the EMF comparison service
         HashMap<String, Object> matchOptions = new HashMap<String, Object>();
-        matchOptions.put(MatchOptions.OPTION_IGNORE_ID, false);
+        // IGNORE FUNCTIONAL IDs to true to prevent problems with Section comparison 
+        matchOptions.put(MatchOptions.OPTION_IGNORE_ID, true);
         matchOptions.put(MatchOptions.OPTION_IGNORE_XMI_ID, true);
         matchOptions.put(MatchOptions.OPTION_PROGRESS_MONITOR, monitor);
 
@@ -381,9 +382,15 @@ public class RequirementDifferenceCalculator
 
     protected CharSequence buildDescription(IdentifiedElement elem) {
         StringBuilder descBuilder = new StringBuilder();
+        boolean flag = true ;
+        // Each \n has to be inserted between Text elements
         for (Text t : elem.getTexts()) {
+        	if (!flag)
+        	{
+        	    descBuilder.append("\n");
+        	}
             descBuilder.append(t.getValue());
-            descBuilder.append("\n");
+            flag = false ;
         }
         return descBuilder;
     }
