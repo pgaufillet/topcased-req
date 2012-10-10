@@ -1,0 +1,132 @@
+-- @nsURI RequirementModel=http://org.topcased.requirement/1.0
+-- @nsURI UMLModel=http://www.eclipse.org/uml2/3.0.0/UML
+-- @nsURI Ecore=http://www.eclipse.org/emf/2002/Ecore
+
+module CurModel2UpModel;
+create OUT : RequirementModel from IN : RequirementModel;
+
+
+--------
+---rules
+--------
+
+---matched rule RequirementProject to Document
+rule ruleReqProject2ReqProject { 	
+	from
+	i : RequirementModel!RequirementProject---(
+	---i.oclIsTypeOf(RequirementModel!RequirementProject))
+	to
+	out0 : RequirementModel!RequirementProject (
+		upstreamModel <- out,
+		identifier <- i.identifier,
+		attributeConfiguration <- i.attributeConfiguration
+	),
+	out1 : RequirementModel!Document (
+		ident <- 'SRD_'+i.hierarchicalElement->first().getText),
+		
+	out : RequirementModel!UpstreamModel (
+		documents <- out1
+		)	
+	do {
+		'This transformation is from RequirementProject to Document'.println();
+	}
+}
+
+---matched rule Section to RequirementProject
+rule ruleHierarchicalElt2Section {
+	from
+	i : RequirementModel!HierarchicalElement (
+	i.oclIsTypeOf(RequirementModel!HierarchicalElement)
+	)
+	to
+	out1 : RequirementModel!Section(
+		---ident<- i.element.name
+		ident<- i.getText
+		)
+	do {		
+		out1.parent<-thisModule.resolveTemp(i.eContainer(), 'out1').debug('out1 is :');		
+		'This transformation is from HierarchicalElement to Section'.println();
+	}
+}
+
+---matched rule CurrentRequirement to Requirement
+rule ruleRequirement {
+	from 
+	i : RequirementModel!CurrentRequirement (
+	i.oclIsTypeOf(RequirementModel!CurrentRequirement)	
+	) 
+	to
+	out : RequirementModel!"ttm::Requirement" (
+		ident <- i.identifier,
+		shortDescription <- i.shortDescription
+		),	
+	out2 : RequirementModel!"ttm::Text" (
+		value <- i.shortDescription,
+		parent <- out
+		)
+		do {
+		out.parent<-thisModule.resolveTemp(i.eContainer(), 'out1').debug('out1 is :');
+		'This transformation is from CurrentRequirement to Requirement'.println();
+	}
+}
+
+---matched rule TextAttribute to Attribute
+rule ruleTextAttribute {
+	from 
+	i : RequirementModel!TextAttribute (
+	i.oclIsTypeOf(RequirementModel!TextAttribute)	
+	) 
+	to
+	out : RequirementModel!"ttm::Attribute" (
+		name <- i.name,
+		value <- i.value
+		)	
+	do {
+		out.parent<-thisModule.resolveTemp(i.eContainer(), 'out').debug('out is :');
+		'This transformation is from CurrentRequirement to Requirement'.println();
+	}
+}
+
+---matched rule ObjectAttribute to Attribute
+rule ruleObjectAttribute {
+	from 
+	i : RequirementModel!ObjectAttribute (
+	i.oclIsTypeOf(RequirementModel!ObjectAttribute) and not i.value.oclIsTypeOf(RequirementModel!CurrentRequirement)	
+	) 
+	to
+	out : RequirementModel!"ttm::Attribute" (
+		name <- i.name,
+		value <- if i.value.oclIsUndefined() then '' else i.value.identifier endif
+		)	
+	do {
+		out.parent<-thisModule.resolveTemp(i.eContainer(), 'out').debug('out is :');
+		'This transformation is from CurrentRequirement to Requirement'.println();
+	}
+}
+
+rule ruleObjectAttribute2 {
+	from 
+	i : RequirementModel!ObjectAttribute (
+	i.oclIsTypeOf(RequirementModel!ObjectAttribute)	and i.value.oclIsTypeOf(RequirementModel!CurrentRequirement)	
+	) 
+	to
+	out : RequirementModel!"ttm::Attribute" (
+		name <- '<- '+i.name,
+		value <- i.eContainer().eContainer().getText
+		)	
+	do {
+		out.parent<-thisModule.resolveTemp(i.value, 'out').debug('out is :');
+		'This transformation is from CurrentRequirement to Requirement'.println();
+	}
+}
+
+
+helper context RequirementModel!HierarchicalElement def : getText : String = 
+	let seq : Sequence(Ecore!EStructuralFeature) = self.element.eClass().eAllStructuralFeatures->select(e  | e.name = 'name' or e.name = 'id')
+	in 
+	if (seq.debug()->notEmpty()) then
+		self.element.eGet(seq->first())
+	else
+		''
+	endif
+	;

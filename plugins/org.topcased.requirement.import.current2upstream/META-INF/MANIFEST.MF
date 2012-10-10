@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ATL Transformation from Current to Upstream
+Bundle-SymbolicName: org.topcased.requirement.import.current2upstream;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.topcased.requirement.current2upstream.RequirementCurrent2UpstreamPlugin
+Bundle-Vendor: Topcased
+Require-Bundle: org.eclipse.core.runtime,
+ org.topcased.requirement,
+ org.eclipse.m2m.atl.engine.emfvm,
+ org.eclipse.ui,
+ org.eclipse.m2m.atl.engine;bundle-version="3.2.1"
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ActivationPolicy: lazy
+Eclipse-LazyStart: true
+Export-Package: org.topcased.requirement.current2upstream.files
