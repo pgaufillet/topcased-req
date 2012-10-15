@@ -14,4 +14,5 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Eclipse-LazyStart: true
-Export-Package: org.topcased.requirement.current2upstream
+Export-Package: org.topcased.requirement.current2upstream,
+ org.topcased.requirement.current2upstream.files
