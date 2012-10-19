@@ -38,8 +38,9 @@ rule ruleReqProject2ReqProject {
 		documents <- out1
 	),
 	out1 : RequirementModel!Document (
-		ident <- 'SRD_'+i.hierarchicalElement->first().getText)
-		
+		ident <- 'SRD_'+i.hierarchicalElement->first().getText,
+		children <- i.hierarchicalElement->collect(tmp | tmp.children)
+	)
 	do {
 		'This transformation is from RequirementProject to Document'.println();
 	}
@@ -55,7 +56,7 @@ rule ruleHierarchicalElt2Section {
 	out1 : RequirementModel!Section(
 		---ident<- i.element.name
 		ident<- i.getText,
-		children <- i.children
+		children <- i.requirement
 		)
 	do {		
 		out1.parent<-thisModule.resolveTemp(i.eContainer(), 'out1').debug('out1 is :');		
