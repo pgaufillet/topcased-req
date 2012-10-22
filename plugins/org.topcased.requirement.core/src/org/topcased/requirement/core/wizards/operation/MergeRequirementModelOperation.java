@@ -11,6 +11,8 @@
 package org.topcased.requirement.core.wizards.operation;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -48,30 +50,29 @@ public class MergeRequirementModelOperation extends AbstractRequirementModelOper
     private static final String MODEL_TMP = "tmp"; //$NON-NLS-1$
 
     private IFile sourceModelFile; // requirement model already created or not
-    
-    private Map<Document,Document> documentsToMerge;
-    
+
+    private Map<Document, Document> documentsToMerge;
+
     private boolean isPartialImport;
-    
+
     private boolean isImpactAnalysis;
 
     private Map<Document, DeletionParameters> deletionParametersDocMap;
 
-    
-    public MergeRequirementModelOperation(IFile targetFile, IFile sourceFile, IFile reqFile, Map<Document,Document> docs, Map<Document, DeletionParameters> deletionParametersDocMap, boolean isPartialImport)
+    public MergeRequirementModelOperation(IFile targetFile, IFile sourceFile, IFile reqFile, Map<Document, Document> docs, Map<Document, DeletionParameters> deletionParametersDocMap, boolean isPartialImport)
     {
-        this(targetFile,sourceFile,reqFile,docs,deletionParametersDocMap,isPartialImport,true);
+        this(targetFile, sourceFile, reqFile, docs, deletionParametersDocMap, isPartialImport, true);
     }
-    
+
     /**
      * The constructor
      * 
      * @param targetFile
      * @param sourceFile
-     * @param isImpactAnalysis 
+     * @param isImpactAnalysis
      * @param destFile
      */
-    public MergeRequirementModelOperation(IFile targetFile, IFile sourceFile, IFile reqFile, Map<Document,Document> docs, Map<Document, DeletionParameters> deletionParametersDocMap, boolean isPartialImport, boolean isImpactAnalysis)
+    public MergeRequirementModelOperation(IFile targetFile, IFile sourceFile, IFile reqFile, Map<Document, Document> docs, Map<Document, DeletionParameters> deletionParametersDocMap, boolean isPartialImport, boolean isImpactAnalysis)
     {
         super(targetFile, reqFile);
         sourceModelFile = sourceFile;
@@ -80,7 +81,6 @@ public class MergeRequirementModelOperation extends AbstractRequirementModelOper
         this.isPartialImport = isPartialImport;
         this.isImpactAnalysis = isImpactAnalysis;
     }
-
 
     /**
      * Get commands to merge requirement models
@@ -96,6 +96,15 @@ public class MergeRequirementModelOperation extends AbstractRequirementModelOper
 
             Command merge = new CommandStub()
             {
+
+                @Override
+                public Collection< ? > getAffectedObjects()
+                {
+                    Collection<Object> listObject = new HashSet<Object>(super.getAffectedObjects());
+                    listObject.addAll(documentsToMerge.keySet());
+                    return listObject;
+                }
+
                 public void redo()
                 {
                     // Merge the existing requirement model
