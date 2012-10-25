@@ -18,6 +18,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -39,7 +40,9 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.edit.domain.EditingDomain;
+import org.eclipse.gmf.runtime.common.ui.util.DisplayUtils;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -156,7 +159,7 @@ public class ImpactAnalysisHandler extends AbstractHandler
                 if (services == null)
                 {
                     Display.getDefault().syncExec(new ImpactErrorRunnable(Messages.getString("ImpactAnalysisHandler.2"))); //$NON-NLS-1$
-                    RequirementCorePlugin.log("ImpactAnalysisHandler.2"); //$NON-NLS-1$
+                    RequirementCorePlugin.log(Messages.getString("ImpactAnalysisHandler.2")); //$NON-NLS-1$
                     return Status.CANCEL_STATUS;
                 }
                 EditingDomain editingDomain = services.getEditingDomain(editor);
@@ -203,15 +206,13 @@ public class ImpactAnalysisHandler extends AbstractHandler
                             else
                             {
                                 Display.getDefault().syncExec(new ImpactErrorRunnable(Messages.getString("ImpactAnalysisHandler.4"))); //$NON-NLS-1$
-                                RequirementCorePlugin.log("ImpactAnalysisHandler.4"); //$NON-NLS-1$
+                                RequirementCorePlugin.log(Messages.getString("ImpactAnalysisHandler.4")); //$NON-NLS-1$
                             }
-                            monitor.done();
                         }
                         catch (IOException e)
                         {
                             Display.getDefault().syncExec(new ImpactErrorRunnable(Messages.getString("ImpactAnalysisHandler.5"))); //$NON-NLS-1$
                             RequirementCorePlugin.log(e);
-                            monitor.done();
                         }
 
                     }
@@ -219,6 +220,9 @@ public class ImpactAnalysisHandler extends AbstractHandler
                     {
                         Display.getDefault().syncExec(new ImpactErrorRunnable(Messages.getString("ImpactAnalysisHandler.6"))); //$NON-NLS-1$
                         RequirementCorePlugin.log(e);
+                    }
+                    finally
+                    {
                         monitor.done();
                     }
 
@@ -243,9 +247,27 @@ public class ImpactAnalysisHandler extends AbstractHandler
         {
             if (isReadOnly(object))
             {
-                Display.getDefault().syncExec(new ImpactErrorRunnable(Messages.getString("ImpactAnalysisHandler.1"))); //$NON-NLS-1$
-                RequirementCorePlugin.log("ImpactAnalysisHandler.1"); //$NON-NLS-1$
-                return;
+                final AtomicInteger result = new AtomicInteger();
+
+                Display.getDefault().syncExec(new Runnable()
+                {
+                    public void run()
+                    {
+                        MessageDialog dialog = new MessageDialog(DisplayUtils.getDefaultShell(), Messages.getString("ImpactAnalysisHandler.13"), null, Messages.getString("ImpactAnalysisHandler.1"),
+                                MessageDialog.WARNING, new String[] {IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL}, 0); //$NON-NLS-1$
+                        result.set(dialog.open());
+                    }
+                });
+
+                if (result.get() == IDialogConstants.OK_ID)
+                {
+                    RequirementCorePlugin.log(Messages.getString("ImpactAnalysisHandler.1")); //$NON-NLS-1$
+                    break;
+                }
+                else
+                {
+                    return;
+                }
             }
         }
 
@@ -296,7 +318,7 @@ public class ImpactAnalysisHandler extends AbstractHandler
         else
         {
             Display.getDefault().syncExec(new ImpactErrorRunnable(Messages.getString("ImpactAnalysisHandler.7"))); //$NON-NLS-1$
-            RequirementCorePlugin.log("ImpactAnalysisHandler.7"); //$NON-NLS-1$
+            RequirementCorePlugin.log(Messages.getString("ImpactAnalysisHandler.7")); //$NON-NLS-1$
         }
     }
 
@@ -477,7 +499,6 @@ public class ImpactAnalysisHandler extends AbstractHandler
 
     private class ImpactErrorRunnable implements Runnable
     {
-
         private String message;
 
         private String reason;
