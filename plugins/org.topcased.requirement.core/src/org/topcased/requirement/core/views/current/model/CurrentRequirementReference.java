@@ -47,19 +47,10 @@ public class CurrentRequirementReference implements IItemLabelProvider, IItemFon
         UNKOWN
         /** URI has never been checked */
     }
-
+    
     /** starting state of URI checking */
     private URIState uriState = URIState.UNKOWN;
 
-    /**
-     * Font for impacted current requirements
-     */
-    private static Font italicFont;
-
-    /**
-     * Default Font for current requirements
-     */
-    private static Font defaultFont;
 
     /**
      * Red color for italic font
@@ -107,8 +98,6 @@ public class CurrentRequirementReference implements IItemLabelProvider, IItemFon
         /**
          * Initialize fonts and color
          */
-        defaultFont = JFaceUtils.getFont(Display.getCurrent().getSystemFont().getFontData()[0], SWT.NONE);
-        italicFont = JFaceUtils.getFont(Display.getCurrent().getSystemFont().getFontData()[0], SWT.ITALIC);
         defaultColor = JFaceUtils.getColor("0,0,0"); //$NON-NLS-1$
         italicColor = JFaceUtils.getColor("206,206,206"); //$NON-NLS-1$
         errorColor = JFaceUtils.getColor("255,0,0"); //$NON-NLS-1$
@@ -275,15 +264,19 @@ public class CurrentRequirementReference implements IItemLabelProvider, IItemFon
     {
         if (!isResourceLoaded())
         {
-            return italicFont;
+            return getFont(SWT.ITALIC);
         }
-        return defaultFont;
+        return getFont(SWT.NONE);
+    }
+    
+    public Font getFont(int font){
+        return JFaceUtils.getFont(Display.getDefault().getSystemFont().getFontData()[0], font);
     }
 
     /**
      * Implementation of {@link IAdaptable}
      */
-    public Object getAdapter(Class adapter)
+    public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter)
     {
         if (adapter == CurrentRequirementReference.class)
         {
@@ -346,5 +339,7 @@ public class CurrentRequirementReference implements IItemLabelProvider, IItemFon
     {
         return refenredBy;
     }
+    
+    
 
 }

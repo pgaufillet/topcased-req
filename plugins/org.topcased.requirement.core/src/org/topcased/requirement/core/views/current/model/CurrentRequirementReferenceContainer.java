@@ -259,6 +259,7 @@ public class CurrentRequirementReferenceContainer implements IItemLabelProvider,
         }
         else if (ob instanceof Collection< ? >)
         {
+            @SuppressWarnings("unchecked")
             Collection<Object> ref = (Collection<Object>) ob;
             if (!ref.isEmpty())
             {

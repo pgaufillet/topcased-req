@@ -518,6 +518,14 @@
             commandId="org.topcased.requirement.core.filterTrashRequirements">
       </handler>
       <handler
+            class="org.topcased.requirement.core.handlers.ToggleInvalidRequirementFilterHandler"
+            commandId="org.topcased.requirement.core.filterInvalidRequirements">
+      </handler>
+      <handler
+            class="org.topcased.requirement.core.handlers.ToggleValidRequirementFilterHandler"
+            commandId="org.topcased.requirement.core.filterValidRequirements">
+      </handler>
+      <handler
             class="org.topcased.requirement.core.handlers.ImpactAnalysisHandler"
             commandId="org.topcased.requirement.core.impactAnalysis">
          <activeWhen>
@@ -860,6 +868,34 @@
                <command
                      commandId="org.topcased.requirement.core.filterTrashRequirements"
                      label="Filter Trash Requirements"
+                     style="toggle">
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="requirementActionsEnablement.hasRequirementModel">
+                        <equals
+                              value="true">
+                        </equals>
+                     </with>
+                  </visibleWhen>
+               </command>
+               <command
+                     commandId="org.topcased.requirement.core.filterInvalidRequirements"
+                     label="Filter Invalid Requirements"
+                     style="toggle">
+                  <visibleWhen
+                        checkEnabled="false">
+                     <with
+                           variable="requirementActionsEnablement.hasRequirementModel">
+                        <equals
+                              value="true">
+                        </equals>
+                     </with>
+                  </visibleWhen>
+               </command>
+               <command
+                     commandId="org.topcased.requirement.core.filterValidRequirements"
+                     label="Filter Valid Requirements"
                      style="toggle">
                   <visibleWhen
                         checkEnabled="false">
@@ -1666,6 +1702,22 @@
          </state>
       </command>
       <command
+            id="org.topcased.requirement.core.filterInvalidRequirements"
+            name="Filter Invalid Requirements">
+         <state
+               class="org.eclipse.ui.handlers.RegistryToggleState"
+               id="org.eclipse.ui.commands.toggleState">
+         </state>
+      </command>
+      <command
+            id="org.topcased.requirement.core.filterValidRequirements"
+            name="Filter Valid Requirements">
+         <state
+               class="org.eclipse.ui.handlers.RegistryToggleState"
+               id="org.eclipse.ui.commands.toggleState">
+         </state>
+      </command>
+      <command
             id="org.topcased.requirement.core.impactAnalysis"
             name="Launch requirement impact analysis from this revision">
       </command>
@@ -1847,6 +1899,36 @@
             contextId="org.topcased.requirement.core.currentView"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="M3+CR">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.filterInvalidRequirements"
+            contextId="org.topcased.requirement.core.currentView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M2+I">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.filterValidRequirements"
+            contextId="org.topcased.requirement.core.currentView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M2+V">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.filterCurrentRequirements"
+            contextId="org.topcased.requirement.core.currentView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M2+C">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.filterTrashRequirements"
+            contextId="org.topcased.requirement.core.currentView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M2+T">
+      </key>
+      <key
+            commandId="org.topcased.requirement.core.linkToUpstream"
+            contextId="org.topcased.requirement.core.currentView"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+M2+L">
       </key>
       <key
             commandId="org.topcased.requirement.core.addAttribute"

@@ -362,12 +362,12 @@ public class ImpactAnalysisHandler extends AbstractHandler
                 {
                     public void run()
                     {
-                        //Information dialog informing about the end of the execution
+                        // Information dialog informing about the end of the execution
                         MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.getString("ImpactAnalysisHandler.0"), Messages.getString("ImpactAnalysisHandler.14")); //$NON-NLS-1$ //$NON-NLS-2$
 
                         try
                         {
-                            //the problems view is executed
+                            // the problems view is executed
                             PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView("org.eclipse.ui.views.ProblemView"); //$NON-NLS-1$
                         }
                         catch (PartInitException e)
@@ -469,6 +469,7 @@ public class ImpactAnalysisHandler extends AbstractHandler
                     return true;
                 }
             });
+            dialog.setContainerMode(true);
             return dialog;
         }
 
@@ -504,5 +505,9 @@ public class ImpactAnalysisHandler extends AbstractHandler
             confirm = MessageDialog.openQuestion(Display.getDefault().getActiveShell(), Messages.getString("ImpactAnalysisHandler.3"), //$NON-NLS-1$
                     Messages.getString("ImpactAnalysisHandler.10")); //$NON-NLS-1$
         }
+    }
+
+    public void testImpactAnalysis(Object[] objects, Resource modelResource, Resource oldModelResource, EditingDomain domain){
+        processDialogResults(objects, modelResource, oldModelResource, domain);
     }
 }

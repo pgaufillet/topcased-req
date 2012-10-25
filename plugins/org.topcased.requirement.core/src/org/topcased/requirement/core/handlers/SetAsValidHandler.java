@@ -32,6 +32,7 @@ import org.topcased.requirement.core.extensions.SupportingEditorsManager;
 import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.utils.RequirementHelper;
 import org.topcased.requirement.core.utils.RequirementUtils;
+import org.topcased.requirement.core.views.current.CurrentPage;
 
 /**
  * This handler allows to set a Current Requirement as valid after an update operation.<br>
@@ -86,6 +87,9 @@ public class SetAsValidHandler extends AbstractHandler
             {
                 editingDomain.getCommandStack().execute(compoundCmd);
             }
+            
+            CurrentPage page = RequirementHelper.INSTANCE.getCurrentPage();
+            page.getViewer().refresh();
         }
         return null;
     }
