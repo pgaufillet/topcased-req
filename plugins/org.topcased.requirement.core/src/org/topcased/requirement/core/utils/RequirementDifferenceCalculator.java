@@ -1,11 +1,13 @@
 /***********************************************************************************************************************
- * Copyright (c) 2011 Atos.
+ * Copyright (c) 2012 Atos.
  * 
  * All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse
  * Public License v1.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors: Philippe ROLAND (Atos) - initial API and implementation
+ *               Matthieu BOIVINEAU (Atos) - deletion updated
+ *                                         - new deletion parameters model taken into account
  * 
  **********************************************************************************************************************/
 package org.topcased.requirement.core.utils;
@@ -39,6 +41,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.topcased.requirement.core.utils.ContainerAssigner.ContainerAssignerFactory;
 import org.topcased.typesmodel.model.inittypes.DeletionParameters;
+import org.topcased.typesmodel.model.inittypes.DeletionParemeter;
 
 import ttm.Attribute;
 import ttm.Document;
@@ -166,7 +169,7 @@ public class RequirementDifferenceCalculator
                         ModelElementChangeRightTarget deleteDiffElement = DiffFactory.eINSTANCE.createModelElementChangeRightTarget();
                         deleteDiffElement.setRightElement(reqToDelete);
                         deleteDiffElement.setLeftParent(originalDocument);
-                        deletions.add(deleteDiffElement);
+                        addDeletion(deletions, deleteDiffElement);
                     }
 
                     //Workaround? setting the ident before the doMatch is done yeilded strange results...
@@ -193,12 +196,12 @@ public class RequirementDifferenceCalculator
                                     deleteElement.setRightElement(texts.get(i));
                                     deleteElement.setLeftParent(originalDocument);
                                     addToRoot.add(deleteElement);
-                                    deletions.add(deleteElement);
+                                    addDeletion(deletions, deleteElement);
                                 }
                             }
 
-                        } else if (!(update.getRightElement() instanceof Document && update.getLeftElement() instanceof Document &&
-                                update.getAttribute() != null && TtmPackage.Literals.IDENTIFIED_ELEMENT__IDENT.equals(update.getAttribute()))) 
+                        } else if (!(update.getRightElement() instanceof Document && update.getLeftElement() instanceof Document
+                                && TtmPackage.Literals.IDENTIFIED_ELEMENT__IDENT.equals(update.getAttribute())) && !TtmPackage.Literals.TEXT__VALUE.equals(update.getAttribute())) 
                         {
                             changes.add(difference);
                         }
@@ -220,7 +223,7 @@ public class RequirementDifferenceCalculator
                         ModelElementChangeRightTarget deleteDiffElement = DiffFactory.eINSTANCE.createModelElementChangeRightTarget();
                         deleteDiffElement.setRightElement(reqToDelete);
                         deleteDiffElement.setLeftParent(originalDocument);
-                        deletions.add(deleteDiffElement);
+                        addDeletion(deletions, deleteDiffElement);
                     } else {
                         newText = matchTextOnAttributeAddition(change);
                         if (newText != null) {
@@ -249,6 +252,31 @@ public class RequirementDifferenceCalculator
             }
         }
     }
+    
+    
+    protected void addDeletion(EList<DiffElement> deletions, ModelElementChangeRightTarget deleteDiffElement){
+        
+        if (deleteDiffElement.getRightElement() instanceof Requirement)
+        {
+            Requirement req = (Requirement) deleteDiffElement.getRightElement();
+            for(DiffElement diffElem:deletions){
+                if (diffElem instanceof ModelElementChangeRightTarget)
+                {
+                    ModelElementChangeRightTarget elem = (ModelElementChangeRightTarget) diffElem;
+                    if (elem.getRightElement() instanceof Requirement)
+                    {
+                        Requirement oldReq = (Requirement) elem.getRightElement();
+                        if(req.getIdent().equals(oldReq.getIdent()))
+                        {
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+        deletions.add(deleteDiffElement);
+    }
+    
     
     protected String matchTextOnAttributeAddition(ModelElementChangeLeftTarget change)
     {
@@ -291,14 +319,14 @@ public class RequirementDifferenceCalculator
     
     protected String computeTextToChange(Requirement modifiedReq, Requirement originalReq) {
         
-        CharSequence origDesc = buildDescription(originalReq);
-        CharSequence modifiedDesc = buildDescription(modifiedReq);
+        String origDesc = buildDescription(originalReq).toString();
+        String modifiedDesc = buildDescription(modifiedReq).toString();
         
         if (modifiedDesc.equals(origDesc)) {
             return null;
         }
                 
-        return modifiedDesc.toString();
+        return modifiedDesc;
     }
     
     protected Requirement matchDeleteOnAddition(ModelElementChangeLeftTarget change, Document originalDocument)
@@ -322,46 +350,49 @@ public class RequirementDifferenceCalculator
     protected Requirement matchDeleteOnAttributeChange(UpdateAttribute update, Document originalDocument)
     {
         if (TtmPackage.Literals.TEXT__VALUE.equals(update.getAttribute())) {
-            return computeReqToDelete(((Text)update.getRightElement()).getParent(), originalDocument);
+            return computeReqToDelete(((Text)update.getLeftElement()).getParent(), originalDocument);
         }
 
         else if (TtmPackage.Literals.ATTRIBUTE__VALUE.equals(update.getAttribute())) {
-            return computeReqToDelete(((Attribute)update.getRightElement()).getParent(), originalDocument);
+            return computeReqToDelete(((Attribute)update.getLeftElement()).getParent(), originalDocument);
         }
 
         else if (TtmPackage.Literals.IDENTIFIED_ELEMENT__IDENT.equals(update.getAttribute())) {
-            return computeReqToDelete(update.getRightElement(), originalDocument);
+            return computeReqToDelete(update.getLeftElement(), originalDocument);
         }
 
         return null;
     }
 
+
     protected Requirement computeReqToDelete(EObject modifiedReq, Document originalDocument) {
         DeletionParameters deletionParameters = deletionParametersDocMap.get(originalDocument);
         if (isPartialImport && deletionParameters != null) {
-            Pattern deletionPattern = Pattern.compile(deletionParameters.getRegex(), Pattern.CASE_INSENSITIVE);
-
             if (modifiedReq instanceof Requirement) {
                 Requirement req = (Requirement) modifiedReq;
-                if (deletionParameters.isMatchId()) {
-                    Matcher matcher = deletionPattern.matcher(req.getIdent());
-
-                    if (matcher.matches()) {
-                        String reqId = matcher.group(1);
-
-                        return getUpstreamWithId(originalDocument, reqId);
-                    }
+                
+                // Test of the identifier
+                Pattern deletionPatternId = Pattern.compile(deletionParameters.getRegexId(), Pattern.CASE_INSENSITIVE);
+                Matcher matcher = deletionPatternId.matcher(req.getIdent());
+                if (matcher.matches()) {
+                    String reqId = matcher.group(1);
+                    return getUpstreamWithId(originalDocument, reqId);
                 }
-
-                if (deletionParameters.isMatchDescription()) {
-                    if (deletionPattern.matcher(buildDescription(req)).matches()) {
-                        return getUpstreamWithId(originalDocument, req.getIdent());
-                    }
+                
+                // Test of the description
+                Pattern deletionPatternDescription = Pattern.compile(deletionParameters.getRegexDescription(), Pattern.CASE_INSENSITIVE);
+                if (deletionPatternDescription.matcher(buildDescription(req)).matches()) {
+                    return getUpstreamWithId(originalDocument, req.getIdent());
                 }
 
                 for (Attribute att : req.getAttributes()) {
-                    if (deletionParameters.getAttributesToMatch().contains(att.getName()) && deletionPattern.matcher(att.getValue()).matches()) {
-                        return getUpstreamWithId(originalDocument, req.getIdent());
+                    for(DeletionParemeter delParam:deletionParameters.getRegexAttributes()){
+                        if(delParam.getNameAttribute().equals(att.getName())){
+                            Pattern deletionPatternAttribute = Pattern.compile(delParam.getRegexAttribute(), Pattern.CASE_INSENSITIVE);
+                            if(deletionPatternAttribute.matcher(att.getValue()).matches()) {
+                                return getUpstreamWithId(originalDocument, req.getIdent());
+                            }
+                        }
                     }
                 }
             }

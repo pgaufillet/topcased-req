@@ -13,6 +13,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 
 import org.topcased.typesmodel.model.inittypes.DeletionParameters;
+import org.topcased.typesmodel.model.inittypes.DeletionParemeter;
 import org.topcased.typesmodel.model.inittypes.InittypesPackage;
 
 /**
@@ -22,10 +23,9 @@ import org.topcased.typesmodel.model.inittypes.InittypesPackage;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.topcased.typesmodel.model.inittypes.impl.DeletionParametersImpl#getRegex <em>Regex</em>}</li>
- *   <li>{@link org.topcased.typesmodel.model.inittypes.impl.DeletionParametersImpl#getAttributesToMatch <em>Attributes To Match</em>}</li>
- *   <li>{@link org.topcased.typesmodel.model.inittypes.impl.DeletionParametersImpl#isMatchDescription <em>Match Description</em>}</li>
- *   <li>{@link org.topcased.typesmodel.model.inittypes.impl.DeletionParametersImpl#isMatchId <em>Match Id</em>}</li>
+ *   <li>{@link org.topcased.typesmodel.model.inittypes.impl.DeletionParametersImpl#getRegexDescription <em>Regex Description</em>}</li>
+ *   <li>{@link org.topcased.typesmodel.model.inittypes.impl.DeletionParametersImpl#getRegexId <em>Regex Id</em>}</li>
+ *   <li>{@link org.topcased.typesmodel.model.inittypes.impl.DeletionParametersImpl#getRegexAttributes <em>Regex Attributes</em>}</li>
  * </ul>
  * </p>
  *
@@ -66,8 +66,8 @@ public class DeletionParametersImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getRegex() {
-		return (String)eGet(InittypesPackage.Literals.DELETION_PARAMETERS__REGEX, true);
+	public String getRegexDescription() {
+		return (String)eGet(InittypesPackage.Literals.DELETION_PARAMETERS__REGEX_DESCRIPTION, true);
 	}
 
 	/**
@@ -75,8 +75,26 @@ public class DeletionParametersImpl extends MinimalEObjectImpl.Container impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setRegex(String newRegex) {
-		eSet(InittypesPackage.Literals.DELETION_PARAMETERS__REGEX, newRegex);
+	public void setRegexDescription(String newRegexDescription) {
+		eSet(InittypesPackage.Literals.DELETION_PARAMETERS__REGEX_DESCRIPTION, newRegexDescription);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getRegexId() {
+		return (String)eGet(InittypesPackage.Literals.DELETION_PARAMETERS__REGEX_ID, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setRegexId(String newRegexId) {
+		eSet(InittypesPackage.Literals.DELETION_PARAMETERS__REGEX_ID, newRegexId);
 	}
 
 	/**
@@ -85,44 +103,8 @@ public class DeletionParametersImpl extends MinimalEObjectImpl.Container impleme
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
-	public EList<String> getAttributesToMatch() {
-		return (EList<String>)eGet(InittypesPackage.Literals.DELETION_PARAMETERS__ATTRIBUTES_TO_MATCH, true);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public boolean isMatchDescription() {
-		return (Boolean)eGet(InittypesPackage.Literals.DELETION_PARAMETERS__MATCH_DESCRIPTION, true);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setMatchDescription(boolean newMatchDescription) {
-		eSet(InittypesPackage.Literals.DELETION_PARAMETERS__MATCH_DESCRIPTION, newMatchDescription);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public boolean isMatchId() {
-		return (Boolean)eGet(InittypesPackage.Literals.DELETION_PARAMETERS__MATCH_ID, true);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setMatchId(boolean newMatchId) {
-		eSet(InittypesPackage.Literals.DELETION_PARAMETERS__MATCH_ID, newMatchId);
+	public EList<DeletionParemeter> getRegexAttributes() {
+		return (EList<DeletionParemeter>)eGet(InittypesPackage.Literals.DELETION_PARAMETERS__REGEX_ATTRIBUTES, true);
 	}
 
 } //DeletionParametersImpl

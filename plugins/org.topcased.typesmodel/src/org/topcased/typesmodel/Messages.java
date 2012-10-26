@@ -31,6 +31,34 @@ public class Messages extends NLS
 
     public static String DeletedFile;
 
+	public static String DeletionParametersComposite_ButtonAdd;
+
+	public static String DeletionParametersComposite_ButtonEdit;
+
+	public static String DeletionParametersComposite_ButtonRemove;
+
+	public static String DeletionParametersComposite_ColumnAttributeName;
+
+	public static String DeletionParametersComposite_ColumnAttributeRegex;
+
+	public static String DeletionParametersComposite_DialogConfirmationText;
+
+	public static String DeletionParametersComposite_DialogConfirmationTitle;
+
+	public static String DeletionParametersComposite_GroupAttributes;
+
+	public static String DeletionParametersComposite_LabelDescriptionRegex;
+
+	public static String DeletionParametersComposite_LabelIdRegex;
+
+	public static String DeletionParametersComposite_TestIdRegex;
+
+	public static String DeletionParametersComposite_TextDescriptionRegex;
+
+	public static String DeletionParametersDialog_Title;
+    
+    public static String DescriptionDeletionRegex;
+
     public static String EndText;
 
     public static String Hierarchical;
@@ -65,7 +93,15 @@ public class Messages extends NLS
     
     public static String btnAttributesToMatch;
     
-    public static String txtAttributesToMatch;
+    public static String IniManagerRegistry_DeletionParameterAttributeName;
+
+	public static String IniManagerRegistry_DeletionParameterAttributeRegex;
+
+	public static String IniManagerRegistry_DeletionParameterDescriptionRegex;
+
+	public static String IniManagerRegistry_DeletionParameterIdRegex;
+
+	public static String txtAttributesToMatch;
     
     public static String lblRegex;
     

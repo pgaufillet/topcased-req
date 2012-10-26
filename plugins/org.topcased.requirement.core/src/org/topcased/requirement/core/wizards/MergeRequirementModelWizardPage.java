@@ -13,6 +13,7 @@
  ******************************************************************************/
 package org.topcased.requirement.core.wizards;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -52,6 +53,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
@@ -69,8 +71,9 @@ import org.topcased.requirement.core.transformation.impl.TypeTransformation;
 import org.topcased.requirement.core.transformation.impl.providers.TransformationLabelProvider;
 import org.topcased.requirement.core.utils.RequirementUtils;
 import org.topcased.requirement.util.RequirementResource;
+import org.topcased.typesmodel.handler.IniManagerRegistry;
 import org.topcased.typesmodel.model.inittypes.DeletionParameters;
-import org.topcased.typesmodel.ui.DeletionParametersComposite;
+import org.topcased.typesmodel.model.inittypes.InittypesFactory;
 
 import ttm.Document;
 
@@ -105,6 +108,7 @@ public class MergeRequirementModelWizardPage extends WizardPage
     private ScrolledComposite scrolledComp;
 
     private Image folderImg;
+    private Image paramImg;
 
     private ResourceSet resourceSet ;
 
@@ -130,6 +134,9 @@ public class MergeRequirementModelWizardPage extends WizardPage
     List<Button> documentsButtons = new ArrayList<Button>();
 
     List<Combo> documentsCombos = new ArrayList<Combo>();
+    
+    List<Button> deletionButtons = new ArrayList<Button>();
+    List<DeletionParameters> deletionParametersList = new ArrayList<DeletionParameters>();
 
     List<ComboViewer> documentsComboViewers = new ArrayList<ComboViewer>();
 
@@ -169,10 +176,10 @@ public class MergeRequirementModelWizardPage extends WizardPage
         }
     };
 
-    private Group deletionGroup;
-
-    private DeletionParametersComposite deletionParametersComposite;
-    private Label label;
+//    private Group deletionGroup;
+//
+//    private DeletionParametersComposite deletionParametersComposite;
+//    private Label label;
 
     /**
      * Constructor for SampleNewWizardPage.
@@ -197,6 +204,14 @@ public class MergeRequirementModelWizardPage extends WizardPage
             alreadyAttachedRequirement = null;
         }
         folderImg = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FOLDER);
+        try
+        {
+            paramImg = new Image(Display.getDefault(), RequirementCorePlugin.getDefault().getBundle().getResource("icons/edit.png").openStream());
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
         resourceSet = new ResourceSetImpl();
         resourceSet.eSetDeliver(false);
         resourceSet.eAdapters().clear();
@@ -263,7 +278,7 @@ public class MergeRequirementModelWizardPage extends WizardPage
          */
         docsGroup = new Group(scrolledComp, SWT.NONE);
         docsGroup.setText(Messages.getString("RequirementWizardPage.26"));
-        docsGroup.setLayout(new GridLayout(6, false));
+        docsGroup.setLayout(new GridLayout(7, false));
         docsGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 4, 1));
 
         scrolledComp.setContent(docsGroup);
@@ -285,7 +300,7 @@ public class MergeRequirementModelWizardPage extends WizardPage
         importModelBt.setToolTipText(Messages.getString("RequirementWizardPage.tooltip.selectAll.browse"));
 
         Label separatorDocs = new Label(docsGroup, SWT.SEPARATOR | SWT.HORIZONTAL);
-        separatorDocs.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 6, 1));
+        separatorDocs.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 7, 1));
 
         Label initialDocLbl = new Label(docsGroup, SWT.NONE);
         initialDocLbl.setText(Messages.getString("RequirementWizardPage.22"));
@@ -296,7 +311,7 @@ public class MergeRequirementModelWizardPage extends WizardPage
         new Label(docsGroup, SWT.NONE);
 
         Label lblDocumentType = new Label(docsGroup, SWT.NONE);
-        lblDocumentType.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+        lblDocumentType.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
         lblDocumentType.setText(Messages.getString("MergeRequirementModelWizardPage.lblDocumentType.text"));
 
         Label newDocument = new Label(docsGroup, SWT.NONE);
@@ -334,7 +349,14 @@ public class MergeRequirementModelWizardPage extends WizardPage
                 documentTypeCombo.getCombo().setToolTipText("Select Document to import requirement");
                 initTypeViewer(documentTypeCombo);
                 documentsComboViewers.add(documentTypeCombo);
-
+                
+                // Deletion parameters button
+                Button btnDeletion = new Button(docsGroup, SWT.PUSH);
+                btnDeletion.setImage(paramImg);
+                btnDeletion.setToolTipText("Edit deletion parameters");
+                deletionButtons.add(btnDeletion);
+                deletionParametersList.add(InittypesFactory.eINSTANCE.createDeletionParameters());
+                
                 // Document choice
                 Combo c = new Combo(docsGroup, SWT.READ_ONLY);
                 c.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
@@ -390,19 +412,6 @@ public class MergeRequirementModelWizardPage extends WizardPage
         impactAnalysisBt = new Button(mainGroup, SWT.CHECK);
         impactAnalysisBt.setText(Messages.getString("RequirementWizardPage.27")); //$NON-NLS-1$
         impactAnalysisBt.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 3, 1));
-
-        label = new Label(mainGroup, SWT.SEPARATOR | SWT.HORIZONTAL);
-        label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 3, 1));
-
-        deletionGroup = new Group(mainGroup, SWT.NONE);
-        deletionGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
-        deletionGroup.setText(Messages.getString("MergeRequirementModelWizardPage.deleteGroup.text")); //$NON-NLS-1$
-        deletionGroup.setLayout(new GridLayout(2, false));
-
-        deletionParametersComposite = new DeletionParametersComposite(deletionGroup, RequirementCorePlugin.getDefault().getPreferenceStore());
-
-        new Label(mainGroup, SWT.NONE);
-        new Label(mainGroup, SWT.NONE);
     }
 
     /**
@@ -489,6 +498,38 @@ public class MergeRequirementModelWizardPage extends WizardPage
                 }
             });
         }
+        
+        // Deletion buttons
+        for (final Button b : deletionButtons)
+        {
+            b.addSelectionListener(new SelectionAdapter()
+            {
+                public void widgetSelected(SelectionEvent e)
+                {
+                    int index = deletionButtons.indexOf(b);
+//                    ISelection selection = documentsComboViewers.get(index).getSelection();
+//                    ITransformation transformation = getSelectedTransformation(selection);
+//                    if(transformation instanceof TypeTransformation){
+//                        if (((TypeTransformation)transformation).getType() != null) {
+//                            DocumentType docType = ((TypeTransformation)transformation).getType();
+//                            Path path = new Path(docType.getDocumentPath());
+//                            IFile typesFile = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+//                            // The deletion parameters dialog is called
+//                            DeletionParameters delParams = IniManagerRegistry.openDeletionParametersEditionDialog(typesFile, false);
+////                            if(delParams != null){
+////                                docType.setDeletionParameters(delParams);
+////                            }
+//                            
+//                        }
+//                    } else {
+                        DeletionParameters delParams = IniManagerRegistry.openDeletionParametersEditionDialog(deletionParametersList.get(index));
+                        if(delParams != null){
+                            deletionParametersList.set(index, delParams);
+                        }  
+//                    }
+                }
+            });
+        }
 
         requirementNameFd.addModifyListener(new ModifyListener()
         {
@@ -519,7 +560,6 @@ public class MergeRequirementModelWizardPage extends WizardPage
         if(transformation != null){
             try{
                 Resource r = getResource(docToMerge);
-                //List<Document> docList = transformation.getDocuments(URI.createPlatformResourceURI(docToMerge,true), resourceSet);
                 List<Document> docList = transformation.getDocuments(r);
                 if(docList.isEmpty()){
                     documentsCombos.get(comboViewerIndex).setEnabled(false);
@@ -529,10 +569,19 @@ public class MergeRequirementModelWizardPage extends WizardPage
                 }
             } catch (Exception e) {
                 documentsCombos.get(comboViewerIndex).setEnabled(false);
+                //deletionButtons.get(comboViewerIndex).setEnabled(false);
+            }
+            if(transformation instanceof TypeTransformation){
+                deletionParametersList.set(comboViewerIndex, ((TypeTransformation) transformation).getType().getDeletionParameters());
+                //deletionButtons.get(comboViewerIndex).setEnabled(true);
+            } else {
+            	deletionParametersList.set(comboViewerIndex, InittypesFactory.eINSTANCE.createDeletionParameters());
+                //deletionButtons.get(comboViewerIndex).setEnabled(false);
             }
             dialogChanged();
         } else {
             documentsCombos.get(comboViewerIndex).setEnabled(false);
+            //deletionButtons.get(comboViewerIndex).setEnabled(false);
         }
     }
     
@@ -553,27 +602,9 @@ public class MergeRequirementModelWizardPage extends WizardPage
      * @param documentToUpdate name of the document to update
      */
     private void updateControlsDocumentRequirement(int index, IFile f, String documentToUpdate){
-//        Combo c = documentsCombos.get(index);
-//        c.removeAll();
         documentsTexts.get(index).setText(f.getFullPath().toString());
-//        if ("docx".equals(f.getFileExtension()) || "odt".equals(f.getFileExtension()) || "csv".equals(f.getFileExtension()) || "ods".equals(f.getFileExtension())
-//                || "xlsx".equals(f.getFileExtension()))
-//        {
-//            documentsComboViewers.get(index).getCombo().setEnabled(true);
-//        }
-//        else
-//        {
-//            //documentsComboViewers.get(index).getCombo().setEnabled(false);
-//            //documentsComboViewers.get(index).setSelection(null);
-//        }
-//        documentsCombos.get(index).setEnabled(RequirementResource.FILE_EXTENSION.equals(f.getFileExtension()));
-//        List<Document> documents = null;
-//        if (RequirementResource.FILE_EXTENSION.equals(f.getFileExtension()))
-//        {
-//            documents = getDocuments(f);
-//        }
-//        addCombosTextsAndSelection(documentToUpdate, c, documents);
         updateComboTransformationSelection(documentsComboViewers.get(index), f.getFileExtension());
+        deletionParametersList.set(index, InittypesFactory.eINSTANCE.createDeletionParameters());
     }
 
     private void updateComboTransformationSelection(ComboViewer comboViewer, String extension){
@@ -988,7 +1019,6 @@ public class MergeRequirementModelWizardPage extends WizardPage
     protected Map<Document, Document> getDocumentsToMerge(Map<Document, DeletionParameters> deletionParametersDocMap)
     {
         Map<Document, Document> docsToMerge = new HashMap<Document, Document>();
-        DeletionParameters defaultDeletionParameters = getDefaultDeletionParameters();
         for (Button b : buttonsCheck){
             if (b.getSelection()){
                 int index = buttonsCheck.indexOf(b);
@@ -1000,13 +1030,12 @@ public class MergeRequirementModelWizardPage extends WizardPage
                     Document doc = transformation.transform(URI.createFileURI(fileToMerge), resourceSet, documentsCombos.get(index).getText());
                     if(doc!=null){
                         docsToMerge.put(inputDocuments.get(index), doc);
-                        if(transformation instanceof TypeTransformation){
-                            if (((TypeTransformation)transformation).getType().getDeletionParameters() != null) {
-                                deletionParametersDocMap.put(inputDocuments.get(index), ((TypeTransformation)transformation).getType().getDeletionParameters());
-                            } else {
-                                deletionParametersDocMap.put(inputDocuments.get(index), defaultDeletionParameters);
-                            }
-                        }
+                        deletionParametersDocMap.put(inputDocuments.get(index), deletionParametersList.get(index));
+//                        if(transformation instanceof TypeTransformation){
+//                            if (((TypeTransformation)transformation).getType().getDeletionParameters() != null) {
+//                                deletionParametersDocMap.put(inputDocuments.get(index), ((TypeTransformation)transformation).getType().getDeletionParameters());
+//                            }
+//                        }
                     } else {
                         MessageBox dialog = new MessageBox(this.getShell(), SWT.ICON_ERROR | SWT.OK);
                         dialog.setText("Transformation error");
@@ -1102,11 +1131,7 @@ public class MergeRequirementModelWizardPage extends WizardPage
         // Save is partial and perform analysis preferences
         RequirementCorePlugin.getDefault().getPreferenceStore().setValue(MergeRequirementModelWizardPage.PREFERENCE_FOR_IS_PARTIAL, isPartialImport());
         RequirementCorePlugin.getDefault().getPreferenceStore().setValue(MergeRequirementModelWizardPage.PREFERENCE_FOR_PERFORM_IMPACT_ANALYSIS, isImpactAnalysis());
-        deletionParametersComposite.savePrefs();
-    }
-
-    public DeletionParameters getDefaultDeletionParameters() {
-        return deletionParametersComposite.getDeletionParameters();
+        //deletionParametersComposite.savePrefs();
     }
 
 }

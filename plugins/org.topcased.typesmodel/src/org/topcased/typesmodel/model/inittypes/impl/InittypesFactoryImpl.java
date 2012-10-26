@@ -70,6 +70,7 @@ public class InittypesFactoryImpl extends EFactoryImpl implements InittypesFacto
 			case InittypesPackage.DOCUMENT_TYPE: return createDocumentType();
 			case InittypesPackage.STYLE: return createStyle();
 			case InittypesPackage.DELETION_PARAMETERS: return createDeletionParameters();
+			case InittypesPackage.DELETION_PAREMETER: return createDeletionParemeter();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -138,6 +139,16 @@ public class InittypesFactoryImpl extends EFactoryImpl implements InittypesFacto
 	public DeletionParameters createDeletionParameters() {
 		DeletionParametersImpl deletionParameters = new DeletionParametersImpl();
 		return deletionParameters;
+	}
+
+				/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public DeletionParemeter createDeletionParemeter() {
+		DeletionParemeterImpl deletionParemeter = new DeletionParemeterImpl();
+		return deletionParemeter;
 	}
 
 				/**

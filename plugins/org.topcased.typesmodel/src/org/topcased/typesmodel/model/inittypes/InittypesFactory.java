@@ -81,6 +81,15 @@ public interface InittypesFactory extends EFactory
 	DeletionParameters createDeletionParameters();
 
 				/**
+	 * Returns a new object of class '<em>Deletion Paremeter</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Deletion Paremeter</em>'.
+	 * @generated
+	 */
+	DeletionParemeter createDeletionParemeter();
+
+				/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

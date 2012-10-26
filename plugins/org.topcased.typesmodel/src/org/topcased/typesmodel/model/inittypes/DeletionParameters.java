@@ -18,10 +18,9 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.topcased.typesmodel.model.inittypes.DeletionParameters#getRegex <em>Regex</em>}</li>
- *   <li>{@link org.topcased.typesmodel.model.inittypes.DeletionParameters#getAttributesToMatch <em>Attributes To Match</em>}</li>
- *   <li>{@link org.topcased.typesmodel.model.inittypes.DeletionParameters#isMatchDescription <em>Match Description</em>}</li>
- *   <li>{@link org.topcased.typesmodel.model.inittypes.DeletionParameters#isMatchId <em>Match Id</em>}</li>
+ *   <li>{@link org.topcased.typesmodel.model.inittypes.DeletionParameters#getRegexDescription <em>Regex Description</em>}</li>
+ *   <li>{@link org.topcased.typesmodel.model.inittypes.DeletionParameters#getRegexId <em>Regex Id</em>}</li>
+ *   <li>{@link org.topcased.typesmodel.model.inittypes.DeletionParameters#getRegexAttributes <em>Regex Attributes</em>}</li>
  * </ul>
  * </p>
  *
@@ -31,99 +30,73 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface DeletionParameters extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Regex</b></em>' attribute.
+	 * Returns the value of the '<em><b>Regex Description</b></em>' attribute.
+	 * The default value is <code>""</code>.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Regex</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Regex Description</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Regex</em>' attribute.
-	 * @see #setRegex(String)
-	 * @see org.topcased.typesmodel.model.inittypes.InittypesPackage#getDeletionParameters_Regex()
-	 * @model
+	 * @return the value of the '<em>Regex Description</em>' attribute.
+	 * @see #setRegexDescription(String)
+	 * @see org.topcased.typesmodel.model.inittypes.InittypesPackage#getDeletionParameters_RegexDescription()
+	 * @model default=""
 	 * @generated
 	 */
-	String getRegex();
+	String getRegexDescription();
 
 	/**
-	 * Sets the value of the '{@link org.topcased.typesmodel.model.inittypes.DeletionParameters#getRegex <em>Regex</em>}' attribute.
+	 * Sets the value of the '{@link org.topcased.typesmodel.model.inittypes.DeletionParameters#getRegexDescription <em>Regex Description</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Regex</em>' attribute.
-	 * @see #getRegex()
+	 * @param value the new value of the '<em>Regex Description</em>' attribute.
+	 * @see #getRegexDescription()
 	 * @generated
 	 */
-	void setRegex(String value);
+	void setRegexDescription(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Attributes To Match</b></em>' attribute list.
-	 * The list contents are of type {@link java.lang.String}.
+	 * Returns the value of the '<em><b>Regex Id</b></em>' attribute.
+	 * The default value is <code>""</code>.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Attributes To Match</em>' attribute list isn't clear,
+	 * If the meaning of the '<em>Regex Id</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Attributes To Match</em>' attribute list.
-	 * @see org.topcased.typesmodel.model.inittypes.InittypesPackage#getDeletionParameters_AttributesToMatch()
-	 * @model
+	 * @return the value of the '<em>Regex Id</em>' attribute.
+	 * @see #setRegexId(String)
+	 * @see org.topcased.typesmodel.model.inittypes.InittypesPackage#getDeletionParameters_RegexId()
+	 * @model default=""
 	 * @generated
 	 */
-	EList<String> getAttributesToMatch();
+	String getRegexId();
 
 	/**
-	 * Returns the value of the '<em><b>Match Description</b></em>' attribute.
-	 * The default value is <code>"false"</code>.
+	 * Sets the value of the '{@link org.topcased.typesmodel.model.inittypes.DeletionParameters#getRegexId <em>Regex Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Regex Id</em>' attribute.
+	 * @see #getRegexId()
+	 * @generated
+	 */
+	void setRegexId(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Regex Attributes</b></em>' containment reference list.
+	 * The list contents are of type {@link org.topcased.typesmodel.model.inittypes.DeletionParemeter}.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Match Description</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Regex Attributes</em>' reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Match Description</em>' attribute.
-	 * @see #setMatchDescription(boolean)
-	 * @see org.topcased.typesmodel.model.inittypes.InittypesPackage#getDeletionParameters_MatchDescription()
-	 * @model default="false"
+	 * @return the value of the '<em>Regex Attributes</em>' containment reference list.
+	 * @see org.topcased.typesmodel.model.inittypes.InittypesPackage#getDeletionParameters_RegexAttributes()
+	 * @model containment="true"
 	 * @generated
 	 */
-	boolean isMatchDescription();
-
-	/**
-	 * Sets the value of the '{@link org.topcased.typesmodel.model.inittypes.DeletionParameters#isMatchDescription <em>Match Description</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Match Description</em>' attribute.
-	 * @see #isMatchDescription()
-	 * @generated
-	 */
-	void setMatchDescription(boolean value);
-
-	/**
-	 * Returns the value of the '<em><b>Match Id</b></em>' attribute.
-	 * The default value is <code>"false"</code>.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Match Id</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Match Id</em>' attribute.
-	 * @see #setMatchId(boolean)
-	 * @see org.topcased.typesmodel.model.inittypes.InittypesPackage#getDeletionParameters_MatchId()
-	 * @model default="false"
-	 * @generated
-	 */
-	boolean isMatchId();
-
-	/**
-	 * Sets the value of the '{@link org.topcased.typesmodel.model.inittypes.DeletionParameters#isMatchId <em>Match Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Match Id</em>' attribute.
-	 * @see #isMatchId()
-	 * @generated
-	 */
-	void setMatchId(boolean value);
+	EList<DeletionParemeter> getRegexAttributes();
 
 } // DeletionParameters

@@ -39,285 +39,325 @@ import org.topcased.typesmodel.model.inittypes.util.InittypesAdapterFactory;
 public class InittypesItemProviderAdapterFactory extends InittypesAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier, IDisposable
 {
     /**
-     * This keeps track of the root adapter factory that delegates to this adapter factory.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the root adapter factory that delegates to this adapter factory.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ComposedAdapterFactory parentAdapterFactory;
 
     /**
-     * This is used to implement {@link org.eclipse.emf.edit.provider.IChangeNotifier}.
-     * <!-- begin-user-doc -->
+	 * This is used to implement {@link org.eclipse.emf.edit.provider.IChangeNotifier}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected IChangeNotifier changeNotifier = new ChangeNotifier();
 
     /**
-     * This keeps track of all the supported types checked by {@link #isFactoryForType isFactoryForType}.
-     * <!-- begin-user-doc -->
+	 * This keeps track of all the supported types checked by {@link #isFactoryForType isFactoryForType}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected Collection<Object> supportedTypes = new ArrayList<Object>();
 
     /**
-     * This constructs an instance.
-     * <!-- begin-user-doc -->
+	 * This constructs an instance.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public InittypesItemProviderAdapterFactory()
     {
-        supportedTypes.add(IEditingDomainItemProvider.class);
-        supportedTypes.add(IStructuredItemContentProvider.class);
-        supportedTypes.add(ITreeItemContentProvider.class);
-        supportedTypes.add(IItemLabelProvider.class);
-        supportedTypes.add(IItemPropertySource.class);
-    }
+		supportedTypes.add(IEditingDomainItemProvider.class);
+		supportedTypes.add(IStructuredItemContentProvider.class);
+		supportedTypes.add(ITreeItemContentProvider.class);
+		supportedTypes.add(IItemLabelProvider.class);
+		supportedTypes.add(IItemPropertySource.class);
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link org.topcased.typesmodel.model.inittypes.TypeModel} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link org.topcased.typesmodel.model.inittypes.TypeModel} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected TypeModelItemProvider typeModelItemProvider;
 
     /**
-     * This creates an adapter for a {@link org.topcased.typesmodel.model.inittypes.TypeModel}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link org.topcased.typesmodel.model.inittypes.TypeModel}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createTypeModelAdapter()
     {
-        if (typeModelItemProvider == null)
-        {
-            typeModelItemProvider = new TypeModelItemProvider(this);
-        }
+		if (typeModelItemProvider == null) {
+			typeModelItemProvider = new TypeModelItemProvider(this);
+		}
 
-        return typeModelItemProvider;
-    }
+		return typeModelItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link org.topcased.typesmodel.model.inittypes.Regex} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link org.topcased.typesmodel.model.inittypes.Regex} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected RegexItemProvider regexItemProvider;
 
     /**
-     * This creates an adapter for a {@link org.topcased.typesmodel.model.inittypes.Regex}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link org.topcased.typesmodel.model.inittypes.Regex}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createRegexAdapter()
     {
-        if (regexItemProvider == null)
-        {
-            regexItemProvider = new RegexItemProvider(this);
-        }
+		if (regexItemProvider == null) {
+			regexItemProvider = new RegexItemProvider(this);
+		}
 
-        return regexItemProvider;
-    }
+		return regexItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link org.topcased.typesmodel.model.inittypes.Column} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link org.topcased.typesmodel.model.inittypes.Column} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected ColumnItemProvider columnItemProvider;
 
     /**
-     * This creates an adapter for a {@link org.topcased.typesmodel.model.inittypes.Column}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link org.topcased.typesmodel.model.inittypes.Column}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createColumnAdapter()
     {
-        if (columnItemProvider == null)
-        {
-            columnItemProvider = new ColumnItemProvider(this);
-        }
+		if (columnItemProvider == null) {
+			columnItemProvider = new ColumnItemProvider(this);
+		}
 
-        return columnItemProvider;
-    }
+		return columnItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link org.topcased.typesmodel.model.inittypes.DocumentType} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link org.topcased.typesmodel.model.inittypes.DocumentType} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected DocumentTypeItemProvider documentTypeItemProvider;
 
     /**
-     * This creates an adapter for a {@link org.topcased.typesmodel.model.inittypes.DocumentType}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link org.topcased.typesmodel.model.inittypes.DocumentType}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createDocumentTypeAdapter()
     {
-        if (documentTypeItemProvider == null)
-        {
-            documentTypeItemProvider = new DocumentTypeItemProvider(this);
-        }
+		if (documentTypeItemProvider == null) {
+			documentTypeItemProvider = new DocumentTypeItemProvider(this);
+		}
 
-        return documentTypeItemProvider;
-    }
+		return documentTypeItemProvider;
+	}
 
     /**
-     * This keeps track of the one adapter used for all {@link org.topcased.typesmodel.model.inittypes.Style} instances.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link org.topcased.typesmodel.model.inittypes.Style} instances.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     protected StyleItemProvider styleItemProvider;
 
     /**
-     * This creates an adapter for a {@link org.topcased.typesmodel.model.inittypes.Style}.
-     * <!-- begin-user-doc -->
+	 * This creates an adapter for a {@link org.topcased.typesmodel.model.inittypes.Style}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter createStyleAdapter()
     {
-        if (styleItemProvider == null)
-        {
-            styleItemProvider = new StyleItemProvider(this);
-        }
+		if (styleItemProvider == null) {
+			styleItemProvider = new StyleItemProvider(this);
+		}
 
-        return styleItemProvider;
-    }
+		return styleItemProvider;
+	}
 
     /**
-     * This returns the root adapter factory that contains this factory.
-     * <!-- begin-user-doc -->
+	 * This keeps track of the one adapter used for all {@link org.topcased.typesmodel.model.inittypes.DeletionParameters} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected DeletionParametersItemProvider deletionParametersItemProvider;
+
+				/**
+	 * This creates an adapter for a {@link org.topcased.typesmodel.model.inittypes.DeletionParameters}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createDeletionParametersAdapter() {
+		if (deletionParametersItemProvider == null) {
+			deletionParametersItemProvider = new DeletionParametersItemProvider(this);
+		}
+
+		return deletionParametersItemProvider;
+	}
+
+				/**
+	 * This keeps track of the one adapter used for all {@link org.topcased.typesmodel.model.inittypes.DeletionParemeter} instances.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected DeletionParemeterItemProvider deletionParemeterItemProvider;
+
+				/**
+	 * This creates an adapter for a {@link org.topcased.typesmodel.model.inittypes.DeletionParemeter}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Adapter createDeletionParemeterAdapter() {
+		if (deletionParemeterItemProvider == null) {
+			deletionParemeterItemProvider = new DeletionParemeterItemProvider(this);
+		}
+
+		return deletionParemeterItemProvider;
+	}
+
+				/**
+	 * This returns the root adapter factory that contains this factory.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public ComposeableAdapterFactory getRootAdapterFactory()
     {
-        return parentAdapterFactory == null ? this : parentAdapterFactory.getRootAdapterFactory();
-    }
+		return parentAdapterFactory == null ? this : parentAdapterFactory.getRootAdapterFactory();
+	}
 
     /**
-     * This sets the composed adapter factory that contains this factory.
-     * <!-- begin-user-doc -->
+	 * This sets the composed adapter factory that contains this factory.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void setParentAdapterFactory(ComposedAdapterFactory parentAdapterFactory)
     {
-        this.parentAdapterFactory = parentAdapterFactory;
-    }
+		this.parentAdapterFactory = parentAdapterFactory;
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public boolean isFactoryForType(Object type)
     {
-        return supportedTypes.contains(type) || super.isFactoryForType(type);
-    }
+		return supportedTypes.contains(type) || super.isFactoryForType(type);
+	}
 
     /**
-     * This implementation substitutes the factory itself as the key for the adapter.
-     * <!-- begin-user-doc -->
+	 * This implementation substitutes the factory itself as the key for the adapter.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Adapter adapt(Notifier notifier, Object type)
     {
-        return super.adapt(notifier, this);
-    }
+		return super.adapt(notifier, this);
+	}
 
     /**
-     * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     @Override
     public Object adapt(Object object, Object type)
     {
-        if (isFactoryForType(type))
-        {
-            Object adapter = super.adapt(object, type);
-            if (!(type instanceof Class<?>) || (((Class<?>)type).isInstance(adapter)))
-            {
-                return adapter;
-            }
-        }
+		if (isFactoryForType(type)) {
+			Object adapter = super.adapt(object, type);
+			if (!(type instanceof Class<?>) || (((Class<?>)type).isInstance(adapter))) {
+				return adapter;
+			}
+		}
 
-        return null;
-    }
+		return null;
+	}
 
     /**
-     * This adds a listener.
-     * <!-- begin-user-doc -->
+	 * This adds a listener.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void addListener(INotifyChangedListener notifyChangedListener)
     {
-        changeNotifier.addListener(notifyChangedListener);
-    }
+		changeNotifier.addListener(notifyChangedListener);
+	}
 
     /**
-     * This removes a listener.
-     * <!-- begin-user-doc -->
+	 * This removes a listener.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void removeListener(INotifyChangedListener notifyChangedListener)
     {
-        changeNotifier.removeListener(notifyChangedListener);
-    }
+		changeNotifier.removeListener(notifyChangedListener);
+	}
 
     /**
-     * This delegates to {@link #changeNotifier} and to {@link #parentAdapterFactory}.
-     * <!-- begin-user-doc -->
+	 * This delegates to {@link #changeNotifier} and to {@link #parentAdapterFactory}.
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void fireNotifyChanged(Notification notification)
     {
-        changeNotifier.fireNotifyChanged(notification);
+		changeNotifier.fireNotifyChanged(notification);
 
-        if (parentAdapterFactory != null)
-        {
-            parentAdapterFactory.fireNotifyChanged(notification);
-        }
-    }
+		if (parentAdapterFactory != null) {
+			parentAdapterFactory.fireNotifyChanged(notification);
+		}
+	}
 
     /**
-     * This disposes all of the item providers created by this factory. 
-     * <!-- begin-user-doc -->
+	 * This disposes all of the item providers created by this factory. 
+	 * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
-     */
+	 * @generated
+	 */
     public void dispose()
     {
-        if (typeModelItemProvider != null) typeModelItemProvider.dispose();
-        if (regexItemProvider != null) regexItemProvider.dispose();
-        if (columnItemProvider != null) columnItemProvider.dispose();
-        if (documentTypeItemProvider != null) documentTypeItemProvider.dispose();
-        if (styleItemProvider != null) styleItemProvider.dispose();
-    }
+		if (typeModelItemProvider != null) typeModelItemProvider.dispose();
+		if (regexItemProvider != null) regexItemProvider.dispose();
+		if (columnItemProvider != null) columnItemProvider.dispose();
+		if (documentTypeItemProvider != null) documentTypeItemProvider.dispose();
+		if (styleItemProvider != null) styleItemProvider.dispose();
+		if (deletionParametersItemProvider != null) deletionParametersItemProvider.dispose();
+		if (deletionParemeterItemProvider != null) deletionParemeterItemProvider.dispose();
+	}
 
 }

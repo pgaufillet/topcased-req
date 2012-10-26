@@ -103,6 +103,10 @@ public class InittypesAdapterFactory extends AdapterFactoryImpl
 				return createDeletionParametersAdapter();
 			}
 			@Override
+			public Adapter caseDeletionParemeter(DeletionParemeter object) {
+				return createDeletionParemeterAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -224,6 +228,20 @@ public class InittypesAdapterFactory extends AdapterFactoryImpl
 	 * @generated
 	 */
 	public Adapter createDeletionParametersAdapter() {
+		return null;
+	}
+
+				/**
+	 * Creates a new adapter for an object of class '{@link org.topcased.typesmodel.model.inittypes.DeletionParemeter <em>Deletion Paremeter</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.topcased.typesmodel.model.inittypes.DeletionParemeter
+	 * @generated
+	 */
+	public Adapter createDeletionParemeterAdapter() {
 		return null;
 	}
 

@@ -9,6 +9,8 @@
  *
  * Contributors:
  *  Anass RADOUANI (Atos) anass.radouani@atos.net - Initial API and implementation
+ *  Matthieu BOIVINEAU (Atos) matthieu.boivineau@atos.net - Deletion parameters parsing added
+ *  														Deletion parameters dialog management added 
  *
  *****************************************************************************/
 
@@ -24,6 +26,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,6 +42,8 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.swt.widgets.Display;
 import org.ini4j.Ini;
 import org.ini4j.Profile.Section;
 import org.ini4j.Wini;
@@ -46,6 +51,7 @@ import org.topcased.typesmodel.Activator;
 import org.topcased.typesmodel.Messages;
 import org.topcased.typesmodel.model.inittypes.Column;
 import org.topcased.typesmodel.model.inittypes.DeletionParameters;
+import org.topcased.typesmodel.model.inittypes.DeletionParemeter;
 import org.topcased.typesmodel.model.inittypes.DocumentType;
 import org.topcased.typesmodel.model.inittypes.InittypesFactory;
 import org.topcased.typesmodel.model.inittypes.InittypesPackage;
@@ -56,6 +62,8 @@ import org.topcased.typesmodel.model.inittypes.TypeModel;
 import org.topcased.typesmodel.model.inittypes.provider.DocumentTypeItemProvider;
 import org.topcased.typesmodel.model.inittypes.provider.InittypesItemProviderAdapterFactory;
 import org.topcased.typesmodel.model.inittypes.provider.RegexItemProvider;
+import org.topcased.typesmodel.ui.ComboInputDialog;
+import org.topcased.typesmodel.ui.DeletionParametersDialog;
 import org.topcased.windows.ini.actions.IniFileParser;
 
 import com.google.common.base.Predicate;
@@ -127,24 +135,24 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
 
 	private static Pattern attributePattern = Pattern.compile(Messages.AttributeRegex);
 	private static Pattern attributeNamePattern = Pattern.compile(Messages.AttributeName);
-	private static Pattern attributeIsTextPattern = Pattern.compile("Attribute\\d+IsText");
+	private static Pattern attributeIsTextPattern = Pattern.compile("Attribute\\d+IsText"); //$NON-NLS-1$
 	private static Pattern stylePattern = Pattern.compile(Messages.StyleRegex);
 	private static Pattern styleNamePattern = Pattern.compile(Messages.StyleName);
 	private static Pattern styleLabelPattern = Pattern.compile(Messages.StyleLabel);
-	private static Pattern styleIsTextPattern = Pattern.compile("Style\\d+IsText");
+	private static Pattern styleIsTextPattern = Pattern.compile("Style\\d+IsText"); //$NON-NLS-1$
 	private static Pattern columnPattern = Pattern.compile(Messages.ColumnRegex);
 	private static Pattern columnNamePattern = Pattern.compile(Messages.ColumnName);
-	private static Pattern columnIsTextPattern = Pattern.compile("Column\\d+IsText");
+	private static Pattern columnIsTextPattern = Pattern.compile("Column\\d+IsText"); //$NON-NLS-1$
 	private static Pattern requirementPattern = Pattern.compile(Messages.RequirementRegex);
 	private static Pattern requirementStylePattern = Pattern.compile(Messages.RequirementStyle);
 	private static Pattern requirementColumnPattern = Pattern.compile(Messages.RequirementColumn);
 	private static Pattern hierarchicalPattern = Pattern.compile(Messages.Hierarchical);
 	private static Pattern endTextPattern = Pattern.compile(Messages.EndText);
-	private static Pattern textRegexPattern = Pattern.compile("DescriptionRegex");
-	private static Pattern deletionMatchIdPattern = Pattern.compile("DeletionMatchId");
-	private static Pattern deletionMatchDescriptionPattern = Pattern.compile("DeletionMatchDescription");
-	private static Pattern deletionRegexPattern = Pattern.compile("DeletionRegex");
-	private static Pattern deletionAttributesToMatchPattern = Pattern.compile("DeletionAttributesToMatch");
+	private static Pattern textRegexPattern = Pattern.compile("DescriptionRegex"); //$NON-NLS-1$
+	private static Pattern deletionParameterIdRegex = Pattern.compile(Messages.IniManagerRegistry_DeletionParameterIdRegex);
+	private static Pattern deletionParameterDescriptionRegex = Pattern.compile(Messages.IniManagerRegistry_DeletionParameterDescriptionRegex);
+	private static Pattern deletionParameterAttributeName = Pattern.compile(Messages.IniManagerRegistry_DeletionParameterAttributeName);
+	private static Pattern deletionParameterAttributeRegex = Pattern.compile(Messages.IniManagerRegistry_DeletionParameterAttributeRegex);
 
 	private boolean fileAdded(IFile resource)
 	{
@@ -169,11 +177,13 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
 			Section section = parser.getElements(type);
 			if (section != null) {
 				Map<String, Type> allElements = new HashMap<String, Type>();
+				Map<String, DeletionParemeter> allDeletionParameters = new HashMap<String, DeletionParemeter>();
 				Type id = null;
 
 				DocumentType documentType = InittypesFactory.eINSTANCE.createDocumentType();
 				documentType.setName(type);
 				documentType.setDocumentPath(resource.getFullPath().toString());
+				documentType.setDeletionParameters( InittypesFactory.eINSTANCE.createDeletionParameters());
 
 				for (Entry<String, String> element : section.entrySet())
 				{
@@ -247,7 +257,7 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
 						if (id == null)
 						{
 							id = manageId(element,InittypesPackage.Literals.COLUMN, InittypesPackage.Literals.REGEX__EXPRESSION);
-							Pattern patternColumn = Pattern.compile("Requirement(\\d*)Column");
+							Pattern patternColumn = Pattern.compile("Requirement(\\d*)Column"); //$NON-NLS-1$
 							Matcher m = patternColumn.matcher(element.getKey());
 							if (m.matches())
 							{
@@ -270,43 +280,29 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
 					{
 						documentType.setTextType(element.getValue());
 					}
-					else if (textRegexPattern.matcher(element.getKey()).matches()) {
+					else if (textRegexPattern.matcher(element.getKey()).matches())
+					{
 						documentType.setTextRegex(element.getValue());
 					}
-					else if (deletionMatchIdPattern.matcher(element.getKey()).matches())
+					else if (deletionParameterIdRegex.matcher(element.getKey()).matches())
 					{
-						DeletionParameters deletionParameters = getOrInitDeletionParameters(documentType);
-						if ("True".equalsIgnoreCase(element.getValue())) { //$NON-NLS-1$
-							deletionParameters.setMatchId(true);
-						}
-						else
-						{
-							deletionParameters.setMatchId(false);
-						}
+						documentType.getDeletionParameters().setRegexId(element.getValue());
 					}
-					else if (deletionMatchDescriptionPattern.matcher(element.getKey()).matches())
+					else if (deletionParameterDescriptionRegex.matcher(element.getKey()).matches())
 					{
-						DeletionParameters deletionParameters = getOrInitDeletionParameters(documentType);
-						if ("True".equalsIgnoreCase(element.getValue())) { //$NON-NLS-1$
-							deletionParameters.setMatchDescription(true);
-						}
-						else
-						{
-							deletionParameters.setMatchDescription(false);
-						}
+						documentType.getDeletionParameters().setRegexDescription(element.getValue());
 					}
-					else if (deletionRegexPattern.matcher(element.getKey()).matches())
+					else if (deletionParameterAttributeName.matcher(element.getKey()).matches())
 					{
-						DeletionParameters deletionParameters = getOrInitDeletionParameters(documentType);
-						deletionParameters.setRegex(element.getValue());
+						manageDeletionParameters(allDeletionParameters,element,InittypesPackage.Literals.DELETION_PAREMETER,InittypesPackage.Literals.DELETION_PAREMETER__NAME_ATTRIBUTE);
 					}
-					else if (deletionAttributesToMatchPattern.matcher(element.getKey()).matches())
+					else if (deletionParameterAttributeRegex.matcher(element.getKey()).matches())
 					{
-						DeletionParameters deletionParameters = getOrInitDeletionParameters(documentType);
-						deletionParameters.getAttributesToMatch().addAll(parseCommaSeparated(element.getValue()));
+						manageDeletionParameters(allDeletionParameters,element,InittypesPackage.Literals.DELETION_PAREMETER,InittypesPackage.Literals.DELETION_PAREMETER__REGEX_ATTRIBUTE);
 					}
 				}
 				documentType.getTypes().addAll(allElements.values());
+				documentType.getDeletionParameters().getRegexAttributes().addAll(allDeletionParameters.values());
 				documentType.setId(id);
 
 				documentTypes.put(type, documentType);
@@ -318,9 +314,9 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
 
 	public static List<String> parseCommaSeparated(String strToParse) {
 		LinkedList<String> strList = new LinkedList<String>();
-		String[] strs = strToParse.split(",");
+		String[] strs = strToParse.split(","); //$NON-NLS-1$
 		for (String str : strs) {
-			if (!"".equals(str)) {
+			if (!"".equals(str)) { //$NON-NLS-1$
 				strList.add(str);
 			}
 		}
@@ -420,6 +416,28 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
 			column.setNumber(Integer.parseInt(elementId.replace("Column", ""))); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
+	
+	
+	private static void manageDeletionParameters(Map<String, DeletionParemeter> allDeletionParameters, Entry<String, String> element, EClass eclass, EStructuralFeature feature)
+	{
+		if (element.getValue() == null || element.getValue().length() == 0)
+		{
+			Activator.getDefault().getLog().log(new Status(Status.WARNING, Activator.PLUGIN_ID, "The deletion parameter : " + element.getKey() + "=" + element.getValue() + " has been ignored because it is empty")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			return;
+		}
+		String elementId = element.getKey().replace("Name", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		elementId = elementId.replace("Regex", ""); //$NON-NLS-1$ //$NON-NLS-2$
+		if (!allDeletionParameters.containsKey(elementId))
+		{
+			DeletionParemeter param = create(eclass);
+			param.eSet(feature,element.getValue());   
+			allDeletionParameters.put(elementId, param);
+		}
+		else if (allDeletionParameters.containsKey(elementId))
+		{
+			(allDeletionParameters.get(elementId)).eSet(feature,element.getValue());
+		}
+	}
 
 
 	@SuppressWarnings("unchecked")
@@ -514,8 +532,8 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
 			typeNames.deleteCharAt(typeNames.length() - 1);
 		}
 
-		Section section = ini.add("Types");
-		section.add("Names", typeNames);
+		Section section = ini.add("Types"); //$NON-NLS-1$
+		section.add("Names", typeNames); //$NON-NLS-1$
 
 		URI uri = typesFile.getLocationURI();
 
@@ -542,41 +560,46 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
 
 	private static void createDocumentTypeSection(Ini ini, DocumentType documentType) {
 		Section section = ini.add(documentType.getName());
-		section.add("Hierarchical", documentType.isHierarchical());
+		section.add("Hierarchical", documentType.isHierarchical()); //$NON-NLS-1$
 
 		DeletionParameters deletionParameters = documentType.getDeletionParameters();
 		if (deletionParameters != null) {
-			section.add("DeletionMatchId", deletionParameters.isMatchId());
-			section.add("DeletionMatchDescription", deletionParameters.isMatchDescription());
-			section.add("DeletionRegex", deletionParameters.getRegex());
-
-			section.add("DeletionAttributesToMatch", serializeCommaSeparated(deletionParameters.getAttributesToMatch()));
+			section.add("DeletionParameterIdRegex", deletionParameters.getRegexId()); //$NON-NLS-1$
+			section.add("DeletionParameterDescriptionRegex", deletionParameters.getRegexDescription()); //$NON-NLS-1$
+			
+			// All the deletion parameters of the attributes
+			int iAttr = 0;
+			for(DeletionParemeter delParam:documentType.getDeletionParameters().getRegexAttributes()){
+				section.add("DeletionParameterAttribute"+iAttr+"Name", delParam.getNameAttribute()); //$NON-NLS-1$ //$NON-NLS-2$
+				section.add("DeletionParameterAttribute"+iAttr+"Regex", delParam.getRegexAttribute()); //$NON-NLS-1$ //$NON-NLS-2$
+				iAttr++;
+			}
 		}
 
 		String endText = documentType.getTextType();
 		if (endText != null && endText.length() > 0)
 		{
-			section.add("EndText", endText);
+			section.add("EndText", endText); //$NON-NLS-1$
 		}
 		String descriptionRegex = documentType.getTextRegex();
 		if (descriptionRegex != null && descriptionRegex.length()>0)
 		{
-			section.add("DescriptionRegex", descriptionRegex);
+			section.add("DescriptionRegex", descriptionRegex); //$NON-NLS-1$
 		}
 
 		Type id = documentType.getId();
 		if (id instanceof Column)
 		{
-			section.add("Requirement" + ((Column)id).getNumber() + "Column", ((Column) id).getExpression());
+			section.add("Requirement" + ((Column)id).getNumber() + "Column", ((Column) id).getExpression()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		else if (id instanceof Style)
 		{
-			section.add("Requirement1Style", ((Style) id).getLabel());
-			section.add("Requirement1", ((Style) id).getExpression());
+			section.add("Requirement1Style", ((Style) id).getLabel()); //$NON-NLS-1$
+			section.add("Requirement1", ((Style) id).getExpression()); //$NON-NLS-1$
 		}
 		else if (id instanceof Regex)
 		{
-			section.add("Requirement1", ((Regex) id).getExpression());
+			section.add("Requirement1", ((Regex) id).getExpression()); //$NON-NLS-1$
 		}
 
 		int i = 0;
@@ -586,35 +609,107 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
 			if (type instanceof Column)
 			{
 				Column column = (Column) type;
-				section.add("Column"+column.getNumber()+"Name", column.getName());
-				section.add("Column"+column.getNumber()+"IsText", column.isIsText());
+				section.add("Column"+column.getNumber()+"Name", column.getName()); //$NON-NLS-1$ //$NON-NLS-2$
+				section.add("Column"+column.getNumber()+"IsText", column.isIsText()); //$NON-NLS-1$ //$NON-NLS-2$
 				if (column.getExpression() != null && column.getExpression().length() > 0)
 				{
-					section.add("Column"+column.getNumber(), column.getExpression());
+					section.add("Column"+column.getNumber(), column.getExpression()); //$NON-NLS-1$
 				}
 
 			}
 			else if (type instanceof Style)
 			{
 				Style style = (Style) type;
-				section.add("Style" + i + "Name", style.getName());
-				section.add("Style" + i + "Label", style.getLabel());
-				section.add("Style" + i + "IsText", style.isIsText());
+				section.add("Style" + i + "Name", style.getName()); //$NON-NLS-1$ //$NON-NLS-2$
+				section.add("Style" + i + "Label", style.getLabel()); //$NON-NLS-1$ //$NON-NLS-2$
+				section.add("Style" + i + "IsText", style.isIsText()); //$NON-NLS-1$ //$NON-NLS-2$
 				if (style.getExpression() != null  && style.getExpression().length() > 0)
 				{
-					section.add("Style" + i, style.getExpression());
+					section.add("Style" + i, style.getExpression()); //$NON-NLS-1$
 				}
 				i++;
 			}
 			else if (type instanceof Regex)
 			{
 				Regex regex = (Regex) type;
-				section.add("Attribute" + i + "Name", regex.getName());
-				section.add("Attribute" + i, regex.getExpression());
-				section.add("Attribute" + i + "IsText", regex.isIsText());
+				section.add("Attribute" + i + "Name", regex.getName()); //$NON-NLS-1$ //$NON-NLS-2$
+				section.add("Attribute" + i, regex.getExpression()); //$NON-NLS-1$
+				section.add("Attribute" + i + "IsText", regex.isIsText()); //$NON-NLS-1$ //$NON-NLS-2$
 				i++;
 			}
 		}
+	}
+	
+	
+	/**
+	 * This method opens a deletion parameters edition dialog. The dialog is filled according to the given deletion parameters.
+	 * @param deletionParameters Deletion parameters used for the default values of the dialog. If null, there is no default value (empty) 
+	 * @return The edited deletion parameters
+	 */
+	public static DeletionParameters openDeletionParametersEditionDialog(DeletionParameters deletionParameters)
+	{
+		DeletionParametersDialog deletionParametersDialog = new DeletionParametersDialog(Display.getDefault().getActiveShell(), deletionParameters);
+		if (deletionParametersDialog.open() == Dialog.OK)
+		{
+			// The modified deletion parameters are collected and returned
+			return deletionParametersDialog.getDeletionParameters();
+		}
+		return null;
+	}
+	
+	/**
+	 * This method opens a deletion parameters edition dialog. The dialog is filled according to the given ".type" file.
+	 * @param typesFile .type file used for the default values of the dialog. If null, there is no default value (empty) and deletion parameters are created from scratch 
+	 * @param saveTypeFile If true, the given file is modified according to the user's modifications 
+	 * @return The edited deletion parameters
+	 */
+	public static DeletionParameters openDeletionParametersEditionDialog(IFile typesFile, boolean saveTypeFile)
+	{
+		// Case we need to create deletion parameters that to the dialog
+		if(typesFile == null)
+		{
+			DeletionParametersDialog deletionParametersDialog = new DeletionParametersDialog(Display.getDefault().getActiveShell(), null);
+			if (deletionParametersDialog.open() == Dialog.OK)
+			{
+				return deletionParametersDialog.getDeletionParameters();
+			}
+		}
+		// Case we need to edit an existing file
+		else
+		{
+			Map<String, DocumentType> documentTypes = IniManagerRegistry.parseTypesFile(typesFile);
+			Set<String> documentTypeNames = documentTypes.keySet();
+
+			if (!documentTypeNames.isEmpty())
+			{
+				ComboInputDialog selectDocTypeDialog = new ComboInputDialog(Display.getDefault().getActiveShell(), "Document type to edit", "Please select the document type you want to edit :", documentTypeNames.iterator().next(), documentTypeNames.toArray(new String[documentTypeNames.size()])); //$NON-NLS-1$ //$NON-NLS-2$
+				if (selectDocTypeDialog.open() == Dialog.OK)
+				{
+					// A documentType is chosen from the .type file
+					DocumentType selectedDocumentType = documentTypes.get(selectDocTypeDialog.getValue());
+					if (selectedDocumentType != null)
+					{
+						DeletionParametersDialog deletionParametersDialog = new DeletionParametersDialog(Display.getDefault().getActiveShell(), selectedDocumentType.getDeletionParameters());
+						if (deletionParametersDialog.open() == Dialog.OK)
+						{
+							// The modified deletion parameters are collected
+							DeletionParameters deletionParameters = deletionParametersDialog.getDeletionParameters();
+							if(saveTypeFile){
+								selectedDocumentType.setDeletionParameters(deletionParameters);
+								IniManagerRegistry.save(typesFile, documentTypes.values());
+								try
+								{
+									typesFile.refreshLocal(IResource.DEPTH_ZERO, null);
+								}
+								catch (CoreException e) {}
+							}
+							return deletionParameters;
+						}
+					}
+				}
+			}
+		}
+		return null;
 	}
 
 }

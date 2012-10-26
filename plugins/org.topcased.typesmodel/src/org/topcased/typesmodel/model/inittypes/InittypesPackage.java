@@ -420,40 +420,31 @@ public interface InittypesPackage extends EPackage
 	int DELETION_PARAMETERS = 6;
 
 				/**
-	 * The feature id for the '<em><b>Regex</b></em>' attribute.
+	 * The feature id for the '<em><b>Regex Description</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DELETION_PARAMETERS__REGEX = 0;
+	int DELETION_PARAMETERS__REGEX_DESCRIPTION = 0;
 
 				/**
-	 * The feature id for the '<em><b>Attributes To Match</b></em>' attribute list.
+	 * The feature id for the '<em><b>Regex Id</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DELETION_PARAMETERS__ATTRIBUTES_TO_MATCH = 1;
+	int DELETION_PARAMETERS__REGEX_ID = 1;
 
 				/**
-	 * The feature id for the '<em><b>Match Description</b></em>' attribute.
+	 * The feature id for the '<em><b>Regex Attributes</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DELETION_PARAMETERS__MATCH_DESCRIPTION = 2;
-
-				/**
-	 * The feature id for the '<em><b>Match Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DELETION_PARAMETERS__MATCH_ID = 3;
+	int DELETION_PARAMETERS__REGEX_ATTRIBUTES = 2;
 
 				/**
 	 * The number of structural features of the '<em>Deletion Parameters</em>' class.
@@ -462,7 +453,44 @@ public interface InittypesPackage extends EPackage
 	 * @generated
 	 * @ordered
 	 */
-	int DELETION_PARAMETERS_FEATURE_COUNT = 4;
+	int DELETION_PARAMETERS_FEATURE_COUNT = 3;
+
+				/**
+	 * The meta object id for the '{@link org.topcased.typesmodel.model.inittypes.impl.DeletionParemeterImpl <em>Deletion Paremeter</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.topcased.typesmodel.model.inittypes.impl.DeletionParemeterImpl
+	 * @see org.topcased.typesmodel.model.inittypes.impl.InittypesPackageImpl#getDeletionParemeter()
+	 * @generated
+	 */
+	int DELETION_PAREMETER = 7;
+
+				/**
+	 * The feature id for the '<em><b>Name Attribute</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELETION_PAREMETER__NAME_ATTRIBUTE = 0;
+
+				/**
+	 * The feature id for the '<em><b>Regex Attribute</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELETION_PAREMETER__REGEX_ATTRIBUTE = 1;
+
+				/**
+	 * The number of structural features of the '<em>Deletion Paremeter</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELETION_PAREMETER_FEATURE_COUNT = 2;
 
 				/**
 	 * Returns the meta object for class '{@link org.topcased.typesmodel.model.inittypes.TypeModel <em>Type Model</em>}'.
@@ -700,48 +728,69 @@ public interface InittypesPackage extends EPackage
 	EClass getDeletionParameters();
 
 				/**
-	 * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.DeletionParameters#getRegex <em>Regex</em>}'.
+	 * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.DeletionParameters#getRegexDescription <em>Regex Description</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Regex</em>'.
-	 * @see org.topcased.typesmodel.model.inittypes.DeletionParameters#getRegex()
+	 * @return the meta object for the attribute '<em>Regex Description</em>'.
+	 * @see org.topcased.typesmodel.model.inittypes.DeletionParameters#getRegexDescription()
 	 * @see #getDeletionParameters()
 	 * @generated
 	 */
-	EAttribute getDeletionParameters_Regex();
+	EAttribute getDeletionParameters_RegexDescription();
 
 				/**
-	 * Returns the meta object for the attribute list '{@link org.topcased.typesmodel.model.inittypes.DeletionParameters#getAttributesToMatch <em>Attributes To Match</em>}'.
+	 * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.DeletionParameters#getRegexId <em>Regex Id</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute list '<em>Attributes To Match</em>'.
-	 * @see org.topcased.typesmodel.model.inittypes.DeletionParameters#getAttributesToMatch()
+	 * @return the meta object for the attribute '<em>Regex Id</em>'.
+	 * @see org.topcased.typesmodel.model.inittypes.DeletionParameters#getRegexId()
 	 * @see #getDeletionParameters()
 	 * @generated
 	 */
-	EAttribute getDeletionParameters_AttributesToMatch();
+	EAttribute getDeletionParameters_RegexId();
 
 				/**
-	 * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.DeletionParameters#isMatchDescription <em>Match Description</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.topcased.typesmodel.model.inittypes.DeletionParameters#getRegexAttributes <em>Regex Attributes</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Match Description</em>'.
-	 * @see org.topcased.typesmodel.model.inittypes.DeletionParameters#isMatchDescription()
+	 * @return the meta object for the containment reference list '<em>Regex Attributes</em>'.
+	 * @see org.topcased.typesmodel.model.inittypes.DeletionParameters#getRegexAttributes()
 	 * @see #getDeletionParameters()
 	 * @generated
 	 */
-	EAttribute getDeletionParameters_MatchDescription();
+	EReference getDeletionParameters_RegexAttributes();
 
 				/**
-	 * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.DeletionParameters#isMatchId <em>Match Id</em>}'.
+	 * Returns the meta object for class '{@link org.topcased.typesmodel.model.inittypes.DeletionParemeter <em>Deletion Paremeter</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Match Id</em>'.
-	 * @see org.topcased.typesmodel.model.inittypes.DeletionParameters#isMatchId()
-	 * @see #getDeletionParameters()
+	 * @return the meta object for class '<em>Deletion Paremeter</em>'.
+	 * @see org.topcased.typesmodel.model.inittypes.DeletionParemeter
 	 * @generated
 	 */
-	EAttribute getDeletionParameters_MatchId();
+	EClass getDeletionParemeter();
+
+				/**
+	 * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.DeletionParemeter#getNameAttribute <em>Name Attribute</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name Attribute</em>'.
+	 * @see org.topcased.typesmodel.model.inittypes.DeletionParemeter#getNameAttribute()
+	 * @see #getDeletionParemeter()
+	 * @generated
+	 */
+	EAttribute getDeletionParemeter_NameAttribute();
+
+				/**
+	 * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.DeletionParemeter#getRegexAttribute <em>Regex Attribute</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Regex Attribute</em>'.
+	 * @see org.topcased.typesmodel.model.inittypes.DeletionParemeter#getRegexAttribute()
+	 * @see #getDeletionParemeter()
+	 * @generated
+	 */
+	EAttribute getDeletionParemeter_RegexAttribute();
 
 				/**
 	 * Returns the factory that creates the instances of the model.
@@ -957,36 +1006,54 @@ public interface InittypesPackage extends EPackage
 		EClass DELETION_PARAMETERS = eINSTANCE.getDeletionParameters();
 
 								/**
-		 * The meta object literal for the '<em><b>Regex</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Regex Description</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute DELETION_PARAMETERS__REGEX = eINSTANCE.getDeletionParameters_Regex();
+		EAttribute DELETION_PARAMETERS__REGEX_DESCRIPTION = eINSTANCE.getDeletionParameters_RegexDescription();
 
 								/**
-		 * The meta object literal for the '<em><b>Attributes To Match</b></em>' attribute list feature.
+		 * The meta object literal for the '<em><b>Regex Id</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute DELETION_PARAMETERS__ATTRIBUTES_TO_MATCH = eINSTANCE.getDeletionParameters_AttributesToMatch();
+		EAttribute DELETION_PARAMETERS__REGEX_ID = eINSTANCE.getDeletionParameters_RegexId();
 
 								/**
-		 * The meta object literal for the '<em><b>Match Description</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Regex Attributes</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute DELETION_PARAMETERS__MATCH_DESCRIPTION = eINSTANCE.getDeletionParameters_MatchDescription();
+		EReference DELETION_PARAMETERS__REGEX_ATTRIBUTES = eINSTANCE.getDeletionParameters_RegexAttributes();
 
 								/**
-		 * The meta object literal for the '<em><b>Match Id</b></em>' attribute feature.
+		 * The meta object literal for the '{@link org.topcased.typesmodel.model.inittypes.impl.DeletionParemeterImpl <em>Deletion Paremeter</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.topcased.typesmodel.model.inittypes.impl.DeletionParemeterImpl
+		 * @see org.topcased.typesmodel.model.inittypes.impl.InittypesPackageImpl#getDeletionParemeter()
+		 * @generated
+		 */
+		EClass DELETION_PAREMETER = eINSTANCE.getDeletionParemeter();
+
+								/**
+		 * The meta object literal for the '<em><b>Name Attribute</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute DELETION_PARAMETERS__MATCH_ID = eINSTANCE.getDeletionParameters_MatchId();
+		EAttribute DELETION_PAREMETER__NAME_ATTRIBUTE = eINSTANCE.getDeletionParemeter_NameAttribute();
+
+								/**
+		 * The meta object literal for the '<em><b>Regex Attribute</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DELETION_PAREMETER__REGEX_ATTRIBUTE = eINSTANCE.getDeletionParemeter_RegexAttribute();
 
     }
 

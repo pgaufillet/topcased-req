@@ -13,6 +13,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.topcased.typesmodel.model.inittypes.Column;
 import org.topcased.typesmodel.model.inittypes.DeletionParameters;
+import org.topcased.typesmodel.model.inittypes.DeletionParemeter;
 import org.topcased.typesmodel.model.inittypes.DocumentType;
 import org.topcased.typesmodel.model.inittypes.InittypesFactory;
 import org.topcased.typesmodel.model.inittypes.InittypesPackage;
@@ -77,6 +78,13 @@ public class InittypesPackageImpl extends EPackageImpl implements InittypesPacka
 	 * @generated
 	 */
 	private EClass deletionParametersEClass = null;
+
+				/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass deletionParemeterEClass = null;
 
 				/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -364,7 +372,7 @@ public class InittypesPackageImpl extends EPackageImpl implements InittypesPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getDeletionParameters_Regex() {
+	public EAttribute getDeletionParameters_RegexDescription() {
 		return (EAttribute)deletionParametersEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -373,7 +381,7 @@ public class InittypesPackageImpl extends EPackageImpl implements InittypesPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getDeletionParameters_AttributesToMatch() {
+	public EAttribute getDeletionParameters_RegexId() {
 		return (EAttribute)deletionParametersEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -382,8 +390,8 @@ public class InittypesPackageImpl extends EPackageImpl implements InittypesPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getDeletionParameters_MatchDescription() {
-		return (EAttribute)deletionParametersEClass.getEStructuralFeatures().get(2);
+	public EReference getDeletionParameters_RegexAttributes() {
+		return (EReference)deletionParametersEClass.getEStructuralFeatures().get(2);
 	}
 
 				/**
@@ -391,8 +399,26 @@ public class InittypesPackageImpl extends EPackageImpl implements InittypesPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getDeletionParameters_MatchId() {
-		return (EAttribute)deletionParametersEClass.getEStructuralFeatures().get(3);
+	public EClass getDeletionParemeter() {
+		return deletionParemeterEClass;
+	}
+
+				/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getDeletionParemeter_NameAttribute() {
+		return (EAttribute)deletionParemeterEClass.getEStructuralFeatures().get(0);
+	}
+
+				/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getDeletionParemeter_RegexAttribute() {
+		return (EAttribute)deletionParemeterEClass.getEStructuralFeatures().get(1);
 	}
 
 				/**
@@ -453,10 +479,13 @@ public class InittypesPackageImpl extends EPackageImpl implements InittypesPacka
 		createEAttribute(styleEClass, STYLE__LABEL);
 
 		deletionParametersEClass = createEClass(DELETION_PARAMETERS);
-		createEAttribute(deletionParametersEClass, DELETION_PARAMETERS__REGEX);
-		createEAttribute(deletionParametersEClass, DELETION_PARAMETERS__ATTRIBUTES_TO_MATCH);
-		createEAttribute(deletionParametersEClass, DELETION_PARAMETERS__MATCH_DESCRIPTION);
-		createEAttribute(deletionParametersEClass, DELETION_PARAMETERS__MATCH_ID);
+		createEAttribute(deletionParametersEClass, DELETION_PARAMETERS__REGEX_DESCRIPTION);
+		createEAttribute(deletionParametersEClass, DELETION_PARAMETERS__REGEX_ID);
+		createEReference(deletionParametersEClass, DELETION_PARAMETERS__REGEX_ATTRIBUTES);
+
+		deletionParemeterEClass = createEClass(DELETION_PAREMETER);
+		createEAttribute(deletionParemeterEClass, DELETION_PAREMETER__NAME_ATTRIBUTE);
+		createEAttribute(deletionParemeterEClass, DELETION_PAREMETER__REGEX_ATTRIBUTE);
 	}
 
     /**
@@ -521,10 +550,13 @@ public class InittypesPackageImpl extends EPackageImpl implements InittypesPacka
 		initEAttribute(getStyle_Label(), ecorePackage.getEString(), "label", null, 0, 1, Style.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(deletionParametersEClass, DeletionParameters.class, "DeletionParameters", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getDeletionParameters_Regex(), ecorePackage.getEString(), "regex", null, 0, 1, DeletionParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getDeletionParameters_AttributesToMatch(), ecorePackage.getEString(), "attributesToMatch", null, 0, -1, DeletionParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getDeletionParameters_MatchDescription(), ecorePackage.getEBoolean(), "matchDescription", "false", 0, 1, DeletionParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getDeletionParameters_MatchId(), ecorePackage.getEBoolean(), "matchId", "false", 0, 1, DeletionParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getDeletionParameters_RegexDescription(), ecorePackage.getEString(), "regexDescription", "", 0, 1, DeletionParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getDeletionParameters_RegexId(), ecorePackage.getEString(), "regexId", "", 0, 1, DeletionParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDeletionParameters_RegexAttributes(), this.getDeletionParemeter(), null, "regexAttributes", null, 0, -1, DeletionParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(deletionParemeterEClass, DeletionParemeter.class, "DeletionParemeter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getDeletionParemeter_NameAttribute(), ecorePackage.getEString(), "nameAttribute", null, 0, 1, DeletionParemeter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getDeletionParemeter_RegexAttribute(), ecorePackage.getEString(), "regexAttribute", null, 0, 1, DeletionParemeter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);
