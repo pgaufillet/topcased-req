@@ -15,9 +15,13 @@ package org.topcased.requirement.core.providers;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.provider.ComposedImage;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
@@ -28,6 +32,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
+import org.topcased.facilities.util.EMFMarkerUtil;
 import org.topcased.requirement.AttributeLink;
 import org.topcased.requirement.AttributeValue;
 import org.topcased.requirement.ConfiguratedAttribute;
@@ -95,9 +100,9 @@ public class CurrentRequirementLabelProvider extends AdapterFactoryLabelProvider
             EObject eObject = ((HierarchicalElement) element).getElement();
             if (eObject != null)
             {
-                if(eObject.eIsProxy())
+                if (eObject.eIsProxy())
                 {
-                    //Displaying the image used for HierarchicalElements. 
+                    // Displaying the image used for HierarchicalElements.
                     return super.getImage(element);
                 }
                 else
@@ -106,24 +111,26 @@ public class CurrentRequirementLabelProvider extends AdapterFactoryLabelProvider
                 }
             }
         }
-        else if (element instanceof EObject){
-            //tests if the requirement refers to trash requirements.
+        else if (element instanceof EObject)
+        {
+            // tests if the requirement refers to trash requirements.
             EObject eObject = (EObject) element;
-            if(RequirementUtils.refersToTrash(eObject)){
+            if (RequirementUtils.refersToTrash(eObject))
+            {
                 Image original = super.getImage(eObject);
-                
+
                 List<Object> images = new ArrayList<Object>(2);
                 images.add(original);
                 images.add(RequirementCorePlugin.getDefault().getImage("icons/trashOverlay.gif"));
                 Object imageWithOverlay = new ComposedImage(images);
-                //Creating the message from the ComposedImage object, and returning it.
+                // Creating the message from the ComposedImage object, and returning it.
                 return this.getImageFromObject(imageWithOverlay);
             }
         }
-        
+
         return super.getImage(element);
     }
-    
+
     /**
      * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider#getText(java.lang.Object)
      */
@@ -136,10 +143,10 @@ public class CurrentRequirementLabelProvider extends AdapterFactoryLabelProvider
             {
                 if (eObject.eIsProxy())
                 {
-                    //Returning the URI of the associated resource.
+                    // Returning the URI of the associated resource.
                     URI eObjectUri = EcoreUtil.getURI(eObject);
                     String resourcePath = eObjectUri.path();
-                    String label = "Element ("+resourcePath+")";
+                    String label = "Element (" + resourcePath + ")";
                     return label;
                 }
                 else
@@ -185,9 +192,9 @@ public class CurrentRequirementLabelProvider extends AdapterFactoryLabelProvider
         if (object instanceof AttributeLink)
         {
             AttributeLink link = (AttributeLink) object;
-            return getFont(link.eContainer());
+            return isImpactMarkerFind(link) ? getFont(link.eContainer()) : defaultFont;
         }
-        if (object instanceof CurrentRequirement)
+        else if (object instanceof CurrentRequirement)
         {
             CurrentRequirement req = (CurrentRequirement) object;
             return req.isImpacted() ? italicFont : defaultFont;
@@ -204,14 +211,55 @@ public class CurrentRequirementLabelProvider extends AdapterFactoryLabelProvider
         if (object instanceof AttributeLink)
         {
             AttributeLink link = (AttributeLink) object;
-            return getForeground(link.eContainer());
+            return isImpactMarkerFind(link) ? getForeground(link.eContainer()) : defaultColor;
         }
-        if (object instanceof CurrentRequirement)
+        else if (object instanceof CurrentRequirement)
         {
             CurrentRequirement req = (CurrentRequirement) object;
             return req.isImpacted() ? italicColor : defaultColor;
         }
         return super.getForeground(object);
+    }
+
+    /**
+     * The attribute is link to an impact marker (or not)
+     * 
+     * @param aLink attribute to link
+     * @return is link do
+     */
+    private boolean isImpactMarkerFind(AttributeLink aLink)
+    {
+        IResource iRes = EMFMarkerUtil.findResourceFor(aLink);
+
+        if (aLink.eResource() != null)
+        {
+            String uriLink = aLink.eResource().getURI().appendFragment(aLink.eResource().getURIFragment(aLink)).toString();
+            IMarker[] markers = null;
+            try
+            {
+                markers = iRes.findMarkers(EValidator.MARKER, true, IResource.DEPTH_INFINITE);
+            }
+            catch (CoreException e)
+            {
+                return false;
+            }
+            for (IMarker marker : markers)
+            {
+                try
+                {
+                    String uriMarker = (String) marker.getAttribute(EValidator.URI_ATTRIBUTE);
+                    if (uriLink.equals(uriMarker))
+                    {
+                        return true;
+                    }
+                }
+                catch (CoreException e)
+                {
+                }
+            }
+        }
+
+        return false;
     }
 
 }

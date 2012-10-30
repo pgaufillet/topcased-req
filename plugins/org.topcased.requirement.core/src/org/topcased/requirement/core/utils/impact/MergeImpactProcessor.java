@@ -64,6 +64,7 @@ public class MergeImpactProcessor
     private Set<URI> resources;
 
     private Map<EObject, List<EObject>> impact;
+
     private Map<String, EObject> ids;
 
     private RequirementDifferenceCalculator calc;
@@ -184,7 +185,8 @@ public class MergeImpactProcessor
                 {
                     processElementImpact(diff, addDiff.getRightParent(), addDiff.getRightParent());
                 }
-                else if (added instanceof HierarchicalElement) {
+                else if (added instanceof HierarchicalElement)
+                {
                     processElementImpact(diff, addDiff.getLeftElement(), addDiff.getRightParent());
                 }
             }
@@ -249,10 +251,23 @@ public class MergeImpactProcessor
     {
         AdapterFactoryLabelProvider factory = new AdapterFactoryLabelProvider(RequirementUtils.getAdapterFactory());
         List<EObject> foundList = null;
+        String req_upstream = "";
+        String currentMarkerText = null;
+
+        if (modifiedElement instanceof ttm.Requirement)
+        {
+            // when deleting a requirement the objects are not equal in a Java sense -> check idents
+            ttm.Requirement ttm2 = (ttm.Requirement) modifiedElement;
+            req_upstream = ttm2.getIdent();
+        }
         if (elementToMark instanceof ttm.Requirement)
         {
             // when deleting a requirement the objects are not equal in a Java sense -> check idents
-            ttm.Requirement ttm = (ttm.Requirement) elementToMark ;
+            ttm.Requirement ttm = (ttm.Requirement) elementToMark;
+            if (req_upstream == null || req_upstream.equals(""))
+            {
+                req_upstream = ttm.getIdent();
+            }
             EObject eObject = ids.get(ttm.getIdent());
             if (eObject != null)
             {
@@ -263,7 +278,7 @@ public class MergeImpactProcessor
         {
             foundList = impact.get(elementToMark);
         }
-        
+
         if (foundList != null)
         {
             for (EObject linkTo : foundList)
@@ -277,9 +292,9 @@ public class MergeImpactProcessor
                         currentReq.setImpacted(true);
                         // the information is logged
                         String requirement = factory.getText(currentReq);
-                        String reason = factory.getText(diff);
+                        currentMarkerText = requirement + "/" + req_upstream + " : " + getDescription(diff);
 
-                        addMarkerFor(linkTo, requirement + " : " + reason, IMarker.SEVERITY_WARNING, d); //$NON-NLS-1$
+                        addMarkerFor(linkTo, currentMarkerText, IMarker.SEVERITY_WARNING, d, false); //$NON-NLS-1$
                     }
                 }
                 catch (CoreException e)
@@ -293,16 +308,103 @@ public class MergeImpactProcessor
         {
             try
             {
-                String infoMsg = factory.getText(diff);
                 Document document = getDocument(modifiedElement);
+                currentMarkerText = req_upstream + " : " + getDescription(diff);
 
-                addMarkerFor(elementToMark, infoMsg, IMarker.SEVERITY_INFO, document);
+                addMarkerFor(elementToMark, currentMarkerText, IMarker.SEVERITY_INFO, document, true);
             }
             catch (CoreException e)
             {
                 RequirementCorePlugin.log("Information message cannot be logged", IStatus.ERROR, e); //$NON-NLS-1$
             }
         }
+    }
+
+    /**
+     * Put a description with minimum data instead of text from factoryLabel when it possible.
+     * 
+     * @param diff The difference extracted from the EMF Compare diff model
+     * @return description for marker
+     */
+    protected String getDescription(DiffElement diff)
+    {
+        int textLength = 15;
+
+        AdapterFactoryLabelProvider factory = new AdapterFactoryLabelProvider(RequirementUtils.getAdapterFactory());
+        String reason = factory.getText(diff);
+
+        if (diff instanceof MoveModelElement)
+        {
+            EObject moved = ((MoveModelElement) diff).getRightElement();
+            if (moved instanceof HierarchicalElement)
+            {
+                return diff.getKind().getName() + " : " + reason;
+            }
+        }
+        else if (diff instanceof ModelElementChangeLeftTarget)
+        {
+            ModelElementChangeLeftTarget addDiff = (ModelElementChangeLeftTarget) diff;
+            EObject added = addDiff.getLeftElement();
+            // a hierarchical element or an attribute has been added.
+            if (added instanceof UpstreamModel)
+            {
+                return diff.getKind().getName() + " : " + reason;
+            }
+            if (added instanceof ttm.Attribute)
+            {
+                return diff.getKind().getName() + " : Attribute " + ((ttm.Attribute) added).getName();
+            }
+            if (added instanceof Text)
+            {
+                String localText = ((Text) added).getValue();
+                return diff.getKind().getName() + " : Text (" + localText.substring(0, Math.min(textLength, localText.length())) + "...)";
+            }
+            else if (added instanceof HierarchicalElement)
+            {
+                return diff.getKind().getName() + " : " + reason;
+            }
+        }
+        else if (diff instanceof UpdateAttribute)
+        {
+            EObject modifiedObject = ((UpdateAttribute) diff).getRightElement();
+            // an attribute has been modified. We need to mark its parent
+            if (modifiedObject instanceof ttm.Attribute)
+            {
+                return diff.getKind().getName() + " : Attribute " + ((ttm.Attribute) modifiedObject).getName();
+            }
+            else if (modifiedObject instanceof Text)
+            {
+                String localText = ((Text) modifiedObject).getValue();
+                return diff.getKind().getName() + " : Text " + ((UpdateAttribute) diff).getAttribute().getName() + " (" + localText.substring(0, Math.min(textLength, localText.length())) + ")";
+            }
+            else if (modifiedObject instanceof HierarchicalElement)
+            {
+                return diff.getKind().getName() + " : " + modifiedObject.getClass().getSimpleName().replace("Impl", "") + " " + ((UpdateAttribute) diff).getAttribute().getName();
+            }
+        }
+        else if (diff instanceof ModelElementChangeRightTarget)
+        {
+            EObject removedElement = ((ModelElementChangeRightTarget) diff).getRightElement();
+            if (removedElement instanceof ttm.Attribute)
+            {
+                return diff.getKind().getName() + " : Attribute " + ((ttm.Attribute) removedElement).getName();
+            }
+            else if (removedElement instanceof Text)
+            {
+                String localText = ((Text) removedElement).getValue();
+                return diff.getKind().getName() + " : Text (" + localText.substring(0, Math.min(textLength, localText.length())) + "...)";
+            }
+            // a hierarchical element has been removed
+            else if (removedElement instanceof Document || removedElement instanceof Section)
+            {
+                return diff.getKind().getName() + " : " + reason;
+            }
+            else if (removedElement instanceof ttm.Requirement)
+            {
+                return diff.getKind().getName() + " : Requirement " + factory.getText(removedElement);
+            }
+        }
+        return diff.getKind().getName() + " : " + reason;
     }
 
     /**
@@ -330,7 +432,8 @@ public class MergeImpactProcessor
             {
                 parent = element.eContainer();
             }
-            else {
+            else
+            {
                 parent = upstream.eContainer();
             }
             while (parent != null && !(parent instanceof Document))
@@ -380,18 +483,21 @@ public class MergeImpactProcessor
      * @param message the message
      * @param severity the severity
      * @param d the document impacted
+     * @param docRes use document for uri (or not)
      * @throws CoreException if cannot create marker
      */
-    private void addMarkerFor(EObject toLog, String message, int severity, Document d) throws CoreException
+    private void addMarkerFor(EObject toLog, String message, int severity, Document d, boolean docRes) throws CoreException
     {
         // find the concerned element.
         IResource resource = null;
         URI uri = null;
-        if (d != null && d.eResource() != null) {
+        if (docRes && d != null && d.eResource() != null)
+        {
             resource = findResourceFor(d.eResource());
             uri = d.eResource().getURI();
         }
-        else if (toLog.eResource() != null) {
+        else if (toLog.eResource() != null)
+        {
             resource = findResourceFor(toLog.eResource());
             uri = toLog.eResource().getURI();
         }
@@ -402,7 +508,8 @@ public class MergeImpactProcessor
             marker.setAttribute(IMarker.SEVERITY, severity);
             marker.setAttribute(EValidator.URI_ATTRIBUTE, uri.appendFragment(toLog.eResource().getURIFragment(toLog)).toString());
             marker.setAttribute(IMarker.MESSAGE, message);
-            if (d != null) {
+            if (d != null)
+            {
                 marker.setAttribute(IMarker.LOCATION, d.getIdent());
             }
         }
