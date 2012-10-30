@@ -105,7 +105,7 @@ public class RequirementDifferenceCalculator
         // Call the EMF comparison service
         HashMap<String, Object> matchOptions = new HashMap<String, Object>();
         // IGNORE FUNCTIONAL IDs to true to prevent problems with Section comparison 
-        matchOptions.put(MatchOptions.OPTION_IGNORE_ID, true);
+        matchOptions.put(MatchOptions.OPTION_IGNORE_ID, false);
         matchOptions.put(MatchOptions.OPTION_IGNORE_XMI_ID, true);
         matchOptions.put(MatchOptions.OPTION_PROGRESS_MONITOR, monitor);
 

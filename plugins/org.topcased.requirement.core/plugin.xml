@@ -2296,4 +2296,14 @@
             providerInstance="org.topcased.requirement.core.transformation.impl.InPlaceTransformation$InPlaceProvider">
       </Provider>
    </extension>
+   <extension
+         point="org.eclipse.emf.compare.match.engine">
+      <matchengine
+            engineClass="org.topcased.requirement.core.compare.ReqMatchEngine"
+            fileExtension="requirement"
+            label="ReqMatchEngine"
+            namespace="http://org.topcased.traceability.model"
+            priority="highest">
+      </matchengine>
+   </extension>
 </plugin>
