@@ -47,7 +47,6 @@ import org.eclipse.m2m.atl.core.emf.EMFModel;
 import org.eclipse.m2m.atl.core.emf.EMFModelFactory;
 import org.eclipse.m2m.atl.core.launch.ILauncher;
 import org.eclipse.m2m.atl.engine.emfvm.launch.EMFVMLauncher;
-import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.UpstreamModel;
 import org.topcased.requirement.current2upstream.RequirementCurrent2UpstreamPlugin;
 
