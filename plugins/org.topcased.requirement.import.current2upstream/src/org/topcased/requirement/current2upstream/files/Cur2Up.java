@@ -17,6 +17,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -29,6 +30,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -258,6 +260,16 @@ public class Cur2Up {
 		for (InputStream inputStream : inputStreamsToClose) {
 			inputStream.close();
 		}
+
+		// filter root elements that are not UpstreamModel
+		Iterator<EObject> rootElems = ((EMFModel)outModel).getResource().getContents().iterator();
+		while(rootElems.hasNext()) {
+			EObject next = rootElems.next();
+			if (!(next instanceof UpstreamModel)) {
+				rootElems.remove();
+			}
+		}
+
 		return result;
 	}
 	
