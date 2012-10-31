@@ -48,6 +48,7 @@ import org.eclipse.m2m.atl.core.emf.EMFModelFactory;
 import org.eclipse.m2m.atl.core.launch.ILauncher;
 import org.eclipse.m2m.atl.engine.emfvm.launch.EMFVMLauncher;
 import org.topcased.requirement.RequirementProject;
+import org.topcased.requirement.UpstreamModel;
 import org.topcased.requirement.current2upstream.RequirementCurrent2UpstreamPlugin;
 
 /**
@@ -161,7 +162,7 @@ public class Cur2Up {
 	 * @throws ATLExecutionException if an error occurs during the execution
 	 * @return the requirementProject if the transformation was successful, else null
 	 */
-	public RequirementProject transform(Resource inputResource){
+	public UpstreamModel transform(Resource inputResource){
 		// Load the input and input/output models, initialize output models.
 		ModelFactory factory = new EMFModelFactory();
 		IInjector injector = new EMFInjector();
@@ -180,8 +181,8 @@ public class Cur2Up {
 			if(		((EMFModel)outModel).getResource() != null
 				&&  ((EMFModel)outModel).getResource().getContents() !=null
 				&&  ((EMFModel)outModel).getResource().getContents().size() > 0
-				&&  ((EMFModel)outModel).getResource().getContents().get(0) instanceof RequirementProject){
-				return (RequirementProject) ((EMFModel)outModel).getResource().getContents().get(0);
+				&&  ((EMFModel)outModel).getResource().getContents().get(0) instanceof UpstreamModel){
+				return (UpstreamModel) ((EMFModel)outModel).getResource().getContents().get(0);
 			}
 		} catch (ATLCoreException e) {
 			RequirementCurrent2UpstreamPlugin.log("ATL Transformation error", IStatus.WARNING, e);

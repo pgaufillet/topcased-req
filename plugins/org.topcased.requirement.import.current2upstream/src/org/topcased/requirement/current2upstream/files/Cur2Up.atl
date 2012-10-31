@@ -28,11 +28,6 @@ rule ruleReqProject2ReqProject {
 	i : RequirementModel!RequirementProject---(
 	---i.oclIsTypeOf(RequirementModel!RequirementProject))
 	to
-	out0 : RequirementModel!RequirementProject (
-		upstreamModel <- out,
-		identifier <- i.identifier,
-		attributeConfiguration <- i.attributeConfiguration
-	),
 	out : RequirementModel!UpstreamModel (
 		---documents <- Sequence{out1}->union(i.chapter->select(c | c.oclIsTypeOf(RequirementModel!TrashChapter)))
 		documents <- out1

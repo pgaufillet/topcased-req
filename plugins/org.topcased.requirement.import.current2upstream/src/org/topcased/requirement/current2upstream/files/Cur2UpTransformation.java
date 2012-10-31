@@ -20,7 +20,7 @@ import java.util.List;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.topcased.requirement.RequirementProject;
+import org.topcased.requirement.UpstreamModel;
 import org.topcased.requirement.core.transformation.ITransformation;
 
 import ttm.Document;
@@ -39,9 +39,9 @@ public class Cur2UpTransformation implements ITransformation
         try{
             runner = new Cur2Up();
             Resource res = set.getResource(inputModel, true);
-            RequirementProject rp = runner.transform(res);
-            if(rp != null){
-                return rp.getUpstreamModel().getDocuments().get(0);
+            UpstreamModel upstreamModel = runner.transform(res);
+            if(upstreamModel != null){
+                return upstreamModel.getDocuments().get(0);
             } else {
                 return null;
             }
