@@ -62,8 +62,7 @@ rule ruleHierarchicalElt2Section {
 ---matched rule TrashChapter to Section
 rule ruleTrashChapter2Section {
 	from
-		s : RequirementModel!TrashChapter(
-	not s.hierarchicalElement->isEmpty() or not s.requirement->isEmpty())
+		s : RequirementModel!TrashChapter
 	to 
 	out :  RequirementModel!Section (
 		ident <- 'Trash chapter',
@@ -72,54 +71,6 @@ rule ruleTrashChapter2Section {
 	do {
 		out.parent<-thisModule.resolveTemp(s.eContainer(), 'out1').debug('out is :');
 		'This transformation is from TrashChapter to Document'.println();
-	}
-}
-
----matched rule ProblemChapter to Section
-rule ruleProblemChapter2Section {
-	from
-		s : RequirementModel!ProblemChapter(
-	not s.hierarchicalElement->isEmpty() or not s.requirement->isEmpty())
-	to 
-	out :  RequirementModel!Section (
-		ident <- 'Problem chapter',
-		children <-s.requirement
-	)
-	do {
-		out.parent<-thisModule.resolveTemp(s.eContainer(), 'out1').debug('out is :');
-		'This transformation is from ProblemChapter to Document'.println();
-	}
-}
-
----matched rule DeletedChapter to Section
-rule ruleDeletedChapter2Section {
-	from
-		s : RequirementModel!DeletedChapter(
-	not s.hierarchicalElement->isEmpty() or not s.requirement->isEmpty())
-	to 
-	out :  RequirementModel!Section (
-		ident <- 'Deleted chapter',
-		children <-s.requirement
-	)
-	do {
-		out.parent<-thisModule.resolveTemp(s.eContainer(), 'out1').debug('out is :');
-		'This transformation is from DeletedChapter to Document'.println();
-	}
-}
-
----matched rule UntracedChapter to Section
-rule ruleUntracedChapter2Section {
-	from
-		s : RequirementModel!UntracedChapter(
-		not s.hierarchicalElement->isEmpty() or not s.requirement->isEmpty())
-	to 
-	out :  RequirementModel!Section (
-		ident <- 'Untraced chapter',
-		children <-s.requirement
-	)
-	do {
-		out.parent<-thisModule.resolveTemp(s.eContainer(), 'out1').debug('out is :');
-		'This transformation is from UntracedChapter to Document'.println();
 	}
 }
 
