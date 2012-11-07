@@ -2305,5 +2305,12 @@
             namespace="http://org.topcased.traceability.model"
             priority="highest">
       </matchengine>
+   </extension> 
+   <extension
+         point="org.eclipse.ui.dropActions">
+      <action
+            class="org.topcased.requirement.core.dnd.UpstreamRequirementPluginAdapter"
+            id="org.topcased.requirement.core.upstreamRequirementDrop">
+      </action>
    </extension>
 </plugin>

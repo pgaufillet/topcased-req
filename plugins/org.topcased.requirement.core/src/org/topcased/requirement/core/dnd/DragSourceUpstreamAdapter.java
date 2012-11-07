@@ -9,6 +9,7 @@
  * Contributors:
  *  	Christophe Mertz (CS) <christophe.mertz@c-s.fr>
  *      Philippe Roland (ATOS) <philippe.roland@atos.net> - PluginTransfer support
+ *      Laurent Devernay (ATOS) <laurent.devernay@atos.net>
  *    
  ******************************************************************************/
 package org.topcased.requirement.core.dnd;
@@ -89,6 +90,9 @@ public class DragSourceUpstreamAdapter extends DragSourceAdapter
                     event.data = UpstreamPluginTransferData.getInstance(extensionId, selection);
                     break;
                 }
+            }
+            if (extensions.length == 0){
+                event.data = UpstreamPluginTransferData.getInstance("org.topcased.requirement.core.upstreamRequirementDrop", selection);
             }
         }
         else

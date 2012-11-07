@@ -15,9 +15,6 @@ package org.topcased.requirement.core.views.upstream;
 import java.util.Collection;
 
 import org.eclipse.core.commands.Command;
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
@@ -144,11 +141,8 @@ public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRe
 
         int dndOperations = DND.DROP_COPY | DND.DROP_MOVE;
        
-        // In the event that an Upstream plugin transfer adapter is detected, add PluginTransfer to our supported transfer types
         Transfer[] transfers;
-        IExtensionRegistry reg = Platform.getExtensionRegistry();
-        IConfigurationElement[] extensions = reg.getConfigurationElementsFor(UPSTREAM_DROP_ADAPTER_POINT);
-        transfers = (extensions.length == 0? new Transfer[] {RequirementTransfer.getInstance()} : new Transfer[] {RequirementTransfer.getInstance(), PluginTransfer.getInstance()});
+        transfers = new Transfer[] {RequirementTransfer.getInstance(), PluginTransfer.getInstance()};
         
         viewer.addDragSupport(dndOperations, transfers, new DragSourceUpstreamAdapter(viewer));
         RequirementFilter upstreamRequirementFilter = new RequirementFilter(false, true);
