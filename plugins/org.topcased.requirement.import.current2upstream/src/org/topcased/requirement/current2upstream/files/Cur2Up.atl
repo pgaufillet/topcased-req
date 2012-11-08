@@ -36,9 +36,6 @@ rule ruleReqProject2ReqProject {
 		ident <- 'SRD_'+i.hierarchicalElement->first().getText,
 		children <- i.hierarchicalElement->collect(tmp | tmp.children)
 	)
-	do {
-		'This transformation is from RequirementProject to Document'.println();
-	}
 }
 
 ---matched rule Section to RequirementProject
@@ -54,8 +51,7 @@ rule ruleHierarchicalElt2Section {
 		children <- i.requirement
 		)
 	do {		
-		out1.parent<-thisModule.resolveTemp(i.eContainer(), 'out1').debug('out1 is :');		
-		'This transformation is from HierarchicalElement to Section'.println();
+		out1.parent<-thisModule.resolveTemp(i.eContainer(), 'out1');
 	}
 }
 
@@ -69,8 +65,7 @@ rule ruleTrashChapter2Section {
 		children <-s.requirement
 	)
 	do {
-		out.parent<-thisModule.resolveTemp(s.eContainer(), 'out1').debug('out is :');
-		'This transformation is from TrashChapter to Document'.println();
+		out.parent<-thisModule.resolveTemp(s.eContainer(), 'out1');
 	}
 }
 
@@ -89,9 +84,6 @@ rule ruleRequirement {
 		value <- i.shortDescription,
 		parent <- out
 		)
-	do {
-		'This transformation is from CurrentRequirement to Requirement'.println();
-	}
 }
 
 ---matched rule TextAttribute to Attribute
@@ -106,8 +98,7 @@ rule ruleTextAttribute {
 		value <- i.value
 		)	
 	do {
-		out.parent<-thisModule.resolveTemp(i.eContainer(), 'out').debug('out is :');
-		'This transformation is from CurrentRequirement to Requirement'.println();
+		out.parent<-thisModule.resolveTemp(i.eContainer(), 'out');
 	}
 }
 
@@ -123,8 +114,7 @@ rule ruleObjectAttribute {
 		value <- if i.value.oclIsUndefined() then '' else i.value.identifier endif
 		)	
 	do {
-		out.parent<-thisModule.resolveTemp(i.eContainer(), 'out').debug('out is :');
-		'This transformation is from CurrentRequirement to Requirement'.println();
+		out.parent<-thisModule.resolveTemp(i.eContainer(), 'out');
 	}
 }
 
@@ -139,8 +129,7 @@ rule ruleObjectAttribute2 {
 		value <- i.eContainer().eContainer().getText
 		)	
 	do {
-		out.parent<-thisModule.resolveTemp(i.value, 'out').debug('out is :');
-		'This transformation is from CurrentRequirement to Requirement'.println();
+		out.parent<-thisModule.resolveTemp(i.value, 'out');
 	}
 }
 
@@ -148,7 +137,7 @@ rule ruleObjectAttribute2 {
 helper context RequirementModel!HierarchicalElement def : getText : String = 
 	let seq : Sequence(Ecore!EStructuralFeature) = self.element.eClass().eAllStructuralFeatures->select(e  | e.name = 'name' or e.name = 'id')
 	in 
-	if (seq.debug()->notEmpty()) then
+	if (seq->notEmpty()) then
 		self.element.eGet(seq->first())
 	else
 		''
