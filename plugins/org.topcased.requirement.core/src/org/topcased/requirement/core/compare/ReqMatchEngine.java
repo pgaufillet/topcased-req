@@ -16,6 +16,8 @@ import org.eclipse.emf.compare.match.engine.GenericMatchEngine;
 import org.eclipse.emf.compare.match.engine.internal.EcoreIDSimilarityChecker;
 import org.eclipse.emf.ecore.EObject;
 
+import ttm.Document;
+import ttm.HierarchicalElement;
 import ttm.Section;
 
 public class ReqMatchEngine extends GenericMatchEngine
@@ -56,7 +58,7 @@ public class ReqMatchEngine extends GenericMatchEngine
         
     }
     
-    public static String getQualifiedName(Section s)
+    public static String getQualifiedName(HierarchicalElement s)
     {
         if (s == null || s.getIdent() == null)
         {
@@ -64,9 +66,9 @@ public class ReqMatchEngine extends GenericMatchEngine
         }
         EObject parent = s.eContainer();
         StringBuilder result = new StringBuilder(s.getIdent());
-        while (parent instanceof Section)
+        while (parent instanceof HierarchicalElement && !(parent instanceof Document))
         {
-            Section s2 = (Section) parent ;
+            HierarchicalElement s2 = (HierarchicalElement) parent ;
             result.insert(0, s2.getIdent() + "::");
             parent = s2.eContainer();
         }
