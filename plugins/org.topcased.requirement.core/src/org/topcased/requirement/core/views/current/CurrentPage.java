@@ -12,10 +12,13 @@
  **********************************************************************************************************************/
 package org.topcased.requirement.core.views.current;
 
+import java.util.Collection;
+
 import org.eclipse.core.commands.Command;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.edit.provider.INotifyChangedListener;
 import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.gef.ui.actions.RedoAction;
@@ -49,6 +52,7 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.RegistryToggleState;
 import org.eclipse.ui.part.IPage;
 import org.topcased.requirement.HierarchicalElement;
+import org.topcased.requirement.ObjectAttribute;
 import org.topcased.requirement.Requirement;
 import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.core.RequirementCorePlugin;
@@ -497,6 +501,30 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
                     if (hierarchicalElt != null)
                     {
                         viewer.update(hierarchicalElt, null);
+                    }
+                }
+                EObject changed = null ;
+                if (msg.getNotifier() instanceof Requirement){
+                    changed = (EObject) msg.getNotifier();
+                }
+                else if (msg.getOldValue() instanceof Requirement){
+                    changed = (EObject) msg.getOldValue();
+                }
+                else if (msg.getNewValue() instanceof Requirement){
+                    changed = (EObject) msg.getNewValue();
+                }
+                if (changed != null)
+                {
+                    // refresh elements with ObjectAttribute on it
+                    Collection<Setting> ref = RequirementUtils.getCrossReferences(changed);
+                    if (ref != null){
+                        for (Setting s : ref){
+                            if (s.getEObject() instanceof ObjectAttribute){
+                                if (s.getEObject().eContainer() != null){
+                                    viewer.refresh(s.getEObject().eContainer(), true);
+                                }
+                            }
+                        }
                     }
                 }
             }
