@@ -133,9 +133,8 @@ rule ruleObjectAttribute2 {
 		value <- if i.value.oclIsUndefined() then '' else i.value.identifier endif
 		)	
 	do {
-		out.parent<-thisModule.resolveTemp(i.value, 'out').debug('out is :');
-		out2.parent<- thisModule.resolveTemp(i.eContainer(), 'out2').debug('out2 is :');
-		'This transformation is from CurrentRequirement to Requirement'.println();
+		out.parent<-thisModule.resolveTemp(i.value, 'out');
+		out2.parent<- thisModule.resolveTemp(i.eContainer(), 'out2');
 	}
 }
 
