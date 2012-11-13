@@ -134,7 +134,7 @@ rule ruleObjectAttribute2 {
 		)	
 	do {
 		out.parent<-thisModule.resolveTemp(i.value, 'out');
-		out2.parent<- thisModule.resolveTemp(i.eContainer(), 'out2');
+		out2.parent<- thisModule.resolveTemp(i.eContainer(), 'out');
 	}
 }
 
