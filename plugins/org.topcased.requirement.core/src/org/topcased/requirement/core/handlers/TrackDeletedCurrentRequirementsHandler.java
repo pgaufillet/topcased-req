@@ -14,14 +14,17 @@ public class TrackDeletedCurrentRequirementsHandler extends DeleteCurrentRequire
     {
         IEditorPart editor = RequirementUtils.getCurrentEditor();
         IEditorServices services = SupportingEditorsManager.getInstance().getServices(editor);
-        EditingDomain domain = services.getEditingDomain(editor);
-        if (RequirementUtils.getDeletedChapter(domain) == null)
+        if(editor != null && services!=null)
         {
-            super.setBaseEnabled(true);
-        }
-        else
-        {
-            super.setBaseEnabled(false);
+            EditingDomain domain = services.getEditingDomain(editor);
+            if (RequirementUtils.getDeletedChapter(domain) == null)
+            {
+                super.setBaseEnabled(true);
+            }
+            else
+            {
+                super.setBaseEnabled(false);
+            }
         }
     }
 
