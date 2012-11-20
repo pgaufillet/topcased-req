@@ -38,8 +38,6 @@ import ttm.Requirement;
  */
 public class CurrentViewFilterFromUpstreamSelection extends ViewerFilter
 {
-    private static final String LINK_TO = "#Link_to"; //$NON-NLS-1$
-    
 	private static CurrentViewFilterFromUpstreamSelection instance = new CurrentViewFilterFromUpstreamSelection();
 
     public static CurrentViewFilterFromUpstreamSelection getInstance()
@@ -121,7 +119,7 @@ public class CurrentViewFilterFromUpstreamSelection extends ViewerFilter
 	            if (a instanceof AttributeLink)
 	            {
 	                AttributeLink link = (AttributeLink) a;
-	                display |= LINK_TO.equals(link.getName()) && searchedRequirement.equals(link.getValue());     
+	                display |= searchedRequirement.equals(link.getValue());     
 	            }
             }
         }
