@@ -69,7 +69,8 @@ public class ValidRequirementFilter extends ViewerFilter implements IValidRequir
         {
             EObject req = (EObject) element;
             if (req instanceof CurrentRequirement){
-                cache.put(element, !((CurrentRequirement) req).isImpacted());
+                result = !((CurrentRequirement) req).isImpacted();
+                cache.put(element, result);
             }
         }
         // Recursive calls when we're dealing with a hierarchical : only
