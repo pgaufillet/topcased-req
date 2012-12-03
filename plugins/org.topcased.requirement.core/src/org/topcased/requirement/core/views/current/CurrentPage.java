@@ -51,6 +51,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.RegistryToggleState;
 import org.eclipse.ui.part.IPage;
+import org.topcased.requirement.Attribute;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.ObjectAttribute;
 import org.topcased.requirement.Requirement;
@@ -506,6 +507,10 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
                 EObject changed = null ;
                 if (msg.getNotifier() instanceof Requirement){
                     changed = (EObject) msg.getNotifier();
+                } else if (msg.getNotifier() instanceof Attribute){
+                    // If an attribute is modified (e.g. #link_to), we refresh its container
+                    Attribute attribute = (Attribute) msg.getNotifier();
+                    viewer.refresh(attribute.eContainer(), true);
                 }
                 else if (msg.getOldValue() instanceof Requirement){
                     changed = (EObject) msg.getOldValue();
