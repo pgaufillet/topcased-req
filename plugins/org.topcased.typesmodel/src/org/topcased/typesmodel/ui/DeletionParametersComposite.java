@@ -103,7 +103,7 @@ public class DeletionParametersComposite {
                 	TableItem item = new TableItem(tabAttributes, SWT.NONE);
                     item.setText (0, dialog.getAttributesName());
                     item.setText (1, dialog.getAttributesRegex());
-                    item.setText (2, dialog.getAttributesRegex());
+                    item.setText (2, dialog.getAttributesType());
                 }
 			}
 			public void widgetDefaultSelected(SelectionEvent e) {}
