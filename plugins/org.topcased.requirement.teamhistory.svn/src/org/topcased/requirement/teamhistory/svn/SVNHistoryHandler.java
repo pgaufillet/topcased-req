@@ -34,7 +34,9 @@ import org.eclipse.team.svn.ui.history.SVNHistoryPage;
 import org.eclipse.team.svn.ui.history.model.LocalLogNode;
 import org.eclipse.team.svn.ui.history.model.SVNLogNode;
 import org.eclipse.team.ui.history.IHistoryView;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.topcased.requirement.teamhistory.IHistoryHandler;
@@ -70,22 +72,31 @@ public class SVNHistoryHandler implements IHistoryHandler {
 
 	public void showHistoryView(IResource r, String revisionLabelToSelect)
 			throws TeamHistoryException {
-		IWorkbenchPage page = PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow().getActivePage();
+		
+		IWorkbench workbench = PlatformUI.getWorkbench();
+		if(workbench != null)
+		{
+			IWorkbenchWindow activeWindow = workbench.getActiveWorkbenchWindow();
+			if(activeWindow != null)
+			{
+				IWorkbenchPage page = activeWindow.getActivePage();
+				if(page != null) {
+					try {
+						IHistoryView historyView = (IHistoryView) page
+								.showView(IHistoryView.VIEW_ID);
+						SVNHistoryPage historyPage = (SVNHistoryPage) historyView
+								.showHistoryFor(r);
 
-		try {
-			IHistoryView historyView = (IHistoryView) page
-					.showView(IHistoryView.VIEW_ID);
-			SVNHistoryPage historyPage = (SVNHistoryPage) historyView
-					.showHistoryFor(r);
-
-			long rev = Long.parseLong(revisionLabelToSelect);
-			historyPage.selectRevision(rev);
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-		} catch (PartInitException e) {
-			throw new TeamHistoryException(
-					"Error when opening the history view", e);
+						long rev = Long.parseLong(revisionLabelToSelect);
+						historyPage.selectRevision(rev);
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+					} catch (PartInitException e) {
+						throw new TeamHistoryException(
+								"Error when opening the history view", e);
+					}
+				}
+			}
 		}
 
 	}
