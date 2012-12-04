@@ -41,15 +41,21 @@ public class Messages extends NLS
 
 	public static String DeletionParametersComposite_ColumnAttributeRegex;
 
+	public static String DeletionParametersComposite_Deletion;
+
 	public static String DeletionParametersComposite_DialogConfirmationText;
 
 	public static String DeletionParametersComposite_DialogConfirmationTitle;
+
+	public static String DeletionParametersComposite_Filter;
 
 	public static String DeletionParametersComposite_GroupAttributes;
 
 	public static String DeletionParametersComposite_LabelDescriptionRegex;
 
 	public static String DeletionParametersComposite_LabelIdRegex;
+
+	public static String DeletionParametersComposite_ParameterTypeColumn;
 
 	public static String DeletionParametersComposite_TestIdRegex;
 
@@ -96,6 +102,10 @@ public class Messages extends NLS
     public static String IniManagerRegistry_DeletionParameterAttributeName;
 
 	public static String IniManagerRegistry_DeletionParameterAttributeRegex;
+	
+	public static String IniManagerRegistry_FilterParameterAttributeName;
+
+	public static String IniManagerRegistry_FilterParameterAttributeRegex;
 
 	public static String IniManagerRegistry_DeletionParameterDescriptionRegex;
 

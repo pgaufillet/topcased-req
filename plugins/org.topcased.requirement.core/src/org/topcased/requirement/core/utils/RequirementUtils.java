@@ -82,6 +82,8 @@ import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.services.RequirementModelSourceProvider;
 import org.topcased.requirement.util.RequirementCacheAdapter;
 import org.topcased.requirement.util.RequirementResource;
+import org.topcased.typesmodel.model.inittypes.DeletionParameters;
+import org.topcased.typesmodel.model.inittypes.DeletionParemeter;
 
 import ttm.Document;
 import ttm.Requirement;
@@ -1141,5 +1143,60 @@ public final class RequirementUtils
         {
             return false;
         }
+    }
+    
+    /**
+     * Filters the document requirements according to the deletion parameters 
+     * @param doc
+     * @param deletionParameters
+     */
+    public static void filterRequirements(Document doc, DeletionParameters deletionParameters)
+    {
+        if(doc != null)
+        {
+            Collection<Requirement> upstreamRequirements = RequirementUtils.getUpstreams(doc);
+            for(Requirement req:upstreamRequirements)
+            {
+                if(isReqFiltered(req, deletionParameters))
+                {
+                    req.getParent().getChildren().remove(req);
+                }
+            }
+        }
+    }
+    
+    
+    /**
+     * Checks if a given requirement should be filtered according to deletionParameters 
+     * @param req The requirement to check
+     * @param deletionParameters The deletion parameters
+     * @return True if the requirement should be filtered
+     */
+    public static boolean isReqFiltered(Requirement req, DeletionParameters deletionParameters)
+    {
+        if (deletionParameters != null)
+        {
+            for(DeletionParemeter filterParam:deletionParameters.getFilterRegexAttributes())
+            {
+                boolean attributeFound = false;
+                for (ttm.Attribute att : req.getAttributes())
+                {
+                    if(filterParam.getNameAttribute().equals(att.getName()))
+                    {
+                        attributeFound = true;
+                        Pattern deletionPatternAttribute = Pattern.compile(filterParam.getRegexAttribute(), Pattern.CASE_INSENSITIVE);
+                        if(deletionPatternAttribute.matcher(att.getValue()).matches())
+                        {
+                            return true;
+                        }
+                    }
+                }
+                if(!attributeFound)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

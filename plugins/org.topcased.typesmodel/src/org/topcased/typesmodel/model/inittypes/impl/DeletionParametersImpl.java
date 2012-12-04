@@ -26,6 +26,7 @@ import org.topcased.typesmodel.model.inittypes.InittypesPackage;
  *   <li>{@link org.topcased.typesmodel.model.inittypes.impl.DeletionParametersImpl#getRegexDescription <em>Regex Description</em>}</li>
  *   <li>{@link org.topcased.typesmodel.model.inittypes.impl.DeletionParametersImpl#getRegexId <em>Regex Id</em>}</li>
  *   <li>{@link org.topcased.typesmodel.model.inittypes.impl.DeletionParametersImpl#getRegexAttributes <em>Regex Attributes</em>}</li>
+ *   <li>{@link org.topcased.typesmodel.model.inittypes.impl.DeletionParametersImpl#getFilterRegexAttributes <em>Filter Regex Attributes</em>}</li>
  * </ul>
  * </p>
  *
@@ -105,6 +106,16 @@ public class DeletionParametersImpl extends MinimalEObjectImpl.Container impleme
 	@SuppressWarnings("unchecked")
 	public EList<DeletionParemeter> getRegexAttributes() {
 		return (EList<DeletionParemeter>)eGet(InittypesPackage.Literals.DELETION_PARAMETERS__REGEX_ATTRIBUTES, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	public EList<DeletionParemeter> getFilterRegexAttributes() {
+		return (EList<DeletionParemeter>)eGet(InittypesPackage.Literals.DELETION_PARAMETERS__FILTER_REGEX_ATTRIBUTES, true);
 	}
 
 } //DeletionParametersImpl

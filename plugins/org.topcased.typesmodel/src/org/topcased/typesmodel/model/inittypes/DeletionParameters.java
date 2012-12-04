@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.topcased.typesmodel.model.inittypes.DeletionParameters#getRegexDescription <em>Regex Description</em>}</li>
  *   <li>{@link org.topcased.typesmodel.model.inittypes.DeletionParameters#getRegexId <em>Regex Id</em>}</li>
  *   <li>{@link org.topcased.typesmodel.model.inittypes.DeletionParameters#getRegexAttributes <em>Regex Attributes</em>}</li>
+ *   <li>{@link org.topcased.typesmodel.model.inittypes.DeletionParameters#getFilterRegexAttributes <em>Filter Regex Attributes</em>}</li>
  * </ul>
  * </p>
  *
@@ -98,5 +99,21 @@ public interface DeletionParameters extends EObject {
 	 * @generated
 	 */
 	EList<DeletionParemeter> getRegexAttributes();
+
+	/**
+	 * Returns the value of the '<em><b>Filter Regex Attributes</b></em>' reference list.
+	 * The list contents are of type {@link org.topcased.typesmodel.model.inittypes.DeletionParemeter}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Filter Regex Attributes</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Filter Regex Attributes</em>' reference list.
+	 * @see org.topcased.typesmodel.model.inittypes.InittypesPackage#getDeletionParameters_FilterRegexAttributes()
+	 * @model
+	 * @generated
+	 */
+	EList<DeletionParemeter> getFilterRegexAttributes();
 
 } // DeletionParameters

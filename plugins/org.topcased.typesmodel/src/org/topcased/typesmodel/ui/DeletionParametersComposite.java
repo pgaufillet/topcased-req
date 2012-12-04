@@ -44,7 +44,7 @@ public class DeletionParametersComposite {
 	private Button btnAddAttribute;
 	private Button btnEditAttribute;
 	private Button btnRemoveAttribute;
-
+	
 
 	public DeletionParametersComposite(Composite composite, DeletionParameters deletionParameters) {
 		composite.setLayout(new GridLayout(2, false));
@@ -77,11 +77,16 @@ public class DeletionParametersComposite {
         data.heightHint = 150;
         tabAttributes.setLayoutData(data);
         String[] titles = { Messages.DeletionParametersComposite_ColumnAttributeName, Messages.DeletionParametersComposite_ColumnAttributeRegex};
-        for (int i = 0; i < titles.length; i++) {
+        int i;
+        for (i = 0; i < titles.length; i++) {
           TableColumn column = new TableColumn(tabAttributes, SWT.NONE);
           column.setText(titles[i]);
           tabAttributes.getColumn(i).pack();
         }
+        // The column for the combo deletion/filters is added
+        TableColumn column = new TableColumn(tabAttributes, SWT.NONE);
+        column.setText(Messages.DeletionParametersComposite_ParameterTypeColumn);
+        tabAttributes.getColumn(i).pack();
         
         Composite buttonGroup = new Composite(deletionGroup, SWT.NONE);
         buttonGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
@@ -98,6 +103,7 @@ public class DeletionParametersComposite {
                 	TableItem item = new TableItem(tabAttributes, SWT.NONE);
                     item.setText (0, dialog.getAttributesName());
                     item.setText (1, dialog.getAttributesRegex());
+                    item.setText (2, dialog.getAttributesRegex());
                 }
 			}
 			public void widgetDefaultSelected(SelectionEvent e) {}
@@ -108,11 +114,12 @@ public class DeletionParametersComposite {
         btnEditAttribute.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent e) {
 				int selectedIndex = tabAttributes.getSelectionIndex();
-				PopupAttributesDialog dialog = new PopupAttributesDialog(null,tabAttributes.getItem(selectedIndex).getText(0),tabAttributes.getItem(selectedIndex).getText(1));
+				PopupAttributesDialog dialog = new PopupAttributesDialog(null,tabAttributes.getItem(selectedIndex).getText(0),tabAttributes.getItem(selectedIndex).getText(1), tabAttributes.getItem(selectedIndex).getText(2));
                 if (dialog.open() == Dialog.OK)
                 {
                 	tabAttributes.getItem(selectedIndex).setText(0, dialog.getAttributesName());
                 	tabAttributes.getItem(selectedIndex).setText(1, dialog.getAttributesRegex());
+                	tabAttributes.getItem(selectedIndex).setText(2, dialog.getAttributesType());
                 }
 			}
 			public void widgetDefaultSelected(SelectionEvent e) {}
@@ -134,7 +141,6 @@ public class DeletionParametersComposite {
         this.setDeletionParameters(deletionParameters);
 	}
 	
-	
 	/**
 	 * Fills the display according to the given deletion parameters
 	 * @param deletionParameters the deletion parameters to display
@@ -148,6 +154,13 @@ public class DeletionParametersComposite {
     				TableItem item = new TableItem(tabAttributes, SWT.NONE);
     				item.setText(0, deletionParameter.getNameAttribute());
     				item.setText(1, deletionParameter.getRegexAttribute());
+    				item.setText(2, Messages.DeletionParametersComposite_Deletion);
+    			}
+    			for(DeletionParemeter filterParameter:deletionParameters.getFilterRegexAttributes()){
+    				TableItem item = new TableItem(tabAttributes, SWT.NONE);
+    				item.setText(0, filterParameter.getNameAttribute());
+    				item.setText(1, filterParameter.getRegexAttribute());
+    				item.setText(2, Messages.DeletionParametersComposite_Filter);
     			}
     		}
     	}
@@ -167,7 +180,14 @@ public class DeletionParametersComposite {
         	DeletionParemeter param = InittypesFactory.eINSTANCE.createDeletionParemeter();
         	param.setNameAttribute(tabItems[i].getText(0));
         	param.setRegexAttribute(tabItems[i].getText(1));
-        	deleteParameters.getRegexAttributes().add(param);
+        	if(Messages.DeletionParametersComposite_Filter.equals(tabItems[i].getText(2)))
+        	{
+        		deleteParameters.getFilterRegexAttributes().add(param);
+        	}
+        	else
+        	{
+        		deleteParameters.getRegexAttributes().add(param);
+        	}
         }
         return deleteParameters;
     }

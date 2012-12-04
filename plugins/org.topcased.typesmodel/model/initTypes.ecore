@@ -40,6 +40,8 @@
         defaultValueLiteral=""/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="regexAttributes" upperBound="-1"
         eType="#//DeletionParemeter" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="filterRegexAttributes"
+        upperBound="-1" eType="#//DeletionParemeter"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DeletionParemeter">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="nameAttribute" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

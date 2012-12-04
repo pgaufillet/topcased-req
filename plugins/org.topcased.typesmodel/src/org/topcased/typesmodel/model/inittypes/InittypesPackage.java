@@ -447,13 +447,22 @@ public interface InittypesPackage extends EPackage
 	int DELETION_PARAMETERS__REGEX_ATTRIBUTES = 2;
 
 				/**
+	 * The feature id for the '<em><b>Filter Regex Attributes</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELETION_PARAMETERS__FILTER_REGEX_ATTRIBUTES = 3;
+
+				/**
 	 * The number of structural features of the '<em>Deletion Parameters</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DELETION_PARAMETERS_FEATURE_COUNT = 3;
+	int DELETION_PARAMETERS_FEATURE_COUNT = 4;
 
 				/**
 	 * The meta object id for the '{@link org.topcased.typesmodel.model.inittypes.impl.DeletionParemeterImpl <em>Deletion Paremeter</em>}' class.
@@ -761,6 +770,17 @@ public interface InittypesPackage extends EPackage
 	EReference getDeletionParameters_RegexAttributes();
 
 				/**
+	 * Returns the meta object for the reference list '{@link org.topcased.typesmodel.model.inittypes.DeletionParameters#getFilterRegexAttributes <em>Filter Regex Attributes</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Filter Regex Attributes</em>'.
+	 * @see org.topcased.typesmodel.model.inittypes.DeletionParameters#getFilterRegexAttributes()
+	 * @see #getDeletionParameters()
+	 * @generated
+	 */
+	EReference getDeletionParameters_FilterRegexAttributes();
+
+				/**
 	 * Returns the meta object for class '{@link org.topcased.typesmodel.model.inittypes.DeletionParemeter <em>Deletion Paremeter</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1028,6 +1048,14 @@ public interface InittypesPackage extends EPackage
 		 * @generated
 		 */
 		EReference DELETION_PARAMETERS__REGEX_ATTRIBUTES = eINSTANCE.getDeletionParameters_RegexAttributes();
+
+								/**
+		 * The meta object literal for the '<em><b>Filter Regex Attributes</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DELETION_PARAMETERS__FILTER_REGEX_ATTRIBUTES = eINSTANCE.getDeletionParameters_FilterRegexAttributes();
 
 								/**
 		 * The meta object literal for the '{@link org.topcased.typesmodel.model.inittypes.impl.DeletionParemeterImpl <em>Deletion Paremeter</em>}' class.

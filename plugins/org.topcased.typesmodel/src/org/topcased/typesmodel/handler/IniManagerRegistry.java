@@ -153,6 +153,8 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
 	private static Pattern deletionParameterDescriptionRegex = Pattern.compile(Messages.IniManagerRegistry_DeletionParameterDescriptionRegex);
 	private static Pattern deletionParameterAttributeName = Pattern.compile(Messages.IniManagerRegistry_DeletionParameterAttributeName);
 	private static Pattern deletionParameterAttributeRegex = Pattern.compile(Messages.IniManagerRegistry_DeletionParameterAttributeRegex);
+	private static Pattern filterParameterAttributeName = Pattern.compile(Messages.IniManagerRegistry_FilterParameterAttributeName);
+	private static Pattern filterParameterAttributeRegex = Pattern.compile(Messages.IniManagerRegistry_FilterParameterAttributeRegex);
 
 	private boolean fileAdded(IFile resource)
 	{
@@ -178,6 +180,7 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
 			if (section != null) {
 				Map<String, Type> allElements = new HashMap<String, Type>();
 				Map<String, DeletionParemeter> allDeletionParameters = new HashMap<String, DeletionParemeter>();
+				Map<String, DeletionParemeter> allFilterParameters = new HashMap<String, DeletionParemeter>();
 				Type id = null;
 
 				DocumentType documentType = InittypesFactory.eINSTANCE.createDocumentType();
@@ -300,9 +303,18 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
 					{
 						manageDeletionParameters(allDeletionParameters,element,InittypesPackage.Literals.DELETION_PAREMETER,InittypesPackage.Literals.DELETION_PAREMETER__REGEX_ATTRIBUTE);
 					}
+					else if (filterParameterAttributeName.matcher(element.getKey()).matches())
+					{
+						manageDeletionParameters(allFilterParameters,element,InittypesPackage.Literals.DELETION_PAREMETER,InittypesPackage.Literals.DELETION_PAREMETER__NAME_ATTRIBUTE);
+					}
+					else if (filterParameterAttributeRegex.matcher(element.getKey()).matches())
+					{
+						manageDeletionParameters(allFilterParameters,element,InittypesPackage.Literals.DELETION_PAREMETER,InittypesPackage.Literals.DELETION_PAREMETER__REGEX_ATTRIBUTE);
+					}
 				}
 				documentType.getTypes().addAll(allElements.values());
 				documentType.getDeletionParameters().getRegexAttributes().addAll(allDeletionParameters.values());
+				documentType.getDeletionParameters().getFilterRegexAttributes().addAll(allFilterParameters.values());
 				documentType.setId(id);
 
 				documentTypes.put(type, documentType);
@@ -574,6 +586,11 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
 				section.add("DeletionParameterAttribute"+iAttr+"Regex", delParam.getRegexAttribute()); //$NON-NLS-1$ //$NON-NLS-2$
 				iAttr++;
 			}
+			for(DeletionParemeter filterParam:documentType.getDeletionParameters().getFilterRegexAttributes()){
+				section.add("FilterParameterAttribute"+iAttr+"Name", filterParam.getNameAttribute()); //$NON-NLS-1$ //$NON-NLS-2$
+				section.add("FilterParameterAttribute"+iAttr+"Regex", filterParam.getRegexAttribute()); //$NON-NLS-1$ //$NON-NLS-2$
+				iAttr++;
+			}
 		}
 
 		String endText = documentType.getTextType();
@@ -711,5 +728,7 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
 		}
 		return null;
 	}
+	
+	 
 
 }

@@ -1019,24 +1019,27 @@ public class MergeRequirementModelWizardPage extends WizardPage
     protected Map<Document, Document> getDocumentsToMerge(Map<Document, DeletionParameters> deletionParametersDocMap)
     {
         Map<Document, Document> docsToMerge = new HashMap<Document, Document>();
-        for (Button b : buttonsCheck){
-            if (b.getSelection()){
+        for (Button b : buttonsCheck)
+        {
+            if (b.getSelection())
+            {
                 int index = buttonsCheck.indexOf(b);
 
                 String fileToMerge = documentsTexts.get(index).getText();
-                if(fileToMerge != null){
+                if(fileToMerge != null)
+                {
                     ISelection selection = documentsComboViewers.get(index).getSelection();
                     ITransformation transformation = getSelectedTransformation(selection);
                     Document doc = transformation.transform(URI.createFileURI(fileToMerge), resourceSet, documentsCombos.get(index).getText());
-                    if(doc!=null){
+                    // Requirements are filtered
+                    RequirementUtils.filterRequirements(doc, deletionParametersList.get(index));
+                    if(doc!=null)
+                    {
                         docsToMerge.put(inputDocuments.get(index), doc);
                         deletionParametersDocMap.put(inputDocuments.get(index), deletionParametersList.get(index));
-//                        if(transformation instanceof TypeTransformation){
-//                            if (((TypeTransformation)transformation).getType().getDeletionParameters() != null) {
-//                                deletionParametersDocMap.put(inputDocuments.get(index), ((TypeTransformation)transformation).getType().getDeletionParameters());
-//                            }
-//                        }
-                    } else {
+                    }
+                    else
+                    {
                         MessageBox dialog = new MessageBox(this.getShell(), SWT.ICON_ERROR | SWT.OK);
                         dialog.setText("Transformation error");
                         dialog.setMessage("The "+transformation.getText()+" tranformtion has not been performed.");
