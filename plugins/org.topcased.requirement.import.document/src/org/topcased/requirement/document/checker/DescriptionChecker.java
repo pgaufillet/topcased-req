@@ -209,7 +209,7 @@ public class DescriptionChecker implements Checker
                 req.getTexts().add(createText);
                 buffer = null;
             }
-            if (eo instanceof org.eclipse.uml2.uml.Class)
+            if (eo instanceof org.eclipse.uml2.uml.Class && descriptionAttribute != null)
             {
                 Class clazz = (Class) eo;
                 Stereotype stereotype = clazz.getAppliedStereotype(descriptionAttribute.getSource());
@@ -251,7 +251,7 @@ public class DescriptionChecker implements Checker
     private void addDescription()
     {
         EObject eobject = process.getLatestCreatedElement();
-        if (eobject instanceof org.eclipse.uml2.uml.Class)
+        if (eobject instanceof org.eclipse.uml2.uml.Class && descriptionAttribute != null)
         {
             Class clazz = (Class) eobject;
             Stereotype stereotype = clazz.getAppliedStereotype(descriptionAttribute.getSource());
