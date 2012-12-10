@@ -14,15 +14,25 @@
 
 package org.topcased.requirement.document.ui;
 
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
+import java.util.Collection;
+import java.util.Collections;
+
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.topcased.requirement.document.elements.Attribute;
 
 /**
  * Composite of Description
@@ -34,6 +44,10 @@ public class DescriptionComposite extends Composite
     private Text descriptionRegex;
 
     private NotifyElement notifyElement;
+    
+    private Label lblDescriptionAttribute;
+    
+    private ComboViewer comboViewer;
 
     /**
      * Create the composite.
@@ -62,7 +76,16 @@ public class DescriptionComposite extends Composite
 
         descriptionRegex = new Text(group, SWT.BORDER);
         descriptionRegex.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-
+        
+        lblDescriptionAttribute = new Label(group, SWT.NONE);
+        lblDescriptionAttribute.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+        lblDescriptionAttribute.setText("Description Attribute");
+        lblDescriptionAttribute.setVisible(false);
+        lblDescriptionAttribute.setEnabled(false);
+        
+        
+        comboViewer = new ComboViewer(group, SWT.NONE);
+        comboViewer.getCombo().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
         hookListeners();
     }
 
@@ -91,6 +114,20 @@ public class DescriptionComposite extends Composite
                 }
             }
         });
+        
+        comboViewer.addSelectionChangedListener(new ISelectionChangedListener()
+        {
+            
+            public void selectionChanged(SelectionChangedEvent event)
+            {
+                if (notifyElement != null)
+                {
+                    notifyElement.handleModelChange();
+                }
+            }
+        });
+        
+        
     }
 
     /**
@@ -163,4 +200,77 @@ public class DescriptionComposite extends Composite
         descriptionRegex.setText(textToSet);
     }
 
+    /**
+     * Sets if stereotype attribute combo is visible or not
+     * @param visible
+     */
+    public void setAttributeComboVisible(boolean visible)
+    {
+        lblDescriptionAttribute.setVisible(visible);
+        lblDescriptionAttribute.setEnabled(visible);
+    }
+    
+    /**
+     * gets if a stereotype attribute is selected in the combo
+     * @return
+     */
+    public boolean isAttributeSelected()
+    {
+        
+        if (comboViewer != null)
+        {
+            return ((IStructuredSelection)comboViewer.getSelection()).size()>0;
+        }
+        
+        return false;
+    }
+    
+    /**
+     * return the selected stereotype attribute
+     * @return
+     */
+    public Attribute getAttributeSelection()
+    {
+        
+        if (comboViewer != null && ((IStructuredSelection)comboViewer.getSelection()).size()>0)
+        {
+            return (Attribute)((IStructuredSelection)comboViewer.getSelection()).getFirstElement();
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Clear the attribute combo
+     */
+    public void clearAttributeCombo()
+    {
+        comboViewer.setInput(Collections.emptyList());
+    }
+    
+    /**
+     * fills the combo with the given attributes
+     * @param input
+     */
+    public void fillAttributeCombo(Collection<Attribute> input)
+    {
+        comboViewer.setContentProvider(new ArrayContentProvider());
+        comboViewer.setInput(input);
+        comboViewer.setLabelProvider(new LabelProvider()
+        {
+            public String getText(Object element)
+            {
+                // Return the resolution's label.
+                if (element instanceof Attribute)
+                {
+                    Attribute attribute = ((Attribute) element);
+                    
+                    return attribute.getSource()+"::"+attribute.getProperName();
+                }
+                return null;
+            }
+        });
+        comboViewer.refresh();
+    }
+    
 }

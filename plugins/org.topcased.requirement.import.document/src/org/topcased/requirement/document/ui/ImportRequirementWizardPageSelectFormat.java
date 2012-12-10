@@ -14,6 +14,7 @@
 package org.topcased.requirement.document.ui;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.regex.Pattern;
@@ -23,6 +24,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -43,10 +45,15 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.uml2.uml.Property;
+import org.eclipse.uml2.uml.Stereotype;
 import org.topcased.requirement.document.Activator;
 import org.topcased.requirement.document.component.ComponentHelpCheckButton;
 import org.topcased.requirement.document.component.ComponentHelpRadioButton;
 import org.topcased.requirement.document.component.ComponentHelpTextFieldButtonWithDelete;
+import org.topcased.requirement.document.elements.Attribute;
+import org.topcased.requirement.document.elements.AttributeSysml;
+import org.topcased.requirement.document.elements.AttributeUml;
 import org.topcased.requirement.document.elements.Column;
 import org.topcased.requirement.document.elements.IStructuredContentProviderTree;
 import org.topcased.requirement.document.elements.PageController;
@@ -160,6 +167,8 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
 
 	/** the description text */
 	private String descriptionText;
+
+    private Attribute descriptionAttribute;
 	
     
     /**
@@ -208,6 +217,11 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
 			descriptionTextComplete = descriptionComposite.isTextComplete();
 			descriptionRegex = descriptionComposite.getDescriptionRegex();
 			descriptionText = descriptionComposite.getText();
+			if (Constants.SYSML_EXTENSION.equals(controller.getModelType()) || Constants.UML_EXTENSION.equals(controller.getModelType()))
+            {
+			    descriptionAttribute = descriptionComposite.getAttributeSelection();
+			    controller.setStereotypeDescrptionAttribute(descriptionAttribute);
+            }
 			controller.setDescriptionRegex(descriptionRegex);
 			controller.setDescriptionEndText(descriptionText);
 		}
@@ -693,6 +707,14 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
             }
         }
         
+        if (descriptionChecked && descriptionRegexComplete && (Constants.SYSML_EXTENSION.equals(controller.getModelType()) || Constants.UML_EXTENSION.equals(controller.getModelType()))){
+            if (!descriptionComposite.isAttributeSelected())
+            {
+                result = false;
+                error.append("Please select a description attribute");
+            }
+        }
+        
         // Display error message
         if (result)
         {
@@ -992,6 +1014,29 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
                     tree.getChildren().addAll(newTree.getChildren());
                 }
             }
+            
+            boolean b = Constants.SYSML_EXTENSION.equals(modelType) || Constants.UML_EXTENSION.equals(modelType);
+            
+            descriptionComposite.setAttributeComboVisible(b);
+            
+            if (b) 
+            {
+            Collection<Stereotype> stereotypes = controller.getStereotypes();
+            Collection<Attribute> attributes = new ArrayList<Attribute>();
+            
+                
+//                Collections2.filter(stereotype.getAllAttributes(), new Predicate<Property>()
+//                {
+//                    public boolean apply(Property input)
+//                    {
+//                        return true;
+//                    }
+//                });
+                attributes.addAll(createAttributes(stereotypes));
+            
+            
+            descriptionComposite.fillAttributeCombo(attributes);
+            }
         } 
         else
         {
@@ -1009,9 +1054,10 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
             }
         }
         
-        if (Constants.REQUIREMENT_EXTENSION.equals(modelType) && documentTypeSelected)
+//        if (Constants.REQUIREMENT_EXTENSION.equals(modelType) && documentTypeSelected)
+//        {
+        if (documentTypeSelected)
         {
-            
             descriptionText = controller.getDescriptionEndText();
             descriptionRegex = controller.getDescriptionRegex();
         }
@@ -1057,6 +1103,57 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
 		}
     }
 
+    
+    protected Collection<Attribute> createAttributes(Collection<Stereotype> stereotypes)
+    {
+        Collection<Attribute> listAttributes = new ArrayList<Attribute>();
+        if (stereotypes != null)
+        {
+            
+            // Get all the properties
+            Collection<Property> attributes = new ArrayList<Property>(); 
+            for (Stereotype stereotype : stereotypes)
+            {
+                attributes.addAll(stereotype.getAllAttributes());
+            }
+            Iterator<Property> iter = attributes.iterator();
+            while (iter.hasNext())
+            {
+                Property next = iter.next();
+                EObject eContainer = next.eContainer();
+                String stereotypeQualifiedName = "";
+                if (eContainer instanceof Stereotype && ((Stereotype)eContainer).getProfile() != null)
+                {
+                    
+                    stereotypeQualifiedName = ((Stereotype)eContainer).getQualifiedName();
+                }
+                
+                if (next.getType() != null && next.getType().getName() != null && "string".equals(next.getType().getName().toLowerCase()))
+                {
+                    if (Constants.UML_EXTENSION.equals(controller.getModelType()))
+                    {
+                            AttributeUml uml = new AttributeUml(next.getName(), ImportRequirementWizard.isRef(next), stereotypeQualifiedName, next.getName(), next.getType().getName());
+                            if (!ImportRequirementWizard.contains(listAttributes, uml))
+                            {
+                                listAttributes.add(uml);
+                            }
+                    }
+                    else
+                    {
+                        AttributeSysml sysML = new AttributeSysml(next.getName(), ImportRequirementWizard.isRef(next), stereotypeQualifiedName, next.getName(), next.getType().getName());
+                        if (!ImportRequirementWizard.contains(listAttributes, sysML))
+                        {
+                            listAttributes.add(sysML);
+                        }
+                    }
+                }
+                
+            }
+        }
+        return listAttributes;
+    }
+    
+    
     /**
      * Refresh graphical components
      */
@@ -1090,8 +1187,8 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
             {
                 
                 
-                if (Constants.REQUIREMENT_EXTENSION.equals(controller.getModelType()))
-                {
+//                if (Constants.REQUIREMENT_EXTENSION.equals(controller.getModelType()))
+//                {
                     descriptionCheck.setVisible(true);
                     descriptionCheck.setEnabled(true);
                     
@@ -1109,15 +1206,15 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
                             descriptionComposite.setDescriptionRegex(descriptionRegex);
                         }
                     }
-                } else
-                {
-                    descriptionCheck.setVisible(false);
-                    descriptionCheck.setEnabled(false);
-                    descriptionComposite.setEnabled(false);
-                    descriptionComposite.setVisible(false);
-                    descriptionComposite.setText(""); //$NON-NLS-1$
-                    descriptionComposite.setDescriptionRegex(""); //$NON-NLS-1$
-                }
+//                } else
+//                {
+//                    descriptionCheck.setVisible(false);
+//                    descriptionCheck.setEnabled(false);
+//                    descriptionComposite.setEnabled(false);
+//                    descriptionComposite.setVisible(false);
+//                    descriptionComposite.setText(""); //$NON-NLS-1$
+//                    descriptionComposite.setDescriptionRegex(""); //$NON-NLS-1$
+//                }
                 
                 // Case docx or odt
                 buttonNewColumn.setVisible(false);

@@ -13,6 +13,7 @@
  *****************************************************************************/
 package org.topcased.requirement.document.checker;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -20,8 +21,16 @@ import java.util.regex.Pattern;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.uml2.uml.Class;
+import org.eclipse.uml2.uml.Enumeration;
+import org.eclipse.uml2.uml.EnumerationLiteral;
+import org.eclipse.uml2.uml.Property;
+import org.eclipse.uml2.uml.Stereotype;
 import org.topcased.doc2model.documents.Checker;
 import org.topcased.doc2model.documents.ParsingProcess;
+import org.topcased.doc2model.parser.Activator;
+import org.topcased.requirement.document.elements.Attribute;
+
 import ttm.Text;
 import ttm.TtmFactory;
 
@@ -41,9 +50,11 @@ public class DescriptionChecker implements Checker
     private static Pattern req = Pattern.compile("E_.*[^\\s]");
 
     private static Pattern regDescription = Pattern.compile("");
+    
+    private static Attribute descriptionAttribute;
 
     private static boolean flagReqInit = false;
-
+    
     private ParsingProcess process;
 
     boolean flagIdent = false;
@@ -56,6 +67,11 @@ public class DescriptionChecker implements Checker
 
     StringBuffer buffer;
 
+    public static void setStereotypeAttribute(Attribute attribute)
+    {
+        descriptionAttribute = attribute;
+    }
+    
     public static void setEndText(String endText)
     {
         pattern = Pattern.compile(".*" + endText + ".*");
@@ -193,6 +209,36 @@ public class DescriptionChecker implements Checker
                 req.getTexts().add(createText);
                 buffer = null;
             }
+            if (eo instanceof org.eclipse.uml2.uml.Class)
+            {
+                Class clazz = (Class) eo;
+                Stereotype stereotype = clazz.getAppliedStereotype(descriptionAttribute.getSource());
+                if (stereotype != null)
+                {
+                    
+                    Property theProperty = stereotype.getAttribute(descriptionAttribute.getProperName(), null);
+                    if (theProperty != null)
+                    {
+                        if (theProperty.isMultivalued())
+                        {
+                            Collection elements = (Collection) clazz.getValue(stereotype, descriptionAttribute.getProperName());
+                            elements.add(getCorrespondingValue4UMLType(theProperty, buffer.toString()));
+                        }
+                        else
+                        {
+                            clazz.setValue(stereotype, descriptionAttribute.getProperName(), getCorrespondingValue4UMLType(theProperty, buffer.toString()));
+                        }
+                    }
+                    else
+                    {
+                        Activator.log(new Exception(String.format("the element typed %s doesn't have attributes named %s", clazz.getClass().getName(), descriptionAttribute.getProperName())));
+                    }
+                }
+                else
+                {
+                    Activator.log(new Exception(String.format("the element typed %s can't have stereotype attribute %s it doesn't have stereotype applied", clazz.getClass().getName(), buffer.toString())));
+                }
+            }
             flagIdent = false;
         }
         else if (string.length() > 0 && buffer != null)
@@ -205,6 +251,36 @@ public class DescriptionChecker implements Checker
     private void addDescription()
     {
         EObject eobject = process.getLatestCreatedElement();
+        if (eobject instanceof org.eclipse.uml2.uml.Class)
+        {
+            Class clazz = (Class) eobject;
+            Stereotype stereotype = clazz.getAppliedStereotype(descriptionAttribute.getSource());
+            if (stereotype != null)
+            {
+                
+                Property theProperty = stereotype.getAttribute(descriptionAttribute.getProperName(), null);
+                if (theProperty != null)
+                {
+                    if (theProperty.isMultivalued())
+                    {
+                        Collection elements = (Collection) clazz.getValue(stereotype, descriptionAttribute.getProperName());
+                        elements.add(getCorrespondingValue4UMLType(theProperty, getLastDescription(((org.eclipse.uml2.uml.Class) eobject).getName())));
+                    }
+                    else
+                    {
+                        clazz.setValue(stereotype, descriptionAttribute.getProperName(), getCorrespondingValue4UMLType(theProperty, getLastDescription(((org.eclipse.uml2.uml.Class) eobject).getName())));
+                    }
+                }
+                else
+                {
+                    Activator.log(new Exception(String.format("the element typed %s doesn't have attributes named %s", clazz.getClass().getName(), descriptionAttribute.getProperName())));
+                }
+            }
+            else
+            {
+                Activator.log(new Exception(String.format("the element typed %s can't have stereotype attribute %s it doesn't have stereotype applied", clazz.getClass().getName(), getLastDescription(((org.eclipse.uml2.uml.Class) eobject).getName()))));
+            }
+        }
         if (eobject instanceof ttm.Requirement)
         {
             ttm.Requirement req = (ttm.Requirement) eobject;
@@ -247,6 +323,38 @@ public class DescriptionChecker implements Checker
         }
     }
 
+    private String getLastDescription(String ident)
+    {
+        if (idDescription.containsKey(ident))
+        {
+            return idDescription.get(ident);
+        }
+        else 
+        {
+            Matcher desc = regDescription.matcher(ident);
+            if (desc.matches())
+            {
+                try
+                {
+                    if (desc.groupCount() == 0)
+                    {
+                        lastDescription = desc.group(0);
+                    }
+                    else
+                    {
+                        lastDescription = desc.group(1);
+                    }
+                    idDescription.put(ident, lastDescription);
+                    return lastDescription;
+                }
+                catch (Exception e) {
+                }
+            }
+        }
+        
+        return null;
+    }
+    
     private boolean containsText(ttm.Requirement requirement, String text)
     {
         for (Text reqText : requirement.getTexts())
@@ -267,6 +375,60 @@ public class DescriptionChecker implements Checker
     public static void setRegDescription(String regex)
     {
         regDescription = Pattern.compile(regex);
+    }
+    
+    /**
+     * Gets the corresponding value for EMF type.
+     * 
+     * @param attr the attr
+     * @param value the value
+     * 
+     * @return the corresponding value4 type
+     */
+    private Object getCorrespondingValue4UMLType(Property attr, String value)
+    {
+        if (attr.getType() != null)
+        {
+            String javaInstanceTypeName = attr.getType().getName();
+            try
+            {
+                if (attr.getType() instanceof Enumeration)
+                {
+                    for (EnumerationLiteral l : ((Enumeration) attr.getType()).getOwnedLiterals())
+                    {
+                        if (value.equals(l.getName()))
+                        {
+                            return l ;
+                        }
+                    }
+                }
+                else if ("Boolean".equals(javaInstanceTypeName))
+                {
+                    if ("false".equals(value.toLowerCase()) || "true".equals(value.toLowerCase()))
+                    {
+                        return Boolean.valueOf(value);
+                    }
+                    else
+                    {
+                        Activator.log(new Exception(String.format("The value %s can't be assigned in Boolean, false is setted by default", value)));
+                        return false;
+                    }
+                }
+                else if ("Integer".equals(javaInstanceTypeName))
+                {
+                    return Integer.valueOf(value);
+                }
+                else
+                {
+                    return value;
+                }
+            }
+            catch (NumberFormatException e)
+            {
+                Activator.log(new Exception(String.format("The value %s can't be assigned to this type : %s", value, javaInstanceTypeName)));
+            }
+        }
+        return null;
     }
 
 }

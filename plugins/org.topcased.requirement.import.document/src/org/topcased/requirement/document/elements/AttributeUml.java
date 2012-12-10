@@ -53,13 +53,13 @@ public class AttributeUml extends Attribute
      * 
      * @param name the name
      * @param ref the ref
-     * @param profileName the profile name
+     * @param stereotypeQualifiedName the stereotype Qualified name
      * @param pname the pname
      * @param type the type
      */
-    public AttributeUml(String name, boolean ref, String profileName, String pname, String type)
+    public AttributeUml(String name, boolean ref, String stereotypeQualifiedName, String pname, String type)
     {
-        this(name, ref, profileName);
+        this(name, ref, stereotypeQualifiedName);
         this.propertyName = pname;
         this.propertyType = type;
     }
@@ -87,11 +87,11 @@ public class AttributeUml extends Attribute
             AttributeInjection attributeInjection = Doc2modelMappingFactory.eINSTANCE.createAttributeInjection();
             if (!"Class".equals(this.getSource()))
             {
-                attributeInjection.setStereotypeAttribute(this.getOriginalName());
+                attributeInjection.setStereotypeAttribute(this.getSource() + "::" + this.getOriginalName());
             }
             else
             {
-                attributeInjection.setInstanceAttribute(this.getOriginalName());
+                attributeInjection.setInstanceAttribute(this.getSource() + "::" + this.getOriginalName());
             }
             result = attributeInjection;
         }

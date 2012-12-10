@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.uml2.uml.Stereotype;
 import org.topcased.doc2model.parser.Doc2ModelParser;
 import org.topcased.doc2model.parser.ProgressionObserver;
 import org.topcased.requirement.RequirementFactory;
@@ -92,8 +93,9 @@ public class Doc2ModelImportDocument implements IImportDocument
         
         
         /** Process **/
-        Doc2ModelCreator d2mc = new Doc2ModelCreator(parser.getMapping(idType), Constants.REQUIREMENT_EXTENSION, Constants.COLUMN_TYPE.equals(getIdType()), null, null, parser.getIsHiearachical(),
-                id, pathForDebug);
+        
+        Doc2ModelCreator d2mc = new Doc2ModelCreator(parser.getMapping(idType), Constants.REQUIREMENT_EXTENSION, Constants.COLUMN_TYPE.equals(getIdType()), null, Collections.<Stereotype> emptyList(), parser.getIsHiearachical(), id, pathForDebug);
+        
         final doc2model model = d2mc.createDoc2Model();
         if (model != null)
         {

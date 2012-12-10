@@ -71,6 +71,10 @@ import org.topcased.requirement.document.elements.Regex;
 import org.topcased.requirement.document.elements.Style;
 import org.topcased.requirement.document.utils.Constants;
 
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Iterables;
+
 import doc2modelMapping.doc2model;
 
 /**
@@ -87,6 +91,9 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
     /** The stereotype. */
     private Stereotype stereotype;
 
+    /** The stereotypes collection. */
+    private Collection<Stereotype> stereotypes;
+    
     /** The tree. */
     private RecognizedTree tree = new RecognizedTree();
 
@@ -150,24 +157,42 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
             {
                 DescriptionChecker.setRegDescription(pageController.getDescriptionRegex());
             }
-        }
-        RecognizedElement id = pageController.getIdentification();
-        if (id instanceof Style)
-        {
-            DescriptionChecker.setStyleIdent(((Style) id).getStyle());
-            String regex = ((Style) id).getRegex();
-            if (regex != null)
+            if (Constants.UML_EXTENSION.equals(pageController.getModelType()) || Constants.SYSML_EXTENSION.equals(pageController.getModelType()))
             {
-                DescriptionChecker.setReqIdent(regex);
+                DescriptionChecker.setStereotypeAttribute(pageController.getDescriptionAttribute());
             }
         }
-        else if (id instanceof Regex)
-        {
-            DescriptionChecker.setReqIdent(((Regex) id).getRegex());
-        }
+        
+        
+            
+            RecognizedElement id = pageController.getIdentification();
+            if (id instanceof Style)
+            {
+                DescriptionChecker.setStyleIdent(((Style) id).getStyle());
+                String regex = ((Style) id).getRegex();
+                if (regex != null)
+                {
+                    DescriptionChecker.setReqIdent(regex);
+                }
+            }
+            else if (id instanceof Regex)
+            {
+                DescriptionChecker.setReqIdent(((Regex) id).getRegex());
+            }
+        
+        
 
+        
+        String uris = Joiner.on(";").join(Iterables.transform(pageController.getProfilesURIs(), new Function<String, String>()
+        {
+            public String apply(String from)
+            {
+                return from;
+            }
+        }));
+        
         /** Process **/
-        Doc2ModelCreator d2mc = new Doc2ModelCreator(pageController.getListMapping(), pageController.getModelType(), pageController.isSpreadsheet(), pageController.getProfileURI(), pageController.getStereotype(), pageController.isHierarchical(),
+        Doc2ModelCreator d2mc = new Doc2ModelCreator(pageController.getListMapping(), pageController.getModelType(), pageController.isSpreadsheet(), uris, pageController.getStereotypes(), pageController.isHierarchical(),
                 pageController.getIdentification(), pathForDebug);
         final doc2model model = d2mc.createDoc2Model();
         if (model != null)
@@ -338,8 +363,8 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
         Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_INPUT_DOC, pageController.getInputDocument());
         Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_OUTPUT_MODEL, pageController.getOutputModel());
         Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_LEVEL, pageController.getLevel());
-        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_STEREO, pageController.getStereotypeName());
-        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_PROFILE, pageController.getProfileURI());
+//        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_STEREO, pageController.getStereotypesNames());
+//        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_PROFILE, pageController.getProfilesURIsString());
         Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_MODEL_TYPE, pageController.getModelType());
 
         // Pref from the second page
@@ -403,23 +428,60 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
     /**
      * Gets the stereotype.
      * 
+     * Use getStereotypes() instead
+     * 
      * @return the stereotype
      */
+    @Deprecated
     public Stereotype getStereotype()
     {
         return stereotype;
     }
 
     /**
+     * Gets the stereotypes collection.
+     * 
+     * 
+     * @return the stereotypes collection
+     */
+    public Collection<Stereotype> getStereotypes()
+    {
+        return stereotypes;
+    }
+    
+    /**
      * Sets the stereotype.
+     * 
+     * Use addStereotypes instead
      * 
      * @param stereotype the new stereotype
      */
+    @Deprecated
     public void setStereotype(Stereotype stereotype)
     {
         this.stereotype = stereotype;
     }
+    
+    /**
+     * Adds a Stereotype to the stereotypes collection
+     * 
+     * @param stereotype
+     */
+    public void addStereotype(Stereotype stereotype)
+    {
+        this.stereotypes.add(stereotype);
+    }
 
+    /**
+     * Remove all stereotypes
+     * 
+     * @param stereotype
+     */
+    public void clearStereotypes()
+    {
+        this.stereotypes.clear();
+    }
+    
     /**
      * Checks if is ref.
      * 

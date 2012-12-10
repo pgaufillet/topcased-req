@@ -13,6 +13,8 @@
  *****************************************************************************/
 package org.topcased.requirement.document.doc2model;
 
+import java.util.Collection;
+
 import org.eclipse.uml2.uml.Stereotype;
 import org.topcased.requirement.document.utils.Constants;
 
@@ -34,6 +36,16 @@ public class Doc2ModelCreatorSysml extends Doc2ModelCreatorUml
     public Doc2ModelCreatorSysml(Stereotype stereotype)
     {
         super(stereotype);
+    }
+    
+    /**
+     * Instantiates a new doc2 model creator sysml.
+     * 
+     * @param stereotypes the stereotypes collection
+     */
+    public Doc2ModelCreatorSysml(Collection<Stereotype> stereotypes)
+    {
+        super(stereotypes);
     }
 
     /*

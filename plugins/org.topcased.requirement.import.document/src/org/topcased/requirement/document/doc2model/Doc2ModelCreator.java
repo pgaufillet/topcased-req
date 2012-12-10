@@ -14,6 +14,7 @@
 package org.topcased.requirement.document.doc2model;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -34,6 +35,10 @@ import org.topcased.requirement.document.elements.RecognizedTree;
 import org.topcased.requirement.document.elements.Regex;
 import org.topcased.requirement.document.elements.Style;
 import org.topcased.requirement.document.utils.Constants;
+
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Iterables;
 
 import doc2modelMapping.DependantInjection;
 import doc2modelMapping.Doc2modelMappingFactory;
@@ -59,11 +64,16 @@ public class Doc2ModelCreator
     /** The is spreadsheet. */
     private boolean isSpreadsheet;
 
-    /** The profile. */
+    /** The profiles' URIs. 
+     *  Separated by a comma
+     */
     private String profile;
-
+    
     /** The stereotype. */
-    private Stereotype stereotype;
+//    private Stereotype stereotype;
+    
+    /** The stereotypes. */
+    private Collection<Stereotype> stereotypes;
 
     /** The is hierarchical. */
     private boolean isHierarchical;
@@ -78,6 +88,7 @@ public class Doc2ModelCreator
     static final HashMap<String, String> metaModels = new HashMap<String, String>();
 
     private String pathForDebug;
+
     static
     {
         metaModels.put(Constants.UML_EXTENSION, "http://www.eclipse.org/uml2/2.1.0/UML");
@@ -107,38 +118,57 @@ public class Doc2ModelCreator
      * @param listMapping the list mapping
      * @param modelType the model type
      * @param inputType the input type
-     * @param profile the profile
+     * @param profile the profile URI
      * @param stereotype the stereotype
      * @param isHierarchical the is hierarchical
      * @param identification the identification
      * @param pathFordebug the path folder to store the doc2model mapping
      */
-    public Doc2ModelCreator(Collection<Mapping> listMapping, String modelType, boolean inputType, String profile, Stereotype stereotype, boolean isHierarchical, RecognizedElement identification,String pathFordebug)
+    public Doc2ModelCreator(Collection<Mapping> listMapping, String modelType, boolean inputType, String profile, Stereotype stereotype, boolean isHierarchical, RecognizedElement identification, String pathFordebug)
+    {
+        this(listMapping, modelType, inputType, profile, Arrays.asList(stereotype), isHierarchical, identification,pathFordebug);
+    }
+
+    
+    /**
+     * Instantiates a new doc2 model creator.
+     * 
+     * @param listMapping the list mapping
+     * @param modelType the model type
+     * @param inputType the input type
+     * @param profile the profile URI
+     * @param stereotypes the stereotypes
+     * @param isHierarchical the is hierarchical
+     * @param identification the identification
+     * @param pathFordebug the path folder to store the doc2model mapping
+     */
+    public Doc2ModelCreator(Collection<Mapping> listMapping, String modelType, boolean inputType, String profile, Collection<Stereotype> stereotypes, boolean isHierarchical, RecognizedElement identification, String pathFordebug)
     {
         super();
         this.listMapping = listMapping;
         this.modelType = modelType;
         this.isSpreadsheet = inputType;
         this.profile = profile;
-        this.stereotype = stereotype;
+        this.stereotypes = stereotypes;
         this.isHierarchical = isHierarchical;
         this.identification = identification;
         this.pathForDebug = pathFordebug;
 
         if (Constants.UML_EXTENSION.equals(modelType))
         {
-            creatorSpecific = new Doc2ModelCreatorUml(stereotype);
+            creatorSpecific = new Doc2ModelCreatorUml(stereotypes);
         }
         else if (Constants.SYSML_EXTENSION.equals(modelType))
         {
-            creatorSpecific = new Doc2ModelCreatorSysml(stereotype);
+            creatorSpecific = new Doc2ModelCreatorSysml(stereotypes);
         }
         else
         {
             creatorSpecific = new Doc2ModelCreatorRequirement();
         }
     }
-
+    
+    
     /**
      * Creates the doc2 model.
      * 
@@ -191,9 +221,15 @@ public class Doc2ModelCreator
             doc.getLinks().add(linkedElement);
             // Add the class element injection
             String source = null;
-            if (stereotype != null)
+            if (stereotypes != null && !stereotypes.isEmpty())
             {
-                source = stereotype.getName();
+                source = Joiner.on(";").join(Iterables.transform(stereotypes, new Function<Stereotype, String>()
+                {
+                    public String apply(Stereotype from)
+                    {
+                        return from.getName();
+                    }
+                }));
             }
             InjectionElement injectionElement = creatorSpecific.getInjectionElement(source, !isHierarchical, isSpreadsheet);
             linkedElement.setInjection(injectionElement);

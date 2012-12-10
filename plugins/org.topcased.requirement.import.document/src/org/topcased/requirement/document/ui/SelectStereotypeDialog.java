@@ -33,7 +33,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -170,20 +169,20 @@ public class SelectStereotypeDialog extends CustomPopupDialog
         createListStereotypes(compo);
 
         // Load profile from a previous use
-        currentProfile = wizard.getProfile();
-        if (currentProfile != null)
-        {
-            textForURI.setText(currentProfile.getName());
-            listStereotypes.setInput(currentProfile.getOwnedStereotypes());
-            uriPrefString = currentProfile.eResource().getURI().toString();
-        }
+//        currentProfile = wizard.getProfile();
+//        if (currentProfile != null)
+//        {
+//            textForURI.setText(currentProfile.getName());
+//            listStereotypes.setInput(currentProfile.getOwnedStereotypes());
+//            uriPrefString = currentProfile.eResource().getURI().toString();
+//        }
 
         // Select the stereotype from previous use
-        selectedStereotype = wizard.getStereotype();
-        if (currentProfile != null && selectedStereotype != null)
-        {
-            listStereotypes.setSelection(new StructuredSelection(selectedStereotype));
-        }
+//        selectedStereotype = wizard.getStereotype();
+//        if (currentProfile != null && selectedStereotype != null)
+//        {
+//            listStereotypes.setSelection(new StructuredSelection(selectedStereotype));
+//        }
 
     }
 
@@ -487,9 +486,9 @@ public class SelectStereotypeDialog extends CustomPopupDialog
          */
         public void run()
         {
-            wizard.setStereotype(selectedStereotype);
-            wizard.setProfile(currentProfile);
-            wizard.setProfileURI(uriPrefString);
+            wizard.addStereotype(selectedStereotype);
+            wizard.addProfile(currentProfile);
+            wizard.addProfileURI(uriPrefString);
             close();
             wizard.handleModelChange();
             wizard.refreshView();

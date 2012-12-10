@@ -14,6 +14,11 @@
 package org.topcased.requirement.document.ui;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,9 +29,17 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.ListViewer;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
@@ -36,7 +49,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.ISharedImages;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.Form;
@@ -56,6 +69,10 @@ import org.topcased.requirement.document.elements.PageController;
 import org.topcased.requirement.document.utils.Constants;
 import org.topcased.requirement.document.utils.Messages;
 import org.topcased.typesmodel.model.inittypes.DocumentType;
+
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Iterables;
 
 /**
  * The Class ImportRequirementWizardPageSelectDocument.
@@ -119,6 +136,9 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
 
     /** The stereotype component. */
     private ComponentHelpTextFieldButton stereotypeComponent;
+    
+    /** The stereotype component. */
+    private ListViewer stereotypeComponent2;
 
     /** The radio button model type. */
     private ComponentHelpRadioButtonModel radioButtonModelType;
@@ -135,12 +155,21 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
 
     /** The stereotype. */
     private Stereotype stereotype;
+    
+    /** stereotypes Collection. */
+    private Collection<Stereotype> stereotypes;
 
     /** The profile. */
     private Profile profile;
 
+    /** The Profiles. */
+    private Collection<Profile> profiles;
+    
     /** The profile uri. */
     private String profileURI;
+    
+    /** The profiles' uris. */
+    private Collection<String> profilesURIs;
 
     /** The old model type. */
     private String oldModelType;
@@ -184,6 +213,26 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
 
     /** Defines if the attache requirement check button is activated */
     private boolean attachRequirementChecked = false;
+
+	private Button buttonAdd;
+    
+    /** The image add. */
+    private static Image imageAdd;
+
+    /** The image remove. */
+    private static Image imageRemove;
+    
+    static
+    {
+        try
+        {
+            imageAdd = new Image(Display.getDefault(), Activator.getDefault().getBundle().getResource("icons/add.gif").openStream());
+            imageRemove = new Image(Display.getDefault(), Activator.getDefault().getBundle().getResource("icons/remove.gif").openStream());
+        }
+        catch (IOException e)
+        {
+        }
+    }
 
     /**
      * Instantiates a new import requirement wizard page select document.
@@ -364,25 +413,25 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
 
         // Get Stereotype
         // Load Profile
-        profileURIFromPref = Activator.getDefault().getPluginPreferences().getString(PREFERENCE_FOR_PROFILE);
-        if (profileURIFromPref != null && profileURIFromPref.length() > 0)
-        {
-            profileURI = profileURIFromPref;
-            this.profile = loadProfile(profileURI);
-            // Load Stereotype
-            if (this.profile != null)
-            {
-                stereotypeFromPref = Activator.getDefault().getPluginPreferences().getString(PREFERENCE_FOR_STEREO);
-                if (stereotypeFromPref != null && stereotypeFromPref.length() > 0)
-                {
-                    this.stereotype = this.profile.getOwnedStereotype(stereotypeFromPref);
-                    if (this.stereotype != null)
-                    {
-                        stereotypeComponent.setValueText(this.stereotype.getName());
-                    }
-                }
-            }
-        }
+//        profileURIFromPref = Activator.getDefault().getPluginPreferences().getString(PREFERENCE_FOR_PROFILE);
+//        if (profileURIFromPref != null && profileURIFromPref.length() > 0)
+//        {
+//            profileURI = profileURIFromPref;
+//            this.profile = loadProfile(profileURI);
+//            // Load Stereotype
+//            if (this.profile != null)
+//            {
+//                stereotypeFromPref = Activator.getDefault().getPluginPreferences().getString(PREFERENCE_FOR_STEREO);
+//                if (stereotypeFromPref != null && stereotypeFromPref.length() > 0)
+//                {
+//                    this.stereotype = this.profile.getOwnedStereotype(stereotypeFromPref);
+//                    if (this.stereotype != null)
+//                    {
+//                        stereotypeComponent.setValueText(this.stereotype.getName());
+//                    }
+//                }
+//            }
+//        }
 
         File currentFileSystem;
         if (inputDocument != null)
@@ -572,30 +621,96 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
         compo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 
         // Create the label
-        toolkit.createLabel(compo, "Stererotype: "); //$NON-NLS-1$
-
-        // Create a delete button
-        buttonDelete = toolkit.createButton(compo, "", SWT.PUSH); //$NON-NLS-1$
-        buttonDelete.setImage(new Image(Display.getDefault(), PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_TOOL_DELETE).getImageData()));
-        buttonDelete.addSelectionListener(new SelectionListener()
+        Label label = toolkit.createLabel(compo, "Stererotype: "); //$NON-NLS-1$
+        label.setLayoutData(new GridData(SWT.BEGINNING, SWT.FILL, true, false, 3, 1));
+        
+        stereotypeComponent2 = new ListViewer(compo, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+        stereotypeComponent2.getList().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 2));
+        stereotypeComponent2.setLabelProvider(new LabelProvider()
         {
-
+            public String getText(Object element)
+            {
+                // Return the resolution's label.
+                if (element instanceof Stereotype)
+                {
+                    return ((Stereotype) element).getQualifiedName();
+                }
+                return null;
+            }
+        });
+        stereotypeComponent2.setContentProvider(new ArrayContentProvider());
+        stereotypeComponent2.addSelectionChangedListener(new ISelectionChangedListener()
+        {
+            public void selectionChanged(SelectionChangedEvent event)
+            {
+                ISelection selection = event.getSelection();
+                if (selection instanceof IStructuredSelection)
+                {
+                    buttonDelete.setEnabled(true);
+                } else {
+                    buttonDelete.setEnabled(false);
+                }
+            }
+        });
+        
+        
+        buttonAdd = toolkit.createButton(compo, "", SWT.PUSH);
+        buttonAdd.setImage(imageAdd);
+        buttonAdd.addSelectionListener(new SelectionListener()
+        {
             public void widgetDefaultSelected(SelectionEvent e)
             {
             }
 
             public void widgetSelected(SelectionEvent e)
             {
-                setStereotype(null);
+                BusyIndicator.showWhile(Display.getDefault(), new Runnable()
+                {
+                    public void run()
+                    {
+                        SelectStereotypeDialog dialog = new SelectStereotypeDialog(Display.getDefault().getActiveShell(), Display.getDefault().getCursorLocation(),
+                                ImportRequirementWizardPageSelectDocument.this, modelType);
+                        dialog.open();
+                    }
+                });
             }
-
         });
-        buttonDelete.setEnabled(false);
-        // Create the field with an help and a brows button
-        String helpText = Messages.ImportRequirementWizardPageSelectDocument_APPLY_STEREOTYPES;
-        stereotypeComponent = new ComponentHelpTextFieldButton(this, compo, toolkit, SWT.NONE, helpText, -1);
-        stereotypeComponent.setTextEnable(false);
-        fill(stereotypeComponent);
+        buttonAdd.setEnabled(false);
+        
+     // Create a delete button
+      buttonDelete = toolkit.createButton(compo, "", SWT.PUSH); //$NON-NLS-1$
+      buttonDelete.setImage(imageRemove);
+      buttonDelete.setEnabled(false);
+      
+      buttonDelete.addSelectionListener(new SelectionListener()
+      {
+        public void widgetSelected(SelectionEvent e)
+        {
+            ISelection selection = stereotypeComponent2.getSelection();
+            if (selection instanceof IStructuredSelection)
+            {
+                IStructuredSelection iStructuredSelection = (IStructuredSelection) selection;
+//                Collection<Stereotype> aa = new ArrayList<Stereotype>();
+//                aa.addAll((Collection< ? extends Stereotype>) stereotypeComponent2.getInput());
+//                aa.remove(iStructuredSelection.getFirstElement());
+//                stereotypes = aa;
+//                stereotypeComponent2.setInput(aa);
+                
+                removeStereotype((Stereotype) iStructuredSelection.getFirstElement());
+                stereotypeComponent2.setInput(stereotypes);
+                
+            }
+        }
+        
+        public void widgetDefaultSelected(SelectionEvent e)
+        {
+        }
+    });
+        
+        
+//        stereotypeComponent = new ComponentHelpTextFieldButton(this, compo, toolkit, SWT.NONE, helpText, -1);
+//        stereotypeComponent.setTextEnable(false);
+//        fill(stereotypeComponent);
 
     }
 
@@ -633,10 +748,11 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
             {
                 result = false;
                 error.append("Choose an output model (uml, sysml or requirement)\n"); //$NON-NLS-1$
-                if (stereotypeComponent != null)
-                {
-                    stereotypeComponent.setButtonEnable(false);
-                }
+//                if (stereotypeComponent != null)
+//                {
+//                stereotypeComponent.setButtonEnable(true);
+                    buttonAdd.setEnabled(false);
+//                }
             }
             else
             {
@@ -647,25 +763,23 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
                     if (outputModel.endsWith(".uml") || outputModel.endsWith(".sysml")) //$NON-NLS-1$ //$NON-NLS-2$
                     {
                         if (!modelType.equals(oldModelType))
-
                         {
-                            setStereotype(null);
-
+                            clearProfiles();
                         }
-                        if (stereotypeComponent != null)
+                        if (buttonAdd != null)
                         {
-                            stereotypeComponent.setButtonEnable(true);
+                            buttonAdd.setEnabled(true);
                         }
 
                     }
                     else
                     {
-                        if (stereotypeComponent != null)
+                        if (buttonAdd != null)
                         {
-                            stereotypeComponent.setButtonEnable(false);
+                            buttonAdd.setEnabled(false);
                         }
 
-                        setStereotype(null);
+                        clearProfiles();
                     }
                 }
             }
@@ -703,9 +817,13 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
     public void handleModelChange()
     {
         // Save output model
-        if (attachRequirementChecked && typedDocumentsComposite.getModelToAttach() != null)
+        if (attachRequirementChecked)
         {
-            outputModel = URI.createURI(typedDocumentsComposite.getModelToAttach().getLocationURI().toString()).trimFileExtension().toString().concat("TEMP.requirement");
+            clearProfiles();
+            if (typedDocumentsComposite.getModelToAttach() != null)
+            {
+                outputModel = URI.createURI(typedDocumentsComposite.getModelToAttach().getLocationURI().toString()).trimFileExtension().toString().concat("TEMP.requirement");
+            }
         }
 
         // Get the model type
@@ -813,16 +931,16 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
         }
 
         // Check profile
-        if (profileURI != null && profileURI != null && !profileURIFromPref.equalsIgnoreCase(profileURI))
-        {
-            load = false;
-        }
+//        if (profileURI != null && profileURI != null && !profileURIFromPref.equalsIgnoreCase(profileURI))
+//        {
+//            load = false;
+//        }
 
         // Check stereotype
-        if (stereotype != null && stereotypeFromPref != null && !stereotypeFromPref.equalsIgnoreCase(stereotype.getName()))
-        {
-            load = false;
-        }
+//        if (stereotype != null && stereotypeFromPref != null && !stereotypeFromPref.equalsIgnoreCase(stereotype.getName()))
+//        {
+//            load = false;
+//        }
 
         return load;
     }
@@ -862,16 +980,30 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
      * 
      * @return the stereotype
      */
+    @Deprecated
     public Stereotype getStereotype()
     {
         return this.stereotype;
     }
 
     /**
+     * Gets the stereotypes collection.
+     * 
+     * @return the stereotype
+     */
+    public Collection<Stereotype> getStereotypes()
+    {
+        return this.stereotypes;
+    }
+    
+    /**
      * Gets the stereotype name.
+     * 
+     * Use getStereotypesNames() instead
      * 
      * @return the stereotype name
      */
+    @Deprecated
     public String getStereotypeName()
     {
         if (stereotype != null)
@@ -881,35 +1013,167 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
     }
 
     /**
+     * Gets the stereotype name.
+     * 
+     * @return the stereotype name
+     */
+    public String getStereotypesNames()
+    {
+        if (stereotypes != null && !stereotypes.isEmpty())
+        {
+            return Joiner.on(";").join(Iterables.transform(stereotypes, new Function<Stereotype, String>()
+            {
+                public String apply(Stereotype from)
+                {
+                    return from.getName();
+                }
+            }));
+        }
+        else
+            return "";
+    }
+    
+    
+    
+    /**
      * Sets the stereotype.
      * 
      * @param s the new stereotype
      */
+    public void addStereotype(Stereotype s)
+    {
+        if (s == null)
+        {
+            return;
+        }
+        if (stereotypeComponent2.getInput() instanceof Collection<?>)
+        {
+            Collection<Stereotype> input = (Collection<Stereotype>) stereotypeComponent2.getInput();
+            ArrayList<Stereotype> c = new ArrayList<Stereotype>();
+            c.addAll(input);
+            c.add(s);
+            stereotypes = c;
+            stereotypeComponent2.setInput(stereotypes);
+        }
+        else
+        {
+            Collection<Stereotype> a = new ArrayList<Stereotype>();
+            a.add(s);
+            stereotypeComponent2.setInput(a);
+        }
+        
+    }
+    
+    /**
+     * remove the stereotype.
+     * 
+     * @param s the stereotype to remove
+     */
+    public void removeStereotype(Stereotype s){
+        if (s == null)
+        {
+            return;
+        }
+        stereotypes.remove(s);
+    }
+    
+    public void clearProfiles(){
+       
+        if (profiles != null)
+        {
+            profiles.clear();
+        }
+        
+        if (profilesURIs != null)
+        {
+            profilesURIs.clear();
+        }
+
+        if (stereotypes != null)
+        {
+            stereotypes.clear();
+        }
+        
+        if (stereotypeComponent2 != null)
+        {
+            stereotypeComponent2.setInput(Collections.emptyList());
+        }
+        
+    }
+    
+    /**
+     * Sets the stereotype.
+     * 
+     * Use addStereotype() and removeStereotype instead
+     * 
+     * @param s the new stereotype
+     */
+    @Deprecated
     public void setStereotype(Stereotype s)
     {
         this.stereotype = s;
     }
-
+    
     /**
      * Sets the profile.
      * 
+     * Use addProfile() and removeProfile() instead
+     * 
      * @param p the new profile
      */
+    @Deprecated
     public void setProfile(Profile p)
     {
         this.profile = p;
     }
+    
+    /**
+     * Add a profile.
+     * 
+     * @param p the new profile
+     */
+    public void addProfile(Profile p)
+    {
+        if (profiles == null)
+        {
+            profiles= new ArrayList<Profile>();
+        }
+        profiles.add(p);
+    }
 
+    /**
+     * remove a profile.
+     * 
+     * @param p the profile to remove
+     */
+    public void removeProfile(Profile p)
+    {
+        profiles.remove(p);
+    }
+    
     /**
      * Gets the profile.
      * 
+     * Use getProfiles() instead
+     * 
      * @return the profile
      */
+    @Deprecated
     public Profile getProfile()
     {
         return this.profile;
     }
 
+    /**
+    * Gets the profiles.
+    * 
+    * @return the profiles Collection
+    */
+    public Collection<Profile> getProfiles()
+    {
+        return this.profiles;
+    }
+    
     /**
      * Gets the level.
      * 
@@ -923,8 +1187,11 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
     /**
      * Gets the profile uri.
      * 
+     * Use getProfilesURIs instead
+     * 
      * @return the profile uri
      */
+    @Deprecated
     public String getProfileURI()
     {
         if (profileURI != null)
@@ -934,15 +1201,89 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
     }
 
     /**
+     * Gets the profiles' uris.
+     * 
+     * @return the profiles' uris
+     */
+    public Collection<String> getProfilesURIs()
+    {
+        if (profilesURIs != null && !profilesURIs.isEmpty())
+        {
+            return profilesURIs;
+        }
+        return null;
+    }
+    
+    /**
+     * Gets the profiles' uris concatenated with comma separation.
+     * 
+     * @return the profiles' uris
+     */
+    public String getProfilesURIsString()
+    {
+        if (profilesURIs != null && !profilesURIs.isEmpty())
+        {
+
+            return Joiner.on(";").join(Iterables.transform(profilesURIs, new Function<String, String>()
+            {
+                public String apply(String from)
+                {
+                    return from;
+                }
+            }));
+        }
+        return "";
+    }
+    
+    /**
      * Sets the profile uri.
+     * 
+     * Use AddProfileURI() and RemoveProfileURI() instead
      * 
      * @param profileURI the new profile uri
      */
+    @Deprecated
     public void setProfileURI(String profileURI)
     {
         this.profileURI = profileURI;
     }
 
+    /**
+     * Add the profile uri.
+     * 
+     * @param profileURI the new profile uri
+     */
+    public void addProfileURI(String profileURI)
+    {
+        if (profilesURIs == null)
+        {
+            profilesURIs = new ArrayList<String>();
+        }
+        profilesURIs.add(profileURI);
+    }
+    
+    /**
+     * Remove the profile uri.
+     * 
+     * @param profileURI the profile uri to Remove
+     */
+    public void removeProfileURI(String profileURI)
+    {
+        if (profilesURIs == null)
+        {
+            return;
+        }
+        for (Iterator<String> iterator = profilesURIs.iterator(); iterator.hasNext();)
+        {
+            String uri = (String) iterator.next();
+            if (uri.equals(profileURI))
+            {
+                iterator.remove();
+            }
+            
+        }
+    }
+    
     /**
      * Gets if an attach requirement is selected
      * 
@@ -1022,14 +1363,13 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
      */
     public void refreshView()
     {
-        if (stereotype != null)
+        if (stereotypes != null && !stereotypes.isEmpty())
         {
-            stereotypeComponent.setValueText(stereotype.getName());
-            buttonDelete.setEnabled(true);
+        	stereotypeComponent2.setInput(stereotypes);
         }
         else
         {
-            stereotypeComponent.setValueText("");
+        	stereotypeComponent2.setInput(Collections.EMPTY_LIST);
             buttonDelete.setEnabled(false);
 
         }

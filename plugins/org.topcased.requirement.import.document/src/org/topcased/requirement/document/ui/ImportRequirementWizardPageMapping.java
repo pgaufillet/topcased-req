@@ -14,12 +14,14 @@
 package org.topcased.requirement.document.ui;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -50,6 +52,7 @@ import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.uml2.uml.Property;
+import org.eclipse.uml2.uml.Stereotype;
 import org.topcased.requirement.document.Activator;
 import org.topcased.requirement.document.elements.Attribute;
 import org.topcased.requirement.document.elements.AttributeRequirement;
@@ -975,21 +978,34 @@ public class ImportRequirementWizardPageMapping extends WizardPage
     
     protected void manageProfiles()
     {
-        if (controller.getProfile() != null && controller.getStereotype() != null)
+        if (controller.getStereotypes() != null)
         {
-            String profileName = controller.getProfile().getName();
+            
             // Get all the properties
-            Iterator<Property> iter = controller.getStereotype().getAllAttributes().iterator();
+            Collection<Stereotype> stereotypes = controller.getStereotypes();
+            Collection<Property> attributes = new ArrayList<Property>(); 
+            for (Stereotype stereotype : stereotypes)
+            {
+                attributes.addAll(stereotype.getAllAttributes());
+            }
+            Iterator<Property> iter = attributes.iterator();
             while (iter.hasNext())
             {
                 Property next = iter.next();
+                EObject eContainer = next.eContainer();
+                String stereotypeQualifiedName = "";
+                if (eContainer instanceof Stereotype && ((Stereotype)eContainer).getProfile() != null)
+                {
+                    
+                    stereotypeQualifiedName = ((Stereotype)eContainer).getQualifiedName();
+                }
                 if (next.getName() != null && !next.getName().contains("base_"))
                 {
                     if (Constants.UML_EXTENSION.equals(controller.getModelType()))
                     {
                         if (!ImportRequirementWizard.isRef(next) || (next.getType() != null && next.getType().getName() != null && "class".equals(next.getType().getName().toLowerCase())))
                         {
-                            AttributeUml uml = new AttributeUml(next.getName(), ImportRequirementWizard.isRef(next), profileName, next.getName(), next.getType().getName());
+                            AttributeUml uml = new AttributeUml(next.getName(), ImportRequirementWizard.isRef(next), stereotypeQualifiedName, next.getName(), next.getType().getName());
                             if (!ImportRequirementWizard.contains(listAttributes, uml))
                             {
                                 listAttributes.add(uml);
@@ -998,7 +1014,7 @@ public class ImportRequirementWizardPageMapping extends WizardPage
                     }
                     else
                     {
-                        AttributeSysml sysML = new AttributeSysml(next.getName(), ImportRequirementWizard.isRef(next), profileName, next.getName(), next.getType().getName());
+                        AttributeSysml sysML = new AttributeSysml(next.getName(), ImportRequirementWizard.isRef(next), stereotypeQualifiedName, next.getName(), next.getType().getName());
                         if (!ImportRequirementWizard.contains(listAttributes, sysML))
                         {
                             listAttributes.add(sysML);

@@ -13,6 +13,7 @@
  *****************************************************************************/
 package org.topcased.requirement.document.doc2model;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 import org.eclipse.uml2.uml.Stereotype;
@@ -46,14 +47,27 @@ public class Doc2ModelCreatorUml implements Doc2ModelCreatorSpecific
     /** The parent regex. */
     HashMap<RecognizedElement, doc2modelMapping.RegEx> parentRegex = new HashMap<RecognizedElement, doc2modelMapping.RegEx>();
 
+    /** The stereotypes collection. */
+    Collection<Stereotype> stereotypes;
+
     /**
      * Instantiates a new doc2 model creator uml.
      * 
-     * @param s the s
+     * @param s the stereotype
      */
     public Doc2ModelCreatorUml(Stereotype s)
     {
         stereotype = s;
+    }
+    
+    /**
+     * Instantiates a new doc2 model creator uml.
+     * 
+     * @param s the stereotypes Collection
+     */
+    public Doc2ModelCreatorUml(Collection<Stereotype> s)
+    {
+        stereotypes = s;
     }
 
     /*
