@@ -6,6 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors: Christophe MERTZ (CS) - initial API and implementation
+ *               Matthieu BOIVINEAU (AtoS) - documentation management updated
  * 
  **********************************************************************************************************************/
 package org.topcased.requirement.core.views.upstream;
@@ -30,7 +31,6 @@ import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.part.IPageBookViewPage;
 import org.topcased.requirement.ObjectAttribute;
 import org.topcased.requirement.RequirementProject;
-import org.topcased.requirement.core.documentation.upstream.PapyrusUpstreamDescPage;
 import org.topcased.requirement.core.documentation.upstream.UpstreamDescPage;
 import org.topcased.requirement.core.handlers.ICommandConstants;
 import org.topcased.requirement.core.utils.RequirementCoverageComputer;
@@ -80,10 +80,6 @@ public class UpstreamRequirementView extends AbstractRequirementView implements 
         if (upstreamPage != null && type.equals(org.topcased.modeler.documentation.IDocPage.class))
         {
             return new UpstreamDescPage();
-        }
-        else if (upstreamPage != null && type.equals(org.eclipse.papyrus.documentation.view.IDocPage.class))
-        {
-            return new PapyrusUpstreamDescPage();
         }
         return super.getAdapter(type);
     }

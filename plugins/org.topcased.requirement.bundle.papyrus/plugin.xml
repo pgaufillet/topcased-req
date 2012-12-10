@@ -143,5 +143,17 @@
             fileExtension="requirement">
       </loadedAssociatedResource>
    </extension>
-   
+   <extension
+         point="org.eclipse.papyrus.documentation.documentationManager">
+      <documentationManager
+            managerClass="org.topcased.requirement.bundle.papyrus.doc.RequirementDocumentationManager"
+            modelNsURI="http://org.topcased.requirement/1.0"
+            priority="High">
+      </documentationManager>
+      <documentationManager
+            managerClass="org.topcased.requirement.bundle.papyrus.doc.TtmRequirementDocumentationManager"
+            modelNsURI="http://org.topcased.traceability.model"
+            priority="High">
+      </documentationManager>
+   </extension>
 </plugin>

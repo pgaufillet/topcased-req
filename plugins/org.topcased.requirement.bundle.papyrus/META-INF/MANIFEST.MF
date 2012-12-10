@@ -8,7 +8,9 @@ Require-Bundle: org.topcased.requirement.core,
  org.eclipse.papyrus.diagram.common,
  org.eclipse.papyrus.tabbedproperties.core,
  org.eclipse.papyrus.ui.perspectiveconfiguration,
- org.eclipse.papyrus.core.resourceloading
+ org.eclipse.papyrus.core.resourceloading,
+ org.eclipse.papyrus.documentation,
+ org.eclipse.papyrus.doc;bundle-version="0.8.2"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: %providerName

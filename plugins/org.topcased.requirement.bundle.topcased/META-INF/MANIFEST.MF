@@ -5,7 +5,8 @@ Bundle-SymbolicName: org.topcased.requirement.bundle.topcased;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.topcased.requirement.bundle.topcased.Activator
 Require-Bundle: org.topcased.modeler,
- org.topcased.requirement.core;visibility:=reexport
+ org.topcased.requirement.core;visibility:=reexport,
+ org.eclipse.papyrus.documentation.uml;bundle-version="0.8.2"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: %providerName
