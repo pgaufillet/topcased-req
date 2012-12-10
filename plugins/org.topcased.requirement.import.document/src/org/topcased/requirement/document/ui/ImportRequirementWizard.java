@@ -162,38 +162,38 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
                 DescriptionChecker.setStereotypeAttribute(pageController.getDescriptionAttribute());
             }
         }
-        
-        
-            
-            RecognizedElement id = pageController.getIdentification();
-            if (id instanceof Style)
-            {
-                DescriptionChecker.setStyleIdent(((Style) id).getStyle());
-                String regex = ((Style) id).getRegex();
-                if (regex != null)
-                {
-                    DescriptionChecker.setReqIdent(regex);
-                }
-            }
-            else if (id instanceof Regex)
-            {
-                DescriptionChecker.setReqIdent(((Regex) id).getRegex());
-            }
-        
-        
 
-        
-        String uris = Joiner.on(";").join(Iterables.transform(pageController.getProfilesURIs(), new Function<String, String>()
+        RecognizedElement id = pageController.getIdentification();
+        if (id instanceof Style)
         {
-            public String apply(String from)
+            DescriptionChecker.setStyleIdent(((Style) id).getStyle());
+            String regex = ((Style) id).getRegex();
+            if (regex != null)
             {
-                return from;
+                DescriptionChecker.setReqIdent(regex);
             }
-        }));
-        
+        }
+        else if (id instanceof Regex)
+        {
+            DescriptionChecker.setReqIdent(((Regex) id).getRegex());
+        }
+
+        String uris = "";
+        Collection<String> profilesUris = pageController.getProfilesURIs();
+        if (profilesUris != null && !profilesUris.isEmpty())
+        {
+            uris = Joiner.on(";").join(Iterables.transform(pageController.getProfilesURIs(), new Function<String, String>()
+            {
+                public String apply(String from)
+                {
+                    return from;
+                }
+            }));
+        }
+
         /** Process **/
-        Doc2ModelCreator d2mc = new Doc2ModelCreator(pageController.getListMapping(), pageController.getModelType(), pageController.isSpreadsheet(), uris, pageController.getStereotypes(), pageController.isHierarchical(),
-                pageController.getIdentification(), pathForDebug);
+        Doc2ModelCreator d2mc = new Doc2ModelCreator(pageController.getListMapping(), pageController.getModelType(), pageController.isSpreadsheet(), uris, pageController.getStereotypes(),
+                pageController.isHierarchical(), pageController.getIdentification(), pathForDebug);
         final doc2model model = d2mc.createDoc2Model();
         if (model != null)
         {
@@ -363,8 +363,10 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
         Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_INPUT_DOC, pageController.getInputDocument());
         Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_OUTPUT_MODEL, pageController.getOutputModel());
         Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_LEVEL, pageController.getLevel());
-//        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_STEREO, pageController.getStereotypesNames());
-//        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_PROFILE, pageController.getProfilesURIsString());
+        // Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_STEREO,
+        // pageController.getStereotypesNames());
+        // Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_PROFILE,
+        // pageController.getProfilesURIsString());
         Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_MODEL_TYPE, pageController.getModelType());
 
         // Pref from the second page
