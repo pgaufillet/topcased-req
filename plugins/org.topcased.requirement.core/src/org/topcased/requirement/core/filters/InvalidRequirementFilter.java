@@ -79,6 +79,7 @@ public class InvalidRequirementFilter extends ViewerFilter implements IInvalidRe
         {
             // This is the first time the hierarchical element gets processed.
             cache.put(element, false);
+            result = false ;
             // Checking subtrees of hierarchicals.
             for (HierarchicalElement hierarchical : ((HierarchicalElement) element).getChildren())
             {
