@@ -520,6 +520,7 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
                 }
                 if (changed != null)
                 {
+                    viewer.refresh(changed,true);
                     // refresh elements with ObjectAttribute on it
                     Collection<Setting> ref = RequirementUtils.getCrossReferences(changed);
                     if (ref != null){
