@@ -83,7 +83,10 @@ public class UpstreamSelectionChangedListener implements ISelectionChangedListen
                     final Requirement current = (Requirement) treeS.getFirstElement();
                     for (int i = 0; i < viewer.getFilters().length; i++)
                     {
-                        viewer.removeFilter(viewer.getFilters()[i]);
+                        if (viewer.getFilters()[i] instanceof CurrentViewFilterFromUpstreamSelection)
+                        {
+                            viewer.removeFilter(viewer.getFilters()[i]);
+                        }
                     }
                     // we set the selection to null to avoid stack overflow
                     // ie : the current page will not try to restore a selection which is not visible
