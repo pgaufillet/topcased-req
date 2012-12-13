@@ -69,6 +69,8 @@ public class MergeImpactProcessor
 
     private RequirementDifferenceCalculator calc;
 
+    private Resource modelResource;
+
     public MergeImpactProcessor(Set<URI> resources, ResourceSet resourceSet, RequirementDifferenceCalculator calculator)
     {
         impact = new HashMap<EObject, List<EObject>>();
@@ -501,6 +503,13 @@ public class MergeImpactProcessor
             resource = findResourceFor(toLog.eResource());
             uri = toLog.eResource().getURI();
         }
+        
+        // Retrieve the original model if the one containing changes is a temporary file
+        if (resource == null && modelResource != null)
+        {
+            resource = findResourceFor(modelResource);
+            uri = modelResource.getURI();
+        }
 
         if (resource != null)
         {
@@ -547,5 +556,13 @@ public class MergeImpactProcessor
             }
         }
         return null;
+    }
+
+    //Use this method if changes are already applied to the original model 
+    // and the model containing changes is a temporary file
+    public void processImpact(Resource modelResource)
+    {
+        this.modelResource = modelResource;
+        processImpact();
     }
 }

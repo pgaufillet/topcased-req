@@ -366,7 +366,8 @@ public class ImpactAnalysisHandler extends AbstractHandler
             {
                 calculator = new RequirementDifferenceCalculator(documentsToImpactAnalyze, null, false);
                 calculator.calculate(null);
-                new MergeImpactProcessor(resources, oldModelResource.getResourceSet(), calculator).processImpact();
+                //Use of processImpact(modelResource) because changes are already applied to the original model and the model containing changes is a temporary file
+                new MergeImpactProcessor(resources, oldModelResource.getResourceSet(), calculator).processImpact(modelResource);
                 ResourceSet set = oldModelResource.getResourceSet();
                 oldModelResource.unload();
                 set.getResources().remove(oldModelResource);
