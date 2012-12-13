@@ -13,8 +13,11 @@
 package org.topcased.requirement.core.views.current;
 
 import java.util.Collection;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.commands.Command;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
@@ -36,6 +39,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
@@ -52,6 +56,7 @@ import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.RegistryToggleState;
 import org.eclipse.ui.part.IPage;
 import org.topcased.requirement.Attribute;
+import org.topcased.requirement.AttributeConfiguration;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.ObjectAttribute;
 import org.topcased.requirement.Requirement;
@@ -95,6 +100,9 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
     private LinkWithEditorHandler linkHandler = null;
 
     static final String CURRENT_POPUP_ID = "org.topcased.requirement.core.views.current.popupMenu"; //$NON-NLS-1$
+    static final String ARG_ATTRIBUTE = "-currentFilter"; //$NON-NLS-1$
+    static Pattern ARG_ATTRIBUTE_PATTERN = Pattern.compile(ARG_ATTRIBUTE+"=(.*)");
+    static Pattern PREFIX_CLASS_ATTRIBUTE_PATTERN = Pattern.compile("(.*)::(.*)");
 
     /**
      * FIXME : find a better way to adapt the focus when an element is deleted
@@ -300,7 +308,48 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
         viewer.addSelectionChangedListener(new CurrentSelectionChangeListener());
 
         final RequirementFilter currentFilter = new RequirementFilter(true, false);
-        viewer.setFilters(new ViewerFilter[] {currentFilter});
+        final ViewerFilter attributeConfigurationFilter = new ViewerFilter()
+        {
+            @Override
+            public boolean select(Viewer viewer, Object parentElement, Object element)
+            {
+                if (!(element instanceof EObject))
+                {
+                    return true ;
+                }
+                EObject current = (EObject) element;
+                String[] args = Platform.getCommandLineArgs();
+                if (args != null){
+                    for (String s : args)
+                    {
+                        Matcher m = ARG_ATTRIBUTE_PATTERN.matcher(s);
+                        if (m.matches()){
+                            String classes = m.group(1);
+                            String[] splitted = classes.split(";");
+                            if (splitted != null){
+                                boolean result = false ;
+                                for (String eClassName : splitted)
+                                {
+                                    Matcher matcherEclass = PREFIX_CLASS_ATTRIBUTE_PATTERN.matcher(eClassName);
+                                    if (matcherEclass.matches())
+                                    {
+                                        String prefix = matcherEclass.group(1);
+                                        String eclass = matcherEclass.group(2);
+                                        result |= prefix != null && eclass != null &&  eclass.equals(current.eClass().getName()) && prefix.equals(current.eClass().getEPackage().getNsPrefix());
+                                    }
+                                }
+                                return !result ;
+                            }
+                        }
+                        if (ARG_ATTRIBUTE_PATTERN.equals(s)){
+                            return !(element instanceof AttributeConfiguration);
+                        }
+                    }
+                }
+                return true;
+            }
+        };
+        viewer.setFilters(new ViewerFilter[] {currentFilter,attributeConfigurationFilter});
 
         int dndOperations = DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK;
         Transfer[] transfers = new Transfer[] {RequirementTransfer.getInstance()};
