@@ -6,6 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors: Sebastien GABEL (CS) - initial API and implementation
+ * Anass RADOUANI (Atos) anass.radouani@atos.net - add attribute
  * 
  **********************************************************************************************************************/
 package org.topcased.requirement.core.utils;
@@ -128,8 +129,8 @@ public final class MergeRequirement
             if (diff instanceof MoveModelElement)
             {
                 EObject moved = ((MoveModelElement) diff).getRightElement();
-                // a hierarchical element has been added.
-                if (moved instanceof HierarchicalElement)
+                // a hierarchical element or an attribute has been added.
+                if (moved instanceof HierarchicalElement || moved instanceof ttm.Attribute)
                 {
                     // the hierarchical element is marked as added
                     MergeService.merge(diff, true);

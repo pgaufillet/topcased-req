@@ -6,6 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors: Philippe ROLAND (Atos) - initial API and implementation
+ * Anass RADOUANI (AtoS) - add the attribute's value for log and  
  * 
  **********************************************************************************************************************/
 package org.topcased.requirement.core.utils.impact;
@@ -168,6 +169,12 @@ public class MergeImpactProcessor
             if (diff instanceof MoveModelElement)
             {
                 EObject moved = ((MoveModelElement) diff).getRightElement();
+                //if it's an attribute we use the his container
+                if (moved instanceof ttm.Attribute)
+                {
+                    moved = moved.eContainer();
+                }
+
                 // a hierarchical element has been added.
                 if (moved instanceof HierarchicalElement)
                 {
@@ -354,7 +361,12 @@ public class MergeImpactProcessor
             }
             if (added instanceof ttm.Attribute)
             {
-                return diff.getKind().getName() + " : Attribute " + ((ttm.Attribute) added).getName();
+                String value = "";
+                if (((ttm.Attribute) added).getValue() != null)
+                {
+                    value =" " + ((ttm.Attribute) added).getValue();
+                }
+                return diff.getKind().getName() + " : Attribute " + ((ttm.Attribute) added).getName() + value;
             }
             if (added instanceof Text)
             {
@@ -372,12 +384,23 @@ public class MergeImpactProcessor
             // an attribute has been modified. We need to mark its parent
             if (modifiedObject instanceof ttm.Attribute)
             {
-                return diff.getKind().getName() + " : Attribute " + ((ttm.Attribute) modifiedObject).getName();
+                String value = "";
+                if (((ttm.Attribute) modifiedObject).getValue() != null)
+                {
+                    value =" " + ((ttm.Attribute) modifiedObject).getValue();
+                }
+                
+                return diff.getKind().getName() + " : Attribute " + ((ttm.Attribute) modifiedObject).getName() + value;
             }
             else if (modifiedObject instanceof Text)
             {
                 String localText = ((Text) modifiedObject).getValue();
-                return diff.getKind().getName() + " : Text " + ((UpdateAttribute) diff).getAttribute().getName() + " (" + localText.substring(0, Math.min(textLength, localText.length())) + ")";
+                String text = "";
+                if (localText != null)
+                {
+                    text =  " (" + localText.substring(0, Math.min(textLength, localText.length())) + ")";
+                }
+                return diff.getKind().getName() + " : Text " + ((UpdateAttribute) diff).getAttribute().getName() + text;
             }
             else if (modifiedObject instanceof HierarchicalElement)
             {
@@ -389,7 +412,12 @@ public class MergeImpactProcessor
             EObject removedElement = ((ModelElementChangeRightTarget) diff).getRightElement();
             if (removedElement instanceof ttm.Attribute)
             {
-                return diff.getKind().getName() + " : Attribute " + ((ttm.Attribute) removedElement).getName();
+                String value = "";
+                if (((ttm.Attribute) removedElement).getValue() != null)
+                {
+                    value = " " + ((ttm.Attribute) removedElement).getValue();
+                }
+                return diff.getKind().getName() + " : Attribute " + ((ttm.Attribute) removedElement).getName() + value;
             }
             else if (removedElement instanceof Text)
             {
