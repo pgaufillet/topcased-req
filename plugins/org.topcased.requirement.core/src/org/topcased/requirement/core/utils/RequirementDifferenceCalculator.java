@@ -384,16 +384,28 @@ public class RequirementDifferenceCalculator
                 if (deletionPatternDescription.matcher(buildDescription(req)).matches()) {
                     return getUpstreamWithId(originalDocument, req.getIdent());
                 }
-
+                boolean isAnd = deletionParameters.isIsAnd();
+                // in case of isAnd is true result must initialized true (and operation after)
+                // in case of isAnd is false var must be initialized false (or operation after)
+                boolean result = isAnd ;
+                if (deletionParameters.getRegexAttributes().isEmpty()){
+                    return null ;
+                }
                 for (Attribute att : req.getAttributes()) {
                     for(DeletionParemeter delParam:deletionParameters.getRegexAttributes()){
                         if(delParam.getNameAttribute().equals(att.getName())){
                             Pattern deletionPatternAttribute = Pattern.compile(delParam.getRegexAttribute(), Pattern.CASE_INSENSITIVE);
-                            if(deletionPatternAttribute.matcher(att.getValue()).matches()) {
-                                return getUpstreamWithId(originalDocument, req.getIdent());
+                                if (isAnd){
+                                    result = result && deletionPatternAttribute.matcher(att.getValue()).matches();
+                                }
+                                else {
+                                    result = result || deletionPatternAttribute.matcher(att.getValue()).matches();
+                                }
                             }
                         }
                     }
+                if (result){
+                    return getUpstreamWithId(originalDocument, req.getIdent());
                 }
             }
         }

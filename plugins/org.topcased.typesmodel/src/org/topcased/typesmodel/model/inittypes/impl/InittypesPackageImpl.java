@@ -408,6 +408,15 @@ public class InittypesPackageImpl extends EPackageImpl implements InittypesPacka
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getDeletionParameters_IsAnd() {
+		return (EAttribute)deletionParametersEClass.getEStructuralFeatures().get(4);
+	}
+
+				/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getDeletionParemeter() {
 		return deletionParemeterEClass;
 	}
@@ -492,6 +501,7 @@ public class InittypesPackageImpl extends EPackageImpl implements InittypesPacka
 		createEAttribute(deletionParametersEClass, DELETION_PARAMETERS__REGEX_ID);
 		createEReference(deletionParametersEClass, DELETION_PARAMETERS__REGEX_ATTRIBUTES);
 		createEReference(deletionParametersEClass, DELETION_PARAMETERS__FILTER_REGEX_ATTRIBUTES);
+		createEAttribute(deletionParametersEClass, DELETION_PARAMETERS__IS_AND);
 
 		deletionParemeterEClass = createEClass(DELETION_PAREMETER);
 		createEAttribute(deletionParemeterEClass, DELETION_PAREMETER__NAME_ATTRIBUTE);
@@ -564,6 +574,7 @@ public class InittypesPackageImpl extends EPackageImpl implements InittypesPacka
 		initEAttribute(getDeletionParameters_RegexId(), ecorePackage.getEString(), "regexId", "", 0, 1, DeletionParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getDeletionParameters_RegexAttributes(), this.getDeletionParemeter(), null, "regexAttributes", null, 0, -1, DeletionParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getDeletionParameters_FilterRegexAttributes(), this.getDeletionParemeter(), null, "filterRegexAttributes", null, 0, -1, DeletionParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getDeletionParameters_IsAnd(), ecorePackage.getEBoolean(), "isAnd", null, 0, 1, DeletionParameters.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(deletionParemeterEClass, DeletionParemeter.class, "DeletionParemeter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getDeletionParemeter_NameAttribute(), ecorePackage.getEString(), "nameAttribute", null, 0, 1, DeletionParemeter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

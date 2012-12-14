@@ -44,6 +44,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute initTypes.ecore#//DeletionParameters/regexId"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference initTypes.ecore#//DeletionParameters/regexAttributes"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference initTypes.ecore#//DeletionParameters/filterRegexAttributes"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute initTypes.ecore#//DeletionParameters/isAnd"/>
     </genClasses>
     <genClasses ecoreClass="initTypes.ecore#//DeletionParemeter">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute initTypes.ecore#//DeletionParemeter/nameAttribute"/>

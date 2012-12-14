@@ -456,13 +456,22 @@ public interface InittypesPackage extends EPackage
 	int DELETION_PARAMETERS__FILTER_REGEX_ATTRIBUTES = 3;
 
 				/**
+	 * The feature id for the '<em><b>Is And</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELETION_PARAMETERS__IS_AND = 4;
+
+				/**
 	 * The number of structural features of the '<em>Deletion Parameters</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DELETION_PARAMETERS_FEATURE_COUNT = 4;
+	int DELETION_PARAMETERS_FEATURE_COUNT = 5;
 
 				/**
 	 * The meta object id for the '{@link org.topcased.typesmodel.model.inittypes.impl.DeletionParemeterImpl <em>Deletion Paremeter</em>}' class.
@@ -781,6 +790,17 @@ public interface InittypesPackage extends EPackage
 	EReference getDeletionParameters_FilterRegexAttributes();
 
 				/**
+	 * Returns the meta object for the attribute '{@link org.topcased.typesmodel.model.inittypes.DeletionParameters#isIsAnd <em>Is And</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Is And</em>'.
+	 * @see org.topcased.typesmodel.model.inittypes.DeletionParameters#isIsAnd()
+	 * @see #getDeletionParameters()
+	 * @generated
+	 */
+	EAttribute getDeletionParameters_IsAnd();
+
+				/**
 	 * Returns the meta object for class '{@link org.topcased.typesmodel.model.inittypes.DeletionParemeter <em>Deletion Paremeter</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1056,6 +1076,14 @@ public interface InittypesPackage extends EPackage
 		 * @generated
 		 */
 		EReference DELETION_PARAMETERS__FILTER_REGEX_ATTRIBUTES = eINSTANCE.getDeletionParameters_FilterRegexAttributes();
+
+								/**
+		 * The meta object literal for the '<em><b>Is And</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute DELETION_PARAMETERS__IS_AND = eINSTANCE.getDeletionParameters_IsAnd();
 
 								/**
 		 * The meta object literal for the '{@link org.topcased.typesmodel.model.inittypes.impl.DeletionParemeterImpl <em>Deletion Paremeter</em>}' class.

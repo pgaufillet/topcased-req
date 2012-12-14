@@ -27,6 +27,7 @@ import org.topcased.typesmodel.model.inittypes.InittypesPackage;
  *   <li>{@link org.topcased.typesmodel.model.inittypes.impl.DeletionParametersImpl#getRegexId <em>Regex Id</em>}</li>
  *   <li>{@link org.topcased.typesmodel.model.inittypes.impl.DeletionParametersImpl#getRegexAttributes <em>Regex Attributes</em>}</li>
  *   <li>{@link org.topcased.typesmodel.model.inittypes.impl.DeletionParametersImpl#getFilterRegexAttributes <em>Filter Regex Attributes</em>}</li>
+ *   <li>{@link org.topcased.typesmodel.model.inittypes.impl.DeletionParametersImpl#isIsAnd <em>Is And</em>}</li>
  * </ul>
  * </p>
  *
@@ -116,6 +117,24 @@ public class DeletionParametersImpl extends MinimalEObjectImpl.Container impleme
 	@SuppressWarnings("unchecked")
 	public EList<DeletionParemeter> getFilterRegexAttributes() {
 		return (EList<DeletionParemeter>)eGet(InittypesPackage.Literals.DELETION_PARAMETERS__FILTER_REGEX_ATTRIBUTES, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean isIsAnd() {
+		return (Boolean)eGet(InittypesPackage.Literals.DELETION_PARAMETERS__IS_AND, true);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setIsAnd(boolean newIsAnd) {
+		eSet(InittypesPackage.Literals.DELETION_PARAMETERS__IS_AND, newIsAnd);
 	}
 
 } //DeletionParametersImpl

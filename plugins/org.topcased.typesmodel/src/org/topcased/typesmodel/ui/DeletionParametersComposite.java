@@ -44,6 +44,8 @@ public class DeletionParametersComposite {
 	private Button btnAddAttribute;
 	private Button btnEditAttribute;
 	private Button btnRemoveAttribute;
+	private Button btnAtLeastOne;
+	private Button btnAll;
 	
 
 	public DeletionParametersComposite(Composite composite, DeletionParameters deletionParameters) {
@@ -137,7 +139,13 @@ public class DeletionParametersComposite {
 			}
 			public void widgetDefaultSelected(SelectionEvent e) {}
 		});
-
+        btnAtLeastOne = new Button(deletionGroup, SWT.RADIO);
+        btnAtLeastOne.setText(Messages.DeletionParametersComposite_at_least_one);
+        btnAtLeastOne.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
+        btnAtLeastOne.setSelection(true);
+        btnAll = new Button(deletionGroup, SWT.RADIO);
+        btnAll.setText(Messages.DeletionParametersComposite_all_must_be_matched);
+        btnAll.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
         this.setDeletionParameters(deletionParameters);
 	}
 	
@@ -163,6 +171,8 @@ public class DeletionParametersComposite {
     				item.setText(2, Messages.DeletionParametersComposite_Filter);
     			}
     		}
+    		btnAll.setSelection(deletionParameters.isIsAnd());
+    		btnAtLeastOne.setSelection(!deletionParameters.isIsAnd());
     	}
     }
 
@@ -189,6 +199,8 @@ public class DeletionParametersComposite {
         		deleteParameters.getRegexAttributes().add(param);
         	}
         }
+        deleteParameters.setIsAnd(btnAll.getSelection());
         return deleteParameters;
     }
+    
 }

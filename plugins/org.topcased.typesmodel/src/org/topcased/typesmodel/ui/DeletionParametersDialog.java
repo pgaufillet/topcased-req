@@ -23,6 +23,7 @@ public class DeletionParametersDialog extends Dialog {
 
 	private DeletionParametersComposite deletionParametersComposite;
 	private DeletionParameters deletionParameters;
+	private boolean isAnd;
 
 	public DeletionParametersDialog(Shell shell, DeletionParameters deletionParameters) {
 		super(shell);

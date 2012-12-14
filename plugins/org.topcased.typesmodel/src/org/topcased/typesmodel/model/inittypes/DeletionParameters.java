@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.topcased.typesmodel.model.inittypes.DeletionParameters#getRegexId <em>Regex Id</em>}</li>
  *   <li>{@link org.topcased.typesmodel.model.inittypes.DeletionParameters#getRegexAttributes <em>Regex Attributes</em>}</li>
  *   <li>{@link org.topcased.typesmodel.model.inittypes.DeletionParameters#getFilterRegexAttributes <em>Filter Regex Attributes</em>}</li>
+ *   <li>{@link org.topcased.typesmodel.model.inittypes.DeletionParameters#isIsAnd <em>Is And</em>}</li>
  * </ul>
  * </p>
  *
@@ -115,5 +116,31 @@ public interface DeletionParameters extends EObject {
 	 * @generated
 	 */
 	EList<DeletionParemeter> getFilterRegexAttributes();
+
+	/**
+	 * Returns the value of the '<em><b>Is And</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Is And</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Is And</em>' attribute.
+	 * @see #setIsAnd(boolean)
+	 * @see org.topcased.typesmodel.model.inittypes.InittypesPackage#getDeletionParameters_IsAnd()
+	 * @model
+	 * @generated
+	 */
+	boolean isIsAnd();
+
+	/**
+	 * Sets the value of the '{@link org.topcased.typesmodel.model.inittypes.DeletionParameters#isIsAnd <em>Is And</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Is And</em>' attribute.
+	 * @see #isIsAnd()
+	 * @generated
+	 */
+	void setIsAnd(boolean value);
 
 } // DeletionParameters

@@ -31,6 +31,10 @@ public class Messages extends NLS
 
     public static String DeletedFile;
 
+	public static String DeletionParametersComposite_all_must_be_matched;
+
+	public static String DeletionParametersComposite_at_least_one;
+
 	public static String DeletionParametersComposite_ButtonAdd;
 
 	public static String DeletionParametersComposite_ButtonEdit;
@@ -99,7 +103,9 @@ public class Messages extends NLS
     
     public static String btnAttributesToMatch;
     
-    public static String IniManagerRegistry_DeletionParameterAttributeName;
+    public static String IniManagerRegistry_AttributesIsAnd;
+
+	public static String IniManagerRegistry_DeletionParameterAttributeName;
 
 	public static String IniManagerRegistry_DeletionParameterAttributeRegex;
 	

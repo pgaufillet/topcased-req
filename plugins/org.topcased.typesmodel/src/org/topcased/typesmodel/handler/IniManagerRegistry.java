@@ -42,6 +42,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.edit.command.DeleteCommand;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.ini4j.Ini;
@@ -150,12 +151,14 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
 	private static Pattern endTextPattern = Pattern.compile(Messages.EndText);
 	private static Pattern textRegexPattern = Pattern.compile("DescriptionRegex"); //$NON-NLS-1$
 	private static Pattern deletionParameterIdRegex = Pattern.compile(Messages.IniManagerRegistry_DeletionParameterIdRegex);
+	
 	private static Pattern deletionParameterDescriptionRegex = Pattern.compile(Messages.IniManagerRegistry_DeletionParameterDescriptionRegex);
 	private static Pattern deletionParameterAttributeName = Pattern.compile(Messages.IniManagerRegistry_DeletionParameterAttributeName);
 	private static Pattern deletionParameterAttributeRegex = Pattern.compile(Messages.IniManagerRegistry_DeletionParameterAttributeRegex);
 	private static Pattern filterParameterAttributeName = Pattern.compile(Messages.IniManagerRegistry_FilterParameterAttributeName);
 	private static Pattern filterParameterAttributeRegex = Pattern.compile(Messages.IniManagerRegistry_FilterParameterAttributeRegex);
-
+	private static Pattern isAndAttributes = Pattern.compile(Messages.IniManagerRegistry_AttributesIsAnd);
+	
 	private boolean fileAdded(IFile resource)
 	{
 		Map<String, DocumentType> documentTypes = parseTypesFile(resource);
@@ -186,7 +189,8 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
 				DocumentType documentType = InittypesFactory.eINSTANCE.createDocumentType();
 				documentType.setName(type);
 				documentType.setDocumentPath(resource.getFullPath().toString());
-				documentType.setDeletionParameters( InittypesFactory.eINSTANCE.createDeletionParameters());
+				DeletionParameters createDeletionParameters = InittypesFactory.eINSTANCE.createDeletionParameters();
+				documentType.setDeletionParameters( createDeletionParameters);
 
 				for (Entry<String, String> element : section.entrySet())
 				{
@@ -229,6 +233,10 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
 					else if (styleLabelPattern.matcher(element.getKey()).matches())
 					{
 						manageElement(allElements, element,InittypesPackage.Literals.STYLE,InittypesPackage.Literals.STYLE__LABEL);
+					}
+					else if (isAndAttributes.matcher(element.getKey()).matches())
+					{
+						createDeletionParameters.setIsAnd(Boolean.valueOf(element.getValue()));
 					}
 					else if (requirementPattern.matcher(element.getKey()).matches())
 					{
@@ -578,7 +586,7 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
 		if (deletionParameters != null) {
 			section.add("DeletionParameterIdRegex", deletionParameters.getRegexId()); //$NON-NLS-1$
 			section.add("DeletionParameterDescriptionRegex", deletionParameters.getRegexDescription()); //$NON-NLS-1$
-			
+			section.add("DeletionIsAnd",deletionParameters.isIsAnd()); //$NON-NLS-1$
 			// All the deletion parameters of the attributes
 			int iAttr = 0;
 			for(DeletionParemeter delParam:documentType.getDeletionParameters().getRegexAttributes()){
@@ -699,29 +707,37 @@ public class IniManagerRegistry implements IResourceVisitor, IResourceDeltaVisit
 
 			if (!documentTypeNames.isEmpty())
 			{
-				ComboInputDialog selectDocTypeDialog = new ComboInputDialog(Display.getDefault().getActiveShell(), "Document type to edit", "Please select the document type you want to edit :", documentTypeNames.iterator().next(), documentTypeNames.toArray(new String[documentTypeNames.size()])); //$NON-NLS-1$ //$NON-NLS-2$
-				if (selectDocTypeDialog.open() == Dialog.OK)
+				DocumentType selectedDocumentType = null;
+				if (documentTypeNames.size() == 1)
 				{
-					// A documentType is chosen from the .type file
-					DocumentType selectedDocumentType = documentTypes.get(selectDocTypeDialog.getValue());
-					if (selectedDocumentType != null)
+					selectedDocumentType = documentTypes.get(documentTypeNames.iterator().next());
+				}
+				else 
+				{
+					ComboInputDialog selectDocTypeDialog = new ComboInputDialog(Display.getDefault().getActiveShell(), "Document type to edit", "Please select the document type you want to edit :", documentTypeNames.iterator().next(), documentTypeNames.toArray(new String[documentTypeNames.size()])); //$NON-NLS-1$ //$NON-NLS-2$
+					if (selectDocTypeDialog.open() == Dialog.OK)
 					{
-						DeletionParametersDialog deletionParametersDialog = new DeletionParametersDialog(Display.getDefault().getActiveShell(), selectedDocumentType.getDeletionParameters());
-						if (deletionParametersDialog.open() == Dialog.OK)
-						{
-							// The modified deletion parameters are collected
-							DeletionParameters deletionParameters = deletionParametersDialog.getDeletionParameters();
-							if(saveTypeFile){
-								selectedDocumentType.setDeletionParameters(deletionParameters);
-								IniManagerRegistry.save(typesFile, documentTypes.values());
-								try
-								{
-									typesFile.refreshLocal(IResource.DEPTH_ZERO, null);
-								}
-								catch (CoreException e) {}
+						// A documentType is chosen from the .type file
+						selectedDocumentType = documentTypes.get(selectDocTypeDialog.getValue());
+					}
+				}
+				if (selectedDocumentType != null)
+				{
+					DeletionParametersDialog deletionParametersDialog = new DeletionParametersDialog(Display.getDefault().getActiveShell(), selectedDocumentType.getDeletionParameters());
+					if (deletionParametersDialog.open() == Dialog.OK)
+					{
+						// The modified deletion parameters are collected
+						DeletionParameters deletionParameters = deletionParametersDialog.getDeletionParameters();
+						if(saveTypeFile){
+							selectedDocumentType.setDeletionParameters(deletionParameters);
+							IniManagerRegistry.save(typesFile, documentTypes.values());
+							try
+							{
+								typesFile.refreshLocal(IResource.DEPTH_ZERO, null);
 							}
-							return deletionParameters;
+							catch (CoreException e) {}
 						}
+						return deletionParameters;
 					}
 				}
 			}

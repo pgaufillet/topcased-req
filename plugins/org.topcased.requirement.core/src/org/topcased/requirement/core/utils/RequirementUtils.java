@@ -1174,28 +1174,40 @@ public final class RequirementUtils
      */
     public static boolean isReqFiltered(Requirement req, DeletionParameters deletionParameters)
     {
-        if (deletionParameters != null)
+        if (deletionParameters != null && !deletionParameters.getFilterRegexAttributes().isEmpty())
         {
-            for(DeletionParemeter filterParam:deletionParameters.getFilterRegexAttributes())
+            boolean isAnd = deletionParameters.isIsAnd();
+            // in case of isAnd is true result must initialized true (and operation after)
+            // in case of isAnd is false var must be initialized false (or operation after)
+            boolean result = isAnd ;
+            for(DeletionParemeter filterParam : deletionParameters.getFilterRegexAttributes())
             {
-                boolean attributeFound = false;
+                boolean attributeFound = false ;
                 for (ttm.Attribute att : req.getAttributes())
                 {
                     if(filterParam.getNameAttribute().equals(att.getName()))
                     {
-                        attributeFound = true;
+                        attributeFound = true ;
                         Pattern deletionPatternAttribute = Pattern.compile(filterParam.getRegexAttribute(), Pattern.CASE_INSENSITIVE);
-                        if(deletionPatternAttribute.matcher(att.getValue()).matches())
+                        if (isAnd)
                         {
-                            return true;
+                            result = result && deletionPatternAttribute.matcher(att.getValue()).matches();
+                        }
+                        else 
+                        {
+                            result = result || deletionPatternAttribute.matcher(att.getValue()).matches();
                         }
                     }
                 }
-                if(!attributeFound)
+                if (!attributeFound)
                 {
-                    return true;
+                    if (isAnd)
+                    {
+                        result = false ;
+                    }
                 }
             }
+            return result ;
         }
         return false;
     }

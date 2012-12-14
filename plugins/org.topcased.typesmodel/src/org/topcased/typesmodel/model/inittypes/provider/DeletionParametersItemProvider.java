@@ -69,6 +69,7 @@ public class DeletionParametersItemProvider
 			addRegexDescriptionPropertyDescriptor(object);
 			addRegexIdPropertyDescriptor(object);
 			addFilterRegexAttributesPropertyDescriptor(object);
+			addIsAndPropertyDescriptor(object);
 		}
 		return itemPropertyDescriptors;
 	}
@@ -135,6 +136,28 @@ public class DeletionParametersItemProvider
 				 false,
 				 true,
 				 null,
+				 null,
+				 null));
+	}
+
+	/**
+	 * This adds a property descriptor for the Is And feature.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	protected void addIsAndPropertyDescriptor(Object object) {
+		itemPropertyDescriptors.add
+			(createItemPropertyDescriptor
+				(((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+				 getResourceLocator(),
+				 getString("_UI_DeletionParameters_isAnd_feature"),
+				 getString("_UI_PropertyDescriptor_description", "_UI_DeletionParameters_isAnd_feature", "_UI_DeletionParameters_type"),
+				 InittypesPackage.Literals.DELETION_PARAMETERS__IS_AND,
+				 true,
+				 false,
+				 false,
+				 ItemPropertyDescriptor.BOOLEAN_VALUE_IMAGE,
 				 null,
 				 null));
 	}
@@ -208,6 +231,7 @@ public class DeletionParametersItemProvider
 		switch (notification.getFeatureID(DeletionParameters.class)) {
 			case InittypesPackage.DELETION_PARAMETERS__REGEX_DESCRIPTION:
 			case InittypesPackage.DELETION_PARAMETERS__REGEX_ID:
+			case InittypesPackage.DELETION_PARAMETERS__IS_AND:
 				fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
 				return;
 			case InittypesPackage.DELETION_PARAMETERS__REGEX_ATTRIBUTES:
