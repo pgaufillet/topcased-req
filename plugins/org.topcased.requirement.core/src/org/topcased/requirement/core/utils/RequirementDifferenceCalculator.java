@@ -166,10 +166,13 @@ public class RequirementDifferenceCalculator
                     
                     Requirement reqToDelete = matchDeleteOnAttributeChange(update, originalDocument);
                     if (reqToDelete != null) {
-                        ModelElementChangeRightTarget deleteDiffElement = DiffFactory.eINSTANCE.createModelElementChangeRightTarget();
-                        deleteDiffElement.setRightElement(reqToDelete);
-                        deleteDiffElement.setLeftParent(originalDocument);
-                        addDeletion(deletions, deleteDiffElement);
+                        // don't delete a req to delete if it is already deleted
+                        if (!reqToDelete.getDocument().getIdent().startsWith(RequirementUtils.DELETED_PREFIX)) {
+                            ModelElementChangeRightTarget deleteDiffElement = DiffFactory.eINSTANCE.createModelElementChangeRightTarget();
+                            deleteDiffElement.setRightElement(reqToDelete);
+                            deleteDiffElement.setLeftParent(originalDocument);
+                            addDeletion(deletions, deleteDiffElement);
+                        }
                     }
 
                     //Workaround? setting the ident before the doMatch is done yeilded strange results...
@@ -220,10 +223,13 @@ public class RequirementDifferenceCalculator
                     reqToDelete = matchDeleteOnAddition(change, originalDocument);
 
                     if (reqToDelete != null) {
-                        ModelElementChangeRightTarget deleteDiffElement = DiffFactory.eINSTANCE.createModelElementChangeRightTarget();
-                        deleteDiffElement.setRightElement(reqToDelete);
-                        deleteDiffElement.setLeftParent(originalDocument);
-                        addDeletion(deletions, deleteDiffElement);
+                        // don't delete a req to delete if it is already deleted
+                        if (!reqToDelete.getDocument().getIdent().startsWith(RequirementUtils.DELETED_PREFIX)) {
+                            ModelElementChangeRightTarget deleteDiffElement = DiffFactory.eINSTANCE.createModelElementChangeRightTarget();
+                            deleteDiffElement.setRightElement(reqToDelete);
+                            deleteDiffElement.setLeftParent(originalDocument);
+                            addDeletion(deletions, deleteDiffElement);
+                        }
                     } else {
                         newText = matchTextOnAttributeAddition(change);
                         if (newText != null) {
@@ -420,6 +426,15 @@ public class RequirementDifferenceCalculator
                 return upstream;
             }
         }
+        // try in all the documents
+        upstreams = RequirementUtils.getUpstreams(document.getProject());
+
+        for (Requirement upstream : upstreams) {
+            if (id.equals(upstream.getIdent())) {
+                return upstream;
+            }
+        }
+
         return null;
     }
 

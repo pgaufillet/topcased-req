@@ -99,7 +99,7 @@ import ttm.Requirement;
 public final class RequirementUtils
 {
     /** Prefix for deleted documents */
-    private static final String DELETED_PREFIX = "deleted_";//$NON-NLS-1$
+    public static final String DELETED_PREFIX = "deleted_";//$NON-NLS-1$
 
     /** Pattern for detecting ident of deleted documents */
     private static final Pattern DELETED_DOCUMENT_PATTERN = Pattern.compile(DELETED_PREFIX.concat("\\d\\d\\d\\d-\\d\\d-\\d\\d(_\\d\\d-\\d\\d)?"));//$NON-NLS-1$
