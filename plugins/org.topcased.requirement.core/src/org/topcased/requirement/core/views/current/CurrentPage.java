@@ -8,6 +8,7 @@
  * Contributors: Christophe MERTZ (CS) - initial API and implementation,
  * Vincent Hemery [(Atos Origin)] [vincent.hemery@atosorigin.com] - updating of CurrentSelectionChangeListener
  * Maxime AUDRAIN (CS) - API Changes
+ * Anass RADOUANI (AtoS) anass.radouani@atos.net - Add sync execution for viewer refreshing
  * 
  **********************************************************************************************************************/
 package org.topcased.requirement.core.views.current;
@@ -47,6 +48,7 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.ISharedImages;
@@ -559,7 +561,7 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
                 } else if (msg.getNotifier() instanceof Attribute){
                     // If an attribute is modified (e.g. #link_to), we refresh its container
                     Attribute attribute = (Attribute) msg.getNotifier();
-                    viewer.refresh(attribute.eContainer(), true);
+                    changed = attribute.eContainer();
                 }
                 else if (msg.getOldValue() instanceof Requirement){
                     changed = (EObject) msg.getOldValue();
@@ -569,18 +571,26 @@ public class CurrentPage extends AbstractRequirementPage implements ICurrentRequ
                 }
                 if (changed != null)
                 {
-                    viewer.refresh(changed,true);
-                    // refresh elements with ObjectAttribute on it
-                    Collection<Setting> ref = RequirementUtils.getCrossReferences(changed);
-                    if (ref != null){
-                        for (Setting s : ref){
-                            if (s.getEObject() instanceof ObjectAttribute){
-                                if (s.getEObject().eContainer() != null){
-                                    viewer.refresh(s.getEObject().eContainer(), true);
+                    final EObject finalChanged = changed;
+                    
+                    Display.getDefault().syncExec(new Runnable()
+                    {
+                        public void run()
+                        {
+                            viewer.refresh(finalChanged,true);
+                            // refresh elements with ObjectAttribute on it
+                            Collection<Setting> ref = RequirementUtils.getCrossReferences(finalChanged);
+                            if (ref != null){
+                                for (Setting s : ref){
+                                    if (s.getEObject() instanceof ObjectAttribute){
+                                        if (s.getEObject().eContainer() != null){
+                                            viewer.refresh(s.getEObject().eContainer(), true);
+                                        }
+                                    }
                                 }
                             }
                         }
-                    }
+                    });
                 }
             }
         }
