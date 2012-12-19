@@ -11,8 +11,16 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.xpand,
  org.topcased.traceability,
  org.topcased.requirement.core,
- org.eclipse.xtend
+ org.eclipse.xtend,
+ org.eclipse.emf.ecore.xmi;bundle-version="2.7.0",
+ org.eclipse.emf.workspace;bundle-version="1.5.1",
+ org.eclipse.papyrus.core;bundle-version="0.8.2",
+ com.google.collect;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: org.topcased.requirement.traceabilitymatrix.generator
+Export-Package: org.topcased.requirement.traceabilitymatrix,
+ org.topcased.requirement.traceabilitymatrix.generator,
+ org.topcased.requirement.traceabilitymatrix.generator.template,
+ org.topcased.requirement.traceabilitymatrix.handlers,
+ org.topcased.requirement.traceabilitymatrix.wizard
 Bundle-Vendor: Topcased

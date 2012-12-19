@@ -9,30 +9,43 @@
  *
  * Contributors:
  *  Nicolas SAMSON (ATOS ORIGIN INTEGRATION) nicolas.samson@atosorigin.com - Initial API and implementation
+ *  Cyril MARCHIVE (Atos) cyril.marchive@atos.net
  *
  *****************************************************************************/
 package org.topcased.requirement.traceabilitymatrix.generator.template;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.SortedSet;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature.Setting;
+import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.edit.provider.ReflectiveItemProvider;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
+import org.eclipse.papyrus.core.modelsetquery.IModelSetQueryAdapter;
+import org.eclipse.papyrus.core.modelsetquery.ModelSetQuery;
 import org.topcased.requirement.Attribute;
 import org.topcased.requirement.AttributeConfiguration;
 import org.topcased.requirement.AttributeLink;
-import org.topcased.requirement.AttributesType;
-import org.topcased.requirement.ConfiguratedAttribute;
 import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.ObjectAttribute;
+import org.topcased.requirement.RequirementPackage;
 import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.TextAttribute;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
 import ttm.Document;
 import ttm.Requirement;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
+import com.google.common.collect.Lists;
 
 /**
  * Helper for the requirement export workflow.
@@ -42,71 +55,105 @@ import ttm.Requirement;
 public class GeneratorHelper
 {
 
-    private static final String CLOSE_CELL_TAG = "</td>";
+    public static final String CELL_START = "<Cell><Data ss:Type='String'>";
 
-    private static final String OPEN_CELL_TAG = "<td rowspan=\"1\" colspan=\"1\">";
+    public static final String CELL_END = "</Data></Cell>";
+
+    public static final String COLUMNS_START = "\n<Row>";
+
+    public static final String COLUMNS_END = "\n</Row>";
 
     /**
      * This service is necessary to work with controlled upstream model
+     * 
      * @param project
      * @return
      */
     public static List<Document> getAllDocuments(final RequirementProject project)
     {
-    	return project.getUpstreamModel().getDocuments();
+        return project.getUpstreamModel().getDocuments();
     }
-    
+
     /**
      * Returns a string for the display of attribute names at the top of the table.
-     * @param project
+     * 
+     * @param allAttribute
      * @return
      */
-    public static String configuration(final RequirementProject project)
+    public static String configuration(final SortedSet<Attribute> allAttribute)
     {
         final StringBuilder result = new StringBuilder();
 
-        AttributeConfiguration conf = project.getAttributeConfiguration();
-
-        for (ConfiguratedAttribute confAtt : conf.getListAttributes())
+        for (Attribute s : allAttribute)
         {
-            if (!confAtt.getType().equals(AttributesType.LINK))
+            if (!(s instanceof AttributeLink))
             {
-                result.append("<th>" + confAtt.getName() + "</th>");
+                result.append(addColumn(s.getName()));
             }
         }
 
         return result.toString();
     }
 
+    public static Collection<Setting> getCrossReferences(EObject source)
+    {
+        Collection<Setting> collection = Collections.<Setting> emptyList();
+        if (source == null)
+        {
+            return collection;
+        }
+        ECrossReferenceAdapter adapter = ECrossReferenceAdapter.getCrossReferenceAdapter(source);
+        if (adapter != null)
+        {
+            collection = adapter.getNonNavigableInverseReferences(source);
+        }
+        return collection;
+    }
+
     /**
      * Returns the details for the excel export of the given requirement.
      * 
      * @param requirement the upstream requirement
+     * @param document the document
+     * @param allAttribute All attributes
      * @return the html details
      */
-    public static String details(final Requirement requirement)
+    public static String details(final Requirement requirement, Document document, SortedSet<Attribute> allAttribute)
     {
         final StringBuilder result = new StringBuilder();
 
-        final List<CurrentRequirement> cReqs = RequirementsUtils.getLinkedCurrentRequirements(requirement);
-
-        AttributeConfiguration conf = RequirementUtils.getAttributeConfiguration(requirement.eResource());
+        final List<Setting> cReqs = Lists.newArrayList(Iterables.filter(getCrossReferences(requirement), new Predicate<Setting>()
+        {
+            public boolean apply(Setting input)
+            {
+                return input.getEObject() instanceof AttributeLink;
+            }
+        }));
+        IModelSetQueryAdapter q = ModelSetQuery.getExistingTypeCacheAdapter(requirement);
+        AttributeConfiguration conf = Iterators.filter(q.getReachableObjectsOfType(requirement, RequirementPackage.Literals.ATTRIBUTE_CONFIGURATION).iterator(), AttributeConfiguration.class).next();
         if (conf == null)
         {
-        	EObject top = EcoreUtil.getRootContainer(requirement);
-        	if (top != null)
-        	{
-        		conf = RequirementUtils.getAttributeConfiguration(top.eResource());
-        	}
+            EObject top = EcoreUtil.getRootContainer(requirement);
+            if (top != null)
+            {
+                conf = RequirementUtils.getAttributeConfiguration(top.eResource());
+            }
         }
 
-        if (cReqs.isEmpty()) {
-            result.append("<td align=\"center\">" + requirement.getIdent() + "</td><td colspan=\"" + new Integer(3 + conf.getListAttributes().size()).toString() + "\"></td>");
-            result.append("</td>");
-        } else {    
-            String lSep = ""; 
-            for (final CurrentRequirement cReq : cReqs)
+        if (cReqs.isEmpty())
+        {
+            result.append(COLUMNS_START);
+            result.append(addColumn(document.getIdent()));
+            result.append(addColumn(requirement.getIdent()));
+            result.append(COLUMNS_END);
+        }
+        else
+        {
+            for (final Setting set : cReqs)
             {
+                AttributeLink link = (AttributeLink) set.getEObject();
+                CurrentRequirement cReq = (CurrentRequirement) link.eContainer();
+                result.append("\n" + COLUMNS_START);
                 StringBuilder attributesResult = new StringBuilder();
                 boolean isPartial = false;
 
@@ -117,12 +164,12 @@ public class GeneratorHelper
                     attributesMap.put(att.getName(), att);
                 }
 
-                for (ConfiguratedAttribute confAtt : conf.getListAttributes())
+                for (Attribute confAtt : allAttribute)
                 {
                     Attribute att = attributesMap.get(confAtt.getName());
                     if (att != null)
                     {
-
+                        String attRepresentation = "";
                         if (att instanceof AttributeLink)
                         {
                             // don't display Linkto attributes since the info is already present*
@@ -138,7 +185,7 @@ public class GeneratorHelper
                         }
                         else
                         {
-                            String attRepresentation = "";
+
                             if (att instanceof ObjectAttribute)
                             {
                                 ObjectAttribute objAtt = (ObjectAttribute) att;
@@ -160,48 +207,84 @@ public class GeneratorHelper
                                 TextAttribute textAtt = (TextAttribute) att;
                                 attRepresentation = textAtt.getValue();
                             }
-                            attributesResult.append(OPEN_CELL_TAG + attRepresentation + CLOSE_CELL_TAG);
+                            attributesResult.append(addColumn(attRepresentation));
                         }
                     }
+                    else
+                    {
+                        attributesResult.append(addColumn(""));
+                    }
                 }
-
-                result.append(lSep);
-                result.append("<td rowspan=\"1\" colspan=\"1\" align=\"center\">" + requirement.getIdent());
-                result.append(OPEN_CELL_TAG + isPartial + CLOSE_CELL_TAG);
-
-                result.append(OPEN_CELL_TAG + cReq.getIdentifier() + CLOSE_CELL_TAG);
-
-                 EObject object = null ;
-                if(cReq.eContainer() instanceof HierarchicalElement)
+                result.append(addColumn(document.getIdent()));
+                result.append(addColumn(requirement.getIdent()));
+                result.append(addColumn(new Boolean(isPartial).toString()));
+                result.append(addColumn(cReq.getIdentifier()));
+                result.append(addColumn(link.getName()));
+                EObject object = null;
+                if (cReq.eContainer() instanceof HierarchicalElement)
                 {
-                	object = ((HierarchicalElement) cReq.eContainer()).getElement();
+                    object = ((HierarchicalElement) cReq.eContainer()).getElement();
                 }
                 else
                 {
-                	object = cReq.eContainer();
+                    object = cReq.eContainer();
                 }
-                result.append(OPEN_CELL_TAG + getDisplayableName(object) + CLOSE_CELL_TAG);
+                result.append(addColumn(getDisplayableName(object)));
+                result.append(addColumn(getQualifiedName(object.eContainer())));
 
-                result.append(OPEN_CELL_TAG + cReq.getShortDescription() + CLOSE_CELL_TAG);
+                // Some special characters encoded in hexadecimel
+                // are not displayed in Excel
+                // This algorithm retrieve these characters and convert its into char
 
+                /*
+                 * Pattern pattern = Pattern.compile("&#x.{1,2};");
+                 * 
+                 * if (cReq.getShortDescription() != null) { Matcher m = pattern.matcher(cReq.getShortDescription());
+                 * while (m.find()) { String chaine = m.group(); int entier = Integer.parseInt(chaine.substring(3,
+                 * chaine.lastIndexOf(';')), 16); System.out.println(chaine + " : " + (char) entier + " -> OK"); } }
+                 */
+
+                result.append(cReq.getShortDescription() == null ? "" : addColumn(cReq.getShortDescription()));
                 result.append(attributesResult);
-                result.append("</td>");
-                lSep = "<tr>";     
+                result.append("\n" + COLUMNS_END);
             }
         }
-        
         return result.toString();
+    }
+
+    private static String getQualifiedName(EObject object)
+    {
+        StringBuilder builder = new StringBuilder();
+        EObject tmp = object;
+        int i = 0;
+        while (tmp != null)
+        {
+            if (i != 0)
+            {
+                builder.insert(0, "::");
+            }
+            builder.insert(0, getDisplayableName(tmp));
+            tmp = tmp.eContainer();
+            i++;
+        }
+        return builder.toString();
     }
 
     private static String getDisplayableName(final EObject object)
     {
         if (object != null)
         {
-            return new CustomReflectiveItemProvider(new ReflectiveItemProviderAdapterFactory()).getText(object);
+            return new ReflectiveItemProvider(new ReflectiveItemProviderAdapterFactory()).getText(object);
         }
         else
         {
             return "";
         }
     }
+
+    public static String addColumn(String header)
+    {
+        return "\n\t" + CELL_START + "<![CDATA[" + header + "]]>" + CELL_END;
+    }
+
 }

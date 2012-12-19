@@ -17,6 +17,16 @@
             Export the selected requirements file in a requirement traceability excel file.
          </description>
       </wizard>
+      <wizard
+            category="com.atosorigin.topcased.requirement.export.category"
+            class="org.topcased.requirement.traceabilitymatrix.wizard.ExportProjectRequirementsWizard"
+            icon="icons\bricks.ico"
+            id="com.atosorigin.topcased.requirement.export.project.wizard"
+            name="Project Requirement Traceability">
+         <selection
+               class="org.eclipse.core.resources.IContainer">
+         </selection>
+      </wizard>
    </extension>
 
 </plugin>
