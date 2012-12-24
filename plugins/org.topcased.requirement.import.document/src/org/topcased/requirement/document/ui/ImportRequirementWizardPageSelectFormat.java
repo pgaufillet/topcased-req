@@ -225,6 +225,15 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
 			controller.setDescriptionRegex(descriptionRegex);
 			controller.setDescriptionEndText(descriptionText);
 		}
+        else
+        {
+            if (Constants.SYSML_EXTENSION.equals(controller.getModelType()) || Constants.UML_EXTENSION.equals(controller.getModelType()))
+            {
+                controller.setStereotypeDescrptionAttribute(null);
+            }
+            controller.setDescriptionRegex(null);
+            controller.setDescriptionEndText(null);
+        }
         
         
         updateWizard();
@@ -894,7 +903,9 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
     {
         // Load preferences for chapter
         chapterPref = Activator.getDefault().getPluginPreferences().getBoolean(PREFERENCE_FOR_CHAPTER);
-
+        if (controller != null) { 
+			controller.setHierarchical(chapterPref);
+		}
         // Load preferences for value to recognize req
         String pref = Activator.getDefault().getPluginPreferences().getString(PREFERENCE_FOR_VALUE_TO_RECOGNIZE_REQ);
         if (pref != null && pref.length() > 0)

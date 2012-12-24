@@ -983,6 +983,7 @@ public class ImportRequirementWizardPageMapping extends WizardPage
             
             // Get all the properties
             Collection<Stereotype> stereotypes = controller.getStereotypes();
+            Attribute descriptionAttribute = controller.getDescriptionAttribute();
             Collection<Property> attributes = new ArrayList<Property>(); 
             for (Stereotype stereotype : stereotypes)
             {
@@ -1006,7 +1007,7 @@ public class ImportRequirementWizardPageMapping extends WizardPage
                         if (!ImportRequirementWizard.isRef(next) || (next.getType() != null && next.getType().getName() != null && "class".equals(next.getType().getName().toLowerCase())))
                         {
                             AttributeUml uml = new AttributeUml(next.getName(), ImportRequirementWizard.isRef(next), stereotypeQualifiedName, next.getName(), next.getType().getName());
-                            if (!ImportRequirementWizard.contains(listAttributes, uml))
+                            if (!ImportRequirementWizard.contains(listAttributes, uml) && isUnused(uml,descriptionAttribute))
                             {
                                 listAttributes.add(uml);
                             }
@@ -1015,7 +1016,7 @@ public class ImportRequirementWizardPageMapping extends WizardPage
                     else
                     {
                         AttributeSysml sysML = new AttributeSysml(next.getName(), ImportRequirementWizard.isRef(next), stereotypeQualifiedName, next.getName(), next.getType().getName());
-                        if (!ImportRequirementWizard.contains(listAttributes, sysML))
+                        if (!ImportRequirementWizard.contains(listAttributes, sysML) && isUnused(sysML,descriptionAttribute))
                         {
                             listAttributes.add(sysML);
                         }
@@ -1025,6 +1026,23 @@ public class ImportRequirementWizardPageMapping extends WizardPage
         }
     }
     
+    /**
+     * Gets if the attr1 is already used for description in second page 
+     */
+    private boolean isUnused(Attribute attr1, Attribute attr2)
+    {
+        if (attr2 == null)
+        {
+            return true;
+        }
+        else 
+        {
+            String qName1 = attr1.getSource()+"::"+attr1.getProperName();
+            String qName2 = attr2.getSource()+"::"+attr2.getProperName();
+            return !qName1.equals(qName2);
+        }
+    }
+
     @Override
     public void setVisible(boolean visible) {
     	super.setVisible(visible);

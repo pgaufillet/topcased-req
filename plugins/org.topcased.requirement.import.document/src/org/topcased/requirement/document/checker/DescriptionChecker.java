@@ -226,8 +226,9 @@ public class DescriptionChecker implements Checker
                         }
                         else
                         {
-                            clazz.setValue(stereotype, descriptionAttribute.getProperName(), getCorrespondingValue4UMLType(theProperty, buffer.toString()));
+                            clazz.setValue(stereotype, descriptionAttribute.getProperName(), buffer.toString());
                         }
+                        buffer = null;
                     }
                     else
                     {

@@ -84,7 +84,7 @@ public class DescriptionComposite extends Composite
         lblDescriptionAttribute.setEnabled(false);
         
         
-        comboViewer = new ComboViewer(group, SWT.NONE);
+        comboViewer = new ComboViewer(group, SWT.READ_ONLY);
         comboViewer.getCombo().setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
         hookListeners();
     }
@@ -208,6 +208,8 @@ public class DescriptionComposite extends Composite
     {
         lblDescriptionAttribute.setVisible(visible);
         lblDescriptionAttribute.setEnabled(visible);
+        comboViewer.getCombo().setVisible(visible);
+        comboViewer.getCombo().setEnabled(visible);
     }
     
     /**

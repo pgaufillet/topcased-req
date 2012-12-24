@@ -1034,21 +1034,32 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
     }
     
     
-    
     /**
      * Sets the stereotype.
      * 
      * @param s the new stereotype
      */
-    public void addStereotype(Stereotype s)
+    public void addStereotype(final Stereotype s)
     {
         if (s == null)
         {
             return;
         }
-        if (stereotypeComponent2.getInput() instanceof Collection<?>)
+
+        if (stereotypeComponent2.getInput() instanceof Collection< ? >)
         {
             Collection<Stereotype> input = (Collection<Stereotype>) stereotypeComponent2.getInput();
+            
+            String sQualifiedName = s.getQualifiedName();
+            
+            for (Stereotype stereotype : input)
+            {
+                if (sQualifiedName.equals(stereotype.getQualifiedName()))
+                {
+                    return;
+                }
+            }
+            
             ArrayList<Stereotype> c = new ArrayList<Stereotype>();
             c.addAll(input);
             c.add(s);
@@ -1061,6 +1072,60 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
             a.add(s);
             stereotypeComponent2.setInput(a);
         }
+    }
+    
+    
+    /**
+     * Sets the stereotype, the profile and the profile uri
+     * 
+     * @param s the new stereotype
+     * @param p the profile
+     * @param profileURI the profile uri
+     */
+    public void addStereotype(final Stereotype s, Profile p, String profileURI)
+    {
+        if (s == null)
+        {
+            return;
+        }
+        if (stereotypeComponent2.getInput() instanceof Collection< ? >)
+        {
+            Collection<Stereotype> input = (Collection<Stereotype>) stereotypeComponent2.getInput();
+
+            String sQualifiedName = s.getQualifiedName();
+            
+            for (Stereotype stereotype : input)
+            {
+                if (sQualifiedName.equals(stereotype.getQualifiedName()))
+                {
+                    return;
+                }
+            }
+
+            ArrayList<Stereotype> c = new ArrayList<Stereotype>();
+            c.addAll(input);
+            c.add(s);
+            stereotypes = c;
+            stereotypeComponent2.setInput(stereotypes);
+        }
+        else
+        {
+            Collection<Stereotype> a = new ArrayList<Stereotype>();
+            a.add(s);
+            stereotypeComponent2.setInput(a);
+        }
+
+        if (profiles == null)
+        {
+            profiles = new ArrayList<Profile>();
+        }
+        profiles.add(p);
+
+        if (profilesURIs == null)
+        {
+            profilesURIs = new ArrayList<String>();
+        }
+        profilesURIs.add(profileURI);
         
     }
     

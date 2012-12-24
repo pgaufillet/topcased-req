@@ -486,12 +486,10 @@ public class SelectStereotypeDialog extends CustomPopupDialog
          */
         public void run()
         {
-            wizard.addStereotype(selectedStereotype);
-            wizard.addProfile(currentProfile);
-            wizard.addProfileURI(uriPrefString);
-            close();
-            wizard.handleModelChange();
-            wizard.refreshView();
+			wizard.addStereotype(selectedStereotype, currentProfile, uriPrefString);
+			close();
+			wizard.handleModelChange();
+			wizard.refreshView();
         }
     }
 
