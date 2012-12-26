@@ -24,8 +24,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edit.provider.ReflectiveItemProvider;
-import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
+import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
+import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.papyrus.core.modelsetquery.IModelSetQueryAdapter;
 import org.eclipse.papyrus.core.modelsetquery.ModelSetQuery;
 import org.topcased.requirement.Attribute;
@@ -55,7 +55,9 @@ import com.google.common.collect.Lists;
 public class GeneratorHelper
 {
 
-    public static final String CELL_START = "<Cell><Data ss:Type='String'>";
+    private static final AdapterFactoryLabelProvider ITEM_PROVIDER = new AdapterFactoryLabelProvider(new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE));
+
+	public static final String CELL_START = "<Cell><Data ss:Type='String'>";
 
     public static final String CELL_END = "</Data></Cell>";
 
@@ -274,7 +276,7 @@ public class GeneratorHelper
     {
         if (object != null)
         {
-            return new ReflectiveItemProvider(new ReflectiveItemProviderAdapterFactory()).getText(object);
+            return ITEM_PROVIDER.getText(object);
         }
         else
         {
