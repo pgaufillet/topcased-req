@@ -121,7 +121,11 @@ public class PageController
     /** the id */
     private RecognizedElement identifier;
 
+    /** the chosen stereotype attribute for the description */
     private Attribute stereotypeDescriptionAttribute;
+    
+    /** the index of the current selected stereotype attribute for the description */
+    private int stereotypeDescriptionAttributeSelectedIndex;
 
     /**
      * the page controller constructor
@@ -181,10 +185,6 @@ public class PageController
         {
             pageMapping.setListAttributes(listAttributes);
         }
-        // if (pageSelectDocument.getModelType() != null)
-        // {
-        // pageMapping.setModelType(pageSelectDocument.getModelType());
-        // }
 
     }
 
@@ -205,7 +205,19 @@ public class PageController
         this.documentType = documentType;
         this.loadMappingPref = loadMappingPref;
         pageSelectFormat.pageChanged(InputDocument, modelType, documentType != null);
+        
     }
+    
+    /**
+     * Called when selected stereoptyes change in Import requirement Wizard
+     * @param stereotypes 
+     */
+    public void pageSelectDocumentStereoptypeChanged()
+    {
+    	pageSelectFormat.stereotypesChanged();
+    }
+    
+    
 
     /**
      * return the type model element
@@ -515,7 +527,7 @@ public class PageController
                 {
                     if (page.isDescriptionText())
                     {
-                        endText = page.getDescription();
+                        endText = page.getDescriptionText();
                     }
                     if (page.isDescriptionRegex())
                     {
@@ -860,54 +872,6 @@ public class PageController
     }
 
     /**
-     * Gets the profile uri.
-     * 
-     * Use GetProfilesURIs instead
-     * 
-     * @return the profile uri
-     */
-    @Deprecated
-    public String getProfileURI()
-    {
-        return pageSelectDocument.getProfileURI();
-    }
-    
-    /**
-     * Gets the profile uri.
-     * 
-     * Use GetProfilesURIs instead
-     * 
-     * @return the profile uri
-     */
-    public String getProfilesURIsString()
-    {
-        return pageSelectDocument.getProfilesURIsString();
-        
-    }
-
-    /**
-     * Gets the profiles' uris.
-     * 
-     * 
-     * @return the profiles' uris
-     */
-    public Collection<String> getProfilesURIs()
-    {
-        return pageSelectDocument.getProfilesURIs();
-    }
-    
-    /**
-     * Gets the stereotype.
-     * 
-     * @return the stereotype
-     */
-    @Deprecated
-    public Stereotype getStereotype()
-    {
-        return pageSelectDocument.getStereotype();
-    }
-
-    /**
      * Gets the stereotype.
      * 
      * @return the stereotype
@@ -937,25 +901,6 @@ public class PageController
         return pageMapping.getListAttributes();
     }
 
-    
-    /**
-     * Gets the profile.
-     * 
-     * Use getProfiles instead
-     * 
-     * @return the profile
-     */
-    @Deprecated
-    public Profile getProfile()
-    {
-        return pageSelectDocument.getProfile();
-    }
-
-    public Collection< Profile > getProfiles()
-    {
-        return pageSelectDocument.getProfiles();
-    }
-    
     /**
      * Sets the document file.
      * 
@@ -986,17 +931,6 @@ public class PageController
         return pageSelectDocument.getInputDocument();
     }
 
-    /**
-     * Gets the stereotype name.
-     * 
-     * @return the stereotype name
-     */
-    @Deprecated
-    public String getStereotypeName()
-    {
-        return pageSelectDocument.getStereotypeName();
-    }
-    
     /**
      * Gets the stereotype name.
      * 
@@ -1106,5 +1040,15 @@ public class PageController
     {
         return stereotypeDescriptionAttribute;
     }
+
+	public void setStereotypeDescrptionAttributeIndex(int selectedAttributeIndex)
+	{
+		stereotypeDescriptionAttributeSelectedIndex = selectedAttributeIndex;
+	}
+
+	public int getStereotypeDescriptionAttributeSelectedIndex()
+	{
+		return stereotypeDescriptionAttributeSelectedIndex;
+	}
 
 }

@@ -17,7 +17,10 @@
    <extension
          point="org.topcased.doc2model.parser.checker">
       <checker
-            instance="org.topcased.requirement.document.checker.DescriptionChecker">
+            instance="org.topcased.requirement.document.checker.ClassDescriptionChecker">
+      </checker>
+      <checker
+            instance="org.topcased.requirement.document.checker.RequirementDescriptionChecker">
       </checker>
    </extension>
    <extension

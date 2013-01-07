@@ -80,6 +80,18 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
 
     /** The Constant PREFERENCE_FOR_LIST_RECOGNIZED_ELEMENT. */
     public static final String PREFERENCE_FOR_LIST_RECOGNIZED_ELEMENT = "value for list of recognize element"; //$NON-NLS-1$
+    
+    /** The Constant PREFERENCE_FOR_DESCRIPTION. */
+    public static final String PREFERENCE_FOR_DESCRIPTION = "value for description"; //$NON-NLS-1$
+    
+    /** The Constant PREFERENCE_FOR_DESCRIPTION. */
+    public static final String PREFERENCE_FOR_DESCRIPTION_ENDLABEL = "value for description endlabel"; //$NON-NLS-1$
+    
+    /** The Constant PREFERENCE_FOR_DESCRIPTION_REGEX. */
+    public static final String PREFERENCE_FOR_DESCRIPTION_REGEX = "value for description regex"; //$NON-NLS-1$
+    
+    /** The Constant PREFERENCE_FOR_DESCRIPTION_ATTRIBUTE. */
+    public static final String PREFERENCE_FOR_DESCRIPTION_ATTRIBUTE = "value for description attribute"; //$NON-NLS-1$
 
     /** Page components *. */
     private FormToolkit toolkit;
@@ -212,7 +224,8 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
         {
             deleteReqId();
         }
-        if (descriptionChecked) {
+        if (descriptionChecked)
+        {
 			descriptionRegexComplete = descriptionComposite.isDescriptionRegexComplete();
 			descriptionTextComplete = descriptionComposite.isTextComplete();
 			descriptionRegex = descriptionComposite.getDescriptionRegex();
@@ -221,6 +234,7 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
             {
 			    descriptionAttribute = descriptionComposite.getAttributeSelection();
 			    controller.setStereotypeDescrptionAttribute(descriptionAttribute);
+			    controller.setStereotypeDescrptionAttributeIndex(descriptionComposite.getSelectedAttributeIndex());
             }
 			controller.setDescriptionRegex(descriptionRegex);
 			controller.setDescriptionEndText(descriptionText);
@@ -331,11 +345,20 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
             }
         }, composite, toolkit, SWT.NONE, helpText);
         descriptionCheck.setValueText("Description"); //$NON-NLS-1$
+        descriptionCheck.setSelection(descriptionChecked);
         descriptionComposite = new DescriptionComposite(composite, SWT.NONE);
         descriptionComposite.setNotifyElement(this);
         descriptionComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
-        descriptionComposite.setEnabled(false);
-        descriptionComposite.setVisible(false);
+        descriptionComposite.setEnabled(descriptionChecked);
+        descriptionComposite.setVisible(descriptionChecked);
+        if(descriptionChecked)
+        {
+        	descriptionComposite.setText(Activator.getDefault().getPluginPreferences().getString(PREFERENCE_FOR_DESCRIPTION_ENDLABEL));
+        	descriptionComposite.setDescriptionRegex(Activator.getDefault().getPluginPreferences().getString(PREFERENCE_FOR_DESCRIPTION_REGEX));
+        	stereotypesChanged();
+        	int attributeIndex = Activator.getDefault().getPluginPreferences().getInt(PREFERENCE_FOR_DESCRIPTION_ATTRIBUTE);
+        	descriptionComposite.selectAttributeIndex(attributeIndex);
+        }
     }
 
 
@@ -699,24 +722,27 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
         	result = false;
             error.append(Messages.DescriptionError);
 		}
+        
+        if (descriptionChecked && descriptionTextComplete)
+        {
+        	if (!isRegexValid(descriptionText))
+        	{
+        		result = false;
+        		error.append(Messages.EndLabelRegexError);
+        	}
+        }
 
-        if (descriptionChecked && descriptionRegexComplete){
+        if (descriptionChecked && descriptionRegexComplete)
+        {
         	if (!isRegexValid(descriptionRegex))
             {
                 result = false;
                 error.append(Messages.DescriptionRegexError);
             }
         }
-
-        if (descriptionChecked && descriptionRegexComplete){
-        	if (!isRegexValid(descriptionText))
-            {
-                result = false;
-                error.append(Messages.EndLabelRegexError);
-            }
-        }
         
-        if (descriptionChecked && descriptionRegexComplete && (Constants.SYSML_EXTENSION.equals(controller.getModelType()) || Constants.UML_EXTENSION.equals(controller.getModelType()))){
+        if (descriptionChecked && (descriptionRegexComplete || descriptionTextComplete) && (Constants.SYSML_EXTENSION.equals(controller.getModelType()) || Constants.UML_EXTENSION.equals(controller.getModelType())))
+        {
             if (!descriptionComposite.isAttributeSelected())
             {
                 result = false;
@@ -875,7 +901,12 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
         return descriptionCheck.getSelection();
     }
     
-    public String getDescription()
+//    public String getDescription()
+//    {
+//        return "";
+//    }
+    
+    public String getDescriptionText()
     {
         return descriptionComposite.getText();
     }
@@ -903,7 +934,8 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
     {
         // Load preferences for chapter
         chapterPref = Activator.getDefault().getPluginPreferences().getBoolean(PREFERENCE_FOR_CHAPTER);
-        if (controller != null) { 
+        if (controller != null)
+        { 
 			controller.setHierarchical(chapterPref);
 		}
         // Load preferences for value to recognize req
@@ -932,6 +964,9 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
                 }
             }
         }
+        
+        // Load preferences for the description
+        descriptionChecked = Activator.getDefault().getPluginPreferences().getBoolean(PREFERENCE_FOR_DESCRIPTION);
     }
 
     /**
@@ -1002,6 +1037,19 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
     }
     
     /**
+     * Performs initialization of the stereotype attributes combo at each changes in the stereotype composite
+     * @param stereotypes 
+     */
+    public void stereotypesChanged()
+    {
+    	Collection<Stereotype> stereotypes = controller.getStereotypes();
+    	Collection<Attribute> attributes = new ArrayList<Attribute>();
+    	attributes.addAll(createAttributes(stereotypes));
+    	descriptionComposite.fillAttributeCombo(attributes);
+    }
+    
+    
+    /**
      * Performs initialization of the page at each changes in the wizard
      * 
      * @param inputDocument
@@ -1030,24 +1078,14 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
             
             descriptionComposite.setAttributeComboVisible(b);
             
-            if (b) 
-            {
-            Collection<Stereotype> stereotypes = controller.getStereotypes();
-            Collection<Attribute> attributes = new ArrayList<Attribute>();
-            
-                
-//                Collections2.filter(stereotype.getAllAttributes(), new Predicate<Property>()
-//                {
-//                    public boolean apply(Property input)
-//                    {
-//                        return true;
-//                    }
-//                });
-                attributes.addAll(createAttributes(stereotypes));
-            
-            
-            descriptionComposite.fillAttributeCombo(attributes);
-            }
+//            if (b) 
+//            {
+//            	Collection<Stereotype> stereotypes = controller.getStereotypes();
+//            	Collection<Attribute> attributes = new ArrayList<Attribute>();
+//            	attributes.addAll(createAttributes(stereotypes));
+//
+//            	descriptionComposite.fillAttributeCombo(attributes);
+//            }
         } 
         else
         {
@@ -1107,9 +1145,11 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
     }
     
     @Override
-    public void setVisible(boolean visible) {
+    public void setVisible(boolean visible)
+    {
     	super.setVisible(visible);
-    	if (visible) {
+    	if (visible)
+    	{
     		 refreshView();
 		}
     }

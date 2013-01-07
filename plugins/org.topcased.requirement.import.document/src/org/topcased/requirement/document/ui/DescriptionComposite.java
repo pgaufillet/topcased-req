@@ -275,4 +275,23 @@ public class DescriptionComposite extends Composite
         comboViewer.refresh();
     }
     
+    
+    public int getSelectedAttributeIndex()
+    {
+    	if(comboViewer.getCombo() != null)
+    	{
+    		return comboViewer.getCombo().getSelectionIndex();
+    	}
+    	return -1; 
+    }
+    
+    
+    public void selectAttributeIndex(int attributeIndex)
+    {
+    	if(comboViewer.getCombo() != null )
+    	{
+    		comboViewer.getCombo().select(attributeIndex);
+    	}
+    }
+    
 }

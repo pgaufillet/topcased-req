@@ -32,7 +32,7 @@ import org.topcased.requirement.RequirementFactory;
 import org.topcased.requirement.RequirementProject;
 import org.topcased.requirement.core.extensions.IImportDocument;
 import org.topcased.requirement.core.preferences.CurrentPreferenceHelper;
-import org.topcased.requirement.document.checker.DescriptionChecker;
+import org.topcased.requirement.document.checker.AbstractDescriptionChecker;
 import org.topcased.requirement.document.elements.RecognizedElement;
 import org.topcased.requirement.document.elements.Regex;
 import org.topcased.requirement.document.elements.Style;
@@ -67,14 +67,14 @@ public class Doc2ModelImportDocument implements IImportDocument
         
         if (description != null)
         {
-            DescriptionChecker.setEndText(description);
+        	AbstractDescriptionChecker.setEndText(description);
         }
         
         String descriptionReg = parser.getDescriptionReg();
         
         if (descriptionReg != null && !descriptionReg.isEmpty())
         {
-            DescriptionChecker.setRegDescription(descriptionReg);
+        	AbstractDescriptionChecker.setRegDescription(descriptionReg);
         }
         
         String idType = getIdType();
@@ -82,11 +82,11 @@ public class Doc2ModelImportDocument implements IImportDocument
         
         if (id instanceof Style)
         {
-            DescriptionChecker.setStyleIdent(((Style) id).getStyle());
+        	AbstractDescriptionChecker.setStyleIdent(((Style) id).getStyle());
         }
         else if (id instanceof Regex)
         {
-            DescriptionChecker.setReqIdent(((Regex) id).getRegex());
+        	AbstractDescriptionChecker.setReqIdent(((Regex) id).getRegex());
         }
         
         
@@ -161,7 +161,7 @@ public class Doc2ModelImportDocument implements IImportDocument
                     }
                     finally
                     {
-                        DescriptionChecker.rollback();
+                    	AbstractDescriptionChecker.rollback();
                     }
                     
                 }

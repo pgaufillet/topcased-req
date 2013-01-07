@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -60,7 +61,7 @@ import org.topcased.requirement.core.RequirementCorePlugin;
 import org.topcased.requirement.core.preferences.CurrentPreferenceHelper;
 import org.topcased.requirement.core.preferences.RequirementPreferenceConstants;
 import org.topcased.requirement.document.Activator;
-import org.topcased.requirement.document.checker.DescriptionChecker;
+import org.topcased.requirement.document.checker.AbstractDescriptionChecker;
 import org.topcased.requirement.document.doc2model.Doc2ModelCreator;
 import org.topcased.requirement.document.elements.Attribute;
 import org.topcased.requirement.document.elements.Mapping;
@@ -151,38 +152,58 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
         {
             if (pageController.isDescriptionText())
             {
-                DescriptionChecker.setEndText(pageController.getDescriptionEndText());
+            	AbstractDescriptionChecker.setEndText(pageController.getDescriptionEndText());
             }
             if (pageController.isDescriptionRegex())
             {
-                DescriptionChecker.setRegDescription(pageController.getDescriptionRegex());
+            	AbstractDescriptionChecker.setRegDescription(pageController.getDescriptionRegex());
             }
             if (Constants.UML_EXTENSION.equals(pageController.getModelType()) || Constants.SYSML_EXTENSION.equals(pageController.getModelType()))
             {
-                DescriptionChecker.setStereotypeAttribute(pageController.getDescriptionAttribute());
+            	AbstractDescriptionChecker.setStereotypeAttribute(pageController.getDescriptionAttribute());
             }
         }
 
         RecognizedElement id = pageController.getIdentification();
         if (id instanceof Style)
         {
-            DescriptionChecker.setStyleIdent(((Style) id).getStyle());
+        	AbstractDescriptionChecker.setStyleIdent(((Style) id).getStyle());
             String regex = ((Style) id).getRegex();
             if (regex != null)
             {
-                DescriptionChecker.setReqIdent(regex);
+            	AbstractDescriptionChecker.setReqIdent(regex);
             }
         }
         else if (id instanceof Regex)
         {
-            DescriptionChecker.setReqIdent(((Regex) id).getRegex());
+        	AbstractDescriptionChecker.setReqIdent(((Regex) id).getRegex());
         }
 
+//        String uris = "";
+//        Collection<String> profilesUris = pageController.getProfilesURIs();
+//        if (profilesUris != null && !profilesUris.isEmpty())
+//        {
+//            uris = Joiner.on(";").join(Iterables.transform(pageController.getProfilesURIs(), new Function<String, String>()
+//            {
+//                public String apply(String from)
+//                {
+//                    return from;
+//                }
+//            }));
+//        }
+        
         String uris = "";
-        Collection<String> profilesUris = pageController.getProfilesURIs();
+        Collection<String> profilesUris = new ArrayList<String>();
+        for(Stereotype stereotype:pageController.getStereotypes())
+        {
+        	if(stereotype.getProfile() != null && stereotype.getProfile().eResource() != null && stereotype.getProfile().eResource().getURI() != null)
+        	{
+        		profilesUris.add(stereotype.getProfile().eResource().getURI().toString());
+        	}
+        }
         if (profilesUris != null && !profilesUris.isEmpty())
         {
-            uris = Joiner.on(";").join(Iterables.transform(pageController.getProfilesURIs(), new Function<String, String>()
+            uris = Joiner.on(";").join(Iterables.transform(profilesUris, new Function<String, String>()
             {
                 public String apply(String from)
                 {
@@ -190,6 +211,7 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
                 }
             }));
         }
+        
 
         /** Process **/
         Doc2ModelCreator d2mc = new Doc2ModelCreator(pageController.getListMapping(), pageController.getModelType(), pageController.isSpreadsheet(), uris, pageController.getStereotypes(),
@@ -267,7 +289,7 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
                         }
                         finally
                         {
-                            DescriptionChecker.rollback();
+                        	AbstractDescriptionChecker.rollback();
                         }
 
                     }
@@ -363,17 +385,29 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
         Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_INPUT_DOC, pageController.getInputDocument());
         Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_OUTPUT_MODEL, pageController.getOutputModel());
         Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_LEVEL, pageController.getLevel());
-        // Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_STEREO,
-        // pageController.getStereotypesNames());
-        // Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_PROFILE,
-        // pageController.getProfilesURIsString());
         Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_MODEL_TYPE, pageController.getModelType());
+        
+        // Saving profile and stereotypes
+        String stereoPref = "";
+        for(Stereotype stereotype:pageController.getStereotypes())
+        {
+        	if(stereotype.getProfile() != null && stereotype.getProfile().eResource() != null && stereotype.getProfile().eResource().getURI() != null)
+        	{
+        		stereoPref += stereotype.eResource().getURI().toString()+"#"+stereotype.eResource().getURIFragment(stereotype)+";";
+        	}
+        }
+        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_STEREO, stereoPref);
 
         // Pref from the second page
         Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectFormat.PREFERENCE_FOR_CHAPTER, pageController.isHierarchical());
         Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectFormat.PREFERENCE_FOR_VALUE_TO_RECOGNIZE_REQ, pageController.getValueToRecognizeReq());
         Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectFormat.PREFERENCE_FOR_LIST_RECOGNIZED_ELEMENT, pageController.getListAttributesPref());
+        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectFormat.PREFERENCE_FOR_DESCRIPTION, pageController.getDescriptionState());
+        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectFormat.PREFERENCE_FOR_DESCRIPTION_ENDLABEL, pageController.getDescriptionEndText());
+        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectFormat.PREFERENCE_FOR_DESCRIPTION_REGEX, pageController.getDescriptionRegex());
+        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectFormat.PREFERENCE_FOR_DESCRIPTION_ATTRIBUTE, pageController.getStereotypeDescriptionAttributeSelectedIndex());
 
+        
         // Pref from the third page
 
         // Save only if it is requirement model

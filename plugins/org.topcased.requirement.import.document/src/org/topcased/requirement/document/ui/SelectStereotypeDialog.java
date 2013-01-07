@@ -489,6 +489,7 @@ public class SelectStereotypeDialog extends CustomPopupDialog
 			wizard.addStereotype(selectedStereotype, currentProfile, uriPrefString);
 			close();
 			wizard.handleModelChange();
+			wizard.handleStereoptypeChange();
 			wizard.refreshView();
         }
     }
