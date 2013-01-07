@@ -134,23 +134,8 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
     /** The level. */
     private String level;
 
-//    /** The stereotype. */
-//    private Stereotype stereotype;
-
     /** stereotypes Collection. */
     private Collection<Stereotype> stereotypes;
-
-//    /** The profile. */
-//    private Profile profile;
-//
-//    /** The Profiles. */
-//    private Collection<Profile> profiles;
-//
-//    /** The profile uri. */
-//    private String profileURI;
-//
-//    /** The profiles' uris. */
-//    private Collection<String> profilesURIs;
 
     /** The old model type. */
     private String oldModelType;
@@ -233,7 +218,6 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
         createSection();
 
         setControl(composite);
-
     }
 
     /**
@@ -795,7 +779,6 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
             {
                 outputModel = outputModel + "." + modelType;
             }
-            ;
         }
 
         return modelType;
@@ -828,19 +811,6 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
         {
             load = false;
         }
-
-        // Check profile
-        // if (profileURI != null && profileURI != null && !profileURIFromPref.equalsIgnoreCase(profileURI))
-        // {
-        // load = false;
-        // }
-
-        // Check stereotype
-        // if (stereotype != null && stereotypeFromPref != null &&
-        // !stereotypeFromPref.equalsIgnoreCase(stereotype.getName()))
-        // {
-        // load = false;
-        // }
 
         return load;
     }
@@ -875,17 +845,6 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
         return modelType;
     }
 
-//    /**
-//     * Gets the stereotype.
-//     * 
-//     * @return the stereotype
-//     */
-//    @Deprecated
-//    public Stereotype getStereotype()
-//    {
-//        return this.stereotype;
-//    }
-
     /**
      * Gets the stereotypes collection.
      * 
@@ -895,22 +854,6 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
     {
         return this.stereotypes;
     }
-
-//    /**
-//     * Gets the stereotype name.
-//     * 
-//     * Use getStereotypesNames() instead
-//     * 
-//     * @return the stereotype name
-//     */
-//    @Deprecated
-//    public String getStereotypeName()
-//    {
-//        if (stereotype != null)
-//            return stereotype.getName();
-//        else
-//            return "";
-//    }
 
     /**
      * Gets the stereotype name.
@@ -944,8 +887,6 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
         {
             stereotypeComposite.addStereotype(s);
         }
-//        addProfile(s.getProfile());
-//        addProfileURI(s.getProfile().eResource().getURI().toString());
     }
 
     /**
@@ -961,9 +902,6 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
         {
             stereotypeComposite.addStereotype(s);
         }
-//        addProfile(p);
-//        addProfileURI(profileURI);
-
     }
 
     /**
@@ -982,16 +920,6 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
     public void clearProfiles()
     {
 
-//        if (profiles != null)
-//        {
-//            profiles.clear();
-//        }
-//
-//        if (profilesURIs != null)
-//        {
-//            profilesURIs.clear();
-//        }
-
         if (stereotypes != null)
         {
             stereotypes.clear();
@@ -1004,78 +932,6 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
 
     }
 
-//    /**
-//     * Sets the stereotype.
-//     * 
-//     * Use addStereotype() and removeStereotype instead
-//     * 
-//     * @param s the new stereotype
-//     */
-//    @Deprecated
-//    public void setStereotype(Stereotype s)
-//    {
-//        this.stereotype = s;
-//    }
-
-//    /**
-//     * Sets the profile.
-//     * 
-//     * Use addProfile() and removeProfile() instead
-//     * 
-//     * @param p the new profile
-//     */
-//    @Deprecated
-//    public void setProfile(Profile p)
-//    {
-//        this.profile = p;
-//    }
-//
-//    /**
-//     * Add a profile.
-//     * 
-//     * @param p the new profile
-//     */
-//    public void addProfile(Profile p)
-//    {
-//        if (profiles == null)
-//        {
-//            profiles = new ArrayList<Profile>();
-//        }
-//        profiles.add(p);
-//    }
-//
-//    /**
-//     * remove a profile.
-//     * 
-//     * @param p the profile to remove
-//     */
-//    public void removeProfile(Profile p)
-//    {
-//        profiles.remove(p);
-//    }
-//
-//    /**
-//     * Gets the profile.
-//     * 
-//     * Use getProfiles() instead
-//     * 
-//     * @return the profile
-//     */
-//    @Deprecated
-//    public Profile getProfile()
-//    {
-//        return this.profile;
-//    }
-//
-//    /**
-//     * Gets the profiles.
-//     * 
-//     * @return the profiles Collection
-//     */
-//    public Collection<Profile> getProfiles()
-//    {
-//        return this.profiles;
-//    }
 
     /**
      * Gets the level.
@@ -1087,105 +943,6 @@ public class ImportRequirementWizardPageSelectDocument extends WizardPage implem
         return level;
     }
 
-//    /**
-//     * Gets the profile uri.
-//     * 
-//     * Use getProfilesURIs instead
-//     * 
-//     * @return the profile uri
-//     */
-//    @Deprecated
-//    public String getProfileURI()
-//    {
-//        if (profileURI != null)
-//            return profileURI;
-//        else
-//            return "";
-//    }
-//
-//    /**
-//     * Gets the profiles' uris.
-//     * 
-//     * @return the profiles' uris
-//     */
-//    public Collection<String> getProfilesURIs()
-//    {
-//        if (profilesURIs != null && !profilesURIs.isEmpty())
-//        {
-//            return profilesURIs;
-//        }
-//        return null;
-//    }
-//
-//    /**
-//     * Gets the profiles' uris concatenated with comma separation.
-//     * 
-//     * @return the profiles' uris
-//     */
-//    public String getProfilesURIsString()
-//    {
-//        if (profilesURIs != null && !profilesURIs.isEmpty())
-//        {
-//
-//            return Joiner.on(";").join(Iterables.transform(profilesURIs, new Function<String, String>()
-//            {
-//                public String apply(String from)
-//                {
-//                    return from;
-//                }
-//            }));
-//        }
-//        return "";
-//    }
-//
-//    /**
-//     * Sets the profile uri.
-//     * 
-//     * Use AddProfileURI() and RemoveProfileURI() instead
-//     * 
-//     * @param profileURI the new profile uri
-//     */
-//    @Deprecated
-//    public void setProfileURI(String profileURI)
-//    {
-//        this.profileURI = profileURI;
-//    }
-//
-//    /**
-//     * Add the profile uri.
-//     * 
-//     * @param profileURI the new profile uri
-//     */
-//    public void addProfileURI(String profileURI)
-//    {
-//        if (profilesURIs == null)
-//        {
-//            profilesURIs = new ArrayList<String>();
-//        }
-//        profilesURIs.add(profileURI);
-//    }
-//
-//    /**
-//     * Remove the profile uri.
-//     * 
-//     * @param profileURI the profile uri to Remove
-//     */
-//    public void removeProfileURI(String profileURI)
-//    {
-//        if (profilesURIs == null)
-//        {
-//            return;
-//        }
-//        for (Iterator<String> iterator = profilesURIs.iterator(); iterator.hasNext();)
-//        {
-//            String uri = (String) iterator.next();
-//            if (uri.equals(profileURI))
-//            {
-//                iterator.remove();
-//            }
-//
-//        }
-//    }
 
     /**
      * Gets if an attach requirement is selected

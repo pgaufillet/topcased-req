@@ -901,11 +901,6 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
         return descriptionCheck.getSelection();
     }
     
-//    public String getDescription()
-//    {
-//        return "";
-//    }
-    
     public String getDescriptionText()
     {
         return descriptionComposite.getText();
@@ -1077,15 +1072,6 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
             boolean b = Constants.SYSML_EXTENSION.equals(modelType) || Constants.UML_EXTENSION.equals(modelType);
             
             descriptionComposite.setAttributeComboVisible(b);
-            
-//            if (b) 
-//            {
-//            	Collection<Stereotype> stereotypes = controller.getStereotypes();
-//            	Collection<Attribute> attributes = new ArrayList<Attribute>();
-//            	attributes.addAll(createAttributes(stereotypes));
-//
-//            	descriptionComposite.fillAttributeCombo(attributes);
-//            }
         } 
         else
         {
@@ -1103,8 +1089,6 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
             }
         }
         
-//        if (Constants.REQUIREMENT_EXTENSION.equals(modelType) && documentTypeSelected)
-//        {
         if (documentTypeSelected)
         {
             descriptionText = controller.getDescriptionEndText();
@@ -1236,36 +1220,23 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
             }
             else
             {
-                
-                
-//                if (Constants.REQUIREMENT_EXTENSION.equals(controller.getModelType()))
-//                {
-                    descriptionCheck.setVisible(true);
-                    descriptionCheck.setEnabled(true);
-                    
-                    if (descriptionText != null || descriptionRegex != null)
-                    {
-                        descriptionCheck.setSelection(true);
-                        descriptionComposite.setEnabled(true);
-                        descriptionComposite.setVisible(true);
-                        if (descriptionText != null)
-                        {
-                            descriptionComposite.setText(descriptionText);
-                        }
-                        if (descriptionRegex != null)
-                        {
-                            descriptionComposite.setDescriptionRegex(descriptionRegex);
-                        }
-                    }
-//                } else
-//                {
-//                    descriptionCheck.setVisible(false);
-//                    descriptionCheck.setEnabled(false);
-//                    descriptionComposite.setEnabled(false);
-//                    descriptionComposite.setVisible(false);
-//                    descriptionComposite.setText(""); //$NON-NLS-1$
-//                    descriptionComposite.setDescriptionRegex(""); //$NON-NLS-1$
-//                }
+            	descriptionCheck.setVisible(true);
+            	descriptionCheck.setEnabled(true);
+
+            	if (descriptionText != null || descriptionRegex != null)
+            	{
+            		descriptionCheck.setSelection(true);
+            		descriptionComposite.setEnabled(true);
+            		descriptionComposite.setVisible(true);
+            		if (descriptionText != null)
+            		{
+            			descriptionComposite.setText(descriptionText);
+            		}
+            		if (descriptionRegex != null)
+            		{
+            			descriptionComposite.setDescriptionRegex(descriptionRegex);
+            		}
+            	}
                 
                 // Case docx or odt
                 buttonNewColumn.setVisible(false);
