@@ -178,19 +178,6 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
         {
         	AbstractDescriptionChecker.setReqIdent(((Regex) id).getRegex());
         }
-
-//        String uris = "";
-//        Collection<String> profilesUris = pageController.getProfilesURIs();
-//        if (profilesUris != null && !profilesUris.isEmpty())
-//        {
-//            uris = Joiner.on(";").join(Iterables.transform(pageController.getProfilesURIs(), new Function<String, String>()
-//            {
-//                public String apply(String from)
-//                {
-//                    return from;
-//                }
-//            }));
-//        }
         
         String uris = "";
         Collection<String> profilesUris = new ArrayList<String>();
