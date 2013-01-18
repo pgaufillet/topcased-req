@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.exportWizards">
+      <wizard
+            category="com.atosorigin.topcased.requirement.export.category"
+            class="org.topcased.requirement.reqif.ui.topcased2reqif.ExportRequirementWizard"
+            icon="icons/RequirementModelFile.gif"
+            id="org.topcased.requirement.reqif.exportRequirementWizard"
+            name="%wizard.name">
+      </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.ui.importWizards">
+      <wizard
+            category="org.topcased.requirement.import.category"
+            class="org.topcased.requirement.reqif.ui.reqif2topcased.ImportRequirementWizard"
+            icon="icons/ReqIf.png"
+            id="org.topcased.requirement.reqif.importRequirementWizard"
+            name="%wizard.name.0">
+      </wizard>
+      <category
+            id="org.topcased.requirement.import.category"
+            name="%category.name">
+      </category>
+   </extension>
+
+</plugin>
