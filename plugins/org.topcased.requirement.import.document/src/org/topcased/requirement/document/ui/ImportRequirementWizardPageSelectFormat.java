@@ -718,12 +718,12 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
         }
         
         
-        if (descriptionChecked && !descriptionRegexComplete && !descriptionTextComplete ) {
+        if (descriptionChecked && !isSpreadsheet && !descriptionRegexComplete && !descriptionTextComplete ) {
         	result = false;
             error.append(Messages.DescriptionError);
 		}
         
-        if (descriptionChecked && descriptionTextComplete)
+        if (descriptionChecked && !isSpreadsheet && descriptionTextComplete)
         {
         	if (!isRegexValid(descriptionText))
         	{
@@ -732,7 +732,7 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
         	}
         }
 
-        if (descriptionChecked && descriptionRegexComplete)
+        if (descriptionChecked && !isSpreadsheet && descriptionRegexComplete)
         {
         	if (!isRegexValid(descriptionRegex))
             {
@@ -741,7 +741,7 @@ public class ImportRequirementWizardPageSelectFormat extends WizardPage implemen
             }
         }
         
-        if (descriptionChecked && (descriptionRegexComplete || descriptionTextComplete) && (Constants.SYSML_EXTENSION.equals(controller.getModelType()) || Constants.UML_EXTENSION.equals(controller.getModelType())))
+        if (descriptionChecked && !isSpreadsheet && (descriptionRegexComplete || descriptionTextComplete) && (Constants.SYSML_EXTENSION.equals(controller.getModelType()) || Constants.UML_EXTENSION.equals(controller.getModelType())))
         {
             if (!descriptionComposite.isAttributeSelected())
             {
