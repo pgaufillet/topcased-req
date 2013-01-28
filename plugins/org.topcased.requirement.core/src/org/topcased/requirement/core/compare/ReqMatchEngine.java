@@ -52,7 +52,10 @@ public class ReqMatchEngine extends GenericMatchEngine
                        }
                        else 
                        {
-                           result = Objects.equal(a1.getName(), a2.getName()) && Objects.equal(a1.getValue(), a2.getValue());
+                           if (Objects.equal(a1.getName(), a2.getName()) && Objects.equal(a1.getValue(), a2.getValue()))
+                           {
+                               result = true ;
+                           }
                        }
                    }
                }
@@ -78,20 +81,23 @@ public class ReqMatchEngine extends GenericMatchEngine
                         Requirement req1 = (Requirement) a1.eContainer();
                         Requirement req2 = (Requirement) a2.eContainer();
                         if (getQualifiedName(req1).equals(getQualifiedName(req2))){
-                            if (a1.getName() != null && a1.getName().equals(a2.getName()) && a1.getValue() != null && a1.getValue().equals(a2.getValue()))
-                            {
-                                return 1 ;
-                            }
-                            else if (a1.getName() != null && a1.getName().equals(a2.getName()) && a1.getValue() == null && a2.getValue() == null)
-                            {
-                                return 1 ;
-                            }
-                            else if (a1.getName() == null && a2.getName()== null && a1.getValue() == null && a2.getValue() == null)
+                            if (Objects.equal(a1.getName(),a2.getName()) && Objects.equal(a1.getValue(), a2.getValue()))
                             {
                                 return 1 ;
                             }
                             else
                             {
+                                if (Objects.equal(a1.getName(), a2.getName()))
+                                {
+                                    // difficult to check if an attribute has been moved if the name are the same
+                                    // the check of index can help to know if it is an attribute modification
+                                    // for the same requirement (same id) same name of the attribute and same index it is possible
+                                    // to define it as a change
+                                    if (Objects.equal(req1.eContents().indexOf(a1), req2.eContents().indexOf(a2)))
+                                    {
+                                        return 0.5 ;
+                                    }
+                                }
                                 return 0 ;
                             }
                         }
