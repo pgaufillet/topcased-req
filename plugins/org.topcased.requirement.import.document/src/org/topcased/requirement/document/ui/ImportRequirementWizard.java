@@ -181,11 +181,14 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
         
         String uris = "";
         Collection<String> profilesUris = new ArrayList<String>();
-        for(Stereotype stereotype:pageController.getStereotypes())
+        if(pageController.getStereotypes() != null)
         {
-        	if(stereotype.getProfile() != null && stereotype.getProfile().eResource() != null && stereotype.getProfile().eResource().getURI() != null)
+        	for(Stereotype stereotype:pageController.getStereotypes())
         	{
-        		profilesUris.add(stereotype.getProfile().eResource().getURI().toString());
+        		if(stereotype.getProfile() != null && stereotype.getProfile().eResource() != null && stereotype.getProfile().eResource().getURI() != null)
+        		{
+        			profilesUris.add(stereotype.getProfile().eResource().getURI().toString());
+        		}
         	}
         }
         if (profilesUris != null && !profilesUris.isEmpty())
@@ -376,11 +379,14 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
         
         // Saving profile and stereotypes
         String stereoPref = "";
-        for(Stereotype stereotype:pageController.getStereotypes())
+        if(pageController.getStereotypes() != null)
         {
-        	if(stereotype.getProfile() != null && stereotype.getProfile().eResource() != null && stereotype.getProfile().eResource().getURI() != null)
+        	for(Stereotype stereotype:pageController.getStereotypes())
         	{
-        		stereoPref += stereotype.eResource().getURI().toString()+"#"+stereotype.eResource().getURIFragment(stereotype)+";";
+        		if(stereotype.getProfile() != null && stereotype.getProfile().eResource() != null && stereotype.getProfile().eResource().getURI() != null)
+        		{
+        			stereoPref += stereotype.eResource().getURI().toString()+"#"+stereotype.eResource().getURIFragment(stereotype)+";";
+        		}
         	}
         }
         Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectDocument.PREFERENCE_FOR_STEREO, stereoPref);
