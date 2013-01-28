@@ -22,6 +22,8 @@ import ttm.HierarchicalElement;
 import ttm.Requirement;
 import ttm.Section;
 
+import com.google.common.base.Objects;
+
 public class ReqMatchEngine extends GenericMatchEngine
 {
     @Override   
@@ -33,6 +35,28 @@ public class ReqMatchEngine extends GenericMatchEngine
             public boolean isSimilar(EObject obj1, EObject obj2) throws FactoryException 
             {
                boolean result = super.isSimilar(obj1, obj2);
+               // attributes if they have different container, they are in every case different it means nothing to move an attribute
+               if (obj1 instanceof Attribute && obj2 instanceof Attribute)
+               {
+                   Attribute a1 = (Attribute) obj1;
+                   Attribute a2 = (Attribute) obj2;                   
+                   EObject container1 = obj1.eContainer() ;
+                   EObject container2 = obj2.eContainer() ;
+                   if (container1 instanceof Requirement && container2 instanceof Requirement)
+                   {
+                       Requirement req1 = (Requirement) container1;
+                       Requirement req2 = (Requirement) container2;
+                       if (!Objects.equal(req1.getIdent(),req2.getIdent()))
+                       {
+                           result = false;
+                       }
+                       else 
+                       {
+                           result = Objects.equal(a1.getName(), a2.getName()) && Objects.equal(a1.getValue(), a2.getValue());
+                       }
+                   }
+               }
+               // objects are not recognized as moved so this case must be computed according to the qualified name 
                if (!result)
                {
                    if (obj1 instanceof Section && obj2 instanceof Section)
