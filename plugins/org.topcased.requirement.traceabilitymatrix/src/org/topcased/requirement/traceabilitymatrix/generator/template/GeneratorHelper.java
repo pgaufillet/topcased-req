@@ -31,12 +31,16 @@ import org.eclipse.papyrus.core.modelsetquery.ModelSetQuery;
 import org.topcased.requirement.Attribute;
 import org.topcased.requirement.AttributeConfiguration;
 import org.topcased.requirement.AttributeLink;
+import org.topcased.requirement.AttributesType;
+import org.topcased.requirement.ConfiguratedAttribute;
 import org.topcased.requirement.CurrentRequirement;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.ObjectAttribute;
 import org.topcased.requirement.RequirementPackage;
 import org.topcased.requirement.RequirementProject;
+import org.topcased.requirement.SpecialChapter;
 import org.topcased.requirement.TextAttribute;
+import org.topcased.requirement.UntracedChapter;
 import org.topcased.requirement.core.utils.RequirementUtils;
 
 import ttm.Document;
@@ -64,6 +68,10 @@ public class GeneratorHelper
     public static final String COLUMNS_START = "\n<Row>";
 
     public static final String COLUMNS_END = "\n</Row>";
+    
+    private static final String CLOSE_CELL_TAG = "</td>";
+
+    private static final String OPEN_CELL_TAG = "<td rowspan=\"1\" colspan=\"1\">";
 
     /**
      * This service is necessary to work with controlled upstream model
@@ -91,6 +99,28 @@ public class GeneratorHelper
             if (!(s instanceof AttributeLink))
             {
                 result.append(addColumn(s.getName()));
+            }
+        }
+
+        return result.toString();
+    }
+    
+    /**
+     * Returns a string for the display of attribute names at the top of the table.
+     * @param project
+     * @return
+     */
+    public static String configuration(final RequirementProject project)
+    {
+        final StringBuilder result = new StringBuilder();
+
+        AttributeConfiguration conf = project.getAttributeConfiguration();
+
+        for (ConfiguratedAttribute confAtt : conf.getListAttributes())
+        {
+            if (!confAtt.getType().equals(AttributesType.LINK))
+            {
+                result.append("<th>" + confAtt.getName() + "</th>");
             }
         }
 
@@ -251,6 +281,123 @@ public class GeneratorHelper
                 result.append("\n" + COLUMNS_END);
             }
         }
+        return result.toString();
+    }
+    
+    /**
+     * Returns the details for the excel export of the given requirement.
+     * 
+     * @param requirement the upstream requirement
+     * @return the html details
+     */
+    public static String details(final Requirement requirement)
+    {
+        final StringBuilder result = new StringBuilder();
+
+        final List<CurrentRequirement> cReqs = RequirementsUtils.getLinkedCurrentRequirements(requirement);
+
+        AttributeConfiguration conf = RequirementUtils.getAttributeConfiguration(requirement.eResource());
+
+        if (cReqs.isEmpty()) {
+            result.append("<td align=\"center\">" + requirement.getIdent() + "</td><td colspan=\"" + new Integer(3 + conf.getListAttributes().size()).toString() + "\"></td>");
+            result.append("</td>");
+        } else {    
+            String lSep = ""; 
+            for (final CurrentRequirement cReq : cReqs)
+            {
+                StringBuilder attributesResult = new StringBuilder();
+                boolean isPartial = false;
+
+                HashMap<String, Attribute> attributesMap = new HashMap<String, Attribute>();
+
+                for (Attribute att : cReq.getAttribute())
+                {
+                    attributesMap.put(att.getName(), att);
+                }
+                if (conf != null)
+                {
+                	for (ConfiguratedAttribute confAtt : conf.getListAttributes())
+                	{
+                		Attribute att = attributesMap.get(confAtt.getName());
+                		if (att != null)
+                		{
+                			
+                			if (att instanceof AttributeLink)
+                			{
+                				// don't display Linkto attributes since the info is already present*
+                				// retrieve the partial attribute if it is the Linkto associated with the currently treated
+                				// upstream
+                				AttributeLink linkAtt = (AttributeLink) att;
+                				
+                				Object value = linkAtt.getValue();
+                				if (requirement.equals(value))
+                				{
+                					isPartial = linkAtt.getPartial();
+                				}
+                			}
+                			else
+                			{
+                				String attRepresentation = "";
+                				if (att instanceof ObjectAttribute)
+                				{
+                					ObjectAttribute objAtt = (ObjectAttribute) att;
+                					
+                					Object value = objAtt.getValue();
+                					
+                					if (value instanceof Requirement)
+                					{
+                						attRepresentation = ((Requirement) value).getIdent();
+                					}
+                					else if (value != null)
+                					{
+                						attRepresentation = value.toString();
+                					}
+                					
+                				}
+                				else if (att instanceof TextAttribute)
+                				{
+                					TextAttribute textAtt = (TextAttribute) att;
+                					attRepresentation = textAtt.getValue();
+                				}
+                				attributesResult.append(OPEN_CELL_TAG + attRepresentation + CLOSE_CELL_TAG);
+                			}
+                		}
+                	}
+                }
+
+                result.append(lSep);
+                result.append("<td rowspan=\"1\" colspan=\"1\" align=\"center\">" + requirement.getIdent());
+                result.append(OPEN_CELL_TAG + isPartial + CLOSE_CELL_TAG);
+
+                result.append(OPEN_CELL_TAG + cReq.getIdentifier() + CLOSE_CELL_TAG);
+
+                EObject eContainer = cReq.eContainer();
+                if (eContainer instanceof HierarchicalElement)
+                {
+                	final EObject object = ((HierarchicalElement) eContainer).getElement();
+                	result.append(OPEN_CELL_TAG + getDisplayableName(object) + CLOSE_CELL_TAG);
+                }
+                else
+                {
+                	if (eContainer instanceof SpecialChapter)
+                	{
+						SpecialChapter special = (SpecialChapter) eContainer;
+						result.append(OPEN_CELL_TAG + getDisplayableName(special) + CLOSE_CELL_TAG);						
+					}
+                	else
+                	{
+                		result.append(OPEN_CELL_TAG + eContainer.toString() + CLOSE_CELL_TAG);
+                	}
+                }
+
+                result.append(OPEN_CELL_TAG + cReq.getShortDescription() + CLOSE_CELL_TAG);
+
+                result.append(attributesResult);
+                result.append("</td>");
+                lSep = "<tr>";     
+            }
+        }
+        
         return result.toString();
     }
 
