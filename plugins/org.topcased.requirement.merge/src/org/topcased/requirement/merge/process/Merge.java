@@ -394,7 +394,7 @@ public class Merge
 
     protected EObject getModelObject(RequirementProject project) {
     	// FIXME when generic methods will exist
-    	for (Iterator<EObject> i = EcoreUtil.getAllProperContents(project, false) ; i.hasNext() ; )
+    	for (Iterator<EObject> i = EcoreUtil.getAllProperContents(project, true) ; i.hasNext() ; )
     	{
     		EObject next = i.next();
 			if (next instanceof HierarchicalElement) {
