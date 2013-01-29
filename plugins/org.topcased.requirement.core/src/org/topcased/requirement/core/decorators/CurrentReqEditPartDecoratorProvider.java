@@ -52,7 +52,7 @@ public class CurrentReqEditPartDecoratorProvider extends AbstractProvider implem
                 loadRequirementsFirst = true;
             }
             IEditorServices services = SupportingEditorsManager.getInstance().getServices(editor);
-            if (services != null)
+            if (services != null && editPart != null)
             {
                 EObject eobject = services.getEObject(editPart);
                 // this is the main element's edit part only if its parent part does not point the same element
