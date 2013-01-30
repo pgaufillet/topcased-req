@@ -190,10 +190,12 @@ public abstract class AbstractRequirementModelWizard extends Wizard implements I
         }
         catch (InvocationTargetException exception)
         {
+            exception.printStackTrace();
             return false;
         }
         catch (InterruptedException exception)
         {
+            exception.printStackTrace();
             return false;
         }
     }

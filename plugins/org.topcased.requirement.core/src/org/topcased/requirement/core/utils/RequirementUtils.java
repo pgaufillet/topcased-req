@@ -215,6 +215,10 @@ public final class RequirementUtils
     public static Collection<Requirement> getUpstreams(EObject starting)
     {
         Collection<Requirement> result = new ArrayList<Requirement>();
+        if (starting == null)
+        {
+            return result ;
+        }
         for (Iterator<EObject> h = starting.eAllContents(); h.hasNext();)
         {
             EObject current = h.next();
