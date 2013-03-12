@@ -395,9 +395,13 @@ public class ImportRequirementWizard extends Wizard implements IImportWizard
         Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectFormat.PREFERENCE_FOR_CHAPTER, pageController.isHierarchical());
         Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectFormat.PREFERENCE_FOR_VALUE_TO_RECOGNIZE_REQ, pageController.getValueToRecognizeReq());
         Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectFormat.PREFERENCE_FOR_LIST_RECOGNIZED_ELEMENT, pageController.getListAttributesPref());
-        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectFormat.PREFERENCE_FOR_DESCRIPTION, pageController.getDescriptionState());
-        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectFormat.PREFERENCE_FOR_DESCRIPTION_ENDLABEL, pageController.getDescriptionEndText());
-        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectFormat.PREFERENCE_FOR_DESCRIPTION_REGEX, pageController.getDescriptionRegex());
+        boolean descriptionState = pageController.getDescriptionState();
+        Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectFormat.PREFERENCE_FOR_DESCRIPTION, descriptionState);
+        if (descriptionState)
+        {
+            Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectFormat.PREFERENCE_FOR_DESCRIPTION_ENDLABEL, pageController.getDescriptionEndText());
+            Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectFormat.PREFERENCE_FOR_DESCRIPTION_REGEX, pageController.getDescriptionRegex());
+        }
         Activator.getDefault().getPluginPreferences().setValue(ImportRequirementWizardPageSelectFormat.PREFERENCE_FOR_DESCRIPTION_ATTRIBUTE, pageController.getStereotypeDescriptionAttributeSelectedIndex());
 
         
