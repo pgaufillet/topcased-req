@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *      Olivier Mélois <a href="mailto:olivier.melois@atos.net">olivier.melois@atos.net</a>"
+ *      Anass RADOUANI (AtoS) {anass.radouani@atos.net) - Use of istrashChapterChild to check if the element is in the Trash Chapter
  * 
  **********************************************************************************************************************/
 
@@ -25,7 +26,6 @@ import org.eclipse.emf.edit.command.CommandParameter;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.PlatformUI;
-import org.topcased.requirement.TrashChapter;
 import org.topcased.requirement.core.commands.TrashCurrentReqCommand;
 import org.topcased.requirement.core.internal.Messages;
 import org.topcased.requirement.core.utils.RequirementUtils;
@@ -138,11 +138,19 @@ public class TrashHandler extends RequirementAbstractEMFCommandHandler
     @Override
     public boolean isEnabled()
     {
-        boolean result = super.isEnabled();
-        TrashChapter trashChapter = RequirementUtils.getTrashChapter(editingDomain);
-        for (EObject eObject : this.getSelectedEObjects()){
-            result &= (eObject.eContainer() != trashChapter);
+        if (!super.isEnabled())
+        {
+            return false;
         }
-        return result;
+        
+        for (EObject eObject : this.getSelectedEObjects())
+        {
+            if (RequirementUtils.istrashChapterChild(eObject))
+            {
+                return false;
+            }
+        }
+        
+        return true;
     }
 }

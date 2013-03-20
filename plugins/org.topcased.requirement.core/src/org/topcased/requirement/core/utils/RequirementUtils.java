@@ -1215,4 +1215,22 @@ public final class RequirementUtils
         }
         return false;
     }
+    
+    /**
+     * Checks if the given eobject is contained in trash chapter
+     * @param eObject The eObject to check
+     * @return True if the eObject is contained in the trash chapter
+     */
+    public static boolean istrashChapterChild(EObject eObject)
+    {
+        while (eObject != null)
+        {
+            if (eObject instanceof TrashChapter)
+            {
+                return true;
+            }
+            eObject = eObject.eContainer();
+        }
+        return false;
+    }
 }

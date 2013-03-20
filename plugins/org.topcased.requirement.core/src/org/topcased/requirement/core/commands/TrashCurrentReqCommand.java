@@ -7,7 +7,7 @@
  * 
  * Contributors:
  *      Olivier Mélois <a href="mailto:olivier.melois@atos.net">olivier.melois@atos.net</a>"
- * 
+ *      Anass RADOUANI (AtoS) {anass.radouani@atos.net} - Adapt code for move to trash on a Hierarchical Element
  **********************************************************************************************************************/
 
 package org.topcased.requirement.core.commands;
@@ -17,9 +17,11 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.command.CompoundCommand;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.command.AddCommand;
 import org.eclipse.emf.edit.command.RemoveCommand;
+import org.eclipse.emf.edit.command.SetCommand;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.topcased.requirement.HierarchicalElement;
 import org.topcased.requirement.Requirement;
@@ -74,7 +76,7 @@ public class TrashCurrentReqCommand extends CompoundCommand
         List<EObject> trash = new ArrayList<EObject>();
         for (EObject eObject : selected)
         {
-            if (eObject instanceof Requirement)
+            if ((eObject instanceof Requirement || eObject instanceof HierarchicalElement) && !RequirementUtils.istrashChapterChild(eObject))
             {
                 trash.add(eObject);
             }
@@ -87,9 +89,30 @@ public class TrashCurrentReqCommand extends CompoundCommand
 
             // Adding the requirements to the trash chapter.
             SpecialChapter trashChapter = RequirementUtils.getTrashChapter(editingDomain);
-            appendIfCanExecute(AddCommand.create(editingDomain, trashChapter, RequirementPackage.eINSTANCE.getSpecialChapter_Requirement(), trash));
+            
+            setHierarchicalElementToNull(trash);
+            
+            appendIfCanExecute(AddCommand.create(editingDomain, trashChapter, EObject.class, trash));
         }
 
+    }
+    
+
+    /**
+     * Set the feature Element to null for Hierarchical element moved to the Trash Chapter
+     * @param trash Element to move to trash
+     */
+    private void setHierarchicalElementToNull(List<? extends EObject> trash)
+    {
+        for (EObject eObject : trash)
+        {
+            if (eObject instanceof HierarchicalElement)
+            {
+                EList<HierarchicalElement> children = ((HierarchicalElement) eObject).getChildren();
+                setHierarchicalElementToNull(children);
+                appendIfCanExecute(SetCommand.create(editingDomain, eObject, RequirementPackage.Literals.HIERARCHICAL_ELEMENT__ELEMENT, null));
+            }
+        }
     }
 
     @Override

@@ -7,6 +7,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors : Maxime AUDRAIN (CS) - initial API and implementation
+ * Anass RADOUANI (AtoS) anass.radouani@atos.net - Some Element feature of Hierarchical Element can be null  
  * 
  *****************************************************************************/
 package org.topcased.requirement.core.extensions;
@@ -101,7 +102,7 @@ public final class DefaultRequirementIdentifierVariables implements IRequirement
     {
         String result = ""; //$NON-NLS-1$
 
-        if (hierarchicalElt != null)
+        if (hierarchicalElt != null && hierarchicalElt.getElement() != null)
         {
             EObject obj = hierarchicalElt.getElement();
             for (EAttribute attribute : obj.eClass().getEAllAttributes())
