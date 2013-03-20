@@ -22,6 +22,22 @@ create OUT : RequirementModel from IN : RequirementModel;
 ---rules
 --------
 
+helper context RequirementModel!SpecialChapter def : getTrashChapter() : RequirementModel!TrashChapter =
+	if self.oclIsTypeOf(RequirementModel!TrashChapter) then
+		self
+	else 
+		OclUndefined
+	endif
+;
+
+helper context RequirementModel!IdentifiedElement def : getTrashChapter() : RequirementModel!TrashChapter =
+	if not self.eContainer().oclIsUndefined() then
+		self.eContainer().getTrashChapter()
+	else
+		OclUndefined
+	endif
+;
+
 ---matched rule RequirementProject to Document
 rule ruleReqProject2ReqProject { 	
 	from
@@ -41,9 +57,10 @@ rule ruleReqProject2ReqProject {
 ---matched rule Section to RequirementProject
 rule ruleHierarchicalElt2Section {
 	from
-	i : RequirementModel!HierarchicalElement (
-	i.oclIsTypeOf(RequirementModel!HierarchicalElement)
-	)
+		i : RequirementModel!HierarchicalElement (
+			i.oclIsTypeOf(RequirementModel!HierarchicalElement)
+			and i.getTrashChapter().oclIsUndefined()
+		)
 	to
 	out1 : RequirementModel!Section(
 		---ident<- i.element.name
@@ -55,25 +72,26 @@ rule ruleHierarchicalElt2Section {
 	}
 }
 
----matched rule TrashChapter to Section
-rule ruleTrashChapter2Section {
-	from
-		s : RequirementModel!TrashChapter
-	to 
-	out :  RequirementModel!Section (
-		ident <- 'Trash chapter',
-		children <-s.requirement
-	)
-	do {
-		out.parent<-thisModule.resolveTemp(s.eContainer(), 'out1');
-	}
-}
+--- the trash chapter and its requirements should not be transformed
+--rule ruleTrashChapter2Section {
+--	from
+--		s : RequirementModel!TrashChapter
+--	to 
+--	out :  RequirementModel!Section (
+--		ident <- 'Trash chapter',
+--		children <-s.requirement
+--	)
+--	do {
+--		out.parent<-thisModule.resolveTemp(s.eContainer(), 'out1');
+--	}
+--}
 
 ---matched rule CurrentRequirement to Requirement
 rule ruleRequirement {
 	from 
 	i : RequirementModel!CurrentRequirement (
-	i.oclIsTypeOf(RequirementModel!CurrentRequirement)	
+	i.oclIsTypeOf(RequirementModel!CurrentRequirement)
+	and i.getTrashChapter().oclIsUndefined() 
 	) 
 	to
 	out : RequirementModel!"ttm::Requirement" (
@@ -91,6 +109,7 @@ rule ruleTextAttribute {
 	from 
 	i : RequirementModel!TextAttribute (
 	i.oclIsTypeOf(RequirementModel!TextAttribute)	
+	and i.eContainer().getTrashChapter().oclIsUndefined()
 	) 
 	to
 	out : RequirementModel!"ttm::Attribute" (
@@ -106,12 +125,14 @@ rule ruleTextAttribute {
 rule ruleObjectAttribute {
 	from 
 	i : RequirementModel!ObjectAttribute (
-	i.oclIsTypeOf(RequirementModel!ObjectAttribute) and not i.value.oclIsTypeOf(RequirementModel!CurrentRequirement)	
+	i.oclIsTypeOf(RequirementModel!ObjectAttribute) 
+	and i.eContainer().getTrashChapter().oclIsUndefined()
+	and not i.value.oclIsTypeOf(RequirementModel!CurrentRequirement)	
 	) 
 	to
 	out : RequirementModel!"ttm::Attribute" (
 		name <- i.name,
-		value <- if i.value.oclIsUndefined() then '' else i.value.identifier endif
+		value <- if i.value.oclIsKindOf(RequirementModel!IdentifiedElement) then i.value.identifier else '' endif
 		)	
 	do {
 		out.parent<-thisModule.resolveTemp(i.eContainer(), 'out');
@@ -121,7 +142,9 @@ rule ruleObjectAttribute {
 rule ruleObjectAttribute2 {
 	from 
 	i : RequirementModel!ObjectAttribute (
-	i.oclIsTypeOf(RequirementModel!ObjectAttribute)	and i.value.oclIsTypeOf(RequirementModel!CurrentRequirement)	
+	i.oclIsTypeOf(RequirementModel!ObjectAttribute)	
+	and i.eContainer().getTrashChapter().oclIsUndefined()
+	and i.value.oclIsTypeOf(RequirementModel!CurrentRequirement)	
 	) 
 	to
 	out : RequirementModel!"ttm::Attribute" (
@@ -130,7 +153,7 @@ rule ruleObjectAttribute2 {
 		),	
 	out2 : RequirementModel!"ttm::Attribute" (
 		name <- i.name,
-		value <- if i.value.oclIsUndefined() then '' else i.value.identifier endif
+		value <- if i.value.oclIsKindOf(RequirementModel!IdentifiedElement) then i.value.identifier else '' endif
 		)	
 	do {
 		out.parent<-thisModule.resolveTemp(i.value, 'out');
@@ -140,11 +163,15 @@ rule ruleObjectAttribute2 {
 
 
 helper context RequirementModel!HierarchicalElement def : getText : String = 
-	let seq : Sequence(Ecore!EStructuralFeature) = self.element.eClass().eAllStructuralFeatures->select(e  | e.name = 'name' or e.name = 'id')
-	in 
-	if (seq->notEmpty()) then
-		self.element.eGet(seq->first())
-	else
+	if self.element.oclIsUndefined() then
 		''
+	else
+		let seq : Sequence(Ecore!EStructuralFeature) = self.element.eClass().eAllStructuralFeatures->select(e  | e.name = 'name' or e.name = 'id')
+		in 
+		if (seq->notEmpty()) then
+			self.element.eGet(seq->first())
+		else
+			''
+		endif
 	endif
 	;
