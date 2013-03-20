@@ -7,6 +7,9 @@
  * 
  * Contributors: Sebastien GABEL (CS) - initial API and implementation
  * 
+ * Anass RADOUANI (Atos) anass.radouani@atos.net - add constructor to specify the hierarchical element to delete 
+ *      when we are in the semantic element post deletion
+ * 
  **********************************************************************************************************************/
 package org.topcased.requirement.core.commands;
 
@@ -47,6 +50,9 @@ public class RemoveRequirementCommand extends CompoundCommand
     /** The editing domain to use */
     private EditingDomain editingDomain;
 
+    /** Hierarchical Element to remove */
+    private HierarchicalElement hElement;
+
     /**
      * Constructor
      * 
@@ -67,6 +73,26 @@ public class RemoveRequirementCommand extends CompoundCommand
     /**
      * Constructor
      * 
+     * @param domain The editing domain to use
+     * @param deleted Represents the model object which is going to be deleted
+     * @param hElement Represents the Hierarchical Element that will be added to the liste of element to delete
+     */
+    public RemoveRequirementCommand(EditingDomain domain, EObject deleted, HierarchicalElement hElement)
+    {
+        super(Messages.getString("RemoveRequirementCommand.0")); //$NON-NLS-1$
+        editingDomain = domain;
+        selected = new ArrayList<EObject>();
+        if (deleted != null)
+        {
+            selected.add(deleted);
+        }
+        this.hElement = hElement;
+        initializeCommands();
+    }
+    
+    /**
+     * Constructor
+     * 
      * @param objects A collection of model objects for which the matching {@link HierarchicalElement} must be removed.
      */
     public RemoveRequirementCommand(EditingDomain domain, Collection<EObject> deleted)
@@ -83,15 +109,26 @@ public class RemoveRequirementCommand extends CompoundCommand
     protected void initializeCommands()
     {
         List<EObject> toRemove = new ArrayList<EObject>();
+        
         for (Iterator<EObject> it = selected.iterator(); it.hasNext();)
         {
             HierarchicalElement elt = RequirementUtils.getHierarchicalElementFor(it.next());
-            if (elt != null)
+            if (elt != null && !RequirementUtils.istrashChapterChild(elt))
             {
                 toRemove.add(elt);
             }
         }
 
+        if (hElement != null && !toRemove.contains(hElement))
+        {
+            toRemove.add(hElement);
+        }
+        
+        if (toRemove.isEmpty())
+        {
+            return;
+        }
+        
         // 1) The HierarchicalElement(s) is/are removed from the model
         appendIfCanExecute(RemoveCommand.create(editingDomain, toRemove));
 
