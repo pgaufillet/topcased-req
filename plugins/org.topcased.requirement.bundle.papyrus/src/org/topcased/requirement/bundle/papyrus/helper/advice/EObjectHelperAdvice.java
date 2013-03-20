@@ -11,6 +11,7 @@
  *  Vincent Hemery (Atos Origin}) {vincent.hemery@atosorigin.com} - Initial API and implementation
  *	David Ribeiro (Atos Origin}) {david.ribeirocampelo@atosorigin.com}
  *  Arthur Daussy (Atos) {Arthur.daussy@atos.net - [#4168] Current requirement when semantic object its move to another container
+ *  Anass Radouani (AtoS) {anass.radouani@atos.net} - [#4362] Move to the trash chapter hierarchical element and current requirement when semantic element is deleted
  *****************************************************************************/
 package org.topcased.requirement.bundle.papyrus.helper.advice;
 
@@ -38,6 +39,7 @@ import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelperAdvice;
+import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyDependentsRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DuplicateElementsRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.IEditCommandRequest;
@@ -82,14 +84,16 @@ import org.topcased.requirement.core.utils.RequirementUtils;
  */
 public class EObjectHelperAdvice extends AbstractEditHelperAdvice
 {
+
     /**
      * Add a command to handle associated requirements of an element to delete (move them to trash chapter).
      * 
-     * @see org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelperAdvice#getBeforeDestroyElementCommand(org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest)
+     * @see org.eclipse.gmf.runtime.emf.type.core.edithelper.AbstractEditHelperAdvice#getBeforeDestroyDependentsCommand(org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest)
      * @param request the request
      * @return the command to execute before the edit helper work is done
      */
-    protected ICommand getBeforeDestroyElementCommand(DestroyElementRequest request)
+    @Override
+    protected ICommand getBeforeDestroyDependentsCommand(DestroyDependentsRequest request)
     {
         IMultiDiagramEditor editor = EditorUtils.getMultiDiagramEditor();
         // check parameter to avoid executing twice
@@ -101,13 +105,15 @@ public class EObjectHelperAdvice extends AbstractEditHelperAdvice
                 // ask user to confirm deletion
                 final TransactionalEditingDomain domain = (TransactionalEditingDomain) editingdomain;
                 final EObject eobject = request.getElementToDestroy();
+                final HierarchicalElement hierarchicalElement = RequirementUtils.getHierarchicalElementFor(eobject);
                 AbstractTransactionalCommand deleteCmdWithCancel = new AbstractTransactionalCommand(domain, Messages.getString("DeleteModelObjectAction.CmdLabel"), null)
                 {
                     @Override
                     protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable adapt) throws ExecutionException
                     {
                         boolean canContinue = true;
-                        HierarchicalElement hierarchicalElement = RequirementUtils.getHierarchicalElementFor(eobject);
+                        EObject test = eobject;
+                        
                         if (RequirementUtils.getTrashChapter(domain) != null && hierarchicalElement != null && !hierarchicalElement.eContents().isEmpty())
                         {
                             ConfirmationDialog dialog = new ConfirmationDialog(Display.getCurrent().getActiveShell(), Messages.getString("DeleteModelObjectAction.CmdLabel"),
@@ -118,7 +124,7 @@ public class EObjectHelperAdvice extends AbstractEditHelperAdvice
                         }
                         if (canContinue)
                         {
-                            RemoveRequirementCommand removeReqCmd = new RemoveRequirementCommand(domain, eobject);
+                            RemoveRequirementCommand removeReqCmd = new RemoveRequirementCommand(domain, eobject, hierarchicalElement);
                             removeReqCmd.execute();
                             return new CommandResult(new Status(IStatus.OK, Activator.PLUGIN_ID, Messages.getString("DeleteModelObjectAction.CmdLabel")));
                         }
@@ -136,12 +142,13 @@ public class EObjectHelperAdvice extends AbstractEditHelperAdvice
                 // Do not ask user to confirm deletion, as we do not know how to cancel
                 final EditingDomain domain = (EditingDomain) editingdomain;
                 final EObject eobject = request.getElementToDestroy();
+                final HierarchicalElement hElement = RequirementUtils.getHierarchicalElementFor(eobject);
                 AbstractCommand deleteCmd = new CommandStub()
                 {
                     @Override
                     public void execute()
                     {
-                        RemoveRequirementCommand removeReqCmd = new RemoveRequirementCommand(domain, eobject);
+                        RemoveRequirementCommand removeReqCmd = new RemoveRequirementCommand(domain, eobject, hElement);
                         removeReqCmd.execute();
                     }
 
