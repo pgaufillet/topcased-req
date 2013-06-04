@@ -3,7 +3,7 @@
 <schema targetNamespace="org.topcased.requirement.core" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.topcased.requirement.core" id="upstreamDropAdapter" name="Upstream Requirement Drop Adapter"/>
+         <meta.schema plugin="org.topcased.requirement.core" id="dropTools" name="Upstream Requirement Drop Adapter"/>
       </appInfo>
       <documentation>
          Allows the user to register an extension id and enable plugin-specific PluginTransfer drag-and-drop of upstream requirement objects. This id must be the id of an extension extending org.eclipse.ui.dropActions.
@@ -18,7 +18,8 @@
       </annotation>
       <complexType>
          <sequence minOccurs="0" maxOccurs="unbounded">
-            <element ref="dropAction"/>
+            <element ref="dropAction" minOccurs="0" maxOccurs="1"/>
+            <element ref="prohibitdrop" minOccurs="0" maxOccurs="1"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -59,6 +60,21 @@
                <documentation>
                   
                </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="prohibitdrop">
+      <complexType>
+         <attribute name="prohibit" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn=":org.topcased.requirement.core.dnd.IProhibitDrop"/>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>

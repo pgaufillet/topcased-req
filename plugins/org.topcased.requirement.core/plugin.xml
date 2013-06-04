@@ -11,7 +11,7 @@
    <extension-point id="mergeRequirementProcessor" name="Merge Requirement Processor" schema="schema/mergeRequirementProcessor.exsd"/>
    <extension-point id="supportingEditors" name="Editors supporting the requirements" schema="schema/supportingEditors.exsd"/>
    <extension-point id="importDocument" name="importDocument" schema="schema/importDocument.exsd"/>
-   <extension-point id="upstreamDropAdapter" name="Upstream Requirement Drop Adapter" schema="schema/upstreamDropAdapter.exsd"/>
+   <extension-point id="dropTools" name="Upstream Requirement Drop Adapter" schema="schema/dropTools.exsd"/>
    <extension-point id="updateTransformationProvider" name="Update Transformation Provider" schema="schema/updateTransformationProvider.exsd"/>
    <extension
          point="org.eclipse.core.runtime.preferences">

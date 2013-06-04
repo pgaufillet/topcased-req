@@ -41,7 +41,7 @@ public class DragSourceUpstreamAdapter extends DragSourceAdapter
     private ISelectionProvider selectionProvider;
 
     /** constant representing the name of the extension point */
-    private static final String UPSTREAM_DROP_ADAPTER_POINT = RequirementCorePlugin.getId() + "." + "upstreamDropAdapter";
+    private static final String UPSTREAM_DROP_ADAPTER_POINT = RequirementCorePlugin.getId() + "." + "dropTools";
 
     /** Value of the extension point attribute containing the extension id for the drop delegate. */
     static final String DELEGATE_ID = "dropActionId";

@@ -93,7 +93,7 @@ import ttm.Document;
 public class UpstreamPage extends AbstractRequirementPage implements IUpstreamRequirementPage
 {
     /** constant representing the name of the extension point */
-    private static final String UPSTREAM_DROP_ADAPTER_POINT = RequirementCorePlugin.getId() + "." + "upstreamDropAdapter";
+    private static final String UPSTREAM_DROP_ADAPTER_POINT = RequirementCorePlugin.getId() + "." + "dropTools";
     
     private IStructuredSelection currSelection;
 

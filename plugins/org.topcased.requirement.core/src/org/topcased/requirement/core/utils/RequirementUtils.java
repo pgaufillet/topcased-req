@@ -283,6 +283,48 @@ public final class RequirementUtils
         }
         return Collections.emptyList();
     }
+    
+    /**
+     * Gets all Upstream Requirements for a Resource.
+     * 
+     * @param resource The requirement model as an EMF {@link Resource}
+     * @return A collection of Upstream Requirements found from the starting point
+     */
+    public static Collection<Requirement> getAllUpstreams(ResourceSet set)
+    {
+        if (set != null)
+        {
+            Set<Requirement> result = new HashSet<Requirement>();
+            for (Resource r : set.getResources()){
+                if (RequirementResource.FILE_EXTENSION.equals(r.getURI().fileExtension())){
+                    result.addAll(getUpstreams(r.getContents().get(0)));
+                }
+            }
+            return result;
+        }
+        return Collections.emptyList();
+    }
+    
+    /**
+     * Gets all Upstream Requirements for a Resource.
+     * 
+     * @param resource The requirement model as an EMF {@link Resource}
+     * @return A collection of Upstream Requirements found from the starting point
+     */
+    public static Collection<org.topcased.requirement.Requirement> getAllCurrents(ResourceSet set)
+    {
+        if (set != null)
+        {
+            Set<org.topcased.requirement.Requirement> result = new HashSet<org.topcased.requirement.Requirement>();
+            for (Resource r : set.getResources()){
+                if (RequirementResource.FILE_EXTENSION.equals(r.getURI().fileExtension())){
+                    result.addAll(getAllCurrents(r));
+                }
+            }
+            return result;
+        }
+        return Collections.emptyList();
+    }
 
     /**
      * Determines if the upstream requirement is linked (link_to attribute) to a current requirement
@@ -767,8 +809,8 @@ public final class RequirementUtils
                 listObjects.addAll(RequirementUtils.getAllObjects(EcorePackage.eINSTANCE.getEModelElement()));
             }
             ObjectAttribute objAtt = (ObjectAttribute) selected;
-            listObjects.addAll(RequirementUtils.getAllUpstreams(objAtt.eResource()));
-            listObjects.addAll(RequirementUtils.getAllCurrents(objAtt.eResource()));
+            listObjects.addAll(RequirementUtils.getAllUpstreams(objAtt.eResource().getResourceSet()));
+            listObjects.addAll(RequirementUtils.getAllCurrents(objAtt.eResource().getResourceSet()));
         }
         return listObjects;
     }

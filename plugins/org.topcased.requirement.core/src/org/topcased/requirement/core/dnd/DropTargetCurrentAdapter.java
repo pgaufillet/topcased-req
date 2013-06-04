@@ -17,7 +17,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.common.util.ECollections;
@@ -71,6 +74,11 @@ import ttm.Section;
 public class DropTargetCurrentAdapter extends EditingDomainViewerDropAdapter
 {
     private List<EObject> toSelect;
+    
+    /** constant representing the name of the extension point */
+    private static final String IPROHIBITDROP_ID = RequirementCorePlugin.getId() + "." + "dropTools";
+
+ 
 
     /**
      * Constructor
@@ -181,7 +189,36 @@ public class DropTargetCurrentAdapter extends EditingDomainViewerDropAdapter
             event.operations = DND.DROP_NONE;
             event.detail = DND.DROP_NONE;
         }
+        
+        if(isDropNone()){
+            event.operations = DND.DROP_NONE;
+            event.detail = DND.DROP_NONE;
+        }
     }
+    
+    
+    
+    private boolean isDropNone() {
+        
+        IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(IPROHIBITDROP_ID);
+          String extensionId = null;
+        for (IConfigurationElement element : config) {
+            extensionId = element.getAttribute("prohibit");
+            if (extensionId != null && "org.topcased.hood.requirement.dnd.IprohibitDropImpl".equals(extensionId))
+            {
+                    try {
+                        final Object o = element.createExecutableExtension("prohibit");
+                        if (o instanceof IProhibitDrop) {
+                            return ((IProhibitDrop) o).match();
+                        }
+                    } catch (CoreException ex) {
+                        System.out.println(ex.getMessage());
+                      }
+                return true;                
+            }
+        }
+      return false;
+  }
 
     /**
      * Handles the drag operation coming from the upstream view.
