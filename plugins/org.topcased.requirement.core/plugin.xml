@@ -428,7 +428,6 @@
             class="org.topcased.requirement.core.handlers.UpdateAttributeConfigurationHandler"
             commandId="org.topcased.requirement.core.updateAttributeConfiguration">
          <enabledWhen>
-            <and>
                <with
                      variable="selection">
                   <iterate
@@ -438,13 +437,6 @@
                      </instanceof>
                   </iterate>
                </with>
-               <with
-                     variable="requirementActionsEnablement.isImpacted">
-                  <equals
-                        value="true">
-                  </equals>
-               </with>
-            </and>
          </enabledWhen>
       </handler>
       <handler
