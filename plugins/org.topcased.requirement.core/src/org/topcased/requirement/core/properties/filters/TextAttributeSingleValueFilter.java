@@ -35,12 +35,17 @@ public class TextAttributeSingleValueFilter implements IFilter
         {
             TextAttribute attribute = (TextAttribute) toTest;
             AttributeConfiguration configuration = RequirementUtils.getAttributeConfiguration(attribute.eResource());
-            for (ConfiguratedAttribute att : configuration.getListAttributes())
-            {
-                if (AttributesType.TEXT.equals(att.getType()) && attribute.getName().equals(att.getName()))
+            if (configuration != null){
+                for (ConfiguratedAttribute att : configuration.getListAttributes())
                 {
-                    return att.getListValue().isEmpty();
+                    if (AttributesType.TEXT.equals(att.getType()) && attribute.getName().equals(att.getName()))
+                    {
+                        return att.getListValue().isEmpty();
+                    }
                 }
+            }
+            else {
+                return true ;
             }
         }
         return false;

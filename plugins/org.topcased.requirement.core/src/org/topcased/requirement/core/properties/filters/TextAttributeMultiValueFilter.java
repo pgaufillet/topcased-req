@@ -35,11 +35,14 @@ public class TextAttributeMultiValueFilter implements IFilter
         {
             TextAttribute attribute = (TextAttribute) toTest;
             AttributeConfiguration configuration = RequirementUtils.getAttributeConfiguration(attribute.eResource());
-            for (ConfiguratedAttribute att : configuration.getListAttributes())
-            {
-                if (AttributesType.TEXT.equals(att.getType()) && attribute.getName().equals(att.getName()))
+            // TODO find a way to get Attribute configuration
+            if (configuration != null){
+                for (ConfiguratedAttribute att : configuration.getListAttributes())
                 {
-                    return att.getListValue().size() > 1;
+                    if (AttributesType.TEXT.equals(att.getType()) && attribute.getName().equals(att.getName()))
+                    {
+                        return att.getListValue().size() > 1;
+                    }
                 }
             }
         }
